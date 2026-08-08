@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistemas Web com Python — para Engenharia de Dados | programa AI</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/styles.css">
+<link rel="stylesheet" href="../shared/components.css">
+<link rel="stylesheet" href="../shared/animations.css">
+<style>
+/* ═══════════ SWP · pitch para a turma de Engenharia de Dados ═══════════ */
+
+/* segurança extra: nenhuma ligature em mono/labels (JetBrains Mono desenha -> como seta) */
+pre,code,.mono,.dio-file,.dio-app,.dio-tab,svg text{font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
+
+/* stagger extra (o shared só cobre 6 filhos) */
+.step-section.visible .reveal-stagger > *:nth-child(7){animation-delay:0.65s}
+.step-section.visible .reveal-stagger > *:nth-child(8){animation-delay:0.75s}
+
+/* ---------- voltar pro hub ---------- */
+.swp-back{
+  position:fixed;top:16px;left:16px;z-index:98;
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--surface2);border:1px solid rgba(108,99,255,0.2);
+  color:var(--text-dim);text-decoration:none;font-weight:700;font-size:0.8rem;
+  padding:10px 16px;border-radius:12px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.3);
+  transition:all 0.3s;
+}
+.swp-back:hover{color:var(--text);border-color:var(--accent)}
+
+/* ---------- mock de vaga (LinkedIn-ish) ---------- */
+.vaga{
+  max-width:620px;margin:0 auto;
+  background:var(--surface);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:18px;overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,0.45);
+}
+.vaga-head{
+  display:flex;gap:14px;align-items:center;
+  padding:20px 22px;border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.vaga-logo{
+  width:52px;height:52px;border-radius:12px;flex-shrink:0;
+  background:linear-gradient(135deg,#3b5b8c,#6c8ebf);
+  display:flex;align-items:center;justify-content:center;font-size:1.5rem;
+}
+.vaga-title{font-weight:900;font-size:1.08rem;line-height:1.3}
+.vaga-meta{
+  font-family:'JetBrains Mono',monospace;font-size:0.72rem;
+  color:var(--text-dim);margin-top:3px;
+}
+.vaga-body{padding:18px 22px 20px}
+.vaga-label{
+  font-size:0.68rem;font-weight:900;text-transform:uppercase;
+  letter-spacing:2px;color:var(--text-dim);margin-bottom:10px;
+}
+.vaga-req{list-style:none}
+.vaga-req li{
+  display:flex;gap:10px;align-items:baseline;
+  padding:8px 10px;font-size:0.88rem;color:var(--text-dim);
+  border-left:3px solid transparent;border-radius:8px;
+  transition:all 0.5s ease;
+}
+.vaga-req li .ok{color:var(--accent7);flex-shrink:0}
+.vaga-req li strong{color:var(--text);font-weight:700}
+.vaga-req li .rq-tag{
+  margin-left:auto;align-self:center;flex-shrink:0;white-space:nowrap;
+  font-size:0.6rem;font-weight:900;letter-spacing:1px;
+  background:var(--accent5);color:#0a0a12;
+  padding:2px 10px;border-radius:50px;
+  opacity:0;transform:translateX(8px);transition:all 0.5s ease;
+}
+.vaga-req li.rq-web.active{
+  background:rgba(247,183,49,0.09);
+  border-left-color:var(--accent5);color:var(--text);
+}
+.vaga-req li.rq-web.active .rq-tag{opacity:1;transform:none}
+.vaga-foot{
+  display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  padding:13px 22px;border-top:1px solid rgba(255,255,255,0.06);
+  font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--text-dim);
+}
+.vaga-foot .hot{color:var(--accent2);font-weight:700}
+
+/* ---------- janela draw.io ---------- */
+.dio-window{
+  margin-top:26px;border-radius:16px;overflow:hidden;
+  border:1px solid rgba(255,255,255,0.08);
+  box-shadow:0 24px 70px rgba(0,0,0,0.5);
+}
+.dio-bar{
+  display:flex;align-items:center;gap:12px;
+  background:#26262e;padding:10px 16px;
+}
+.dio-bar .dots{display:flex;gap:6px;flex-shrink:0}
+.dio-bar .dots span{width:11px;height:11px;border-radius:50%}
+.dio-bar .dots span:nth-child(1){background:#ff5f57}
+.dio-bar .dots span:nth-child(2){background:#febc2e}
+.dio-bar .dots span:nth-child(3){background:#28c840}
+.dio-file{
+  font-family:'JetBrains Mono',monospace;font-size:0.76rem;color:#9a9ab2;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.dio-app{
+  margin-left:auto;flex-shrink:0;
+  font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:#63637a;
+}
+.dio-canvas{background:#fff}
+.dio-canvas svg{display:block;width:100%;height:auto}
+.dio-foot{
+  display:flex;align-items:center;gap:6px;
+  background:#f1f1f4;border-top:1px solid #e0e0e6;padding:5px 14px 0;
+}
+.dio-tab{
+  font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:#555;
+  background:#fff;border:1px solid #d8d8e0;border-bottom:none;
+  border-radius:6px 6px 0 0;padding:3px 18px;
+}
+.dio-plus{font-size:0.8rem;color:#999;padding:0 8px}
+
+/* elementos do diagrama */
+.dio-title{font-family:'Nunito',sans-serif;font-weight:800;font-size:14.5px;fill:#26263a;text-anchor:middle}
+.dio-sub{font-family:'JetBrains Mono',monospace;font-size:10.5px;fill:#5a5a6e;text-anchor:middle}
+.dio-zlabel{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:12px;letter-spacing:1px}
+.dio-elabel{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;fill:#44445a;text-anchor:middle;
+  paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round;
+}
+.dio-edge{fill:none;stroke:#55555e;stroke-width:1.6;marker-end:url(#dioArr)}
+.dio-node{transform-box:fill-box;transform-origin:center;transition:transform 0.45s ease}
+.dio-node rect{transition:stroke-width 0.45s ease,filter 0.45s ease}
+.dio-node.active{transform:scale(1.06)}
+.dio-node.active rect{stroke-width:3;filter:drop-shadow(0 6px 14px rgba(0,0,0,0.22))}
+.dio-note{transform-box:fill-box;transform-origin:center;transition:transform 0.45s ease}
+.dio-note.active{transform:scale(1.09)}
+.dio-note-t{font-family:'Nunito',sans-serif;font-weight:800;font-size:13.5px;fill:#7a2f28;text-anchor:middle}
+.dio-pill-t{font-family:'Nunito',sans-serif;font-weight:800;font-size:13.5px;fill:#3d3d4e;text-anchor:middle}
+
+/* ---------- placar candidato A vs B ---------- */
+.swp-vs{
+  display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:24px 0;
+}
+@media (max-width:640px){.swp-vs{grid-template-columns:1fr}}
+.swp-vs-col{
+  border-radius:18px;padding:24px;position:relative;overflow:hidden;
+}
+.swp-vs-col.before{
+  background:var(--surface);
+  border:1px solid rgba(255,255,255,0.06);
+  opacity:0.85;
+}
+.swp-vs-col.after{
+  background:linear-gradient(160deg,rgba(6,214,160,0.07),rgba(69,183,209,0.05));
+  border:1px solid rgba(6,214,160,0.3);
+  box-shadow:0 0 40px rgba(6,214,160,0.10);
+}
+.swp-vs-tag{
+  display:inline-block;font-size:0.68rem;font-weight:900;
+  text-transform:uppercase;letter-spacing:2px;
+  padding:4px 14px;border-radius:50px;margin-bottom:14px;
+}
+.swp-vs-col.before .swp-vs-tag{background:rgba(255,255,255,0.06);color:var(--text-dim)}
+.swp-vs-col.after  .swp-vs-tag{background:rgba(6,214,160,0.15);color:var(--accent7)}
+.swp-vs-col h4{font-size:1.1rem;font-weight:900;margin-bottom:12px}
+.swp-vs-col ul{list-style:none}
+.swp-vs-col li{
+  font-size:0.88rem;color:var(--text-dim);
+  padding:6px 0;display:flex;gap:10px;align-items:flex-start;
+}
+.swp-vs-col li .ic{flex-shrink:0}
+.swp-vs-col.after li strong{color:var(--text)}
+
+/* ---------- cards "o que você leva" ---------- */
+.take-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px;
+}
+@media (max-width:640px){.take-grid{grid-template-columns:1fr}}
+.take-card{
+  background:var(--surface);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:16px;padding:20px 22px;
+  transition:transform 0.3s ease,border-color 0.3s ease;
+}
+.take-card:hover{border-color:rgba(6,214,160,0.35);transform:translateY(-3px)}
+.take-card .tk-ic{font-size:1.8rem;display:block}
+.take-card h4{font-size:1rem;font-weight:800;margin:8px 0 6px}
+.take-card p{font-size:0.85rem;color:var(--text-dim)}
+.take-card p strong{color:var(--text)}
+
+/* ---------- timeline dos 8 dias ---------- */
+.swp-timeline{
+  position:relative;margin:30px 0 10px;
+  display:flex;flex-direction:column;gap:14px;
+}
+.swp-timeline::before{
+  content:'';position:absolute;left:25px;top:20px;bottom:20px;width:2px;
+  background:linear-gradient(to bottom,var(--python),var(--accent5),var(--accent6),var(--accent7));
+  opacity:0.4;
+}
+.swp-day{
+  display:flex;gap:18px;align-items:flex-start;
+  background:var(--surface);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:16px;padding:16px 20px;
+  position:relative;transition:all 0.45s ease;
+}
+.swp-day .d-num{
+  width:52px;height:52px;border-radius:14px;flex-shrink:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:var(--surface2);border:1px solid rgba(255,255,255,0.08);
+  font-weight:900;line-height:1.1;position:relative;z-index:1;
+  transition:all 0.45s ease;
+}
+.swp-day .d-num .d-label{font-size:0.5rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim)}
+.swp-day .d-num .d-n{font-size:1.2rem}
+.swp-day .d-body{flex:1}
+.swp-day .d-title{font-weight:800;font-size:1rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.swp-day .d-out{font-size:0.84rem;color:var(--text-dim);margin-top:2px}
+.swp-day .d-out strong{color:var(--accent7);font-weight:700}
+.swp-day.active{
+  border-color:rgba(247,183,49,0.45);
+  box-shadow:0 0 30px rgba(247,183,49,0.12);
+  transform:translateX(8px) scale(1.01);
+}
+.swp-day.active .d-num{
+  background:linear-gradient(135deg,var(--accent5),var(--accent2));
+  color:var(--bg);border-color:transparent;
+}
+.swp-day.active .d-num .d-label{color:rgba(10,10,18,0.7)}
+
+/* ---------- oferta ---------- */
+.swp-offer{
+  max-width:560px;margin:30px auto 0;
+  background:linear-gradient(165deg,var(--surface2),var(--surface));
+  border:1px solid rgba(247,183,49,0.35);
+  border-radius:24px;padding:38px 34px;text-align:center;
+  position:relative;overflow:hidden;
+  box-shadow:0 24px 80px rgba(0,0,0,0.5),0 0 60px rgba(247,183,49,0.08);
+}
+.swp-offer::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,var(--python),var(--accent5),var(--streamlit),var(--accent7));
+}
+.swp-offer-badge{
+  display:inline-block;font-size:0.7rem;font-weight:900;
+  text-transform:uppercase;letter-spacing:2px;
+  background:linear-gradient(135deg,var(--accent5),var(--accent2));
+  color:var(--bg);padding:5px 18px;border-radius:50px;margin-bottom:18px;
+}
+.swp-offer-list{
+  list-style:none;text-align:left;max-width:420px;margin:0 auto 24px;
+}
+.swp-offer-list li{
+  padding:8px 0;font-size:0.92rem;color:var(--text-dim);
+  display:flex;gap:12px;align-items:flex-start;
+  border-bottom:1px dashed rgba(255,255,255,0.06);
+}
+.swp-offer-list li:last-child{border-bottom:none}
+.swp-offer-list li .ic{flex-shrink:0}
+.swp-offer-list li strong{color:var(--text)}
+.swp-price-old-label{
+  font-family:'Caveat',cursive;font-size:1.5rem;color:var(--text-dim);
+  display:block;margin-bottom:-6px;
+}
+.swp-price{
+  font-size:clamp(3rem,9vw,4.2rem);font-weight:900;line-height:1.1;
+  background:linear-gradient(135deg,var(--python-y),var(--accent5),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.swp-price-cents{font-size:0.45em}
+.swp-price-terms{
+  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:14px 0 6px;
+}
+.swp-price-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--surface);border:1px solid rgba(255,255,255,0.1);
+  padding:6px 16px;border-radius:50px;
+  font-size:0.8rem;font-weight:800;
+}
+.swp-price-chip.hl{border-color:rgba(6,214,160,0.4);color:var(--accent7)}
+.swp-price-note{font-size:0.82rem;color:var(--text-dim);margin-bottom:22px}
+.swp-cta{
+  display:inline-block;border:none;cursor:pointer;
+  background:linear-gradient(135deg,var(--accent7),var(--accent4));
+  color:#06281f;font-family:'Nunito',sans-serif;
+  font-size:1.15rem;font-weight:900;
+  padding:18px 44px;border-radius:60px;
+  position:relative;overflow:hidden;
+  box-shadow:0 10px 40px rgba(6,214,160,0.35);
+  transition:transform 0.25s ease,box-shadow 0.25s ease;
+  animation:pulse 2.6s ease-in-out infinite;
+}
+.swp-cta:hover{
+  transform:translateY(-3px) scale(1.03);
+  box-shadow:0 16px 50px rgba(6,214,160,0.5);
+  animation:none;
+}
+.swp-cta::after{
+  content:'';position:absolute;top:0;bottom:0;left:-120%;width:60%;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,0.35),transparent);
+  animation:shimmerSweep 2.8s ease-in-out infinite;
+}
+.swp-cta-sub{
+  margin-top:14px;font-size:0.85rem;color:var(--text-dim);
+}
+.swp-cta-sub strong{color:var(--accent5)}
+.swp-scarcity{
+  margin-top:22px;display:inline-flex;align-items:center;gap:8px;
+  font-size:0.78rem;font-weight:800;color:var(--accent2);
+  background:rgba(255,107,107,0.07);
+  border:1px solid rgba(255,107,107,0.2);
+  padding:7px 18px;border-radius:50px;
+}
+.swp-scarcity .dot-live{
+  width:8px;height:8px;border-radius:50%;background:var(--accent2);
+  animation:pulse 1.4s ease-in-out infinite;
+}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-orbs">
+  <div class="orb"></div>
+  <div class="orb"></div>
+  <div class="orb"></div>
+</div>
+
+<div class="progress-track"><div class="progress-bar"></div></div>
+
+<a class="swp-back" href="../index.html">← hub do curso</a>
+
+<!-- ═══════════════════════════════════════════════════════
+     HERO — a ferida
+     ═══════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-icons">📊 🌐 🐍</div>
+  <span class="hero-badge python">🎓 Engenharia de Dados &amp; Web</span>
+  <h1>O mercado cansou do<br>engenheiro que só sabe dados</h1>
+  <p class="subtitle">
+    Nos squads de verdade — os <strong style="color:var(--accent6)">multi-stack</strong> —
+    o pipeline é só metade do desenho. A outra metade é
+    <strong style="color:var(--accent7)">web</strong>: o portal onde o negócio sobe os arquivos,
+    o backend que recebe tudo via <strong style="color:var(--python-y)">HTTP</strong>,
+    as telas internas. <strong>Quem domina os dois lados vale mais.</strong>
+  </p>
+  <div class="hero-stack">
+    <span class="stack-chip python">🐍 Python</span>
+    <span class="stack-chip">🌶️ Flask</span>
+    <span class="stack-chip">🌐 HTTP de verdade</span>
+    <span class="stack-chip">🗄️ SQL na mão</span>
+    <span class="stack-chip">🤖 Agentes de IA</span>
+    <span class="stack-chip streamlit">🚀 Deploy real</span>
+  </div>
+</section>
+
+<div class="container">
+
+  <!-- ═══════════════════════════════════════════════════════
+       1 · A VAGA — leia os requisitos
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section">
+    <div class="step-header">
+      <div class="step-number sn-red">💼</div>
+      <div>
+        <div class="step-title">A vaga que está aberta agora</div>
+        <div class="step-sub">Leia os requisitos. Presta atenção no que <strong>não</strong> é pipeline.</div>
+      </div>
+    </div>
+
+    <div class="vaga" data-seq="1600">
+      <div class="vaga-head">
+        <div class="vaga-logo">🏢</div>
+        <div>
+          <div class="vaga-title">Engenheiro(a) de Dados Pleno</div>
+          <div class="vaga-meta mono">Grande empresa · São Paulo (híbrido) · CLT + benefícios</div>
+        </div>
+      </div>
+      <div class="vaga-body">
+        <div class="vaga-label">O que buscamos</div>
+        <ul class="vaga-req">
+          <li><span class="ok">✔</span> <span><strong>Python</strong> para pipelines e automações</span></li>
+          <li><span class="ok">✔</span> <span><strong>SQL forte</strong> — modelagem e otimização</span></li>
+          <li><span class="ok">✔</span> <span>Orquestração de ETL — <strong>Airflow, Spark</strong></span></li>
+          <li><span class="ok">✔</span> <span>Cloud (AWS/GCP) e armazenamento</span></li>
+          <li class="rq-web" data-seq-step="0,1,2"><span class="ok">✔</span> <span><strong>APIs REST</strong> e integrações via <strong>HTTP</strong></span> <span class="rq-tag">← web</span></li>
+          <li class="rq-web" data-seq-step="1,2"><span class="ok">✔</span> <span>Manutenção de <strong>aplicações web internas</strong> (portais de ingestão, backoffice)</span> <span class="rq-tag">← web</span></li>
+          <li class="rq-web" data-seq-step="2"><span class="ok">✔</span> <span>Atuação em <strong>squad multidisciplinar</strong> com backend e produto</span> <span class="rq-tag">← squad</span></li>
+        </ul>
+        <span data-seq-step="3" style="display:none"></span>
+      </div>
+      <div class="vaga-foot mono">
+        <span>⚡ Candidatura simplificada · <span class="hot">94 candidatos</span></span>
+        <span>vaga adaptada de anúncios reais</span>
+      </div>
+    </div>
+
+    <div class="analogy">
+      <div class="analogy-title">🎭 Toca na ferida:</div>
+      <p>
+        A vaga <strong>não</strong> pede um dev frontend. Pede um engenheiro de dados
+        <strong>que não trava</strong> quando o problema sai do pipeline.
+        E hoje, sendo sincero: se o assunto virar HTTP, portal, upload…
+        você segura a conversa ou passa a bola?
+      </p>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       2 · O DIAGRAMA — de onde vem o dado
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section">
+    <div class="step-header">
+      <div class="step-number sn-blue">🗺️</div>
+      <div>
+        <div class="step-title">De onde vem o dado do seu pipeline?</div>
+        <div class="step-sub">A arquitetura que toda plataforma de dados tem — e que pouca gente desenha inteira</div>
+      </div>
+    </div>
+
+    <div class="dio-window" id="diagrama" data-seq="1500">
+      <div class="dio-bar">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <span class="dio-file">arquitetura-plataforma-dados.drawio</span>
+        <span class="dio-app">draw.io</span>
+      </div>
+      <div class="dio-canvas">
+        <svg viewBox="0 0 1000 585" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagrama: time de negócio sobe arquivos num portal web, o backend recebe via HTTP e grava no staging; de lá o pipeline de ETL carrega o data warehouse que alimenta os dashboards do negócio">
+          <defs>
+            <pattern id="dioGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#f0f0f4" stroke-width="1"/>
+            </pattern>
+            <marker id="dioArr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" fill="#55555e"/>
+            </marker>
+            <marker id="dioArrRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" fill="#b85450"/>
+            </marker>
+          </defs>
+
+          <rect width="1000" height="585" fill="#ffffff"/>
+          <rect width="1000" height="585" fill="url(#dioGrid)"/>
+
+          <!-- zona web -->
+          <rect x="30" y="70" width="940" height="190" rx="10" fill="rgba(108,142,191,0.035)" stroke="#6c8ebf" stroke-width="1.5" stroke-dasharray="8 6"/>
+          <text class="dio-zlabel" x="48" y="96" fill="#6c8ebf">🌐 O LADO WEB — quem o negócio vê e usa</text>
+
+          <!-- zona dados -->
+          <rect x="30" y="360" width="940" height="190" rx="10" fill="rgba(130,179,102,0.04)" stroke="#82b366" stroke-width="1.5" stroke-dasharray="8 6"/>
+          <text class="dio-zlabel" x="48" y="386" fill="#82b366">⚙️ O LADO DADOS — onde você já vive</text>
+
+          <!-- arestas: lado web -->
+          <path class="dio-edge" d="M230 165 H285"/>
+          <path class="dio-edge" d="M490 165 H545"/>
+          <path class="dio-edge" d="M750 165 H805"/>
+
+          <!-- aresta: staging desce pro ETL -->
+          <path class="dio-edge" d="M885 210 V405"/>
+
+          <!-- arestas: lado dados (direita pra esquerda) -->
+          <path class="dio-edge" d="M760 455 H665"/>
+          <path class="dio-edge" d="M460 455 H365"/>
+
+          <!-- ciclo: BI de volta pro negócio -->
+          <path class="dio-edge" d="M160 455 H18 V165 H55"/>
+
+          <!-- nós: lado web -->
+          <g class="dio-node" data-seq-step>
+            <rect x="60" y="120" width="170" height="90" rx="8" fill="#fff2cc" stroke="#d6b656" stroke-width="2"/>
+            <text class="dio-title" x="145" y="150">👩‍💼 Time de negócio</text>
+            <text class="dio-sub" x="145" y="173">planilhas · análises</text>
+            <text class="dio-sub" x="145" y="190">quer subir e consultar</text>
+          </g>
+          <g class="dio-node" data-seq-step>
+            <rect x="290" y="120" width="200" height="90" rx="8" fill="#dae8fc" stroke="#6c8ebf" stroke-width="2"/>
+            <text class="dio-title" x="390" y="150">🖥️ Portal web interno</text>
+            <text class="dio-sub" x="390" y="173">telas · login · upload</text>
+            <text class="dio-sub" x="390" y="190">o navegador do negócio</text>
+          </g>
+          <g class="dio-node" data-seq-step>
+            <rect x="550" y="120" width="200" height="90" rx="8" fill="#d5e8d4" stroke="#82b366" stroke-width="2"/>
+            <text class="dio-title" x="650" y="150">🐍 Backend Python</text>
+            <text class="dio-sub" x="650" y="173">recebe o HTTP POST</text>
+            <text class="dio-sub" x="650" y="190">valida · salva</text>
+          </g>
+          <g class="dio-node" data-seq-step>
+            <rect x="810" y="120" width="150" height="90" rx="8" fill="#ffe6cc" stroke="#d79b00" stroke-width="2"/>
+            <text class="dio-title" x="885" y="158">🗂️ Staging</text>
+            <text class="dio-sub" x="885" y="183">arquivos + banco</text>
+          </g>
+
+          <!-- nós: lado dados -->
+          <g class="dio-node" data-seq-step>
+            <rect x="760" y="410" width="190" height="90" rx="8" fill="#e1d5e7" stroke="#9673a6" stroke-width="2"/>
+            <text class="dio-title" x="855" y="440">⚙️ Pipeline ETL</text>
+            <text class="dio-sub" x="855" y="463">extrai · transforma</text>
+            <text class="dio-sub" x="855" y="480">Airflow · Spark · Python</text>
+          </g>
+          <g class="dio-node" data-seq-step>
+            <rect x="460" y="410" width="200" height="90" rx="8" fill="#dae8fc" stroke="#6c8ebf" stroke-width="2"/>
+            <text class="dio-title" x="560" y="445">🏛️ Data Warehouse</text>
+            <text class="dio-sub" x="560" y="472">dados prontos pra análise</text>
+          </g>
+          <g class="dio-node" data-seq-step>
+            <rect x="160" y="410" width="200" height="90" rx="8" fill="#fff2cc" stroke="#d6b656" stroke-width="2"/>
+            <text class="dio-title" x="260" y="445">📊 Dashboards / BI</text>
+            <text class="dio-sub" x="260" y="472">onde o negócio decide</text>
+          </g>
+
+          <!-- rótulos das arestas (depois dos nós, pra não serem encobertos) -->
+          <g>
+            <text class="dio-elabel" x="258" y="150">sobe arquivo</text>
+            <text class="dio-elabel" x="518" y="150">HTTP POST</text>
+            <text class="dio-elabel" x="778" y="150">grava</text>
+            <text class="dio-elabel" x="885" y="313">dispara o ETL</text>
+            <text class="dio-elabel" x="712" y="440">carrega</text>
+            <text class="dio-elabel" x="412" y="440">consulta</text>
+            <text class="dio-elabel" x="36" y="322" text-anchor="start">📈 decisões</text>
+          </g>
+
+          <!-- pílula: mesmo squad -->
+          <g class="dio-node" data-seq-step>
+            <rect x="385" y="288" width="240" height="44" rx="22" fill="#f5f5f5" stroke="#666666" stroke-width="1.5" stroke-dasharray="5 4"/>
+            <text class="dio-pill-t" x="505" y="316">🧩 mesmo squad. tudo isso.</text>
+          </g>
+
+          <!-- nota vermelha: quem mantém? -->
+          <g class="dio-note" data-seq-step>
+            <g transform="rotate(1.5 836 29)">
+              <rect x="700" y="6" width="272" height="48" rx="6" fill="#f8cecc" stroke="#b85450" stroke-width="2"/>
+              <text class="dio-note-t" x="836" y="26">❓ quem constrói e mantém</text>
+              <text class="dio-note-t" x="836" y="44">isso aqui?</text>
+            </g>
+            <path d="M770 56 Q660 62 585 104" fill="none" stroke="#b85450" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#dioArrRed)"/>
+          </g>
+        </svg>
+      </div>
+      <div class="dio-foot">
+        <span class="dio-tab">Page-1</span>
+        <span class="dio-plus">+</span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:22px">
+      <p style="text-align:center">
+        Toda empresa com dados tem uma versão desse desenho. O dado <strong>não nasce</strong> no
+        seu pipeline — ele chega por um <strong style="color:var(--accent4)">sistema web</strong> que alguém
+        construiu e alguém mantém. A pergunta da entrevista é:
+        <strong style="color:var(--accent5)">até onde do desenho VOCÊ vai?</strong>
+      </p>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">🧠</span> A analista subiu a planilha no portal e os dados NÃO chegaram no warehouse. Onde você olha primeiro?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this, false)">A) No Spark — deve ser o pipeline</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this, true)">B) No caminho web: o upload chegou? o POST funcionou? gravou no staging?</button>
+        </div>
+        <div class="quiz-feedback" data-correct="🎯 Exato!" data-wrong="😬 Talvez não —" data-explain="o defeito pode estar ANTES do seu pipeline: um formulário, uma rota, um POST que falhou. Quem entende o caminho web inteiro acha o problema em minutos — quem não entende, descobre em reunião."></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       3 · CANDIDATO A vs CANDIDATO B
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section">
+    <div class="step-header">
+      <div class="step-number sn-yellow">⚖️</div>
+      <div>
+        <div class="step-title">Mesma vaga, dois candidatos</div>
+        <div class="step-sub">Qual currículo a empresa chama primeiro?</div>
+      </div>
+    </div>
+
+    <div class="swp-vs reveal-stagger">
+      <div class="swp-vs-col before">
+        <span class="swp-vs-tag">Candidato A · só dados</span>
+        <h4>🧱 Pipeline impecável. E só.</h4>
+        <ul>
+          <li><span class="ic">🎫</span> <span>Portal de upload quebrou? "Não é comigo — abre um ticket"</span></li>
+          <li><span class="ic">⏳</span> <span>Pipeline parado, esperando o time de web responder</span></li>
+          <li><span class="ic">🤐</span> <span>Conversa de HTTP e rotas na daily? Fica no mudo</span></li>
+          <li><span class="ic">📄</span> <span>Currículo igual ao de outros 94 candidatos</span></li>
+        </ul>
+      </div>
+      <div class="swp-vs-col after">
+        <span class="swp-vs-tag">Candidato B · dados + web</span>
+        <h4>🚀 Resolve ponta a ponta</h4>
+        <ul>
+          <li><span class="ic">🌐</span> <span>Entende HTTP: <strong>acha o problema</strong> entre portal e backend</span></li>
+          <li><span class="ic">🔧</span> <span>Dá <strong>manutenção no sistema</strong> que alimenta o pipeline</span></li>
+          <li><span class="ic">🤖</span> <span>Dirige <strong>agentes de IA</strong> com especificações claras</span></li>
+          <li><span class="ic">🔗</span> <span>Tem um <strong>sistema web no ar</strong>, com link no currículo</span></li>
+          <li><span class="ic">⭐</span> <span>Vira <strong>referência do squad</strong> — e é lembrado na promoção</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tip">
+      <div class="tip-icon">💡</div>
+      <div class="tip-content">
+        <strong>Ninguém está pedindo pra você largar os dados.</strong> Dados continuam sendo sua
+        especialidade — a diferença é parar de depender dos outros pra tudo que acontece
+        <em>antes</em> do seu pipeline.
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       4 · O QUE O CURSO TE DÁ
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section">
+    <div class="step-header">
+      <div class="step-number sn-mint">🎁</div>
+      <div>
+        <div class="step-title">O que este curso coloca no seu arsenal</div>
+        <div class="step-sub">Cada item pensado pra quem já vive de dados</div>
+      </div>
+    </div>
+
+    <div class="take-grid reveal-stagger">
+      <div class="take-card">
+        <span class="tk-ic">🌐</span>
+        <h4>HTTP sem mistério</h4>
+        <p>Request, response, GET, POST — <strong>o alfabeto de toda API</strong> que você vai consumir ou depurar na vida.</p>
+      </div>
+      <div class="take-card">
+        <span class="tk-ic">🖥️</span>
+        <h4>Um sistema web inteiro, seu</h4>
+        <p>Telas, formulários, banco e login: você constrói <strong>o "portal" do diagrama</strong>, de ponta a ponta.</p>
+      </div>
+      <div class="take-card">
+        <span class="tk-ic">🗄️</span>
+        <h4>SQL na mão</h4>
+        <p><code>sqlite3</code> puro, <strong>sem ORM escondendo a query</strong>. Pra quem é de dados, é jogar em casa.</p>
+      </div>
+      <div class="take-card">
+        <span class="tk-ic">🤖</span>
+        <h4>Agentes de IA de verdade</h4>
+        <p>Claude Code, Codex, Gemini CLI: <strong>especificar · gerar · revisar · aprovar</strong> — o fluxo que o mercado usa.</p>
+      </div>
+      <div class="take-card">
+        <span class="tk-ic">🚀</span>
+        <h4>Deploy com URL pública</h4>
+        <p>Seu sistema <strong>no ar de verdade</strong> — link pro currículo, pro LinkedIn e pra entrevista.</p>
+      </div>
+      <div class="take-card">
+        <span class="tk-ic">🧩</span>
+        <h4>Visão de squad</h4>
+        <p>Você passa a conversar <strong>de igual pra igual</strong> com backend e produto — sem ficar no mudo na daily.</p>
+      </div>
+    </div>
+
+    <div class="warning">
+      <div class="warning-icon">🎯</div>
+      <div class="warning-content">
+        <strong>Começamos pelo alicerce.</strong> Aqui você constrói um sistema web completo com
+        Flask e entende a web <em>por dentro</em>. API separada, front dedicado, microsserviço?
+        São o passo seguinte — e sem esse alicerce, viram decoreba.
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       5 · A JORNADA — 8 encontros
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section">
+    <div class="step-header">
+      <div class="step-number sn-purple">🗓️</div>
+      <div>
+        <div class="step-title">A jornada: 8 encontros, 8 vitórias</div>
+        <div class="step-sub">Cada aula termina com algo NOVO funcionando na sua tela</div>
+      </div>
+    </div>
+
+    <div class="swp-timeline" data-seq="2200">
+      <div class="swp-day" data-seq-step>
+        <div class="d-num"><span class="d-label">dia</span><span class="d-n">01</span></div>
+        <div class="d-body">
+          <div class="d-title">🌐 Olá, Web! Olá, Flask!</div>
+          <div class="d-out">Você sai com: <strong>seu primeiro site com URL própria</strong> — request e response sem mistério</div>
+        </div>
+      </div>
+      <div class="swp-day" data-seq-step>
+        <div class="d-num"><span class="d-label">dia</span><span class="d-n">02</span></div>
+        <div class="d-body">
+          <div class="d-title">📝 Telas que falam com Python</div>
+          <div class="d-out">Você sai com: <strong>formulários com GET e POST</strong> — o caminho que um dado faz até o backend</div>
+        </div>
+      </div>
+      <div class="swp-day" data-seq-step>
+        <div class="d-num"><span class="d-label">dia</span><span class="d-n">03</span></div>
+        <div class="d-body">
+          <div class="d-title">🗄️ SQL e SQLite, na mão</div>
+          <div class="d-out">Você sai com: <strong>banco relacional respondendo suas queries</strong> — sem ORM no meio</div>
+        </div>
+      </div>
+      <div class="swp-day" data-seq-step>
+        <div class="d-num"><span class="d-label">dia</span><span class="d-n">04</span></div>
+        <div class="d-body">
+          <div class="d-title">📦 O sistema ganha banco</div>
+          <div class="d-out">Você sai com: <strong>dados persistidos de verdade</strong> — reinicia o servidor e continuam lá</div>
+        </div>
+      </div>
+      <div class="swp-day" data-seq-step>
+        <div class="d-num"><span class="d-label">dia</span><span class="d-n">05</span></div>
+        <div class="d-body">
+          <div class="d-title">🛒 CRUD completo + operações</div>
+          <div class="d-out">Você sai com: <strong>o sistema inteiro funcionando</strong> — cadastro, edição, exclusão e movimentos</div>
+        </div>
+      </div>
+      <div class="swp-day" data-seq-step>
+        <div class="d-num"><span class="d-label">dia</span><span class="d-n">06</span></div>
+        <div class="d-body">
+          <div class="d-title">🤖 Agentes de IA na prática</div>
+          <div class="d-out">Você sai com: <strong>login implementado por um agente</strong> — especificado, revisado e testado por você</div>
+        </div>
+      </div>
+      <div class="swp-day" data-seq-step>
+        <div class="d-num"><span class="d-label">dia</span><span class="d-n">07</span></div>
+        <div class="d-body">
+          <div class="d-title">🏗️ Projeto final: SEU sistema</div>
+          <div class="d-out">Você sai com: <strong>um sistema do seu tema</strong> — que tal um mini-portal de ingestão de dados? 😏</div>
+        </div>
+      </div>
+      <div class="swp-day" data-seq-step>
+        <div class="d-num"><span class="d-label">dia</span><span class="d-n">08</span></div>
+        <div class="d-body">
+          <div class="d-title">🚀 Deploy + Demo Day</div>
+          <div class="d-out">Você sai com: <strong>seu sistema NO AR, com link público</strong> — apresentado pra turma inteira 🎉</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       6 · OFERTA
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="oferta">
+    <div class="chapter-divider" style="padding-top:20px">
+      <span class="chapter-icon">🎟️</span>
+      <span class="chapter-number">Garanta sua vaga</span>
+      <h2 class="grad-funcs">Bora dominar o desenho inteiro?</h2>
+      <p class="chapter-subtitle">
+        8 encontros. Um sistema web seu, no ar. E um currículo que não trava na parte de "web e APIs".
+      </p>
+    </div>
+
+    <div class="swp-offer">
+      <span class="swp-offer-badge">🌶️ Sistemas Web com Python</span>
+
+      <ul class="swp-offer-list">
+        <li><span class="ic">📅</span> <span><strong>8 encontros ao vivo de 2h</strong> — 16 horas de mão na massa com o professor</span></li>
+        <li><span class="ic">🧰</span> <span><strong>Starter kit pronto</strong> — as telas vêm montadas, você foca no Python</span></li>
+        <li><span class="ic">📚</span> <span><strong>Material interativo completo</strong> — seu pra sempre</span></li>
+        <li><span class="ic">🤖</span> <span><strong>Programação com agentes de IA</strong> — Claude Code e cia. na prática</span></li>
+        <li><span class="ic">🌍</span> <span><strong>Seu sistema publicado na internet</strong> — com link pra colocar no currículo</span></li>
+        <li><span class="ic">📋</span> <span><strong>Pré-requisito: só Python básico</strong> — se você escreve ETL, você já tem</span></li>
+      </ul>
+
+      <span class="swp-price-old-label">tudo isso por</span>
+      <div class="swp-price">R$ 499<span class="swp-price-cents">,99</span></div>
+      <div class="swp-price-terms">
+        <span class="swp-price-chip hl">💳 em até 12x no cartão</span>
+        <span class="swp-price-chip">📅 8 dias · 2h por dia</span>
+      </div>
+      <p class="swp-price-note">
+        Parcelando em 12x, dá <strong style="color:var(--text)">menos de R$ 42 por mês</strong> —
+        pra deixar de ser "só pipeline" e levar um sistema <em>seu</em>, no ar.
+      </p>
+
+      <button class="swp-cta" onclick="confettiAt(this)">🚀 QUERO OS DOIS LADOS</button>
+      <p class="swp-cta-sub">
+        A matrícula é com o <strong>prof. Kelson</strong> — fala com ele
+        <strong>agora no fim da aula</strong> (ele tá bem aí na sua frente 😄)
+      </p>
+
+      <div><span class="swp-scarcity"><span class="dot-live"></span> Turma única · vagas limitadas</span></div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="footer">
+  Feito com <span class="heart">♥</span> pela <strong style="color:var(--text)">programa AI</strong> ·
+  <strong style="color:var(--python-y)">Sistemas Web com Python</strong> ·
+  <a href="https://github.com/kelsonvictr" target="_blank" rel="noopener">github.com/kelsonvictr</a>
+</footer>
+
+<script src="../shared/scripts.js" defer></script>
+</body>
+</html>

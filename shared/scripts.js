@@ -1,0 +1,233 @@
+/* =========================================================
+   shared/scripts.js — Toggler, sidebar, progress, scroll-reveal,
+   quiz, terminal typewriter, autoplay flow, confetti
+   ========================================================= */
+
+/* ---------- Toggler ("olhinho 👀") ---------- */
+function toggleSection(headerEl){
+  const body  = headerEl.nextElementSibling;
+  const isOpen = headerEl.classList.toggle('open');
+  if (body) body.classList.toggle('open', isOpen);
+}
+
+/* ---------- Sidebar ---------- */
+function openSidebar(){
+  document.querySelector('.sidebar-nav')?.classList.add('open');
+  document.querySelector('.sidebar-overlay')?.classList.add('open');
+}
+function closeSidebar(){
+  document.querySelector('.sidebar-nav')?.classList.remove('open');
+  document.querySelector('.sidebar-overlay')?.classList.remove('open');
+}
+function goTo(id){
+  closeSidebar();
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ---------- Progress bar ---------- */
+function updateProgress(){
+  const bar = document.querySelector('.progress-bar');
+  if (!bar) return;
+  const h = document.documentElement;
+  const max = h.scrollHeight - h.clientHeight;
+  const pct = max > 0 ? (h.scrollTop / max) * 100 : 0;
+  bar.style.width = pct + '%';
+}
+
+/* ---------- Scroll reveal for .step-section ---------- */
+function initScrollReveal(){
+  const sections = document.querySelectorAll('.step-section');
+  const obs = new IntersectionObserver((entries)=>{
+    for (const e of entries){
+      if (e.isIntersecting){
+        e.target.classList.add('visible');
+      }
+    }
+  },{threshold:0, rootMargin:'0px 0px -60px 0px'});
+  sections.forEach(s => obs.observe(s));
+}
+
+/* ---------- Autoplay flow containers ---------- */
+function initAutoplayFlows(){
+  const flows = document.querySelectorAll('.flow-container.autoplay');
+  const obs = new IntersectionObserver((entries)=>{
+    for (const e of entries){
+      if (e.isIntersecting){
+        e.target.classList.add('run');
+      }
+    }
+  },{threshold:0.25});
+  flows.forEach(f => obs.observe(f));
+}
+
+/* ---------- Quiz buttons ---------- */
+function checkQuiz(btn, isCorrect){
+  const quiz = btn.closest('.quiz');
+  if (!quiz) return;
+  // disable all options
+  quiz.querySelectorAll('.quiz-opt').forEach(o => {
+    o.disabled = true;
+    o.classList.remove('correct','wrong');
+  });
+  btn.classList.add(isCorrect ? 'correct' : 'wrong');
+  // highlight the actually correct option if user got it wrong
+  if (!isCorrect){
+    const correctBtn = quiz.querySelector('.quiz-opt[data-correct="true"]');
+    if (correctBtn) correctBtn.classList.add('correct');
+  }
+  // feedback area
+  const fb = quiz.querySelector('.quiz-feedback');
+  if (fb){
+    const okText  = fb.dataset.correct  || '🎉 Boa! Você acertou.';
+    const errText = fb.dataset.wrong    || '😬 Quase! Olha a explicação:';
+    const expl    = fb.dataset.explain  || '';
+    fb.innerHTML = isCorrect
+      ? `<strong class="correct">${okText}</strong> ${expl ? '— ' + expl : ''}`
+      : `<strong class="wrong">${errText}</strong> ${expl ? '— ' + expl : ''}`;
+    fb.classList.add('show');
+  }
+  if (isCorrect) confettiAt(btn);
+}
+
+/* ---------- Confetti at element ---------- */
+function confettiAt(el){
+  const rect = el.getBoundingClientRect();
+  const cx = rect.left + rect.width/2;
+  const cy = rect.top  + rect.height/2;
+  const burst = document.createElement('div');
+  burst.className = 'confetti-burst';
+  burst.style.left = cx + 'px';
+  burst.style.top  = cy + 'px';
+  const colors = ['#6c63ff','#ff6b6b','#4ecdc4','#f7b731','#06d6a0','#a78bfa'];
+  for (let i=0;i<24;i++){
+    const p = document.createElement('span');
+    p.className = 'piece';
+    p.style.background = colors[i % colors.length];
+    const angle = (Math.PI*2) * (i/24);
+    const dist  = 80 + Math.random()*70;
+    p.style.setProperty('--cx', (Math.cos(angle)*dist) + 'px');
+    p.style.setProperty('--cy', (Math.sin(angle)*dist + 80) + 'px');
+    p.style.animationDelay = (Math.random()*0.1) + 's';
+    burst.appendChild(p);
+  }
+  document.body.appendChild(burst);
+  setTimeout(()=>burst.remove(), 1600);
+}
+
+/* ---------- Terminal typewriter ---------- */
+/* Usage:
+   <div class="terminal" data-typewriter>
+     <div class="terminal-body">
+       <span class="prompt">>>></span>
+       <span class="typed" data-text='print("Olá, mundo!")'></span><span class="cursor"></span>
+       <br><span class="out">Olá, mundo!</span>
+     </div>
+   </div>
+*/
+function initTerminals(){
+  const terms = document.querySelectorAll('.terminal[data-typewriter]');
+  const obs = new IntersectionObserver((entries)=>{
+    for (const e of entries){
+      if (e.isIntersecting && !e.target.dataset.played){
+        e.target.dataset.played = '1';
+        playTerminal(e.target);
+      }
+    }
+  },{threshold:0.3});
+  terms.forEach(t => obs.observe(t));
+}
+
+function playTerminal(term){
+  const lines = term.querySelectorAll('.typed');
+  let i = 0;
+  function next(){
+    if (i >= lines.length) return;
+    const span = lines[i];
+    const text = span.dataset.text || '';
+    let pos = 0;
+    span.textContent = '';
+    const speed = 28 + Math.random()*15;
+    const tick = setInterval(()=>{
+      span.textContent = text.slice(0, ++pos);
+      if (pos >= text.length){
+        clearInterval(tick);
+        i++;
+        setTimeout(next, 380);
+      }
+    }, speed);
+  }
+  next();
+}
+
+/* ---------- Generic auto-stepping sequences ----------
+   Usage:
+   <div data-seq="2000">                       // delay in ms (optional)
+     <div data-seq-step>...</div>               // gets .active one at a time
+     <div data-seq-frame="0">...</div>          // gets .on when its index is current
+   </div>
+   Um step também pode listar EM QUAIS quadros fica ativo:
+     <div data-seq-step="2,5,8">...</div>       // .active nos quadros 2, 5 e 8
+   Isso permite o destaque "voltar" para uma linha já visitada —
+   essencial pra animar loops (while/for) linha a linha.
+   Starts automatically when the box scrolls into view, so the
+   iniciante never has to "discover" a button. */
+function initSeqLoops(){
+  const boxes = document.querySelectorAll('[data-seq]');
+  const obs = new IntersectionObserver((entries)=>{
+    for (const e of entries){
+      if (e.isIntersecting && !e.target.dataset.seqPlaying){
+        e.target.dataset.seqPlaying = '1';
+        playSeqLoop(e.target);
+      }
+    }
+  },{threshold:0.2});
+  boxes.forEach(b => obs.observe(b));
+}
+
+function playSeqLoop(box){
+  const steps  = [...box.querySelectorAll('[data-seq-step]')];
+  const frames = [...box.querySelectorAll('[data-seq-frame]')];
+  const count  = Math.max(steps.length, frames.length);
+  if (!count) return;
+  const delay = parseInt(box.dataset.seq) || 1600;
+  let i = 0;
+  function tick(){
+    steps.forEach((s, idx) => {
+      const spec = s.dataset.seqStep;
+      const on = spec
+        ? spec.split(',').some(n => parseInt(n) === i)  // lista explícita de quadros
+        : idx === i;                                     // padrão: posicional
+      s.classList.toggle('active', on);
+    });
+    frames.forEach(f => f.classList.toggle('on', parseInt(f.dataset.seqFrame) === i));
+    i = (i + 1) % count;
+  }
+  tick();
+  setInterval(tick, delay);
+}
+
+/* ---------- Setup on load ---------- */
+document.addEventListener('DOMContentLoaded', () => {
+  initScrollReveal();
+  initAutoplayFlows();
+  initSeqLoops();
+  initTerminals();
+  updateProgress();
+
+  window.addEventListener('scroll', updateProgress, {passive:true});
+
+  // sidebar close on overlay click
+  document.querySelector('.sidebar-overlay')?.addEventListener('click', closeSidebar);
+  // sidebar close on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeSidebar();
+  });
+});
+
+/* expose globals for inline onclick */
+window.toggleSection = toggleSection;
+window.openSidebar   = openSidebar;
+window.closeSidebar  = closeSidebar;
+window.goTo          = goTo;
+window.checkQuiz     = checkQuiz;

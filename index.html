@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistemas Web com Python — Flask + SQLite + IA | programa AI</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/styles.css">
+<link rel="stylesheet" href="shared/components.css">
+<link rel="stylesheet" href="shared/animations.css">
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-orbs">
+  <div class="orb"></div>
+  <div class="orb"></div>
+  <div class="orb"></div>
+</div>
+
+<div class="progress-track"><div class="progress-bar"></div></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-icons">🌶️ 🗄️ 🤖</div>
+  <span class="hero-badge python">Curso rápido · programa AI · 8 encontros</span>
+  <h1>Sistemas Web com Python</h1>
+  <p class="subtitle">
+    Lembra da <strong style="color:var(--python-y)">loja</strong> que você construiu no bootcamp?
+    Agora ela vai ganhar <strong>endereço na internet</strong>, telas próprias e um
+    <strong>banco de dados profissional</strong> — com
+    <code style="background:var(--code-bg);padding:2px 8px;border-radius:6px;color:var(--accent5);font-family:'JetBrains Mono',monospace">Flask</code> +
+    <code style="background:var(--code-bg);padding:2px 8px;border-radius:6px;color:var(--accent5);font-family:'JetBrains Mono',monospace">SQLite</code>.
+    E você ainda aprende a programar com <strong>agentes de IA</strong>. 🚀
+  </p>
+  <div class="hero-stack">
+    <span class="stack-chip python">🐍 Python 3</span>
+    <span class="stack-chip">🌶️ Flask</span>
+    <span class="stack-chip">🗄️ SQLite + SQL</span>
+    <span class="stack-chip">🤖 Claude Code</span>
+    <span class="stack-chip streamlit">🌐 Deploy real</span>
+    <span class="stack-chip bug">🐛 BugZilla</span>
+  </div>
+</section>
+
+<div class="container">
+
+  <!-- ═══════════════════════════════════════════════════════
+       MENSAGEM DE BOAS-VINDAS
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section visible" id="boas-vindas-hub">
+    <div class="card" style="text-align:center;background:linear-gradient(135deg,rgba(55,118,171,0.08),rgba(255,212,59,0.04));border-color:rgba(55,118,171,0.20)">
+      <h3 style="font-size:1.5rem;color:var(--python-y);margin-bottom:10px">De volta, dev! 👋</h3>
+      <p style="font-size:1.05rem;max-width:680px;margin:0 auto">
+        No bootcamp, o Streamlit montava a telinha pra você. Agora <strong style="color:var(--text)">você
+        assume o controle</strong>: cada página com sua URL, cada dado numa tabela SQL de verdade,
+        e no final o seu sistema <strong style="color:var(--text)">no ar, com link público</strong>
+        pra mostrar pra qualquer pessoa. 📱
+      </p>
+      <p class="text-dim" style="margin-top:14px;font-size:0.9rem">
+        São <strong style="color:var(--accent5)">8 encontros de 2h</strong>. Cada um termina com
+        algo <strong style="color:var(--accent5)">funcionando</strong> na sua tela.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       CARDS DOS 8 ENCONTROS
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section visible">
+    <div class="step-header">
+      <div class="step-number sn-py">📚</div>
+      <div>
+        <div class="step-title">Os 8 encontros</div>
+        <div class="step-sub">Do <code style="background:var(--code-bg);color:var(--accent5);padding:1px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.8rem">streamlit run</code> ao seu sistema no ar</div>
+      </div>
+    </div>
+
+    <a href="capitulos/00-apresentacao/" style="text-decoration:none;color:inherit;display:block;margin-bottom:18px">
+      <div class="card" style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;cursor:pointer;background:linear-gradient(135deg,rgba(247,183,49,0.10),rgba(255,107,107,0.05));border-color:rgba(247,183,49,0.35)">
+        <div style="font-size:3rem;line-height:1;flex-shrink:0;animation:bounce 2s ease-in-out infinite">🎬</div>
+        <div style="flex:1;min-width:220px">
+          <h3 style="margin-bottom:4px;color:var(--accent5)">Apresentação do curso — comece por aqui!</h3>
+          <p style="margin-bottom:0;font-size:0.92rem">
+            O que você vai construir, como a web funciona por dentro, os 8 encontros
+            e como garantir sua vaga. 🚀
+          </p>
+        </div>
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:8px 18px;background:linear-gradient(135deg,var(--accent5),var(--accent2));color:var(--bg);border-radius:50px;font-weight:800;font-size:0.85rem;white-space:nowrap">
+          Assistir →
+        </span>
+      </div>
+    </a>
+
+    <div class="hub-grid reveal-stagger">
+
+      <div class="hub-card c01" style="opacity:0.75">
+        <span class="num">DIA · 01</span>
+        <span class="ic">🌐</span>
+        <span class="title">Olá, Web! Olá, Flask!</span>
+        <span class="desc">Como a internet funciona por dentro — e o que o Streamlit escondia de você. Sua primeira página com URL própria.</span>
+        <span class="pills">
+          <span class="pill">HTTP</span>
+          <span class="pill">rotas</span>
+          <span class="pill">🚧 em construção</span>
+        </span>
+      </div>
+
+      <div class="hub-card c02" style="opacity:0.75">
+        <span class="num">DIA · 02</span>
+        <span class="ic">📝</span>
+        <span class="title">Telas que falam com Python</span>
+        <span class="desc">Jinja pra mostrar seus dados na tela e formulários pra receber dados do usuário. GET vs POST.</span>
+        <span class="pills">
+          <span class="pill">Jinja</span>
+          <span class="pill">form</span>
+          <span class="pill">🚧 em construção</span>
+        </span>
+      </div>
+
+      <div class="hub-card c03" style="opacity:0.75">
+        <span class="num">DIA · 03</span>
+        <span class="ic">🗄️</span>
+        <span class="title">Banco de dados de verdade</span>
+        <span class="desc">Adeus, TinyDB. Chegou o SQLite: tabelas, colunas e a linguagem SQL — a mesma dos sistemas profissionais.</span>
+        <span class="pills">
+          <span class="pill">SQL</span>
+          <span class="pill">SELECT</span>
+          <span class="pill">🚧 em construção</span>
+        </span>
+      </div>
+
+      <div class="hub-card c04" style="opacity:0.75">
+        <span class="num">DIA · 04</span>
+        <span class="ic">📦</span>
+        <span class="title">A Loja ganha banco</span>
+        <span class="desc">Listar e cadastrar produtos direto no SQLite. Reinicia o servidor e os dados continuam lá. 🤯</span>
+        <span class="pills">
+          <span class="pill">CRUD 1/2</span>
+          <span class="pill">INSERT</span>
+          <span class="pill">🚧 em construção</span>
+        </span>
+      </div>
+
+      <div class="hub-card c05" style="opacity:0.75">
+        <span class="num">DIA · 05</span>
+        <span class="ic">🛒</span>
+        <span class="title">Editar, excluir e vender</span>
+        <span class="desc">O CRUD completo + a tela de vendas com baixa de estoque e faturamento. A Loja inteira, agora na web.</span>
+        <span class="pills">
+          <span class="pill">CRUD 2/2</span>
+          <span class="pill">UPDATE</span>
+          <span class="pill">🚧 em construção</span>
+        </span>
+      </div>
+
+      <div class="hub-card c06" style="opacity:0.75">
+        <span class="num">DIA · 06</span>
+        <span class="ic">🤖</span>
+        <span class="title">Programando com agentes de IA</span>
+        <span class="desc">Claude Code, Codex e Gemini CLI. Especificar, gerar, revisar, testar — o agente constrói o login do sistema.</span>
+        <span class="pills">
+          <span class="pill">Claude Code</span>
+          <span class="pill">login</span>
+          <span class="pill">🚧 em construção</span>
+        </span>
+      </div>
+
+      <div class="hub-card c07" style="opacity:0.75">
+        <span class="num">DIA · 07</span>
+        <span class="ic">🏗️</span>
+        <span class="title">Projeto final — seu sistema</span>
+        <span class="desc">Barbearia? Petshop? Brechó? Você escolhe o tema e constrói seu próprio sistema, com o agente de par.</span>
+        <span class="pills">
+          <span class="pill">seu tema</span>
+          <span class="pill">na prática</span>
+          <span class="pill">🚧 em construção</span>
+        </span>
+      </div>
+
+      <div class="hub-card c08" style="opacity:0.75">
+        <span class="num">DIA · 08</span>
+        <span class="ic">🚀</span>
+        <span class="title">No ar! Deploy + Demo Day</span>
+        <span class="desc">Seu sistema publicado com link real, testado no celular, apresentado pra turma. E o mapa do próximo passo.</span>
+        <span class="pills">
+          <span class="pill">deploy</span>
+          <span class="pill">demo day</span>
+          <span class="pill">🚧 em construção</span>
+        </span>
+      </div>
+
+    </div>
+
+    <div class="tip" style="margin-top:18px">
+      <div class="tip-icon">🚧</div>
+      <div class="tip-content">
+        <strong>Material em construção!</strong> Os capítulos vão sendo liberados ao longo do curso.
+        Os cards acima viram links clicáveis conforme ficam prontos.
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       PRA QUEM É
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section visible">
+    <div class="step-header">
+      <div class="step-number sn-yellow">🎯</div>
+      <div>
+        <div class="step-title">Pra quem é esse curso</div>
+        <div class="step-sub">O próximo passo natural depois do bootcamp</div>
+      </div>
+    </div>
+
+    <div class="keyword-grid">
+      <div class="keyword-chip">
+        <span class="emoji">🎓</span>
+        <span class="kw-name">Fez o bootcamp</span>
+        <span class="kw-desc">Você já sabe Python básico, TinyDB e Streamlit. É tudo que precisa pra entrar aqui.</span>
+      </div>
+      <div class="keyword-chip">
+        <span class="emoji">🌐</span>
+        <span class="kw-name">Quer sistemas de verdade</span>
+        <span class="kw-desc">URL própria, telas próprias, banco SQL — o jeito que sistemas profissionais funcionam.</span>
+      </div>
+      <div class="keyword-chip">
+        <span class="emoji">🤖</span>
+        <span class="kw-name">Quer dominar a IA</span>
+        <span class="kw-desc">Agentes de codificação como par de programação — do jeito certo, revisando tudo.</span>
+      </div>
+      <div class="keyword-chip">
+        <span class="emoji">📱</span>
+        <span class="kw-name">Quer mostrar pro mundo</span>
+        <span class="kw-desc">Você sai com um link público do SEU sistema, rodando na internet.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       PROFESSOR
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section visible">
+    <div class="step-header">
+      <div class="step-number sn-purple">👨‍🏫</div>
+      <div>
+        <div class="step-title">Quem te acompanha</div>
+        <div class="step-sub">Seu professor nessa jornada</div>
+      </div>
+    </div>
+
+    <a href="sobre/" style="text-decoration:none;color:inherit;display:block">
+      <div class="card" style="display:flex;gap:24px;align-items:center;flex-wrap:wrap;cursor:pointer;transition:transform 0.3s,border-color 0.3s">
+        <div style="font-size:4rem;line-height:1;flex-shrink:0">🧑‍💻</div>
+        <div style="flex:1;min-width:240px">
+          <h3 style="margin-bottom:6px">Prof. Kelson Almeida</h3>
+          <p style="color:var(--text-dim);font-size:0.95rem">
+            Mestre em Informática pela UFPB · Bacharel em Sistemas de Informação · Pesquisador na
+            University of New Brunswick (Canadá) · Desenvolvedor Sênior na NTT Data Europe &amp; Latam @ Itaú.
+          </p>
+          <p style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+            <span style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:linear-gradient(135deg,var(--accent),var(--accent6));color:white;border-radius:50px;font-weight:800;font-size:0.85rem">
+              👨‍🏫 Conhecer o professor →
+            </span>
+            <a href="https://github.com/kelsonvictr" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:var(--accent4);text-decoration:none;font-weight:700;font-size:0.85rem">
+              github.com/kelsonvictr ↗
+            </a>
+          </p>
+        </div>
+      </div>
+    </a>
+  </section>
+
+</div>
+
+<footer class="footer">
+  Feito com <span class="heart">♥</span> pela <strong style="color:var(--text)">programa AI</strong> ·
+  <strong style="color:var(--python-y)">Sistemas Web com Python</strong> ·
+  <a href="https://github.com/kelsonvictr" target="_blank" rel="noopener">github.com/kelsonvictr</a>
+</footer>
+
+<script src="shared/scripts.js" defer></script>
+</body>
+</html>

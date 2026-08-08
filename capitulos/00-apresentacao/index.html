@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apresentação — Sistemas Web com Python | programa AI</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../shared/styles.css">
+<link rel="stylesheet" href="../../shared/components.css">
+<link rel="stylesheet" href="../../shared/animations.css">
+<style>
+/* ═══════════ SWP · estilos exclusivos da página de apresentação ═══════════ */
+
+/* stagger extra (o shared só cobre 6 filhos) */
+.step-section.visible .reveal-stagger > *:nth-child(7){animation-delay:0.65s}
+.step-section.visible .reveal-stagger > *:nth-child(8){animation-delay:0.75s}
+
+/* ---------- voltar pro hub ---------- */
+.swp-back{
+  position:fixed;top:16px;left:16px;z-index:98;
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--surface2);border:1px solid rgba(108,99,255,0.2);
+  color:var(--text-dim);text-decoration:none;font-weight:700;font-size:0.8rem;
+  padding:10px 16px;border-radius:12px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.3);
+  transition:all 0.3s;
+}
+.swp-back:hover{color:var(--text);border-color:var(--accent)}
+
+/* ---------- mockup de navegador ---------- */
+.swp-browser{
+  max-width:560px;margin:36px auto 0;
+  background:var(--surface);
+  border:1px solid rgba(108,99,255,0.25);
+  border-radius:16px;overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 40px var(--glow-accent);
+  animation:fadeSlideUp 0.9s ease 0.65s both;
+}
+.swp-browser-top{
+  display:flex;align-items:center;gap:10px;
+  background:var(--surface2);padding:10px 14px;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.swp-browser-top .dots{display:flex;gap:6px;flex-shrink:0}
+.swp-browser-top .dots span{width:10px;height:10px;border-radius:50%}
+.swp-browser-top .dots span:nth-child(1){background:#ff5f57}
+.swp-browser-top .dots span:nth-child(2){background:#febc2e}
+.swp-browser-top .dots span:nth-child(3){background:#28c840}
+.swp-url-bar{
+  flex:1;background:var(--code-bg);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:50px;padding:5px 16px;
+  font-family:'JetBrains Mono',monospace;font-size:0.78rem;
+  color:var(--accent7);display:flex;align-items:center;gap:6px;
+  overflow:hidden;
+}
+.swp-url-bar .lock{flex-shrink:0}
+.swp-url-text{
+  display:inline-block;overflow:hidden;white-space:nowrap;
+  animation:typing 2.4s steps(30,end) 1.1s both;
+}
+.swp-url-cursor{
+  display:inline-block;width:2px;height:14px;background:var(--accent7);
+  animation:blink 1s step-end infinite;flex-shrink:0;
+}
+.swp-browser-body{padding:20px 22px 22px}
+.swp-mock-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:14px;
+}
+.swp-mock-title{font-weight:900;font-size:1.05rem}
+.swp-mock-title .hl{color:var(--python-y)}
+.swp-mock-btn{
+  background:linear-gradient(135deg,var(--accent7),var(--accent3));
+  color:#06281f;font-weight:800;font-size:0.72rem;
+  padding:6px 14px;border-radius:50px;white-space:nowrap;
+}
+.swp-mock-row{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  background:var(--surface2);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:10px;padding:9px 14px;margin-bottom:8px;
+  font-size:0.82rem;transition:all 0.4s;
+}
+.swp-mock-row .p-name{font-weight:700}
+.swp-mock-row .p-price{font-family:'JetBrains Mono',monospace;color:var(--accent5);font-size:0.78rem}
+.swp-mock-row .p-qty{
+  font-size:0.68rem;color:var(--text-dim);
+  background:rgba(255,255,255,0.04);padding:2px 10px;border-radius:50px;
+  white-space:nowrap;
+}
+.swp-mock-row.active{
+  border-color:var(--accent7);
+  box-shadow:0 0 18px rgba(6,214,160,0.25);
+  transform:scale(1.02);
+}
+.swp-mock-foot{
+  margin-top:12px;text-align:center;
+  font-size:0.72rem;color:var(--text-dim);
+}
+.swp-mock-foot strong{color:var(--accent7)}
+
+/* ---------- chat estilo mensageiro ---------- */
+.swp-chat{
+  max-width:420px;margin:24px auto;
+  display:flex;flex-direction:column;gap:10px;
+}
+.swp-bubble{
+  max-width:85%;padding:10px 16px;border-radius:18px;
+  font-size:0.92rem;line-height:1.5;
+  opacity:0;transform:translateY(12px) scale(0.96);
+  transition:opacity 0.45s ease,transform 0.45s ease;
+}
+.swp-bubble.active{opacity:1;transform:translateY(0) scale(1)}
+.swp-bubble.them{
+  align-self:flex-start;
+  background:var(--surface2);
+  border:1px solid rgba(255,255,255,0.07);
+  border-bottom-left-radius:4px;
+}
+.swp-bubble.me{
+  align-self:flex-end;
+  background:rgba(6,214,160,0.13);
+  border:1px solid rgba(6,214,160,0.25);
+  border-bottom-right-radius:4px;
+}
+.swp-bubble.me.sad{
+  background:rgba(255,107,107,0.10);
+  border-color:rgba(255,107,107,0.25);
+}
+.swp-bubble .who{
+  display:block;font-size:0.65rem;font-weight:800;
+  text-transform:uppercase;letter-spacing:1.5px;
+  color:var(--text-dim);margin-bottom:2px;
+}
+.swp-bubble.big{font-size:1rem;font-weight:800}
+.swp-bubble code{
+  font-family:'JetBrains Mono',monospace;font-size:0.8rem;
+  color:var(--accent7);background:var(--code-bg);
+  padding:2px 8px;border-radius:6px;
+}
+
+/* ---------- placar antes/depois ---------- */
+.swp-vs{
+  display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:24px 0;
+}
+@media (max-width:640px){.swp-vs{grid-template-columns:1fr}}
+.swp-vs-col{
+  border-radius:18px;padding:24px;position:relative;overflow:hidden;
+}
+.swp-vs-col.before{
+  background:var(--surface);
+  border:1px solid rgba(255,255,255,0.06);
+  opacity:0.85;
+}
+.swp-vs-col.after{
+  background:linear-gradient(160deg,rgba(6,214,160,0.07),rgba(69,183,209,0.05));
+  border:1px solid rgba(6,214,160,0.3);
+  box-shadow:0 0 40px rgba(6,214,160,0.10);
+}
+.swp-vs-tag{
+  display:inline-block;font-size:0.68rem;font-weight:900;
+  text-transform:uppercase;letter-spacing:2px;
+  padding:4px 14px;border-radius:50px;margin-bottom:14px;
+}
+.swp-vs-col.before .swp-vs-tag{background:rgba(255,255,255,0.06);color:var(--text-dim)}
+.swp-vs-col.after  .swp-vs-tag{background:rgba(6,214,160,0.15);color:var(--accent7)}
+.swp-vs-col h4{font-size:1.1rem;font-weight:900;margin-bottom:12px}
+.swp-vs-col ul{list-style:none}
+.swp-vs-col li{
+  font-size:0.88rem;color:var(--text-dim);
+  padding:6px 0;display:flex;gap:10px;align-items:flex-start;
+}
+.swp-vs-col li .ic{flex-shrink:0}
+.swp-vs-col.after li strong{color:var(--text)}
+
+/* ---------- timeline dos 8 dias ---------- */
+.swp-timeline{
+  position:relative;margin:30px 0 10px;
+  display:flex;flex-direction:column;gap:14px;
+}
+.swp-timeline::before{
+  content:'';position:absolute;left:25px;top:20px;bottom:20px;width:2px;
+  background:linear-gradient(to bottom,var(--python),var(--accent5),var(--accent6),var(--accent7));
+  opacity:0.4;
+}
+.swp-day{
+  display:flex;gap:18px;align-items:flex-start;
+  background:var(--surface);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:16px;padding:16px 20px;
+  position:relative;transition:all 0.45s ease;
+}
+.swp-day .d-num{
+  width:52px;height:52px;border-radius:14px;flex-shrink:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:var(--surface2);border:1px solid rgba(255,255,255,0.08);
+  font-weight:900;line-height:1.1;position:relative;z-index:1;
+  transition:all 0.45s ease;
+}
+.swp-day .d-num .d-label{font-size:0.5rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim)}
+.swp-day .d-num .d-n{font-size:1.2rem}
+.swp-day .d-body{flex:1}
+.swp-day .d-title{font-weight:800;font-size:1rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.swp-day .d-out{font-size:0.84rem;color:var(--text-dim);margin-top:2px}
+.swp-day .d-out strong{color:var(--accent7);font-weight:700}
+.swp-day.active{
+  border-color:rgba(247,183,49,0.45);
+  box-shadow:0 0 30px rgba(247,183,49,0.12);
+  transform:translateX(8px) scale(1.01);
+}
+.swp-day.active .d-num{
+  background:linear-gradient(135deg,var(--accent5),var(--accent2));
+  color:var(--bg);border-color:transparent;
+}
+.swp-day.active .d-num .d-label{color:rgba(10,10,18,0.7)}
+
+/* ---------- trilha bootcamp → curso ---------- */
+.swp-path{
+  display:flex;align-items:stretch;justify-content:center;gap:0;
+  flex-wrap:wrap;margin:26px 0;
+}
+.swp-path-node{
+  background:var(--surface);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:18px;padding:20px 24px;text-align:center;
+  min-width:190px;flex:1;max-width:260px;
+}
+.swp-path-node .pn-ic{font-size:2rem;display:block;margin-bottom:6px}
+.swp-path-node .pn-title{font-weight:900;font-size:0.95rem}
+.swp-path-node .pn-sub{font-size:0.75rem;color:var(--text-dim);margin-top:4px}
+.swp-path-node.done{border-color:rgba(6,214,160,0.35)}
+.swp-path-node.done .pn-badge{
+  display:inline-block;margin-top:10px;font-size:0.65rem;font-weight:900;
+  background:rgba(6,214,160,0.15);color:var(--accent7);
+  padding:3px 12px;border-radius:50px;text-transform:uppercase;letter-spacing:1px;
+}
+.swp-path-node.now{
+  border-color:rgba(247,183,49,0.5);
+  background:linear-gradient(160deg,rgba(247,183,49,0.08),rgba(255,107,107,0.05));
+  box-shadow:0 0 40px rgba(247,183,49,0.15);
+  animation:glowFlow 3s ease-in-out infinite;
+}
+.swp-path-node.now .pn-badge{
+  display:inline-block;margin-top:10px;font-size:0.65rem;font-weight:900;
+  background:linear-gradient(135deg,var(--accent5),var(--accent2));color:var(--bg);
+  padding:3px 12px;border-radius:50px;text-transform:uppercase;letter-spacing:1px;
+}
+.swp-path-node.next{opacity:0.6;border-style:dashed}
+.swp-path-node.next .pn-badge{
+  display:inline-block;margin-top:10px;font-size:0.65rem;font-weight:800;
+  background:rgba(255,255,255,0.05);color:var(--text-dim);
+  padding:3px 12px;border-radius:50px;text-transform:uppercase;letter-spacing:1px;
+}
+.swp-path-arrow{
+  display:flex;align-items:center;padding:0 12px;
+  font-size:1.4rem;color:var(--text-dim);
+}
+@media (max-width:720px){
+  .swp-path{flex-direction:column;align-items:center}
+  .swp-path-node{max-width:340px;width:100%}
+  .swp-path-arrow{transform:rotate(90deg);padding:6px 0}
+}
+
+/* ---------- oferta ---------- */
+.swp-offer{
+  max-width:560px;margin:30px auto 0;
+  background:linear-gradient(165deg,var(--surface2),var(--surface));
+  border:1px solid rgba(247,183,49,0.35);
+  border-radius:24px;padding:38px 34px;text-align:center;
+  position:relative;overflow:hidden;
+  box-shadow:0 24px 80px rgba(0,0,0,0.5),0 0 60px rgba(247,183,49,0.08);
+}
+.swp-offer::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,var(--python),var(--accent5),var(--streamlit),var(--accent7));
+}
+.swp-offer-badge{
+  display:inline-block;font-size:0.7rem;font-weight:900;
+  text-transform:uppercase;letter-spacing:2px;
+  background:linear-gradient(135deg,var(--accent5),var(--accent2));
+  color:var(--bg);padding:5px 18px;border-radius:50px;margin-bottom:18px;
+}
+.swp-offer-list{
+  list-style:none;text-align:left;max-width:400px;margin:0 auto 24px;
+}
+.swp-offer-list li{
+  padding:8px 0;font-size:0.92rem;color:var(--text-dim);
+  display:flex;gap:12px;align-items:flex-start;
+  border-bottom:1px dashed rgba(255,255,255,0.06);
+}
+.swp-offer-list li:last-child{border-bottom:none}
+.swp-offer-list li .ic{flex-shrink:0}
+.swp-offer-list li strong{color:var(--text)}
+.swp-price-old-label{
+  font-family:'Caveat',cursive;font-size:1.5rem;color:var(--text-dim);
+  display:block;margin-bottom:-6px;
+}
+.swp-price{
+  font-size:clamp(3rem,9vw,4.2rem);font-weight:900;line-height:1.1;
+  background:linear-gradient(135deg,var(--python-y),var(--accent5),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.swp-price-cents{font-size:0.45em}
+.swp-price-terms{
+  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:14px 0 6px;
+}
+.swp-price-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--surface);border:1px solid rgba(255,255,255,0.1);
+  padding:6px 16px;border-radius:50px;
+  font-size:0.8rem;font-weight:800;
+}
+.swp-price-chip.hl{border-color:rgba(6,214,160,0.4);color:var(--accent7)}
+.swp-price-note{font-size:0.82rem;color:var(--text-dim);margin-bottom:22px}
+.swp-cta{
+  display:inline-block;border:none;cursor:pointer;
+  background:linear-gradient(135deg,var(--accent7),var(--accent4));
+  color:#06281f;font-family:'Nunito',sans-serif;
+  font-size:1.15rem;font-weight:900;
+  padding:18px 44px;border-radius:60px;
+  position:relative;overflow:hidden;
+  box-shadow:0 10px 40px rgba(6,214,160,0.35);
+  transition:transform 0.25s ease,box-shadow 0.25s ease;
+  animation:pulse 2.6s ease-in-out infinite;
+}
+.swp-cta:hover{
+  transform:translateY(-3px) scale(1.03);
+  box-shadow:0 16px 50px rgba(6,214,160,0.5);
+  animation:none;
+}
+.swp-cta::after{
+  content:'';position:absolute;top:0;bottom:0;left:-120%;width:60%;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,0.35),transparent);
+  animation:shimmerSweep 2.8s ease-in-out infinite;
+}
+.swp-cta-sub{
+  margin-top:14px;font-size:0.85rem;color:var(--text-dim);
+}
+.swp-cta-sub strong{color:var(--accent5)}
+.swp-scarcity{
+  margin-top:22px;display:inline-flex;align-items:center;gap:8px;
+  font-size:0.78rem;font-weight:800;color:var(--accent2);
+  background:rgba(255,107,107,0.07);
+  border:1px solid rgba(255,107,107,0.2);
+  padding:7px 18px;border-radius:50px;
+}
+.swp-scarcity .dot-live{
+  width:8px;height:8px;border-radius:50%;background:var(--accent2);
+  animation:pulse 1.4s ease-in-out infinite;
+}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-orbs">
+  <div class="orb"></div>
+  <div class="orb"></div>
+  <div class="orb"></div>
+</div>
+
+<div class="progress-track"><div class="progress-bar"></div></div>
+
+<a class="swp-back" href="../../index.html">← hub do curso</a>
+
+<!-- ═══════════════════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-icons">🌶️ 🌐 🤖</div>
+  <span class="hero-badge python">Novo curso · exclusivo pra quem fez o bootcamp</span>
+  <h1>Seu código merece<br>sair do seu computador</h1>
+  <p class="subtitle">
+    Você já sabe programar. Agora chegou a hora do seu sistema ter
+    <strong style="color:var(--accent7)">um endereço na internet</strong>,
+    telas de verdade e um <strong style="color:var(--python-y)">banco de dados profissional</strong> —
+    construído por você, com um <strong style="color:var(--accent6)">agente de IA de par</strong>. 🤖
+  </p>
+  <div class="hero-stack">
+    <span class="stack-chip python">🐍 Python</span>
+    <span class="stack-chip">🌶️ Flask</span>
+    <span class="stack-chip">🗄️ SQL de verdade</span>
+    <span class="stack-chip">🤖 Claude Code</span>
+    <span class="stack-chip streamlit">🚀 Deploy real</span>
+  </div>
+
+  <!-- mockup: a Loja no ar, com URL de verdade -->
+  <div class="swp-browser" data-seq="1800">
+    <div class="swp-browser-top">
+      <div class="dots"><span></span><span></span><span></span></div>
+      <div class="swp-url-bar">
+        <span class="lock">🔒</span>
+        <span class="swp-url-text">minha-loja.pythonanywhere.com</span>
+        <span class="swp-url-cursor"></span>
+      </div>
+    </div>
+    <div class="swp-browser-body">
+      <div class="swp-mock-header">
+        <span class="swp-mock-title">🛍️ <span class="hl">Minha Loja</span> · Estoque</span>
+        <span class="swp-mock-btn">+ Nova venda</span>
+      </div>
+      <div class="swp-mock-row" data-seq-step>
+        <span class="p-name">🎧 Fone Bluetooth</span>
+        <span class="p-price">R$ 149,90</span>
+        <span class="p-qty">12 un.</span>
+      </div>
+      <div class="swp-mock-row" data-seq-step>
+        <span class="p-name">⌨️ Teclado Mecânico</span>
+        <span class="p-price">R$ 299,00</span>
+        <span class="p-qty">5 un.</span>
+      </div>
+      <div class="swp-mock-row" data-seq-step>
+        <span class="p-name">🖱️ Mouse Gamer</span>
+        <span class="p-price">R$ 89,90</span>
+        <span class="p-qty">23 un.</span>
+      </div>
+      <div class="swp-mock-foot">
+        Isso não é um print. É <strong>o sistema que VOCÊ vai construir</strong> — rodando na internet.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+
+  <!-- ═══════════════════════════════════════════════════════
+       1 · A DOR — a conversa que você já viveu
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section">
+    <div class="step-header">
+      <div class="step-number sn-red">💔</div>
+      <div>
+        <div class="step-title">Essa conversa já aconteceu com você?</div>
+        <div class="step-sub">O drama de todo programa que "só roda no meu PC"</div>
+      </div>
+    </div>
+
+    <div class="swp-chat" data-seq="1700">
+      <div class="swp-bubble them" data-seq-step="0,1,2,3,4,5">
+        <span class="who">Sua amiga</span>
+        mostra aí o sistema que você fez no curso! 😍
+      </div>
+      <div class="swp-bubble me" data-seq-step="1,2,3,4,5">
+        peraí… deixa eu ligar o notebook… abrir o PyCharm… ativar o venv… rodar o streamlit…
+      </div>
+      <div class="swp-bubble them" data-seq-step="2,3,4,5">
+        …tá, então me manda o <strong>LINK</strong> que eu abro aqui no meu celular
+      </div>
+      <div class="swp-bubble me sad" data-seq-step="3,4,5">
+        é que… não tem link 😅 ele só roda aqui na minha máquina…
+      </div>
+      <div class="swp-bubble them" data-seq-step="4,5">
+        ah… 😕
+      </div>
+      <span data-seq-step="99" style="display:none"></span>
+    </div>
+
+    <div class="analogy">
+      <div class="analogy-title">🎭 A real:</div>
+      <p>
+        O bootcamp te ensinou a <strong>programar</strong> — e você programou! Loops, funções,
+        dicionários, banco, telinha no Streamlit. Mas todo esse talento está
+        <strong>preso no seu computador</strong>. O mundo não consegue ver.
+      </p>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       2 · A VIRADA — a mesma conversa, depois do curso
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section">
+    <div class="step-header">
+      <div class="step-number sn-green">😎</div>
+      <div>
+        <div class="step-title">Agora a mesma conversa… depois desse curso</div>
+        <div class="step-sub">8 encontros mudam esse final</div>
+      </div>
+    </div>
+
+    <div class="swp-chat" data-seq="1700">
+      <div class="swp-bubble them" data-seq-step="0,1,2,3,4,5">
+        <span class="who">Sua amiga</span>
+        mostra aí o sistema que você fez! 😍
+      </div>
+      <div class="swp-bubble me" data-seq-step="1,2,3,4,5">
+        <code>minha-loja.pythonanywhere.com</code>
+      </div>
+      <div class="swp-bubble them big" data-seq-step="2,3,4,5">
+        PERA. ISSO TÁ NA INTERNET?? 🤯
+      </div>
+      <div class="swp-bubble them" data-seq-step="3,4,5">
+        VOCÊ que fez isso?? com login e tudo???
+      </div>
+      <div class="swp-bubble me" data-seq-step="4,5">
+        fiz. 😎 telas, banco de dados SQL, login… e publiquei na internet. quer cadastrar um produto aí pra testar?
+      </div>
+      <span data-seq-step="99" style="display:none"></span>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       3 · COMO A MÁGICA ACONTECE — fluxo animado
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section">
+    <div class="step-header">
+      <div class="step-number sn-blue">🌐</div>
+      <div>
+        <div class="step-title">O caminho de um clique</div>
+        <div class="step-sub">É isso que você vai aprender a construir — cada pedacinho</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="text-align:center">
+        Quando alguém abre o <strong>seu site</strong>, essa viagem acontece em
+        <strong style="color:var(--accent5)">milissegundos</strong> — e cada parada é sua:
+      </p>
+
+      <div class="flow-container autoplay">
+        <div class="flow-box fb-input">
+          <div class="label">1 · o mundo</div>
+          📱 Alguém abre <strong>seu link</strong> no celular
+        </div>
+        <div class="flow-arrow"><span class="flow-label">request ✉️</span></div>
+        <div class="flow-box fb-py">
+          <div class="label">2 · seu código</div>
+          🌶️ Seu app <strong>Flask</strong> (Python!) recebe e decide
+        </div>
+        <div class="flow-arrow"><span class="flow-label">SQL 🔍</span></div>
+        <div class="flow-box fb-process">
+          <div class="label">3 · seus dados</div>
+          🗄️ O banco <strong>SQLite</strong> busca os produtos
+        </div>
+        <div class="flow-arrow"><span class="flow-label">response 📦</span></div>
+        <div class="flow-box fb-output">
+          <div class="label">4 · a mágica</div>
+          ✨ A página aparece <strong>na tela da pessoa</strong>
+        </div>
+      </div>
+
+      <div class="tip">
+        <div class="tip-icon">💡</div>
+        <div class="tip-content">
+          <strong>O Streamlit fazia tudo isso escondido de você.</strong> Nesse curso, você assume
+          o volante: cada rota, cada tela e cada consulta ao banco é <strong>código seu</strong> —
+          do jeito que os sistemas profissionais funcionam.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       4 · ANTES vs DEPOIS
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section">
+    <div class="step-header">
+      <div class="step-number sn-yellow">⚡</div>
+      <div>
+        <div class="step-title">Sua Loja: antes e depois</div>
+        <div class="step-sub">O mesmo sistema do desafio final do bootcamp — evoluído</div>
+      </div>
+    </div>
+
+    <div class="swp-vs reveal-stagger">
+      <div class="swp-vs-col before">
+        <span class="swp-vs-tag">Bootcamp · onde você está</span>
+        <h4>🎨 app_loja.py no Streamlit</h4>
+        <ul>
+          <li><span class="ic">🖥️</span> Só roda no seu computador</li>
+          <li><span class="ic">🙈</span> Telinha montada pelo Streamlit, do jeito dele</li>
+          <li><span class="ic">📄</span> TinyDB: um arquivinho JSON de dados</li>
+          <li><span class="ic">🔓</span> Qualquer um que rodar, mexe em tudo</li>
+          <li><span class="ic">🔗</span> Link pra mostrar? Não existe…</li>
+        </ul>
+      </div>
+      <div class="swp-vs-col after">
+        <span class="swp-vs-tag">Este curso · onde você chega</span>
+        <h4>🚀 Sistema web de verdade</h4>
+        <ul>
+          <li><span class="ic">🌍</span> <strong>No ar, com link público</strong> — abre em qualquer celular</li>
+          <li><span class="ic">🎨</span> <strong>Telas suas</strong>, com URLs próprias (/produtos, /vendas…)</li>
+          <li><span class="ic">🗄️</span> <strong>SQLite + SQL</strong> — a linguagem de dados do mercado</li>
+          <li><span class="ic">🔐</span> <strong>Login com senha</strong> protegendo o sistema</li>
+          <li><span class="ic">🤖</span> Construído <strong>com agente de IA de par</strong></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       5 · AGENTES DE IA
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section">
+    <div class="step-header">
+      <div class="step-number sn-purple">🤖</div>
+      <div>
+        <div class="step-title">Você vai programar dirigindo uma IA</div>
+        <div class="step-sub">Claude Code, Codex, Gemini CLI — do jeito que o mercado já trabalha</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p>
+        Em 2026, dev profissional não digita tudo na mão: ele <strong>dirige agentes de IA</strong> —
+        e revisa cada linha que a IA escreve. Nesse curso você vive isso na prática:
+        no dia 6, <strong style="color:var(--accent6)">um agente constrói a tela de login do seu
+        sistema</strong>… e você especifica, revisa, testa e aprova. Como um dev sênior faz.
+      </p>
+
+      <div class="terminal" data-typewriter>
+        <div class="terminal-header">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <span class="title">terminal — claude code</span>
+        </div>
+        <div class="terminal-body">
+          <span class="prompt">$</span> <span class="typed" data-text="claude"></span><br>
+          <span class="input-mark">&gt;</span> <span class="typed" data-text="adicione uma tela de login com senha criptografada e proteja as rotas de produtos"></span><br>
+          <span class="out">🤖 Analisando seu projeto Flask…</span><br>
+          <span class="out">✔ login.html criado &nbsp;✔ senha com hash &nbsp;✔ rotas protegidas</span><br>
+          <span class="out" style="color:var(--accent5)">👀 Agora é com você: revisar, testar e aprovar.</span>
+        </div>
+      </div>
+
+      <div class="warning">
+        <div class="warning-icon">🎯</div>
+        <div class="warning-content">
+          <strong>E é por isso que os dias 1 a 5 são na mão.</strong> Quem não sabe construir um CRUD
+          não sabe julgar o que a IA gerou. Você vai saber os dois — e isso é
+          <strong>exatamente o perfil que o mercado procura</strong>.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       6 · A JORNADA — 8 encontros
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section">
+    <div class="step-header">
+      <div class="step-number sn-main">🗺️</div>
+      <div>
+        <div class="step-title">A jornada: 8 encontros, 8 vitórias</div>
+        <div class="step-sub">Cada aula termina com algo NOVO funcionando na sua tela</div>
+      </div>
+    </div>
+
+    <div class="swp-timeline" data-seq="2200">
+      <div class="swp-day" data-seq-step>
+        <div class="d-num"><span class="d-label">dia</span><span class="d-n">01</span></div>
+        <div class="d-body">
+          <div class="d-title">🌐 Olá, Web! Olá, Flask!</div>
+          <div class="d-out">Você sai com: <strong>seu primeiro site com URL própria</strong> — e entendendo o que o Streamlit escondia</div>
+        </div>
+      </div>
+      <div class="swp-day" data-seq-step>
+        <div class="d-num"><span class="d-label">dia</span><span class="d-n">02</span></div>
+        <div class="d-body">
+          <div class="d-title">📝 Telas que falam com Python</div>
+          <div class="d-out">Você sai com: <strong>formulário recebendo dados do usuário</strong> (GET, POST e Jinja)</div>
+        </div>
+      </div>
+      <div class="swp-day" data-seq-step>
+        <div class="d-num"><span class="d-label">dia</span><span class="d-n">03</span></div>
+        <div class="d-body">
+          <div class="d-title">🗄️ SQL — a linguagem de dados do mercado</div>
+          <div class="d-out">Você sai com: <strong>banco SQLite de verdade</strong> respondendo suas consultas SQL</div>
+        </div>
+      </div>
+      <div class="swp-day" data-seq-step>
+        <div class="d-num"><span class="d-label">dia</span><span class="d-n">04</span></div>
+        <div class="d-body">
+          <div class="d-title">📦 A Loja ganha banco</div>
+          <div class="d-out">Você sai com: <strong>produtos salvos pra sempre</strong> — reinicia o servidor e os dados continuam lá 🤯</div>
+        </div>
+      </div>
+      <div class="swp-day" data-seq-step>
+        <div class="d-num"><span class="d-label">dia</span><span class="d-n">05</span></div>
+        <div class="d-body">
+          <div class="d-title">🛒 Editar, excluir e VENDER</div>
+          <div class="d-out">Você sai com: <strong>a Loja completa</strong> — estoque, vendas e faturamento na tela</div>
+        </div>
+      </div>
+      <div class="swp-day" data-seq-step>
+        <div class="d-num"><span class="d-label">dia</span><span class="d-n">06</span></div>
+        <div class="d-body">
+          <div class="d-title">🤖 Agentes de IA na prática</div>
+          <div class="d-out">Você sai com: <strong>login construído por um agente</strong> — especificado, revisado e testado por você</div>
+        </div>
+      </div>
+      <div class="swp-day" data-seq-step>
+        <div class="d-num"><span class="d-label">dia</span><span class="d-n">07</span></div>
+        <div class="d-body">
+          <div class="d-title">🏗️ Projeto final: SEU sistema</div>
+          <div class="d-out">Você sai com: <strong>um sistema do SEU tema</strong> — barbearia, petshop, brechó, você escolhe</div>
+        </div>
+      </div>
+      <div class="swp-day" data-seq-step>
+        <div class="d-num"><span class="d-label">dia</span><span class="d-n">08</span></div>
+        <div class="d-body">
+          <div class="d-title">🚀 Deploy + Demo Day</div>
+          <div class="d-out">Você sai com: <strong>seu sistema NO AR, com link público</strong> — apresentado pra turma inteira 🎉</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       7 · VOCÊ JÁ PROVOU QUE CONSEGUE
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section">
+    <div class="step-header">
+      <div class="step-number sn-mint">🏆</div>
+      <div>
+        <div class="step-title">Você já provou que consegue</div>
+        <div class="step-sub">Esse curso começa exatamente de onde você parou</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="text-align:center">
+        Você não está começando do zero. Você <strong>terminou um bootcamp inteiro</strong>:
+        lógica, funções, dicionários, banco, telinha. A parte difícil — aprender a programar —
+        <strong style="color:var(--accent7)">você já venceu</strong>. Agora é colher.
+      </p>
+
+      <div class="swp-path">
+        <div class="swp-path-node done">
+          <span class="pn-ic">🐍</span>
+          <span class="pn-title">Bootcamp<br>Programação para Iniciantes</span>
+          <span class="pn-sub">lógica · Python · TinyDB · Streamlit</span><br>
+          <span class="pn-badge">✔ Concluído</span>
+        </div>
+        <div class="swp-path-arrow">→</div>
+        <div class="swp-path-node now">
+          <span class="pn-ic">🌶️</span>
+          <span class="pn-title">Sistemas Web<br>com Python</span>
+          <span class="pn-sub">Flask · SQL · agentes de IA · deploy</span><br>
+          <span class="pn-badge">👉 Você está aqui</span>
+        </div>
+        <div class="swp-path-arrow">→</div>
+        <div class="swp-path-node next">
+          <span class="pn-ic">💼</span>
+          <span class="pn-title">O caminho<br>profissional</span>
+          <span class="pn-sub">portfólio · projetos reais · mercado</span><br>
+          <span class="pn-badge">futuro</span>
+        </div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">🧠</span> Teste rápido: o que acontece quando o servidor Flask reinicia com SQLite?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this, false)">A) Os dados somem, igual lista em memória</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this, true)">B) Os dados continuam lá, salvos no banco</button>
+        </div>
+        <div class="quiz-feedback" data-correct="🎉 Exato!" data-wrong="😬 Ainda não —" data-explain="banco de dados de verdade guarda tudo em disco. É a primeira coisa que você vai sentir no dia 4 — e é viciante."></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       8 · OFERTA
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="oferta">
+    <div class="chapter-divider" style="padding-top:20px">
+      <span class="chapter-icon">🎟️</span>
+      <span class="chapter-number">Garanta sua vaga</span>
+      <h2 class="grad-intro">Bora colocar seu código no mundo?</h2>
+      <p class="chapter-subtitle">
+        Turma exclusiva pra quem veio do bootcamp — todo mundo no mesmo ritmo, sem enrolação.
+      </p>
+    </div>
+
+    <div class="swp-offer">
+      <span class="swp-offer-badge">🌶️ Sistemas Web com Python</span>
+
+      <ul class="swp-offer-list">
+        <li><span class="ic">📅</span> <span><strong>8 encontros ao vivo de 2h</strong> — 16 horas de mão na massa com o professor</span></li>
+        <li><span class="ic">📚</span> <span><strong>Material interativo completo</strong> — o mesmo estilo do bootcamp, seu pra sempre</span></li>
+        <li><span class="ic">🧰</span> <span><strong>Starter kit pronto</strong> — as telas vêm montadas, você foca no Python</span></li>
+        <li><span class="ic">🤖</span> <span><strong>Programação com agentes de IA</strong> — Claude Code e cia. na prática</span></li>
+        <li><span class="ic">🌍</span> <span><strong>Seu sistema publicado na internet</strong> — com link pra colocar no currículo</span></li>
+      </ul>
+
+      <span class="swp-price-old-label">tudo isso por</span>
+      <div class="swp-price">R$ 499<span class="swp-price-cents">,99</span></div>
+      <div class="swp-price-terms">
+        <span class="swp-price-chip hl">💳 em até 12x no cartão</span>
+        <span class="swp-price-chip">📅 8 dias · 2h por dia</span>
+      </div>
+      <p class="swp-price-note">
+        Parcelando em 12x, dá <strong style="color:var(--text)">menos de R$ 42 por mês</strong> —
+        pra sair com um sistema <em>seu</em>, no ar, e uma habilidade que fica pra sempre.
+      </p>
+
+      <button class="swp-cta" onclick="confettiAt(this)">🚀 QUERO MINHA VAGA</button>
+      <p class="swp-cta-sub">
+        A matrícula é com o <strong>prof. Kelson</strong> — fala com ele
+        <strong>agora no fim da aula</strong> (ele tá bem aí na sua frente 😄)
+      </p>
+
+      <div><span class="swp-scarcity"><span class="dot-live"></span> Turma única · vagas limitadas</span></div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="footer">
+  Feito com <span class="heart">♥</span> pela <strong style="color:var(--text)">programa AI</strong> ·
+  <strong style="color:var(--python-y)">Sistemas Web com Python</strong> ·
+  <a href="https://github.com/kelsonvictr" target="_blank" rel="noopener">github.com/kelsonvictr</a>
+</footer>
+
+<script src="../../shared/scripts.js" defer></script>
+</body>
+</html>
