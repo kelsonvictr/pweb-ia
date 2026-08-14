@@ -112,3 +112,31 @@ Decisão do professor ao escrever o cap 01:
 6. **`shared/` ganhou** (blocos `/* SWP */`): badges `lang-badge.jinja/.sql`, tokens `.jvar`/
    `.jtag`, e `.swp-data-table` com estados animados (row-new/row-del/cell-hot/row-match/row-dim)
    usados pelos três capítulos.
+
+## D12 · PyCharm-first em todo o material (2026-08-14)
+
+A turma vem do bootcamp **Programação para Iniciantes feito 100% no PyCharm** — eles já têm o
+hábito de New Project (que cria o venv sozinho), ▶ Run e Terminal embutido. O material foi
+convertido para esse fluxo, eliminando o atrito de aprender ferramenta nova junto com Flask/SQL:
+
+- **Ambiente**: nada de `python -m venv` / `source venv/bin/activate`. O aluno faz
+  `File → New Project…` (nome `loja` no dia 1, `treino-sql` no dia 3) e o PyCharm entrega o venv
+  pronto e ativado. O único comando de terminal do curso é `pip install flask`, no
+  **Terminal do PyCharm** (`Alt+F12`), onde o `(venv)` já aparece sozinho.
+- **Rodar/parar**: ▶ Run (botão direito → `Run '…'`) e ⏹ Stop, em vez de `python app.py` + CTRL+C.
+  Vale também pros scripts SQL do dia 3 (▶ em cada arquivo), igual ao bootcamp. A saída é a
+  **janela Run** — e o material aproveita que o PyCharm transforma `http://127.0.0.1:5000` em
+  link clicável.
+- **Impacto nas encenações**: o apagão (dia 2) e o teste de persistência (dia 4) agora são
+  "⏹ e depois ▶"; os widgets e o texto foram ajustados (`^C` virou `⏹ Process finished`).
+- **Arquivos e pastas**: `New → File` / `New → Python File` / `New → Directory` pelo botão direito;
+  HTML aberto pelos ícones de navegador no canto do editor (não mais "duplo clique no arquivo").
+- **BugZillas reescritos para causas de PyCharm**:
+  - `ModuleNotFoundError: No module named 'flask'` → instalou num terminal do sistema (sem
+    `(venv)`) ou o interpretador do projeto está errado (`Settings → Project → Python Interpreter`).
+  - `Address already in use` → aba antiga da janela Run ainda rodando.
+  - `no such table` → script rodando de outra pasta criou um segundo `.db`; diagnóstico agora é
+    "procure `.db` duplicado na árvore de arquivos" (o caminho completo sai no topo da janela Run).
+- O terminal cru **permanece** só onde é historicamente fiel: o raio-X do `streamlit run` no cap 01.
+- O **guia do professor** (`guia-professor/`, fora do git) foi convertido junto e ganhou uma seção
+  "Cola do PyCharm" com os atalhos e os dois tropeços mais comuns da turma.

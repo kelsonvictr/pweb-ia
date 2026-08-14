@@ -1371,14 +1371,14 @@ produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"<
     <div class="card">
       <p style="color:var(--text-dim)">
         Sua lista <code>produtos</code> mora <strong style="color:var(--text)">na memória RAM</strong>
-        do processo Python. Quando o servidor desliga (CTRL+C, queda de luz, deploy…),
+        do processo Python. Quando o servidor desliga (⏹ Stop, queda de luz, deploy…),
         a memória é devolvida — <strong style="color:var(--text)">com seus dados dentro</strong>.
         Teste aqui, sem dó:
       </p>
 
       <div class="swp-blackout" id="swpBlackout">
         <div class="swp-blackout-stage">
-          <div class="swp-blackout-flash" id="blackoutFlash">^C<br>(venv) $ python app.py<br>* Running on http://127.0.0.1:5000</div>
+          <div class="swp-blackout-flash" id="blackoutFlash">⏹ Process finished<br>▶ Run 'app'<br>* Running on http://127.0.0.1:5000</div>
           <div class="swp-volta-browser">
             <div class="mb-chrome">
               <span class="mb-dots"><i></i><i></i><i></i></span>
@@ -1404,7 +1404,7 @@ produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"<
           </div>
         </div>
         <div class="swp-machine-hud">
-          <button class="swp-machine-btn ghost" id="blackoutBtn">🔌 Reiniciar o servidor (CTRL+C)</button>
+          <button class="swp-machine-btn ghost" id="blackoutBtn">🔌 Reiniciar o servidor (⏹ e ▶)</button>
           <span class="swp-machine-note" id="blackoutNote">4 produtos cadastrados com carinho… por enquanto</span>
         </div>
       </div>
@@ -1777,7 +1777,7 @@ The method is not allowed for the requested URL.</pre>
         <span class="tip-icon">👀</span>
         <div class="tip-content">
           <strong>No próximo encontro:</strong> resolver o apagão de uma vez por todas.
-          Seus dados vão ganhar um cofre à prova de CTRL+C: o <strong>SQLite</strong> — e você
+          Seus dados vão ganhar um cofre à prova de ⏹: o <strong>SQLite</strong> — e você
           vai aprender a língua oficial dos bancos de dados, o <strong>SQL</strong>.
           Adeus, caderninho. 🗄️
         </div>
@@ -2106,7 +2106,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', async () => {
       if (!killed){
         flash.classList.add('on');
-        note.textContent = 'CTRL+C… o processo Python morreu — e a RAM foi devolvida';
+        note.textContent = '⏹ Stop… o processo Python morreu — e a RAM foi devolvida';
         await sleep(1400);
         alive.style.display = 'none';
         dead.style.display = 'block';
@@ -2119,7 +2119,7 @@ document.addEventListener('DOMContentLoaded', () => {
         alive.style.display = 'block';
         dead.style.display = 'none';
         killed = false;
-        btn.textContent = '🔌 Reiniciar o servidor (CTRL+C)';
+        btn.textContent = '🔌 Reiniciar o servidor (⏹ e ▶)';
         note.textContent = 'redigitou tudo na mão… até o PRÓXIMO restart. Cansativo, né? Pois é. Dia 3 resolve.';
       }
     });

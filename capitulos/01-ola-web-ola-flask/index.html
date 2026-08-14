@@ -720,7 +720,8 @@
 
     <div class="card">
       <p style="color:var(--text-dim)">
-        Lembra do que aparecia no terminal toda vez que você rodava a Loja?
+        Lembra do que aparecia no terminal toda vez que você rodava a Loja com
+        <code>streamlit run</code>?
         Presta atenção na <strong style="color:var(--text)">segunda linha</strong>:
       </p>
 
@@ -1014,12 +1015,25 @@
         </div>
 
         <p style="color:var(--text-dim)">
-          <strong style="color:var(--text)">1.</strong> Crie uma pasta chamada <code>loja</code>
-          (essa pasta vai crescer com a gente até o fim do curso!).<br>
-          <strong style="color:var(--text)">2.</strong> Abra a pasta no seu editor (VS Code / PyCharm).<br>
-          <strong style="color:var(--text)">3.</strong> Crie um arquivo chamado <code>index.html</code>
-          e digite — <strong>digite mesmo, tecla por tecla</strong>:
+          <strong style="color:var(--text)">1.</strong> No PyCharm:
+          <code>File → New Project…</code>, dê o nome <code>loja</code> e clique em
+          <strong>Create</strong> (essa pasta vai crescer com a gente até o fim do curso!).<br>
+          <strong style="color:var(--text)">2.</strong> Na árvore de arquivos, clique com o botão
+          direito na pasta <code>loja</code> → <code>New → File</code> e chame de
+          <code>index.html</code>.<br>
+          <strong style="color:var(--text)">3.</strong> Digite —
+          <strong>digite mesmo, tecla por tecla</strong>:
         </p>
+
+        <div class="tip">
+          <span class="tip-icon">🐍</span>
+          <div class="tip-content">
+            <strong>Reparou na pasta <code>venv</code> que apareceu sozinha?</strong>
+            O PyCharm cria o ambiente do projeto pra você a cada New Project —
+            é a mesma caixinha de ferramentas do bootcamp. Não mexa nela; ela vai
+            guardar o Flask daqui a pouco. 👍
+          </div>
+        </div>
 
         <div class="code-block with-lines">
           <div class="code-header">
@@ -1048,10 +1062,18 @@
         </div>
 
         <p style="color:var(--text-dim)">
-          <strong style="color:var(--text)">4.</strong> Salve (<code>Ctrl+S</code> / <code>Cmd+S</code>) e
-          <strong>dê um duplo clique no arquivo</strong> na sua pasta.
-          Ele abre no navegador — com a SUA página! 🎉
+          <strong style="color:var(--text)">4.</strong> Salve (<code>Ctrl+S</code> / <code>Cmd+S</code>).
+          Agora passe o mouse no <strong>canto superior direito do editor</strong>: aparece uma
+          fileirinha de ícones de navegador. Clique no seu 🌐 — a página abre com a SUA loja! 🎉
         </p>
+
+        <div class="tip">
+          <span class="tip-icon">🖱️</span>
+          <div class="tip-content">
+            <strong>Não achou os ícones?</strong> Botão direito no arquivo (na árvore ou no editor)
+            → <code>Open In → Browser → Chrome</code>. Dá no mesmo.
+          </div>
+        </div>
 
         <div class="tip">
           <span class="tip-icon">👀</span>
@@ -1292,7 +1314,7 @@
 
     <div class="card">
       <p style="color:var(--text-dim)">
-        Repara no endereço da página que você abriu com duplo clique.
+        Repara no endereço da página que o PyCharm abriu pra você.
         Começa com <code>file:///</code>… — isso significa:
         <strong style="color:var(--text)">"arquivo local, lido direto do SEU disco"</strong>.
         Não teve request, não teve servidor, não teve garçom.
@@ -1341,48 +1363,56 @@
       <div class="step-number sn-mint">📦</div>
       <div>
         <div class="step-title">Preparando a cozinha: instalando o Flask</div>
-        <div class="step-sub">Dois comandos no terminal e pronto</div>
+        <div class="step-sub">Um comando no Terminal do PyCharm e pronto</div>
       </div>
     </div>
 
     <div class="card">
       <p style="color:var(--text-dim)">
-        O Flask é uma biblioteca Python como as que você já usou (TinyDB, Streamlit…).
-        Abra o terminal <strong style="color:var(--text)">dentro da pasta <code>loja</code></strong>
-        e vamos lá:
+        O Flask é uma biblioteca Python como as que você já instalou no bootcamp
+        (TinyDB, Streamlit…). Mesmo lugar de sempre: o
+        <strong style="color:var(--text)">Terminal do PyCharm</strong>, lá embaixo
+        (ou <code>Alt+F12</code> / <code>Option+F12</code>).
       </p>
 
       <div class="terminal" data-typewriter>
         <div class="terminal-header">
           <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
-          <span class="title">terminal — pasta loja</span>
+          <span class="title">Terminal do PyCharm — projeto loja</span>
         </div>
         <div class="terminal-body">
-          <span class="prompt">$</span> <span class="typed" data-text="python -m venv venv"></span><br>
-          <span class="out" style="color:#5b6478"># cria o ambiente do projeto (só na primeira vez)</span><br>
-          <span class="prompt">$</span> <span class="typed" data-text="source venv/bin/activate"></span><br>
-          <span class="out" style="color:#5b6478"># Windows: venv\Scripts\activate</span><br>
-          <span class="prompt" style="color:var(--accent7)">(venv) $</span> <span class="typed" data-text="pip install flask"></span><span class="cursor"></span><br>
+          <span class="prompt" style="color:var(--accent7)">(venv) loja $</span> <span class="typed" data-text="pip install flask"></span><span class="cursor"></span><br>
+          <span class="out">Collecting flask …</span><br>
           <span class="out">Successfully installed flask-3.1.1 ✓</span><br>
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🎁</span>
+        <div class="tip-content">
+          <strong>Só isso mesmo — um comando.</strong> O PyCharm já criou e já ativou o
+          ambiente do projeto quando você fez o New Project. Por isso o
+          <code>(venv)</code> aparece sozinho no começo da linha: você está
+          instalando <strong>dentro da caixinha do projeto loja</strong>. ✅
         </div>
       </div>
 
       <div class="warning">
         <span class="tip-icon">👁️</span>
         <div class="tip-content">
-          <strong>Olha o <code>(venv)</code> no começo da linha!</strong> Ele é o crachá dizendo
-          "ambiente ativado". Se ele NÃO estiver aparecendo, o Flask vai ser instalado no lugar
-          errado — e daqui a pouco o BugZilla vem te visitar por causa disso. 🐛
-          <strong>Toda vez que abrir o terminal, ative o venv primeiro.</strong>
+          <strong>Confere o <code>(venv)</code> antes de dar Enter.</strong> Se você abrir o
+          terminal do sistema (fora do PyCharm), ele NÃO aparece — e aí o Flask vai parar no
+          lugar errado. Regra simples do curso: <strong>pip só no Terminal do PyCharm</strong>,
+          com o projeto aberto. Se pular essa, o BugZilla te visita. 🐛
         </div>
       </div>
 
       <div class="tip">
         <span class="tip-icon">🧰</span>
         <div class="tip-content">
-          <strong>Relembrando o pré-curso:</strong> o venv é a caixa de ferramentas exclusiva
-          do projeto — as bibliotecas ficam instaladas ali dentro, sem bagunçar o resto do
-          computador. Criou uma vez, ativa sempre.
+          <strong>Relembrando o bootcamp:</strong> o <code>venv</code> é a caixa de ferramentas
+          exclusiva deste projeto — as bibliotecas ficam ali dentro, sem bagunçar o resto do
+          computador. É aquela pasta que o PyCharm criou e você não mexe.
         </div>
       </div>
     </div>
@@ -1404,8 +1434,9 @@
 
     <div class="card">
       <p style="color:var(--text-dim)">
-        Crie um arquivo <code>app.py</code> na pasta <code>loja</code> (do lado do
-        <code>index.html</code>). Este é o programa inteiro — e ele é
+        Botão direito na pasta <code>loja</code> → <code>New → Python File</code>,
+        nome <code>app.py</code> (do lado do <code>index.html</code>).
+        Este é o programa inteiro — e ele é
         <strong style="color:var(--text)">um servidor web completo</strong>:
       </p>
 
@@ -1448,20 +1479,31 @@
         </div>
 
         <p style="color:var(--text-dim)">
-          Digite o <code>app.py</code> acima, salve, e no terminal
-          (com o <code>(venv)</code> aparecendo!):
+          Digite o <code>app.py</code> acima, salve, e rode do mesmo jeito que você rodava
+          no bootcamp: <strong style="color:var(--accent7)">botão direito no arquivo →
+          Run 'app'</strong> (ou o ▶ verde lá em cima).
+          A <strong>janela Run</strong> abre embaixo com isto:
         </p>
 
         <div class="terminal" data-typewriter>
           <div class="terminal-header">
             <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
-            <span class="title">terminal — pasta loja</span>
+            <span class="title">▶ Run — app</span>
           </div>
           <div class="terminal-body">
-            <span class="prompt" style="color:var(--accent7)">(venv) $</span> <span class="typed" data-text="python app.py"></span><span class="cursor"></span><br>
+            <span class="out" style="color:#5b6478">/loja/venv/bin/python /loja/app.py</span><br>
             <span class="out"> * Serving Flask app 'app'</span><br>
             <span class="out" style="color:var(--accent7)"> * Running on http://127.0.0.1:5000</span><br>
-            <span class="out">Press CTRL+C to quit</span><br>
+            <span class="out">Press CTRL+C to quit</span><span class="cursor"></span><br>
+          </div>
+        </div>
+
+        <div class="tip">
+          <span class="tip-icon">🖱️</span>
+          <div class="tip-content">
+            <strong>Atalho de ouro:</strong> o PyCharm transforma o
+            <code>http://127.0.0.1:5000</code> em <strong>link clicável</strong> na janela Run.
+            Um clique e o navegador abre no lugar certo. 😎
           </div>
         </div>
 
@@ -1489,9 +1531,12 @@
         <div class="warning">
           <span class="tip-icon">🛑</span>
           <div class="tip-content">
-            <strong>O terminal "travou"?</strong> Travou nada — ele está <strong>de plantão</strong>,
-            que é o trabalho de um servidor. Repare: cada F5 no navegador imprime uma linha nova ali
-            (é o request chegando!). Pra desligar o servidor: <code>CTRL+C</code>.
+            <strong>"O PyCharm travou, o programa não termina!"</strong> Não travou —
+            ele está <strong>de plantão</strong>, que é o trabalho de um servidor.
+            No bootcamp seus programas rodavam e acabavam; um servidor
+            <strong>fica ligado esperando pedidos</strong>. Repare: cada F5 no navegador
+            imprime uma linha nova na janela Run (é o request chegando!).
+            Pra desligar: o <strong>quadrado vermelho ⏹</strong> ao lado do ▶.
           </div>
         </div>
       </div>
@@ -1536,10 +1581,10 @@
       </p>
 
       <div class="swp-file-tree">📁 <span class="dir">loja/</span>
-├── 📁 <span class="dir">venv/</span>                <span class="note">← ambiente (não mexe)</span>
+├── 📁 <span class="dir">venv/</span>                <span class="note">← o PyCharm criou (não mexe)</span>
 ├── 🐍 <span class="file">app.py</span>
-└── 📁 <span class="new">templates/</span>          <span class="note">← crie esta pasta (nome EXATO!)</span>
-    └── 🧱 <span class="new">index.html</span>      <span class="note">← mova sua página pra cá</span></div>
+└── 📁 <span class="new">templates/</span>          <span class="note">← botão direito → New → Directory (nome EXATO!)</span>
+    └── 🧱 <span class="new">index.html</span>      <span class="note">← arraste sua página pra cá</span></div>
 
       <p style="color:var(--text-dim);margin-top:14px">
         E o <code>app.py</code> muda pouquinho — repara nas <strong style="color:var(--text)">duas</strong> diferenças:
@@ -1871,23 +1916,30 @@ app.run(debug=<span class="bool">True</span>)</pre>
           <div class="code-block">
             <div class="code-header">
               <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-              <span class="filename">terminal</span>
+              <span class="filename">janela Run</span>
               <span class="lang-badge terminal">erro</span>
             </div>
-<pre>$ python app.py
-Traceback (most recent call last):
+<pre>Traceback (most recent call last):
   File "app.py", line 1, in &lt;module&gt;
     from flask import Flask
 <span style="color:var(--bug)">ModuleNotFoundError: No module named 'flask'</span></pre>
           </div>
           <p>
-            Olha o começo da linha do terminal: <strong>cadê o <code>(venv)</code>?</strong>
-            Você abriu um terminal novo e esqueceu de ativar o ambiente. O Flask está instalado
-            <em>dentro</em> do venv — com ele desativado, o Python não enxerga.
+            O Python que rodou <strong>não é o do projeto</strong> — ou o Flask foi instalado
+            fora dele. Os dois culpados de sempre:
           </p>
           <p>
-            💊 <strong>Remédio:</strong> <code>source venv/bin/activate</code>
-            (Windows: <code>venv\Scripts\activate</code>) e rode de novo.
+            ① você rodou o <code>pip install flask</code> num <strong>terminal do
+            sistema</strong> (fora do PyCharm), sem o <code>(venv)</code> na linha; <br>
+            ② o projeto está usando outro interpretador (acontece quando se abre a pasta
+            por <em>Open</em> em vez de criar por <em>New Project</em>).
+          </p>
+          <p>
+            💊 <strong>Remédio:</strong> abra o <strong>Terminal do PyCharm</strong>
+            (<code>Alt+F12</code>), confirme o <code>(venv)</code> no começo da linha e rode
+            <code>pip install flask</code> de novo. Se persistir, confira em
+            <code>Settings → Project → Python Interpreter</code> se o interpretador é o
+            <code>venv</code> do projeto <code>loja</code>.
           </p>
         </div>
       </div>
@@ -1922,14 +1974,14 @@ Traceback (most recent call last):
           <p>
             Você JÁ SABE o que isso significa (lembra da máquina Pedido ao Vivo?):
             o request saiu, mas <strong>não tinha servidor ligado pra atender</strong>.
-            O <code>python app.py</code> não está rodando — ou você deu <code>CTRL+C</code>
-            sem perceber, ou fechou aquele terminal, ou o app quebrou ao iniciar
-            (aí olha a mensagem de erro no terminal!).
+            O <code>app.py</code> não está rodando — ou você clicou no ⏹ sem perceber,
+            ou o app quebrou ao iniciar (aí tem um traceback vermelho te esperando
+            na janela Run!).
           </p>
           <p>
-            💊 <strong>Remédio:</strong> volta no terminal, confere se o
-            <code>Running on http://127.0.0.1:5000</code> está lá. Não está? Roda
-            <code>python app.py</code> de novo.
+            💊 <strong>Remédio:</strong> olhe a janela Run: o
+            <code>Running on http://127.0.0.1:5000</code> está lá e o ⏹ vermelho está aceso?
+            Se não, é só apertar o ▶ de novo.
           </p>
         </div>
       </div>
@@ -1938,8 +1990,9 @@ Traceback (most recent call last):
         <span class="tip-icon">🎁</span>
         <div class="tip-content">
           <strong>Bônus raro — "Address already in use":</strong> significa que já TEM um
-          servidor rodando na porta 5000 (provavelmente outro terminal seu, esquecido).
-          Ache o outro terminal e dê <code>CTRL+C</code> nele.
+          servidor na porta 5000 — quase sempre <strong>uma aba antiga da janela Run</strong>
+          que ficou rodando. Olhe as abas do Run (ou o ⏹ aceso) e pare a antiga antes de
+          rodar de novo.
         </div>
       </div>
     </div>
@@ -2150,8 +2203,8 @@ Traceback (most recent call last):
           Em casa, com calma: <strong style="color:var(--text)">1)</strong> renomeie a pasta
           <code>templates</code> pra <code>template</code> e dê F5 — olha o BugZilla aí! Leia a
           mensagem em voz alta e desfaça. <strong style="color:var(--text)">2)</strong> Pare o
-          servidor com <code>CTRL+C</code> e dê F5 — reconheceu o dinossauro? 🦖 Religue.
-          Errar DE PROPÓSITO tira o medo de errar sem querer.
+          servidor no <strong>⏹ vermelho</strong> e dê F5 — reconheceu o dinossauro? 🦖
+          Aperte o ▶ pra religar. Errar DE PROPÓSITO tira o medo de errar sem querer.
         </p>
       </div>
 
@@ -2220,7 +2273,7 @@ Traceback (most recent call last):
         <div>🩻 <strong>Streamlit desmascarado:</strong> era um servidor web esse tempo todo (localhost:8501!)</div>
         <div>🧱 <strong>HTML de verdade:</strong> tags, aninhamento, esqueleto — você ESCREVEU uma página na mão</div>
         <div>🌶️ <strong>Flask:</strong> servidor em 7 linhas de Python, rotas com <code>@app.route</code> e páginas com <code>render_template</code></div>
-        <div>🐛 <strong>3 bugs clássicos dominados:</strong> venv esquecido, TemplateNotFound e o dinossauro 🦖</div>
+        <div>🐛 <strong>3 bugs clássicos dominados:</strong> Flask instalado fora do projeto, TemplateNotFound e o dinossauro 🦖</div>
       </div>
 
       <div class="concept" style="margin-top:18px">

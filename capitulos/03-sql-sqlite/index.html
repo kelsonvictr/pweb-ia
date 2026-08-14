@@ -309,7 +309,7 @@
       <div class="step-number sn-yellow">🔥</div>
       <div>
         <div class="step-title">Aquecimento: o trauma do apagão</div>
-        <div class="step-sub">Hoje é dia de aposentar o CTRL+C assassino</div>
+        <div class="step-sub">Hoje é dia de aposentar o ⏹ assassino</div>
       </div>
     </div>
 
@@ -591,7 +591,7 @@
 
     <div class="card">
       <p style="color:var(--text-dim)">
-        O <code>loja.db</code> é um arquivo binário — clique duplo nele não mostra nada útil.
+        O <code>loja.db</code> é um arquivo binário — abrir no PyCharm mostra só um monte de caractere estranho.
         O <strong style="color:var(--text)">DB Browser for SQLite</strong>
         (<code>sqlitebrowser.org</code>, grátis) abre o arquivo e mostra as tabelas como
         planilha, com uma aba pra executar SQL. Ótimo pra <strong style="color:var(--text)">conferir
@@ -724,9 +724,10 @@
 
     <div class="card">
       <p style="color:var(--text-dim)">
-        Crie uma pasta de treino (ex.: <code>treino-sql</code>) e dentro dela o
-        <code>criar_banco.py</code>. Acompanhe o destaque — o ritual tem 5 passos e
-        vai se repetir a vida inteira:
+        Hoje o projeto é outro: <code>File → New Project…</code> com o nome
+        <code>treino-sql</code> (sem Flask, sem templates — só Python e SQL).
+        Dentro dele, <code>New → Python File</code> chamado <code>criar_banco.py</code>.
+        Acompanhe o destaque — o ritual tem 5 passos e vai se repetir a vida inteira:
       </p>
 
       <div class="swp-trace" data-seq="2600">
@@ -753,7 +754,7 @@
           <div data-seq-frame="3"><span class="tm-emoji">⚡</span><span><strong>execute</strong> roda o SQL — o MESMO CREATE TABLE do simulador, numa string de três aspas. O <code>IF NOT EXISTS</code> deixa rodar o script de novo sem erro.</span></div>
           <div data-seq-frame="4"><span class="tm-emoji">📌</span><span><strong>commit</strong> = CARIMBAR no arquivo. Sem ele, mudanças ficam só no rascunho… (a próxima máquina mostra o desastre)</span></div>
           <div data-seq-frame="5"><span class="tm-emoji">🚪</span><span><strong>close</strong> desliga o cabo, liberando o arquivo. Abriu, usou, fechou — educação de dev.</span></div>
-          <div data-seq-frame="6"><span class="tm-emoji">🎉</span><span>Rode com <code>python criar_banco.py</code> — e repare: nasceu um arquivo <code>loja.db</code> na pasta!</span></div>
+          <div data-seq-frame="6"><span class="tm-emoji">🎉</span><span>Rode com <strong>botão direito → Run 'criar_banco'</strong> — e repare: nasceu um arquivo <code>loja.db</code> na árvore de arquivos!</span></div>
         </div>
       </div>
 
@@ -817,10 +818,10 @@ conexao.<span class="fn">close</span>()</pre>
       <div class="terminal" data-typewriter>
         <div class="terminal-header">
           <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
-          <span class="title">terminal — pasta treino-sql</span>
+          <span class="title">▶ Run — consultar</span>
         </div>
         <div class="terminal-body">
-          <span class="prompt">$</span> <span class="typed" data-text="python consultar.py"></span><span class="cursor"></span><br>
+          <span class="out" style="color:#5b6478">/treino-sql/venv/bin/python /treino-sql/consultar.py</span><br>
           <span class="out">(1, 'Fone Bluetooth', 149.9, 12)</span><br>
         </div>
       </div>
@@ -984,15 +985,16 @@ conexao.<span class="fn">close</span>()</pre>
           </div>
         </div>
         <p style="color:var(--text-dim)">
-          <strong style="color:var(--text)">1.</strong> Crie a pasta <code>treino-sql</code> e
-          digite o <code>criar_banco.py</code> (da seção do ritual). Rode:
-          <code>python criar_banco.py</code> → confira o <code>loja.db</code> na pasta!<br>
+          <strong style="color:var(--text)">1.</strong> No projeto <code>treino-sql</code>, digite o
+          <code>criar_banco.py</code> (da seção do ritual) e rode como sempre:
+          <strong>botão direito → Run 'criar_banco'</strong> → olha o <code>loja.db</code>
+          nascendo na árvore de arquivos! 🎉<br>
           <strong style="color:var(--text)">2.</strong> Digite o <code>inserir.py</code> e rode
           <strong>3 vezes mudando os valores</strong> (fone, teclado, mouse — preços à sua escolha).<br>
           <strong style="color:var(--text)">3.</strong> Digite o <code>consultar.py</code> e rode:
           as 3 tuplas na tela, com ids 1, 2, 3 carimbados pelo banco. 🎉<br>
-          <strong style="color:var(--text)">4.</strong> A prova final: <strong>feche TUDO, reinicie
-          o computador se quiser</strong>… rode <code>consultar.py</code> de novo.
+          <strong style="color:var(--text)">4.</strong> A prova final: <strong>feche o PyCharm, reinicie
+          o computador se quiser</strong>… abra de novo e rode o <code>consultar.py</code>.
           Os dados continuam lá. Sem apagão. Nunca mais. 🏆
         </p>
       </div>
@@ -1143,14 +1145,15 @@ conexao.<span class="fn">commit</span>()   <span class="cm"># ← escreveu? CARI
           </div>
           <p>
             Pegadinha cruel: <code>connect("loja.db")</code> procura o arquivo
-            <strong>na pasta onde o terminal está</strong> — e se não achar,
-            <strong>CRIA UM NOVO, vazio</strong>! Rodou o script de outra pasta?
-            Nasceu um segundo loja.db zerado, sem a tabela.
+            <strong>na pasta do script que está rodando</strong> — e se não achar,
+            <strong>CRIA UM NOVO, vazio</strong>! Script numa subpasta diferente da do
+            <code>criar_banco.py</code>? Nasceu um segundo loja.db zerado, sem a tabela.
           </p>
           <p>
-            💊 <strong>Remédio:</strong> confira a pasta do terminal antes de rodar
-            (<code>cd treino-sql</code>) — e se aparecer um loja.db misterioso em outra pasta,
-            já sabe de onde veio.
+            💊 <strong>Remédio:</strong> olhe a <strong>árvore de arquivos do PyCharm</strong> —
+            se tiver mais de um <code>loja.db</code>, é esse o problema. Mantenha todos os
+            scripts do dia <strong>na mesma pasta</strong>, do lado do banco. (Se quiser conferir,
+            o caminho completo aparece no topo da janela Run.)
           </p>
         </div>
       </div>
@@ -1405,7 +1408,7 @@ conexao.<span class="fn">commit</span>()   <span class="cm"># ← escreveu? CARI
       <div class="concept" style="margin-top:18px">
         <div class="concept-title">🎯 A frase pra levar pra casa</div>
         <p>
-          <strong>"Meus dados agora sobrevivem a qualquer CTRL+C."</strong>
+          <strong>"Meus dados agora sobrevivem a qualquer ⏹."</strong>
           E melhor: você fala a língua que TODO banco relacional do mercado entende.
         </p>
       </div>
@@ -1663,7 +1666,7 @@ document.addEventListener('DOMContentLoaded', () => {
       fileBody.appendChild(row);
       file.classList.add('stamp');
       postit.classList.add('gone');
-      note.innerHTML = '📌 <strong>CARIMBADO no arquivo!</strong> Agora o dado sobrevive a close, CTRL+C, queda de luz… Roda de novo pra testar o outro final 😈';
+      note.innerHTML = '📌 <strong>CARIMBADO no arquivo!</strong> Agora o dado sobrevive a close, ⏹, queda de luz… Roda de novo pra testar o outro final 😈';
       await sleep(1200);
       file.classList.remove('stamp');
       await sleep(600);

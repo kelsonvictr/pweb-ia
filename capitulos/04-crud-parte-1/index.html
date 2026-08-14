@@ -281,7 +281,7 @@
         <strong style="color:var(--text)">telas que mostram e recebem dados</strong>
         (Jinja + form, Dia 2) e <strong style="color:var(--text)">dados que sobrevivem a
         qualquer restart</strong> (SQLite, Dia 3). O problema? Eles ainda não se conhecem:
-        a Loja usa a lista em memória, e o loja.db mora sozinho na pasta treino-sql.
+        a Loja usa a lista em memória, e o loja.db mora sozinho no projeto treino-sql.
         Hoje é o dia do 💍.
       </p>
 
@@ -413,8 +413,10 @@
 
     <div class="card">
       <p style="color:var(--text-dim)">
-        Primeiro passo do dia: copie o <code>criar_banco.py</code> do treino-sql pra pasta
-        <code>loja</code> e rode UMA vez (nasce o <code>loja.db</code> da Loja).
+        Primeiro passo do dia: <strong>reabra o projeto <code>loja</code></strong> no PyCharm
+        (<code>File → Open Recent</code>) e traga o <code>criar_banco.py</code> do treino-sql —
+        pode copiar e colar o arquivo direto na árvore, com <code>Ctrl+C</code>/<code>Ctrl+V</code>.
+        Rode UMA vez (▶) e o <code>loja.db</code> da Loja nasce ali.
         Depois, crie o <code>banco.py</code> — acompanhe o destaque:
       </p>
 
@@ -558,8 +560,8 @@ app = <span class="tp">Flask</span>(__name__)
           </div>
         </div>
         <p style="color:var(--text-dim)">
-          <strong style="color:var(--text)">1.</strong> <code>criar_banco.py</code> na pasta loja
-          → rodar UMA vez.<br>
+          <strong style="color:var(--text)">1.</strong> <code>criar_banco.py</code> no projeto loja
+          → ▶ Run UMA vez (o <code>loja.db</code> aparece na árvore).<br>
           <strong style="color:var(--text)">2.</strong> Digitar o <code>banco.py</code>
           (por enquanto só o <code>listar_produtos</code>).<br>
           <strong style="color:var(--text)">3.</strong> Rota <code>/produtos</code> no app.py +
@@ -596,7 +598,7 @@ app = <span class="tp">Flask</span>(__name__)
 
       <div class="swp-blackout" id="swpBlackout">
         <div class="swp-blackout-stage">
-          <div class="swp-blackout-flash" id="blackoutFlash">^C<br>(venv) $ python app.py<br>* Running on http://127.0.0.1:5000</div>
+          <div class="swp-blackout-flash" id="blackoutFlash">⏹ Process finished<br>▶ Run 'app'<br>* Running on http://127.0.0.1:5000</div>
           <div class="swp-mini">
             <div class="mb-chrome">
               <span class="mb-dots"><i></i><i></i><i></i></span>
@@ -617,7 +619,7 @@ app = <span class="tp">Flask</span>(__name__)
           </div>
         </div>
         <div class="swp-machine-hud">
-          <button class="swp-machine-btn ghost" id="blackoutBtn">🔌 Reiniciar o servidor (CTRL+C)</button>
+          <button class="swp-machine-btn ghost" id="blackoutBtn">🔌 Reiniciar o servidor (⏹ e ▶)</button>
           <span class="swp-machine-note" id="blackoutNote">os mesmos 4 produtos do trauma do Dia 2… mas agora com casa própria</span>
         </div>
       </div>
@@ -635,7 +637,7 @@ app = <span class="tp">Flask</span>(__name__)
         <span class="tip-icon">🏠</span>
         <div class="tip-content">
           <strong>Teste na sua máquina de verdade:</strong> cadastre produtos (Operação 2, já já),
-          derrube o servidor com CTRL+C, suba de novo, F5… tudo lá. Faça o teste — essa
+          derrube o servidor no ⏹, aperte o ▶ de novo, F5… tudo lá. Faça o teste — essa
           sensação vale a aula.
         </div>
       </div>
@@ -726,7 +728,7 @@ app = <span class="tp">Flask</span>(__name__)
           <span class="exercise-icon">👨‍🏫</span>
           <div>
             <div class="exercise-title">Bora rodar a Operação 2</div>
-            <div class="exercise-sub">Complete o ciclo — e faça o teste do CTRL+C</div>
+            <div class="exercise-sub">Complete o ciclo — e faça o teste do ⏹</div>
           </div>
         </div>
         <p style="color:var(--text-dim)">
@@ -737,8 +739,9 @@ app = <span class="tp">Flask</span>(__name__)
           (<code>&lt;a href="/produtos/novo"&gt;</code>).<br>
           <strong style="color:var(--text)">3.</strong> Cadastre 3 produtos de verdade.
           Cada um deve te devolver pro estoque, com a tabela maior.<br>
-          <strong style="color:var(--text)">4.</strong> <strong>O teste sagrado:</strong> CTRL+C,
-          <code>python app.py</code>, F5… seus produtos continuam lá. 🏆 Sem apagão. Nunca mais.
+          <strong style="color:var(--text)">4.</strong> <strong>O teste sagrado:</strong> aperte o
+          <strong>⏹ vermelho</strong>, depois o <strong>▶ verde</strong>, e F5… seus produtos
+          continuam lá. 🏆 Sem apagão. Nunca mais.
         </p>
       </div>
     </div>
@@ -1016,7 +1019,7 @@ app = <span class="tp">Flask</span>(__name__)
         <span class="tip-icon">🎁</span>
         <div class="tip-content">
           <strong>Bônus — "no such table" atacou de novo?</strong> Você esqueceu de rodar o
-          <code>criar_banco.py</code> na pasta <code>loja</code> (ou rodou o Flask de outra pasta).
+          <code>criar_banco.py</code> no projeto <code>loja</code> — ou tem um <code>loja.db</code> em pasta errada (olha a árvore de arquivos).
           Diagnóstico do Dia 3, mesmo remédio.
         </div>
       </div>
@@ -1193,8 +1196,8 @@ app = <span class="tp">Flask</span>(__name__)
         </div>
         <p style="color:var(--text-dim)">
           O percurso completo: coluna <code>categoria TEXT</code> no CREATE TABLE
-          (apague o loja.db antigo e rode o criar_banco.py de novo — em desenvolvimento
-          pode!), campo no form, parâmetro no <code>cadastrar_produto</code>, valor no INSERT,
+          (clique com o botão direito no <code>loja.db</code> antigo → <code>Delete</code>, e rode o
+          criar_banco.py de novo — em desenvolvimento pode!), campo no form, parâmetro no <code>cadastrar_produto</code>, valor no INSERT,
           coluna na tabela (vira <code>p[4]</code>). Cinco arquivos, uma feature.
           Assim nasce TODA feature de sistema real.
         </p>
@@ -1366,7 +1369,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     btn.addEventListener('click', async () => {
       flash.classList.add('on');
-      note.textContent = 'CTRL+C… o processo morreu — a RAM foi devolvida, como sempre';
+      note.textContent = '⏹ Stop… o processo morreu — a RAM foi devolvida, como sempre';
       await sleep(1400);
       flash.classList.remove('on');
       restarts++;
