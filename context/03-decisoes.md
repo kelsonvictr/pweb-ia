@@ -62,3 +62,27 @@ OFF), grade fina + vinhetas, foto recortada valorizada, badge "📍 Presencial /
 - Assets copiados do java-avancado: `logo-full.svg`, `claude.svg`, `claudecode.png`, `cut-prof2/3.png`,
   `prof4.png`. Novos: `python.svg`, `flask.svg` (mono branco), `sqlite.svg` (SQLite370),
   `sqlite-mono.svg` (glifo simple-icons, usado no chip da capa).
+
+## D10 · Capítulo 01 — fundamentos web no próprio capítulo, sem starter kit (2026-08-14)
+
+Decisão do professor ao escrever o cap 01:
+
+1. **Fundamentos de HTML/CSS/JS entram no Dia 1**, num ato próprio ("As linguagens do navegador"),
+   ANTES do Flask: HTML ensinado de verdade (tags, aninhamento, esqueleto — o aluno digita uma
+   página na mão), CSS conceitual + Pico.css via CDN (uma linha de `<link>`), e JavaScript apenas
+   APRESENTADO como "a terceira linguagem, território do curso Fullstack" — sem uma linha de código
+   JS, preservando a D3 (anti-canibalização).
+2. **Sem starter kit no Dia 1**: o aluno cria `loja/`, `app.py` e `templates/*.html` do zero.
+   Entender cada linha que digita vale mais que ganhar telas prontas — e casa com o ato de HTML.
+   O starter kit (base.html + Pico) fica para quando as telas crescerem (dia 2+).
+3. **Reuso de componentes**: em vez de promover o `.swp-browser` do cap 00, o cap 01 usa o
+   **mini-browser portado do fullstack** (`.mini-browser`/`.mb-chrome` em `shared/components.css`
+   + motor `buildMiniPreview` em `shared/scripts.js`, ambos marcados `/* SWP */`). Também entraram
+   no shared: `motion-fx.js` (cópia do fullstack), badges `lang-badge.html/.css/.bash`, tokens de
+   syntax HTML/CSS (`.tag .atr .sel .prop .val .unit .punc`), `.fp-paint` da forja e
+   `.next-chapter`/`.btn-next`.
+4. **Máquinas didáticas do cap 01** (todas vanilla, autoplay via IntersectionObserver, respeitam
+   `prefers-reduced-motion`): Pedido ao Vivo (request/response com botão de desligar o servidor →
+   ERR_CONNECTION_REFUSED), Anatomia da URL (2 instâncias clicáveis), Raio-X do Streamlit
+   (data-seq), Forja de Tags (tag-forge.js), rastreador do app.py linha a linha (data-seq) e
+   roteador "Cada URL é uma página" (com 404 do /contato que vira exercício solo).

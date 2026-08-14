@@ -163,6 +163,10 @@ pre,code,.code-block,.code-block *{
 .lang-badge.python   { background:rgba(55,118,171,0.18); color:var(--python-y) }
 .lang-badge.json     { background:rgba(247,183,49,0.15); color:var(--accent5) }
 .lang-badge.terminal { background:rgba(255,255,255,0.06); color:var(--text-dim) }
+/* SWP — badges p/ HTML/CSS/bash (cap 01+) */
+.lang-badge.html { background:rgba(227,79,38,0.18); color:#ff7a52 }
+.lang-badge.css  { background:rgba(41,101,241,0.18); color:#6f9bff }
+.lang-badge.bash { background:rgba(255,255,255,0.06); color:var(--text-dim) }
 
 pre{
   padding:20px;margin:0;overflow-x:auto;
@@ -196,6 +200,15 @@ pre{
 .fstr {color:#c3e88d}    /* f-string outer */
 .fexp {color:#82aaff}    /* {expression} inside f-string */
 .attr {color:#82aaff}    /* method attribute */
+
+/* SWP — tokens HTML/CSS (cap 01 mostra HTML de verdade) */
+.tag  {color:#f78c6c}    /* &lt;tag&gt; HTML */
+.atr  {color:#ffcb6b}    /* atributo HTML (href, lang) */
+.sel  {color:#c4a7e7}    /* seletor CSS (.classe, #id) */
+.prop {color:#82aaff}    /* propriedade CSS (color, margin) */
+.val  {color:#c3e88d}    /* valor CSS (#fff, 10px) */
+.unit {color:#f78c6c}    /* unidade CSS (px, rem, %) */
+.punc {color:#89ddff}    /* pontuação { } ( ) ; */
 
 /* =========================================================
    TOGGLER (the "olhinho 👀" pattern)
@@ -1708,6 +1721,18 @@ pre{
 }
 .forge-pane.browser{padding:0;display:flex;flex-direction:column;background:#fff}
 .forge-pane.browser .browser-mockup{margin:0;border-radius:0;box-shadow:none;height:100%}
+/* SWP — painel direito da forja usando o chrome do mini-browser */
+.forge .mb-chrome{border-radius:0}
+.fp-paint{
+  flex:1;background:#fff;color:#15151f;min-height:200px;padding:18px 20px;
+  font-family:'Nunito',system-ui,Arial,sans-serif;
+}
+.fp-paint h1{font-size:1.5rem;margin:.25em 0;color:#15151f;line-height:1.2}
+.fp-paint h2{font-size:1.15rem;margin:.3em 0;color:#15151f;line-height:1.25}
+.fp-paint p{font-size:.95rem;margin:.45em 0;color:#3a3a4a}
+.fp-paint ul{margin:.4em 0 .4em 1.25em;color:#3a3a4a}
+.fp-paint li{margin:.15em 0}
+.fp-paint a{color:#2965f1}
 /* alvos pintados: começam escondidos e aparecem ao "encaixar" */
 .forge [data-paint]{opacity:0;transform:translateY(10px) scale(0.97)}
 .forge [data-paint].painted{
@@ -1727,3 +1752,93 @@ pre{
 }
 .forge-hud .forge-btn:hover{transform:translateY(-2px)}
 .forge-hud .forge-msg{font-size:0.8rem;color:var(--text-dim);line-height:1.4;flex:1}
+
+/* =========================================================
+   SWP — MINI BROWSER (Live Preview read-only, port do fullstack)
+   Markup declarativo (JS monta o iframe/console em shared/scripts.js):
+   <div class="mini-browser" data-url="index.html">
+     <script type="text/html" data-mp="html"> ...HTML real... </script>
+     <script type="text/html" data-mp="css">  ...CSS opcional... </script>
+   </div>
+   Variante console: <div class="mini-browser console" data-url="Terminal">
+     <script type="text/plain" data-mp="out"> ...linhas... </script>
+   </div>
+   ========================================================= */
+.mini-browser{
+  border-radius:14px;overflow:hidden;margin:16px 0;
+  border:1px solid rgba(255,255,255,0.10);
+  background:#0f1320;
+  box-shadow:0 18px 50px rgba(0,0,0,0.45);
+  opacity:0;transform:translateY(16px) scale(0.985);
+  transition:opacity .55s ease, transform .55s cubic-bezier(.2,.9,.3,1.3);
+}
+.mini-browser.shown{opacity:1;transform:none}
+.mb-chrome{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;
+  background:linear-gradient(180deg,#212a40,#141a29);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.mb-dots{display:flex;gap:6px;flex-shrink:0}
+.mb-dots i{width:11px;height:11px;border-radius:50%;display:block}
+.mb-dots i:nth-child(1){background:#ff5f57}
+.mb-dots i:nth-child(2){background:#febc2e}
+.mb-dots i:nth-child(3){background:#28c840}
+.mb-url{
+  flex:1;min-width:0;display:flex;align-items:center;gap:7px;
+  background:rgba(0,0,0,0.32);border:1px solid rgba(255,255,255,0.06);
+  border-radius:50px;padding:5px 12px;
+  font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:#9fb0d0;
+  font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+}
+.mb-url .lock{color:#5fd07a;font-size:0.68rem;flex-shrink:0}
+.mb-url .addr{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mb-actions{display:flex;align-items:center;gap:10px;color:var(--text-dim);font-size:0.82rem;flex-shrink:0}
+.mb-tag{
+  font-size:0.58rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+  color:var(--accent7);background:rgba(6,214,160,0.14);
+  padding:2px 8px;border-radius:50px;flex-shrink:0;
+}
+.mb-viewport{background:#fff;display:block;position:relative}
+.mb-viewport iframe{display:block;width:100%;border:0;background:#fff}
+/* fica enquanto o JS não montou (e fallback se algo falhar) */
+.mb-loading{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  min-height:90px;color:#9aa3b8;font-size:0.82rem;
+  font-family:'JetBrains Mono',monospace;background:#fff;
+  font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+}
+/* variante console (terminal/devtools) */
+.mini-browser.console .mb-chrome{background:linear-gradient(180deg,#16161f,#0d0d14)}
+.mini-browser.console .mb-viewport{background:#0b0b14;padding:14px 16px;min-height:54px}
+.mb-cl{
+  font-family:'JetBrains Mono',monospace;font-size:0.82rem;line-height:1.8;
+  color:#cdd6f4;white-space:pre-wrap;
+  font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+}
+.mb-cl::before{content:'› ';color:var(--accent5)}
+.mb-cl.cmd{color:#9fb0d0}
+.mb-cl.cmd::before{content:'> ';color:var(--accent7)}
+.mb-cl.err{color:#ff7a7a}
+.mb-cl.muted{color:var(--text-dim);font-style:italic}
+.mb-cl.muted::before{content:''}
+
+/* =========================================================
+   SWP — PRÓXIMO CAPÍTULO (CTA de fim de capítulo, padrão v2)
+   ========================================================= */
+.next-chapter{
+  text-align:center;
+  background:linear-gradient(135deg,rgba(108,99,255,0.08),rgba(247,183,49,0.05));
+  border:1px solid rgba(108,99,255,0.22);
+  border-radius:18px;padding:30px;margin-top:30px;
+}
+.next-chapter h3{color:var(--accent);margin-bottom:8px;font-size:1.3rem}
+.btn-next{
+  display:inline-block;padding:12px 28px;
+  background:linear-gradient(135deg,var(--accent),var(--accent6));
+  color:var(--bg);text-decoration:none;font-weight:900;
+  border-radius:50px;letter-spacing:1px;margin-top:12px;
+}
+.btn-next.disabled{
+  opacity:0.45;pointer-events:none;filter:grayscale(0.4);
+}

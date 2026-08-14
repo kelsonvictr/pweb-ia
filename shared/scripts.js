@@ -207,12 +207,104 @@ function playSeqLoop(box){
   setInterval(tick, delay);
 }
 
+/* ---------- SWP: Mini Browser (Live Preview read-only, port do fullstack) ----------
+   Markup:
+   <div class="mini-browser" data-url="index.html">
+     [script type="text/html" data-mp="html"]  ...HTML real...  [/script]
+     [script type="text/html" data-mp="css"]   ...CSS opcional... [/script]
+   </div>
+   <div class="mini-browser console" data-url="Terminal">
+     <script type="text/plain" data-mp="out">linha 1
+> comando        (prefixe com "> " para virar entrada; "! " para erro)
+saída qualquer</script>
+   </div>
+*/
+function buildMiniPreview(mb){
+  const isConsole = mb.classList.contains('console');
+  const url = mb.dataset.url || (isConsole ? 'Console' : 'index.html');
+  // pega o conteúdo literal ANTES de injetar o chrome
+  const get = (k) => mb.querySelector(`script[data-mp="${k}"]`)?.textContent ?? '';
+  const htmlSrc = get('html');
+  const cssSrc  = get('css');
+  const outSrc  = get('out');
+  mb.innerHTML = '';
+
+  // chrome (barra do navegador)
+  const chrome = document.createElement('div');
+  chrome.className = 'mb-chrome';
+  chrome.innerHTML =
+    '<span class="mb-dots"><i></i><i></i><i></i></span>' +
+    '<span class="mb-url"><span class="lock">' + (isConsole ? '⌗' : '🔒') + '</span>' +
+      '<span class="addr"></span></span>' +
+    '<span class="mb-actions">' + (isConsole ? '🗑️' : '⟳') +
+      '<span class="mb-tag">' + (isConsole ? 'console' : 'preview') + '</span></span>';
+  chrome.querySelector('.addr').textContent = url;   // textContent evita injeção
+  mb.appendChild(chrome);
+
+  const viewport = document.createElement('div');
+  viewport.className = 'mb-viewport';
+  mb.appendChild(viewport);
+
+  if (isConsole){
+    outSrc.replace(/\s+$/,'').split('\n').forEach(raw => {
+      const line = document.createElement('div');
+      const cmd  = raw.startsWith('> ');
+      const err  = raw.startsWith('! ');
+      line.className = 'mb-cl' + (cmd ? ' cmd' : err ? ' err' : '');
+      line.textContent = cmd || err ? raw.slice(2) : raw;
+      viewport.appendChild(line);
+    });
+    if (!outSrc.trim()){
+      viewport.innerHTML = '<div class="mb-cl muted">// (sem saída)</div>';
+    }
+  } else {
+    const iframe = document.createElement('iframe');
+    iframe.setAttribute('sandbox', '');            // prévia read-only, sem scripts
+    iframe.setAttribute('title', 'prévia ' + url);
+    iframe.setAttribute('scrolling', 'no');
+    iframe.srcdoc =
+      '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">' +
+      '<style>html,body{margin:0}body{font-family:system-ui,Arial,sans-serif;' +
+      'padding:16px;color:#1a1a1a;background:#fff}' + cssSrc + '</style></head><body>' +
+      htmlSrc +
+      '</body></html>';
+    // ajusta a altura ao conteúdo quando carregar (fallback: data-h ou 220px)
+    iframe.addEventListener('load', () => {
+      try {
+        const h = iframe.contentDocument?.body?.scrollHeight;
+        if (h) iframe.style.height = Math.min(Math.max(h, 90), 520) + 'px';
+        else iframe.style.height = (mb.dataset.h || 220) + 'px';
+      } catch(e){ iframe.style.height = (mb.dataset.h || 220) + 'px'; }
+    });
+    iframe.style.height = '120px';
+    viewport.appendChild(iframe);
+  }
+}
+
+function initMiniPreviews(){
+  // [data-static]: o autor montou o conteúdo na mão — não reconstruir
+  const previews = document.querySelectorAll('.mini-browser:not([data-static])');
+  if (!previews.length) return;
+  // monta o conteúdo só quando entra na tela (e revela com a transição CSS)
+  const obs = new IntersectionObserver((entries) => {
+    for (const e of entries){
+      if (e.isIntersecting && !e.target.dataset.built){
+        e.target.dataset.built = '1';
+        buildMiniPreview(e.target);
+        requestAnimationFrame(() => e.target.classList.add('shown'));
+      }
+    }
+  }, {threshold:0.12, rootMargin:'0px 0px -40px 0px'});
+  previews.forEach(p => obs.observe(p));
+}
+
 /* ---------- Setup on load ---------- */
 document.addEventListener('DOMContentLoaded', () => {
   initScrollReveal();
   initAutoplayFlows();
   initSeqLoops();
   initTerminals();
+  initMiniPreviews();
   updateProgress();
 
   window.addEventListener('scroll', updateProgress, {passive:true});

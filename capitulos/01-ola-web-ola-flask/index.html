@@ -1,0 +1,2468 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dia 01 · Olá, Web! Olá, Flask! — Sistemas Web com Python | programa AI</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../shared/styles.css">
+<link rel="stylesheet" href="../../shared/components.css">
+<link rel="stylesheet" href="../../shared/animations.css">
+<style>
+/* ══════════ CSS local do capítulo 01 (prefixo swp-) ══════════ */
+
+/* Ligatures OFF em toda classe mono local (regra do workspace) */
+.swp-seg,.swp-seg-info code,.swp-tline,.swp-route,.swp-live-url,.swp-router-url,
+.swp-err-code,.swp-pico-code{
+  font-variant-ligatures:none;
+  font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+}
+
+/* reveal-stagger do shared só cobre 6 filhos */
+.step-section.visible .reveal-stagger > *:nth-child(7){transition-delay:0.65s}
+.step-section.visible .reveal-stagger > *:nth-child(8){transition-delay:0.75s}
+
+/* ---------- botões padrão das máquinas ---------- */
+.swp-machine-btn{
+  background:linear-gradient(135deg,var(--accent4),var(--accent7));color:#06281f;
+  border:0;font-weight:800;padding:9px 18px;border-radius:10px;cursor:pointer;
+  font-size:0.84rem;transition:transform .2s;font-family:'Nunito',sans-serif;
+}
+.swp-machine-btn:hover{transform:translateY(-2px)}
+.swp-machine-btn.ghost{
+  background:rgba(255,255,255,0.06);color:var(--text-dim);
+  border:1px solid rgba(255,255,255,0.12);
+}
+.swp-machine-hud{
+  display:flex;align-items:center;gap:12px;padding:12px 16px;flex-wrap:wrap;
+  background:rgba(255,255,255,0.03);border-top:1px solid rgba(255,255,255,0.06);
+}
+.swp-machine-note{font-size:0.8rem;color:var(--text-dim);line-height:1.5;flex:1;min-width:180px}
+
+/* ---------- MÁQUINA 1: Pedido ao Vivo (request/response) ---------- */
+.swp-live{
+  border:1px solid rgba(69,183,209,0.28);border-radius:18px;overflow:hidden;margin:18px 0;
+  background:
+    radial-gradient(1100px 280px at 50% -12%, rgba(69,183,209,0.10), transparent 70%),
+    linear-gradient(180deg,#0b1020,#0d0d1a);
+  box-shadow:0 22px 60px rgba(0,0,0,0.45);
+}
+.swp-live-stage{
+  display:grid;grid-template-columns:1fr 130px 1fr;gap:0;align-items:stretch;
+  padding:20px 18px 14px;
+}
+.swp-live-pane{min-width:0}
+.swp-live-pane .pane-label{
+  font-size:0.66rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--text-dim);margin-bottom:10px;text-align:center;
+}
+/* mini navegador da máquina */
+.swp-live-browser{
+  border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.10);
+  background:#0f1320;
+}
+.swp-live-url{
+  font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:#9fb0d0;
+}
+.swp-live-view{
+  background:#fff;min-height:150px;padding:14px 16px;position:relative;
+  font-family:'Nunito',system-ui,sans-serif;
+}
+.swp-live-view .state{display:none}
+.swp-live-view .state.on{display:block}
+/* estado: esqueleto carregando */
+.swp-sk{height:14px;border-radius:6px;background:#e6e8f0;margin:10px 0;
+  animation:swpSkPulse 1.1s ease-in-out infinite}
+.swp-sk.w60{width:60%}.swp-sk.w80{width:80%}.swp-sk.w40{width:40%}
+@keyframes swpSkPulse{0%,100%{opacity:1}50%{opacity:0.45}}
+/* estado: página pronta */
+.swp-page-ok h1{font-size:1.15rem;margin:0 0 6px;color:#15151f}
+.swp-page-ok p{font-size:0.85rem;margin:4px 0;color:#3a3a4a}
+.swp-page-ok .chip{
+  display:inline-block;background:#eef;border-radius:50px;color:#3b3bd1;
+  font-size:0.72rem;font-weight:700;padding:3px 10px;margin-top:6px;
+}
+/* estado: erro de conexão (a telinha do dinossauro) */
+.swp-page-err{text-align:center;color:#5f6368;padding:10px 0}
+.swp-page-err .dino{font-size:2rem}
+.swp-page-err .big{font-weight:700;font-size:0.9rem;margin:8px 0 2px;color:#202124}
+.swp-page-err small{font-size:0.72rem}
+.swp-err-code{font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:#80868b;display:block;margin-top:8px}
+/* fio + pacotes */
+.swp-live-wire{position:relative;min-height:150px}
+.swp-live-wire .rail{
+  position:absolute;left:-6px;right:-6px;top:50%;height:3px;transform:translateY(-50%);
+  background:linear-gradient(90deg,var(--accent4),var(--accent7));
+  border-radius:3px;opacity:0.35;
+}
+.swp-live-wire .wire-cap{
+  position:absolute;width:100%;text-align:center;
+  font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:var(--text-dim);
+  font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+}
+.swp-live-wire .wire-cap.top{top:calc(50% - 34px)}
+.swp-live-wire .wire-cap.bottom{top:calc(50% + 20px)}
+.swp-pkt{
+  position:absolute;top:50%;left:0;transform:translate(-50%,-58%);
+  font-size:1.5rem;opacity:0;z-index:2;
+  transition:left 1.1s cubic-bezier(0.45,0,0.55,1), opacity .25s ease;
+  filter:drop-shadow(0 0 10px rgba(69,183,209,0.55));
+}
+.swp-pkt.show{opacity:1}
+.swp-pkt.cross{left:100%}
+/* servidor */
+.swp-server{
+  border-radius:12px;border:1px solid rgba(6,214,160,0.30);
+  background:linear-gradient(180deg,rgba(6,214,160,0.08),rgba(6,214,160,0.02));
+  min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:6px;padding:14px;text-align:center;position:relative;
+  transition:filter .4s, border-color .4s;
+}
+.swp-server .glow{
+  position:absolute;inset:-1px;border-radius:12px;opacity:0;pointer-events:none;
+  box-shadow:0 0 30px 3px rgba(6,214,160,0.45), inset 0 0 18px rgba(6,214,160,0.18);
+  transition:opacity .35s ease;
+}
+.swp-server.working .glow{opacity:1}
+.swp-server .s-ico{font-size:2.3rem;line-height:1}
+.swp-server .s-name{font-weight:800;font-size:0.85rem}
+.swp-server .s-sub{font-size:0.7rem;color:var(--text-dim)}
+.swp-server.off{filter:grayscale(1) brightness(0.6);border-color:rgba(255,255,255,0.12)}
+@media(max-width:760px){
+  .swp-live-stage{grid-template-columns:1fr}
+  .swp-live-wire{min-height:84px}
+  .swp-live-wire .rail{left:50%;right:auto;top:8px;bottom:8px;width:3px;height:auto;transform:translateX(-50%);
+    background:linear-gradient(180deg,var(--accent4),var(--accent7))}
+  .swp-live-wire .wire-cap.top{top:auto;left:0;right:auto;width:44%;text-align:right;top:calc(50% - 8px)}
+  .swp-live-wire .wire-cap.bottom{left:56%;width:44%;text-align:left;top:calc(50% - 8px)}
+  .swp-pkt{left:50% !important;top:0;transform:translate(-50%,-30%);
+    transition:top 1.1s cubic-bezier(0.45,0,0.55,1), opacity .25s ease}
+  .swp-pkt.cross{top:100%}
+}
+
+/* ---------- MÁQUINA 2: Anatomia da URL ---------- */
+.swp-urlana{
+  border:1px solid rgba(247,183,49,0.25);border-radius:18px;margin:18px 0;overflow:hidden;
+  background:linear-gradient(180deg,#0d1020,#0d0d1a);
+}
+.swp-urlana-row{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:6px;
+  padding:22px 16px 8px;
+}
+.swp-seg{
+  font-family:'JetBrains Mono',monospace;font-size:clamp(0.78rem,2.4vw,1.02rem);
+  font-weight:700;padding:8px 10px;border-radius:10px;cursor:pointer;
+  border:1px solid rgba(255,255,255,0.10);background:rgba(255,255,255,0.03);
+  color:var(--text-dim);transition:all .3s ease;user-select:none;
+}
+.swp-seg:hover{border-color:rgba(255,255,255,0.3)}
+.swp-seg.active{
+  color:#0a0a12;transform:translateY(-4px);
+  box-shadow:0 8px 24px rgba(0,0,0,0.4);
+}
+.swp-seg.c1.active{background:var(--accent3)}
+.swp-seg.c2.active{background:var(--accent5)}
+.swp-seg.c3.active{background:var(--accent2);color:#fff}
+.swp-seg.c4.active{background:var(--accent6)}
+.swp-seg-info{
+  margin:10px 16px 16px;padding:14px 18px;border-radius:12px;min-height:74px;
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);
+  font-size:0.9rem;color:var(--text-dim);line-height:1.6;
+  display:flex;align-items:center;gap:12px;
+}
+.swp-seg-info .si-emoji{font-size:1.6rem;flex-shrink:0}
+.swp-seg-info strong{color:var(--text)}
+.swp-seg-info code{background:rgba(255,255,255,0.07);padding:1px 6px;border-radius:5px;font-size:0.82rem}
+
+/* ---------- Raio-X do Streamlit ---------- */
+.swp-xray{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0;align-items:stretch;
+}
+@media(max-width:700px){.swp-xray{grid-template-columns:1fr}}
+.swp-xray-col{
+  border-radius:16px;padding:18px;border:1px solid rgba(255,255,255,0.08);
+  background:var(--surface);
+}
+.swp-xray-col .xc-title{
+  font-weight:800;font-size:0.9rem;margin-bottom:12px;display:flex;align-items:center;gap:8px;
+}
+.swp-xray-layer{
+  border:1px solid rgba(255,255,255,0.08);border-radius:10px;
+  padding:10px 14px;margin:8px 0;font-size:0.85rem;color:var(--text-dim);
+  display:flex;align-items:center;gap:10px;
+  transition:all .45s ease;opacity:0.45;
+}
+.swp-xray-layer .xl-emoji{font-size:1.2rem}
+.swp-xray-layer.active{
+  opacity:1;border-color:rgba(255,75,75,0.45);background:rgba(255,75,75,0.07);
+  transform:translateX(4px);color:var(--text);
+}
+.swp-xray-col.flask-col .swp-xray-layer.active{
+  border-color:rgba(6,214,160,0.45);background:rgba(6,214,160,0.07);
+}
+
+/* ---------- Rastreador do app.py ---------- */
+.swp-trace .swp-tline{
+  display:block;padding:2px 10px;border-left:3px solid transparent;border-radius:4px;
+  transition:all .35s ease;
+}
+.swp-trace .swp-tline.active{
+  background:rgba(108,99,255,0.14);border-left-color:var(--accent);
+}
+.swp-trace-msgs{position:relative;min-height:64px;margin-top:12px}
+.swp-trace-msgs > div{
+  position:absolute;inset:0;opacity:0;transition:opacity .4s ease;
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);
+  border-radius:12px;padding:12px 16px;font-size:0.88rem;color:var(--text-dim);
+  display:flex;align-items:center;gap:10px;line-height:1.5;
+}
+.swp-trace-msgs > div.on{opacity:1}
+.swp-trace-msgs strong{color:var(--text)}
+.swp-trace-msgs .tm-emoji{font-size:1.4rem;flex-shrink:0}
+
+/* ---------- MÁQUINA 3: Cada URL é uma página (router) ---------- */
+.swp-router{
+  border:1px solid rgba(108,99,255,0.28);border-radius:18px;overflow:hidden;margin:18px 0;
+  background:
+    radial-gradient(1100px 280px at 50% -12%, rgba(108,99,255,0.12), transparent 70%),
+    linear-gradient(180deg,#0b1020,#0d0d1a);
+  box-shadow:0 22px 60px rgba(0,0,0,0.45);
+}
+.swp-router-stage{display:grid;grid-template-columns:1fr 1fr;gap:0}
+@media(max-width:760px){.swp-router-stage{grid-template-columns:1fr}}
+.swp-router-pane{padding:16px 18px;min-width:0}
+.swp-router-pane.code{border-right:1px solid rgba(255,255,255,0.06)}
+@media(max-width:760px){.swp-router-pane.code{border-right:none;border-top:1px solid rgba(255,255,255,0.06);order:2}}
+.swp-router-browser{border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.10);background:#0f1320}
+.swp-router-url{font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:#9fb0d0}
+.swp-router-url .path{color:var(--accent7);font-weight:700}
+.swp-router-nav{
+  display:flex;gap:8px;background:#f2f3f7;padding:8px 12px;border-bottom:1px solid #e2e4ea;
+}
+.swp-router-nav button{
+  border:0;background:#fff;border-radius:8px;padding:6px 12px;cursor:pointer;
+  font-family:'Nunito',sans-serif;font-weight:700;font-size:0.78rem;color:#3a3a4a;
+  box-shadow:0 1px 3px rgba(0,0,0,0.12);transition:all .25s;
+}
+.swp-router-nav button:hover{transform:translateY(-1px)}
+.swp-router-nav button.here{background:#3b3bd1;color:#fff}
+.swp-router-view{background:#fff;min-height:130px;padding:14px 16px;font-family:'Nunito',sans-serif}
+.swp-router-view .rv{display:none}
+.swp-router-view .rv.on{display:block}
+.swp-router-view h1{font-size:1.1rem;margin:0 0 6px;color:#15151f}
+.swp-router-view p{font-size:0.84rem;margin:4px 0;color:#3a3a4a}
+/* rotas no painel de código */
+.swp-route{
+  font-family:'JetBrains Mono',monospace;font-size:0.78rem;line-height:1.9;color:#8b96b0;
+  border:1px solid rgba(255,255,255,0.07);border-radius:10px;
+  padding:10px 14px;margin:10px 0;white-space:pre;overflow-x:auto;overflow-y:hidden;
+  transition:all .35s ease;position:relative;
+  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.15) transparent;
+}
+.swp-route::-webkit-scrollbar{height:5px;width:5px}
+.swp-route::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:3px}
+.swp-route::-webkit-scrollbar-track{background:transparent}
+.swp-route .glow{
+  position:absolute;inset:-1px;border-radius:10px;opacity:0;pointer-events:none;
+  box-shadow:0 0 24px 2px rgba(6,214,160,0.4), inset 0 0 14px rgba(6,214,160,0.15);
+  transition:opacity .3s ease;
+}
+.swp-route.lit{border-color:rgba(6,214,160,0.5);color:#c9d1d9}
+.swp-route.lit .glow{opacity:1}
+.swp-router-note{
+  padding:10px 16px;font-size:0.8rem;color:var(--text-dim);min-height:42px;line-height:1.5;
+  border-top:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.03);
+}
+.swp-router-note strong{color:var(--accent7)}
+
+/* ---------- Widget Pico.css antes/depois ---------- */
+.swp-pico-code{display:block;margin:0 0 0 0}
+.swp-pico .swp-pico-view{
+  background:#fff;min-height:170px;padding:18px 20px;transition:all .4s ease;
+  font-family:'Times New Roman',serif;color:#000;
+}
+.swp-pico .swp-pico-view h1{font-size:1.5rem;margin:0 0 8px;font-family:inherit;color:#000;font-weight:700}
+.swp-pico .swp-pico-view p{margin:6px 0;font-size:0.95rem;font-family:inherit;color:#000}
+.swp-pico .swp-pico-view a{color:#00e}
+.swp-pico .swp-pico-view button{
+  font-family:inherit;font-size:0.85rem;padding:2px 8px;background:#efefef;
+  border:2px outset #ccc;border-radius:0;color:#000;cursor:pointer;transition:all .4s ease;
+}
+/* com o Pico "ligado" */
+.swp-pico .swp-pico-view.pretty{
+  font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  background:#11191f;color:#c2c7d0;padding:22px 24px;
+}
+.swp-pico .swp-pico-view.pretty h1{color:#f1f3f5;font-family:inherit;font-weight:700;letter-spacing:-0.5px}
+.swp-pico .swp-pico-view.pretty p{color:#a7afba;font-family:inherit}
+.swp-pico .swp-pico-view.pretty a{color:#01aaff}
+.swp-pico .swp-pico-view.pretty button{
+  font-family:inherit;background:#01aaff;color:#fff;border:0;border-radius:6px;
+  padding:9px 18px;font-weight:600;
+}
+
+/* código da forja pode rolar no mobile em vez de cortar */
+.forge .fp-body{overflow-x:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.15) transparent}
+.forge .fp-body::-webkit-scrollbar{height:5px}
+.forge .fp-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:3px}
+
+/* ---------- selos / detalhes ---------- */
+.swp-file-tree{
+  font-family:'JetBrains Mono',monospace;font-size:0.85rem;line-height:2;
+  background:var(--code-bg);border:1px solid rgba(255,255,255,0.07);
+  border-radius:12px;padding:16px 20px;color:var(--text-dim);white-space:pre;overflow-x:auto;
+  font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+}
+.swp-file-tree .dir{color:var(--accent5);font-weight:700}
+.swp-file-tree .file{color:var(--text)}
+.swp-file-tree .new{color:var(--accent7);font-weight:700}
+.swp-file-tree .note{color:#5b6478;font-style:italic}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-orbs">
+  <div class="orb"></div>
+  <div class="orb"></div>
+  <div class="orb"></div>
+</div>
+
+<div class="progress-track"><div class="progress-bar"></div></div>
+
+<button class="menu-toggle" onclick="openSidebar()" aria-label="Abrir menu">☰</button>
+<aside class="sidebar-nav" id="sidebar">
+  <button class="sidebar-close" onclick="closeSidebar()" aria-label="Fechar menu">✕</button>
+  <div class="sidebar-header">
+    <h3>🌐 Dia 01 · Olá, Web!</h3>
+    <a href="../../index.html" class="sidebar-back">← Voltar ao hub</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🌐 Como a web funciona</div>
+    <a class="sidebar-link" onclick="goTo('aquecimento')"><span class="dot" style="background:var(--accent5)"></span>Aquecimento</a>
+    <a class="sidebar-link" onclick="goTo('garcom')"><span class="dot" style="background:var(--accent6)"></span>A analogia do garçom</a>
+    <a class="sidebar-link" onclick="goTo('pedido-vivo')"><span class="dot" style="background:var(--accent4)"></span>⭐ Pedido ao Vivo</a>
+    <a class="sidebar-link" onclick="goTo('url')"><span class="dot" style="background:var(--accent3)"></span>Anatomia da URL</a>
+    <a class="sidebar-link" onclick="goTo('streamlit')"><span class="dot" style="background:var(--streamlit)"></span>Raio-X do Streamlit</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🧱 As linguagens do navegador</div>
+    <a class="sidebar-link" onclick="goTo('html')"><span class="dot" style="background:#ff7a52"></span>HTML de verdade</a>
+    <a class="sidebar-link" onclick="goTo('forja')"><span class="dot" style="background:var(--accent5)"></span>⭐ Forja de Tags</a>
+    <a class="sidebar-link" onclick="goTo('bora-html')"><span class="dot" style="background:var(--accent4)"></span>Bora: sua 1ª página</a>
+    <a class="sidebar-link" onclick="goTo('css')"><span class="dot" style="background:#6f9bff"></span>CSS + o truque do Pico</a>
+    <a class="sidebar-link" onclick="goTo('dor')"><span class="dot" style="background:var(--accent2)"></span>O problema do file://</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🌶️ Olá, Flask</div>
+    <a class="sidebar-link" onclick="goTo('instalacao')"><span class="dot" style="background:var(--accent7)"></span>Instalação</a>
+    <a class="sidebar-link" onclick="goTo('primeiro-app')"><span class="dot" style="background:var(--python-y)"></span>Seu primeiro servidor</a>
+    <a class="sidebar-link" onclick="goTo('render-template')"><span class="dot" style="background:var(--accent)"></span>render_template</a>
+    <a class="sidebar-link" onclick="goTo('duas-rotas')"><span class="dot" style="background:var(--accent6)"></span>⭐ Cada URL, uma página</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🏁 Fechamento</div>
+    <a class="sidebar-link" onclick="goTo('bugzilla')"><span class="dot" style="background:var(--bug)"></span>BugZilla do dia 🐛</a>
+    <a class="sidebar-link" onclick="goTo('quiz')"><span class="dot" style="background:var(--accent5)"></span>Quiz de fixação</a>
+    <a class="sidebar-link" onclick="goTo('arena')"><span class="dot" style="background:var(--accent6)"></span>Arena de treino</a>
+    <a class="sidebar-link" onclick="goTo('resumo')"><span class="dot" style="background:var(--accent7)"></span>Resumo do dia</a>
+  </div>
+</aside>
+<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-icons">🌐 🧑‍🍳 🌶️</div>
+  <span class="hero-badge python">Dia 01 · Sistemas Web com Python</span>
+  <h1><span style="background:linear-gradient(135deg,var(--accent4),var(--python-y));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Olá, Web!<br>Olá, Flask!</span></h1>
+  <p class="subtitle">
+    Hoje você descobre <strong style="color:var(--accent4)">o que acontece quando alguém abre um site</strong> —
+    e o que o <strong style="color:var(--streamlit)">streamlit run</strong> escondia de você esse tempo todo.
+    No fim da aula, seu computador vai estar servindo um site com
+    <strong style="color:var(--accent7)">duas páginas e URL própria</strong>. 🚀
+  </p>
+  <div class="hero-stack">
+    <span class="stack-chip python">🐍 Python</span>
+    <span class="stack-chip">🌐 request / response</span>
+    <span class="stack-chip">🧱 HTML</span>
+    <span class="stack-chip">🌶️ Flask</span>
+  </div>
+</section>
+
+<div class="container">
+
+  <!-- ═══════════════════════════════════════════════════════
+       AQUECIMENTO — ponte com o bootcamp
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="aquecimento">
+    <div class="step-header">
+      <div class="step-number sn-yellow">🔥</div>
+      <div>
+        <div class="step-title">Aquecimento: de onde a gente vem</div>
+        <div class="step-sub">Um minuto de memória antes da novidade</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        No fim do bootcamp você construiu o <strong style="color:var(--text)">Sistema de Loja</strong>:
+        estoque, cadastro, vendas… tudo em Python, com telinha no Streamlit e dados no TinyDB.
+        Funciona! Mas ele tem um probleminha que você talvez nem tenha percebido —
+        e é exatamente esse problema que este curso resolve.
+      </p>
+
+      <div class="analogy">
+        <div class="analogy-title">Pensa assim 🎪</div>
+        <p>
+          Seu sistema hoje é como um <strong>espetáculo incrível ensaiado na sua garagem</strong>.
+          O show existe, é bom, funciona… mas ninguém consegue assistir,
+          porque <strong>não tem endereço para chegar até ele</strong>.
+        </p>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">1️⃣</span> O <code>app_loja.py</code> que você fez no bootcamp roda onde?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Só no meu computador</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Na internet, qualquer um acessa</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">No computador do professor</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">No celular, se eu instalar</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Exato!" data-wrong="Quase!"
+             data-explain="ele roda na SUA máquina. Se você desligar o notebook, o sistema some. Hoje começamos a mudar isso."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">2️⃣</span> O que falta para sua amiga abrir seu sistema no celular dela?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Um computador mais potente</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Um endereço na internet (uma URL)</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Instalar o Python no celular</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Mandar o arquivo .py por WhatsApp</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Isso!" data-wrong="Hmm, não!"
+             data-explain="sites não se instalam: eles são VISITADOS por um endereço. Entender esse endereço é o assunto de hoje."></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       A ANALOGIA DO GARÇOM
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="garcom">
+    <div class="step-header">
+      <div class="step-number sn-purple">🧑‍🍳</div>
+      <div>
+        <div class="step-title">Como a web funciona: a analogia do garçom</div>
+        <div class="step-sub">Todo site do mundo funciona assim. Todo. Sem exceção.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="analogy">
+        <div class="analogy-title">Imagina um restaurante 🍝</div>
+        <p>
+          Você senta na mesa e <strong>não entra na cozinha</strong> — você chama o garçom e faz um
+          <strong>pedido</strong>. O garçom leva o pedido pra cozinha, a cozinha prepara o prato,
+          e o garçom <strong>volta com a comida</strong> pra sua mesa. Você nunca viu a cozinha,
+          mas jantou muito bem.
+        </p>
+      </div>
+
+      <div class="flow-container autoplay">
+        <div class="flow-box fb-input">🪑<br>Você, na mesa</div>
+        <div class="flow-arrow">→<span class="flow-label">pedido ✉️</span></div>
+        <div class="flow-box">🧑‍🍳<br>Garçom</div>
+        <div class="flow-arrow">→<span class="flow-label">comanda 📋</span></div>
+        <div class="flow-box fb-process">🍳<br>Cozinha</div>
+        <div class="flow-arrow">→<span class="flow-label">prato pronto 🍝</span></div>
+        <div class="flow-box fb-output">🪑<br>Você, comendo</div>
+      </div>
+
+      <p style="color:var(--text-dim);margin-top:18px">
+        Agora troca os nomes — <strong style="color:var(--text)">é exatamente a mesma cena</strong>:
+      </p>
+
+      <div class="flow-container autoplay">
+        <div class="flow-box fb-input">🌐<br>Navegador</div>
+        <div class="flow-arrow">→<span class="flow-label">request ✉️</span></div>
+        <div class="flow-box fb-process">🖥️<br>Servidor</div>
+        <div class="flow-arrow">→<span class="flow-label">response 📦</span></div>
+        <div class="flow-box fb-output">🌐<br>Navegador</div>
+      </div>
+
+      <div class="keyword-grid" style="margin-top:18px">
+        <div class="keyword-chip">
+          <span class="emoji">🌐</span>
+          <span class="kw-name">Navegador</span>
+          <span class="kw-desc">a mesa: onde você senta, pede e recebe (Chrome, Firefox…)</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">✉️</span>
+          <span class="kw-name">Request</span>
+          <span class="kw-desc">o pedido: "me traz a página inicial, por favor"</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">🖥️</span>
+          <span class="kw-name">Servidor</span>
+          <span class="kw-desc">a cozinha: um computador que PREPARA e entrega páginas</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">📦</span>
+          <span class="kw-name">Response</span>
+          <span class="kw-desc">o prato: a resposta que volta — geralmente uma página</span>
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 A frase que resume a web inteira</div>
+        <p>
+          <strong>Navegador pede (request) → servidor responde (response).</strong>
+          Instagram, YouTube, banco, joguinho… tudo que você abre na internet é essa
+          conversa acontecendo, milhões de vezes por segundo.
+        </p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🤯</span>
+        <div class="tip-content">
+          <strong>E o mais legal:</strong> a partir de hoje, VOCÊ vai ser o dono da cozinha.
+          O Flask é isso: um jeito de escrever a cozinha (o servidor) <strong>em Python</strong>.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ MÁQUINA: PEDIDO AO VIVO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="pedido-vivo">
+    <div class="step-header">
+      <div class="step-number sn-blue">⭐</div>
+      <div>
+        <div class="step-title">Pedido ao Vivo: veja a conversa acontecer</div>
+        <div class="step-sub">Um request de verdade, em câmera lenta — com direito a dar errado 😈</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Aperte <strong style="color:var(--text)">▶ Visitar o site</strong> e acompanhe:
+        o navegador manda o request, o servidor prepara a página e a response volta.
+        Depois faça uma maldade: <strong style="color:var(--text)">desligue o servidor</strong>
+        e tente visitar de novo…
+      </p>
+
+      <div class="swp-live" id="swpLive">
+        <div class="swp-live-stage">
+          <div class="swp-live-pane">
+            <div class="pane-label">🌐 seu navegador</div>
+            <div class="swp-live-browser">
+              <div class="mb-chrome">
+                <span class="mb-dots"><i></i><i></i><i></i></span>
+                <span class="mb-url"><span class="lock">🔒</span><span class="addr swp-live-url">minha-loja.com</span></span>
+              </div>
+              <div class="swp-live-view" id="liveView">
+                <div class="state on" id="stIdle">
+                  <p style="color:#9aa3b8;font-size:0.85rem;text-align:center;padding:34px 0">
+                    aguardando você clicar em ▶ …
+                  </p>
+                </div>
+                <div class="state" id="stLoading">
+                  <div class="swp-sk w60"></div>
+                  <div class="swp-sk w80"></div>
+                  <div class="swp-sk w40"></div>
+                </div>
+                <div class="state" id="stOk">
+                  <div class="swp-page-ok">
+                    <h1>🛍️ Minha Loja</h1>
+                    <p>Bem-vindo! Temos fones, teclados e mouses.</p>
+                    <span class="chip">✓ página entregue pelo servidor</span>
+                  </div>
+                </div>
+                <div class="state" id="stErr">
+                  <div class="swp-page-err">
+                    <div class="dino">🦖</div>
+                    <div class="big">Este site não pode ser alcançado</div>
+                    <small>minha-loja.com demorou muito para responder</small>
+                    <span class="swp-err-code">ERR_CONNECTION_REFUSED</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swp-live-pane">
+            <div class="pane-label">a viagem</div>
+            <div class="swp-live-wire">
+              <div class="rail"></div>
+              <span class="wire-cap top">request ✉️ →</span>
+              <span class="wire-cap bottom">← response 📦</span>
+              <span class="swp-pkt" id="pktReq">✉️</span>
+              <span class="swp-pkt" id="pktRes" style="transition-timing-function:cubic-bezier(0.45,0,0.55,1)">📦</span>
+            </div>
+          </div>
+
+          <div class="swp-live-pane">
+            <div class="pane-label">🖥️ o servidor (a cozinha)</div>
+            <div class="swp-server" id="liveServer">
+              <div class="glow"></div>
+              <span class="s-ico" id="srvIco">🖥️</span>
+              <span class="s-name" id="srvName">servidor da loja</span>
+              <span class="s-sub" id="srvSub">ligado, esperando pedidos</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="swp-machine-hud">
+          <button class="swp-machine-btn" id="liveGo">▶ Visitar o site</button>
+          <button class="swp-machine-btn ghost" id="livePower">🔌 Desligar servidor</button>
+          <span class="swp-machine-note" id="liveNote">clica em ▶ pra ver o request viajar</span>
+        </div>
+      </div>
+
+      <div class="bug-box">
+        <span class="tip-icon">🦖</span>
+        <div class="tip-content">
+          <strong>Reconheceu o dinossaurinho?</strong> Aquela tela de "site não pode ser alcançado"
+          significa exatamente isto: <strong>o request viajou, mas não tinha nenhum servidor
+          ligado do outro lado pra responder</strong>. A cozinha estava fechada.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ANATOMIA DA URL
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="url">
+    <div class="step-header">
+      <div class="step-number sn-mint">📮</div>
+      <div>
+        <div class="step-title">A URL: o endereço do pedido</div>
+        <div class="step-sub">Cada pedacinho tem um significado — clique neles!</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="analogy">
+        <div class="analogy-title">O endereço da entrega 📮</div>
+        <p>
+          Pra pizza chegar, o entregador precisa de <strong>cidade, rua e número do apartamento</strong>.
+          Pro request chegar, o navegador precisa da <strong>URL</strong> — e ela também tem
+          "cidade, rua e apartamento". Olha só:
+        </p>
+      </div>
+
+      <div class="swp-urlana" id="urlAna">
+        <div class="swp-urlana-row">
+          <span class="swp-seg c1" data-seg="0">https://</span>
+          <span class="swp-seg c2" data-seg="1">minha-loja.com</span>
+          <span class="swp-seg c3" data-seg="2">:443</span>
+          <span class="swp-seg c4" data-seg="3">/sobre</span>
+        </div>
+        <div class="swp-seg-info" id="segInfo">
+          <span class="si-emoji">👆</span>
+          <span>Clique em cada pedaço da URL para descobrir o que ele faz (ou espere, que eu mesmo mostro).</span>
+        </div>
+      </div>
+
+      <p style="color:var(--text-dim)">
+        E a URL que você vai usar HOJE, a cada 30 segundos, é esta aqui:
+      </p>
+
+      <div class="swp-urlana" id="urlAna2">
+        <div class="swp-urlana-row">
+          <span class="swp-seg c1" data-seg="0">http://</span>
+          <span class="swp-seg c2" data-seg="1">localhost</span>
+          <span class="swp-seg c3" data-seg="2">:5000</span>
+          <span class="swp-seg c4" data-seg="3">/</span>
+        </div>
+        <div class="swp-seg-info" id="segInfo2">
+          <span class="si-emoji">👆</span>
+          <span>Esta é a URL do seu Flask. Clique nos pedaços!</span>
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 localhost = "aqui mesmo"</div>
+        <p>
+          <strong>localhost</strong> é o apelido que todo computador dá <strong>pra si mesmo</strong>.
+          Quando você acessa <code>localhost:5000</code>, o navegador faz um request…
+          <strong>pro seu próprio computador</strong>. Mesa e cozinha na mesma casa —
+          perfeito pra desenvolver sem depender de internet.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       RAIO-X DO STREAMLIT
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="streamlit">
+    <div class="step-header">
+      <div class="step-number sn-red">🩻</div>
+      <div>
+        <div class="step-title">O que o Streamlit escondia de você</div>
+        <div class="step-sub">Plot twist: você já rodava um servidor web sem saber</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Lembra do que aparecia no terminal toda vez que você rodava a Loja?
+        Presta atenção na <strong style="color:var(--text)">segunda linha</strong>:
+      </p>
+
+      <div class="terminal" data-typewriter>
+        <div class="terminal-header">
+          <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+          <span class="title">terminal</span>
+        </div>
+        <div class="terminal-body">
+          <span class="prompt">$</span> <span class="typed" data-text="streamlit run app_loja.py"></span><span class="cursor"></span><br>
+          <span class="out">  You can now view your Streamlit app in your browser.</span><br>
+          <span class="out" style="color:var(--accent7)">  Local URL: http://localhost:8501</span><br>
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🕵️</span>
+        <div class="tip-content">
+          <strong>Local URL… localhost… :8501…</strong> Você acabou de aprender a ler isso!
+          O Streamlit <strong>ligava um servidor no seu computador</strong>, na porta 8501,
+          e abria o navegador apontando pra ele. Você era dono de uma cozinha e não sabia.
+        </div>
+      </div>
+
+      <div class="swp-xray" data-seq="1900">
+        <div class="swp-xray-col">
+          <div class="xc-title">🎩 O que você via</div>
+          <div class="swp-xray-layer" data-seq-step="0,1,2,3"><span class="xl-emoji">✨</span> "Mágica": <code>st.title()</code>, <code>st.button()</code>… e a tela aparece</div>
+          <div class="swp-xray-layer" data-seq-step="1,2,3"><span class="xl-emoji">🎨</span> Visual pronto, sem você tocar em HTML</div>
+          <div class="swp-xray-layer" data-seq-step="2,3"><span class="xl-emoji">🔄</span> Tela que se refaz sozinha a cada clique</div>
+        </div>
+        <div class="swp-xray-col flask-col">
+          <div class="xc-title">🩻 O que existia por baixo</div>
+          <div class="swp-xray-layer" data-seq-step="1,2,3"><span class="xl-emoji">🖥️</span> Um <strong>servidor web</strong> ouvindo em <code>localhost:8501</code></div>
+          <div class="swp-xray-layer" data-seq-step="2,3"><span class="xl-emoji">📦</span> <strong>Responses</strong> com páginas HTML prontas</div>
+          <div class="swp-xray-layer" data-seq-step="3"><span class="xl-emoji">🌐</span> O ciclo request → response que você acabou de aprender</div>
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 Flask é o Streamlit de capô aberto</div>
+        <p>
+          O Streamlit é ótimo — mas ele decide <strong>por você</strong>: as URLs, o visual, o
+          comportamento. Com o <strong>Flask</strong>, você assume o volante: escolhe cada URL,
+          cada página, cada resposta. É o mesmo motor… <strong>com você dirigindo</strong>.
+        </p>
+      </div>
+
+      <div class="warning">
+        <span class="tip-icon">🧭</span>
+        <div class="tip-content">
+          <strong>Spoiler honesto:</strong> vai dar um pouquinho mais de trabalho que o Streamlit.
+          Em troca, você ganha o superpoder que TODA vaga de backend pede:
+          entender <strong>como a web funciona de verdade</strong>.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="chapter-divider">
+    <div class="chapter-icon">🧱</div>
+    <div class="chapter-number">Parte 2</div>
+    <h2 style="background:linear-gradient(135deg,#ff7a52,#6f9bff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">As linguagens do navegador</h2>
+    <p class="chapter-subtitle">Antes de servir páginas, você precisa saber do que uma página é feita</p>
+  </div>
+
+<!-- ═══════════════════════════════════════════════════════
+       HTML DE VERDADE
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="html">
+    <div class="step-header">
+      <div class="step-number" style="background:linear-gradient(135deg,#ff7a52,#e34f26)">🧱</div>
+      <div>
+        <div class="step-title">HTML: a língua que o navegador entende</div>
+        <div class="step-sub">A response que o servidor manda é escrita nela</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Quando o garçom volta com o "prato" (a response), o que vem dentro do pacote?
+        Não é uma foto da tela pronta. É <strong style="color:var(--text)">texto</strong> —
+        texto escrito numa língua chamada <strong style="color:#ff7a52">HTML</strong>,
+        que o navegador lê e transforma em página.
+      </p>
+
+      <div class="analogy">
+        <div class="analogy-title">Texto com etiquetas 🏷️</div>
+        <p>
+          HTML é um texto normal onde cada pedaço ganha uma <strong>etiqueta</strong> dizendo
+          o que ele é: "isto é um título", "isto é um parágrafo", "isto é uma lista".
+          O navegador lê as etiquetas e desenha cada coisa do jeito certo.
+          As etiquetas se chamam <strong>tags</strong>.
+        </p>
+      </div>
+
+      <h3 style="margin:22px 0 10px">🔬 Anatomia de uma tag</h3>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">uma tag de título</span>
+          <span class="lang-badge html">HTML</span>
+        </div>
+<pre><span class="tag">&lt;h1&gt;</span>Minha Loja<span class="tag">&lt;/h1&gt;</span>
+<span class="cm"> ↑ abre           ↑ conteúdo   ↑ fecha (repare na barra /)</span></pre>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 A regra do sanduíche</div>
+        <p>
+          Quase toda tag vem em par: <strong>abre</strong> <code>&lt;h1&gt;</code>,
+          recheio no meio, <strong>fecha</strong> <code>&lt;/h1&gt;</code> — a de fechar
+          tem uma <strong>barra /</strong>. O que está entre as duas é o conteúdo.
+        </p>
+      </div>
+
+      <p style="color:var(--text-dim)">
+        As 4 tags que você vai usar hoje (só 4, prometo):
+      </p>
+
+      <div class="keyword-grid">
+        <div class="keyword-chip">
+          <span class="emoji">📰</span>
+          <span class="kw-name">&lt;h1&gt;</span>
+          <span class="kw-desc">título principal da página (h de heading)</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">📝</span>
+          <span class="kw-name">&lt;p&gt;</span>
+          <span class="kw-desc">parágrafo de texto comum</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">📋</span>
+          <span class="kw-name">&lt;ul&gt; + &lt;li&gt;</span>
+          <span class="kw-desc">lista (ul) e cada item dela (li)</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">🔗</span>
+          <span class="kw-name">&lt;a&gt;</span>
+          <span class="kw-desc">link pra outra página (vai brilhar no fim da aula)</span>
+        </div>
+      </div>
+
+      <h3 style="margin:26px 0 10px">🪆 Tags dentro de tags</h3>
+      <p style="color:var(--text-dim)">
+        Tags podem se <strong style="color:var(--text)">aninhar</strong>, como bonecas russas.
+        Uma lista é isso: itens <code>&lt;li&gt;</code> morando dentro de um <code>&lt;ul&gt;</code>:
+      </p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">lista de produtos</span>
+          <span class="lang-badge html">HTML</span>
+        </div>
+<pre><span class="tag">&lt;ul&gt;</span>
+  <span class="tag">&lt;li&gt;</span>🎧 Fone Bluetooth<span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>⌨️ Teclado Mecânico<span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ul&gt;</span></pre>
+      </div>
+
+      <div class="bug-box">
+        <span class="tip-icon">⚠️</span>
+        <div class="tip-content">
+          <strong>Regra das bonecas:</strong> quem abre por último, fecha primeiro.
+          O <code>&lt;li&gt;</code> abriu dentro do <code>&lt;ul&gt;</code>,
+          então fecha <strong>antes</strong> do <code>&lt;/ul&gt;</code>.
+          Cruzar tags (<code>&lt;ul&gt;&lt;li&gt;&lt;/ul&gt;&lt;/li&gt;</code>) confunde o navegador.
+        </div>
+      </div>
+
+      <h3 style="margin:26px 0 10px">🦴 O esqueleto de toda página</h3>
+      <p style="color:var(--text-dim)">
+        Todo arquivo HTML do planeta começa com a mesma estrutura básica.
+        Ela diz ao navegador "isto aqui é uma página" e separa o que é
+        <strong style="color:var(--text)">informação sobre a página</strong> (head)
+        do que <strong style="color:var(--text)">aparece na tela</strong> (body):
+      </p>
+
+      <div class="code-block with-lines">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">index.html</span>
+          <span class="lang-badge html">HTML</span>
+        </div>
+        <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11</div>
+<pre><span class="tag">&lt;!DOCTYPE html&gt;</span>          <span class="cm">← "navegador, isto é HTML moderno"</span>
+<span class="tag">&lt;html</span> <span class="atr">lang</span>=<span class="st">"pt-BR"</span><span class="tag">&gt;</span>     <span class="cm">← a página inteira mora aqui dentro</span>
+  <span class="tag">&lt;head&gt;</span>                 <span class="cm">← bastidores: infos SOBRE a página</span>
+    <span class="tag">&lt;meta</span> <span class="atr">charset</span>=<span class="st">"UTF-8"</span><span class="tag">&gt;</span>   <span class="cm">← acentos funcionando ✓</span>
+    <span class="tag">&lt;title&gt;</span>Minha Loja<span class="tag">&lt;/title&gt;</span> <span class="cm">← nome na abinha do navegador</span>
+  <span class="tag">&lt;/head&gt;</span>
+  <span class="tag">&lt;body&gt;</span>                 <span class="cm">← palco: o que APARECE na tela</span>
+    <span class="tag">&lt;h1&gt;</span>Minha Loja<span class="tag">&lt;/h1&gt;</span>
+    <span class="tag">&lt;p&gt;</span>Bem-vindo!<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🏷️</span>
+        <div class="tip-content">
+          <strong>Viu o <code>lang="pt-BR"</code>?</strong> Isso é um <strong>atributo</strong>:
+          uma informação extra escrita DENTRO da tag de abrir, no formato
+          <code>nome="valor"</code>. Cada tag pode ter os seus.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ FORJA DE TAGS
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="forja">
+    <div class="step-header">
+      <div class="step-number sn-yellow">🪄</div>
+      <div>
+        <div class="step-title">As tags chegam no navegador — assista ao vivo</div>
+        <div class="step-sub">Cada tag voa do arquivo e vira um pedaço da página. Isso é renderizar.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="forge" data-forge>
+        <div class="forge-stage">
+          <div class="forge-pane code">
+            <div class="fp-head">📄 seu arquivo index.html</div>
+            <div class="fp-body">
+              <div class="fp-line"><span class="cm">&lt;body&gt;</span></div>
+              <div class="fp-line">  <span class="brick" data-brick="0" data-msg="🧱 a tag &lt;h1&gt; vira o título grandão da página">&lt;h1&gt;</span> Minha Loja 🛍️</div>
+              <div class="fp-line">  <span class="brick" data-brick="1" data-msg="🧱 &lt;p&gt; vira um parágrafo de texto comum">&lt;p&gt;</span> As melhores ofertas da cidade.</div>
+              <div class="fp-line">  <span class="brick" data-brick="2" data-msg="🧱 &lt;ul&gt; + &lt;li&gt; viram a lista de produtos, com bolinha e tudo">&lt;ul&gt;&lt;li&gt;</span> Fone · Teclado · Mouse</div>
+              <div class="fp-line">  <span class="brick" data-brick="3" data-msg="🧱 &lt;a&gt; vira um LINK clicável — guarda essa, ela volta já já">&lt;a&gt;</span> Fale conosco</div>
+              <div class="fp-line"><span class="cm">&lt;/body&gt;</span></div>
+            </div>
+          </div>
+          <div class="forge-pane browser">
+            <div class="mb-chrome">
+              <span class="mb-dots"><i></i><i></i><i></i></span>
+              <span class="mb-url"><span class="lock">🔒</span><span class="addr">index.html</span></span>
+              <span class="mb-actions">⟳<span class="mb-tag">ao vivo</span></span>
+            </div>
+            <div class="fp-paint">
+              <h1 data-paint="0">Minha Loja 🛍️</h1>
+              <p data-paint="1">As melhores ofertas da cidade.</p>
+              <ul data-paint="2"><li>🎧 Fone Bluetooth</li><li>⌨️ Teclado Mecânico</li><li>🖱️ Mouse Gamer</li></ul>
+              <p data-paint="3"><a href="javascript:void(0)">Fale conosco</a></p>
+            </div>
+          </div>
+        </div>
+        <div class="forge-hud">
+          <button class="forge-btn" data-forge-play>▶ Renderizar de novo</button>
+          <span class="forge-msg"></span>
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 Renderizar</div>
+        <p>
+          É o nome desse passe de mágica: o navegador <strong>lê o texto HTML e desenha a
+          página</strong>. Servidor manda texto → navegador renderiza. Sempre.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       EXERCÍCIO GUIADO 1 — primeira página
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="bora-html">
+    <div class="step-header">
+      <div class="step-number sn-blue">⌨️</div>
+      <div>
+        <div class="step-title">Bora codar: sua primeira página</div>
+        <div class="step-sub">Digitando de verdade — nada de copiar e colar</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="exercise guided">
+        <div class="exercise-header">
+          <span class="exercise-icon">👨‍🏫</span>
+          <div>
+            <div class="exercise-title">Passo a passo com o professor</div>
+            <div class="exercise-sub">Criar a pasta do projeto e a primeira página da Loja</div>
+          </div>
+        </div>
+
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">1.</strong> Crie uma pasta chamada <code>loja</code>
+          (essa pasta vai crescer com a gente até o fim do curso!).<br>
+          <strong style="color:var(--text)">2.</strong> Abra a pasta no seu editor (VS Code / PyCharm).<br>
+          <strong style="color:var(--text)">3.</strong> Crie um arquivo chamado <code>index.html</code>
+          e digite — <strong>digite mesmo, tecla por tecla</strong>:
+        </p>
+
+        <div class="code-block with-lines">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/index.html</span>
+            <span class="lang-badge html">HTML</span>
+          </div>
+          <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16</div>
+<pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="atr">lang</span>=<span class="st">"pt-BR"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="atr">charset</span>=<span class="st">"UTF-8"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;title&gt;</span>Minha Loja<span class="tag">&lt;/title&gt;</span>
+  <span class="tag">&lt;/head&gt;</span>
+  <span class="tag">&lt;body&gt;</span>
+    <span class="tag">&lt;h1&gt;</span>🛍️ Minha Loja<span class="tag">&lt;/h1&gt;</span>
+    <span class="tag">&lt;p&gt;</span>As melhores ofertas da cidade, direto do meu Python.<span class="tag">&lt;/p&gt;</span>
+
+    <span class="tag">&lt;h2&gt;</span>Produtos de hoje<span class="tag">&lt;/h2&gt;</span>
+    <span class="tag">&lt;ul&gt;</span>
+      <span class="tag">&lt;li&gt;</span>🎧 Fone Bluetooth — R$ 149,90<span class="tag">&lt;/li&gt;</span>
+      <span class="tag">&lt;li&gt;</span>⌨️ Teclado Mecânico — R$ 299,00<span class="tag">&lt;/li&gt;</span>
+    <span class="tag">&lt;/ul&gt;</span>
+  <span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+        </div>
+
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">4.</strong> Salve (<code>Ctrl+S</code> / <code>Cmd+S</code>) e
+          <strong>dê um duplo clique no arquivo</strong> na sua pasta.
+          Ele abre no navegador — com a SUA página! 🎉
+        </p>
+
+        <div class="tip">
+          <span class="tip-icon">👀</span>
+          <div class="tip-content">
+            <strong>Apareceu <code>&lt;h2&gt;</code> aí e eu não avisei?</strong> Avisei agora:
+            existem títulos de vários tamanhos, do <code>&lt;h1&gt;</code> (maior)
+            ao <code>&lt;h6&gt;</code> (menor). Sub-título? Usa <code>&lt;h2&gt;</code>.
+          </div>
+        </div>
+
+        <p style="color:var(--text-dim)">O resultado deve ficar assim:</p>
+
+        <div class="mini-browser" data-url="loja/index.html">
+          <script type="text/html" data-mp="html">
+            <h1>🛍️ Minha Loja</h1>
+            <p>As melhores ofertas da cidade, direto do meu Python.</p>
+            <h2>Produtos de hoje</h2>
+            <ul>
+              <li>🎧 Fone Bluetooth — R$ 149,90</li>
+              <li>⌨️ Teclado Mecânico — R$ 299,00</li>
+            </ul>
+          </script>
+          <div class="mb-loading">montando a prévia…</div>
+        </div>
+      </div>
+
+      <div class="exercise solo">
+        <div class="exercise-header">
+          <span class="exercise-icon">🧑‍💻</span>
+          <div>
+            <div class="exercise-title">Agora sozinho/a: deixa a loja com a sua cara</div>
+            <div class="exercise-sub">Continua no MESMO arquivo, sem apagar nada</div>
+          </div>
+        </div>
+
+        <div class="drill-tags">
+          <span class="drill-level lv1"><span class="stars">★</span> fácil</span>
+          <span class="drill-tag">&lt;p&gt;</span>
+          <span class="drill-tag">&lt;li&gt;</span>
+        </div>
+
+        <p style="color:var(--text-dim)">
+          Missão: <strong style="color:var(--text)">1)</strong> troque o nome da loja pelo nome da SUA loja
+          (a que você inventou no bootcamp!), <strong style="color:var(--text)">2)</strong> adicione um
+          terceiro produto na lista e <strong style="color:var(--text)">3)</strong> crie um parágrafo
+          novo no final com o horário de funcionamento.
+        </p>
+
+        <div class="concept">
+          <div class="concept-title">💡 Dica</div>
+          <p>
+            Produto novo = mais um <code>&lt;li&gt;</code> <strong>dentro</strong> do
+            <code>&lt;ul&gt;</code>. Parágrafo novo = um <code>&lt;p&gt;</code> depois do
+            <code>&lt;/ul&gt;</code>. Salvou? Aperta F5 no navegador pra recarregar.
+          </p>
+        </div>
+
+        <div class="try-first">
+          <div class="try-first-icon">🚨</div>
+          <div class="try-first-content">
+            <strong>Tenta primeiro!</strong> Só espia a solução depois de digitar,
+            salvar e dar F5. Errar aqui é barato — e é onde se aprende.
+          </div>
+        </div>
+
+        <div class="toggler">
+          <div class="toggler-header" onclick="toggleSection(this)">
+            <span>👀 Só clique aqui DEPOIS de tentar — ver uma solução possível</span>
+            <span class="toggler-arrow">▼</span>
+          </div>
+          <div class="toggler-body">
+            <div class="code-block">
+              <div class="code-header">
+                <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+                <span class="filename">loja/index.html (trecho do body)</span>
+                <span class="lang-badge html">HTML</span>
+              </div>
+<pre><span class="tag">&lt;h1&gt;</span>🐾 PetShop da Ana<span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;p&gt;</span>As melhores ofertas da cidade, direto do meu Python.<span class="tag">&lt;/p&gt;</span>
+
+<span class="tag">&lt;h2&gt;</span>Produtos de hoje<span class="tag">&lt;/h2&gt;</span>
+<span class="tag">&lt;ul&gt;</span>
+  <span class="tag">&lt;li&gt;</span>🎧 Fone Bluetooth — R$ 149,90<span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>⌨️ Teclado Mecânico — R$ 299,00<span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>🖱️ Mouse Gamer — R$ 89,90<span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ul&gt;</span>
+
+<span class="tag">&lt;p&gt;</span>⏰ Aberto de segunda a sábado, das 9h às 18h.<span class="tag">&lt;/p&gt;</span></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       CSS + PICO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="css">
+    <div class="step-header">
+      <div class="step-number" style="background:linear-gradient(135deg,#6f9bff,#2965f1)">🎨</div>
+      <div>
+        <div class="step-title">CSS: a roupa da página (e um truque de mestre)</div>
+        <div class="step-sub">Sua página funciona… mas tá com cara de 1996, né? 😅</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="analogy">
+        <div class="analogy-title">Estrutura vs. aparência 👔</div>
+        <p>
+          O <strong>HTML</strong> diz O QUE existe na página (título, lista, link) —
+          é o corpo. O <strong>CSS</strong> diz COMO cada coisa aparece
+          (cor, tamanho, espaçamento) — é a roupa. São duas linguagens
+          separadas, cada uma com um trabalho.
+        </p>
+      </div>
+
+      <p style="color:var(--text-dim)">
+        Escrever CSS bonito dá trabalho e é uma arte à parte
+        (é <strong style="color:var(--text)">metade do curso Fullstack</strong>, pra você ter ideia).
+        Mas existe um truque de gente esperta: usar uma
+        <strong style="color:var(--text)">folha de estilo pronta</strong>.
+        Aperte o botão e veja o que UMA linha de HTML faz:
+      </p>
+
+      <div class="swp-pico" id="picoWidget">
+        <div class="mini-browser shown" data-static style="opacity:1;transform:none">
+          <div class="mb-chrome">
+            <span class="mb-dots"><i></i><i></i><i></i></span>
+            <span class="mb-url"><span class="lock">🔒</span><span class="addr">loja/index.html</span></span>
+            <span class="mb-actions"><span class="mb-tag" id="picoTag">sem css</span></span>
+          </div>
+          <div class="swp-pico-view" id="picoView">
+            <h1>🛍️ Minha Loja</h1>
+            <p>As melhores ofertas da cidade, direto do meu Python.</p>
+            <p><a href="javascript:void(0)">Ver produtos</a></p>
+            <button>Fazer pedido</button>
+          </div>
+        </div>
+        <div class="swp-machine-hud" style="border:1px solid rgba(255,255,255,0.06);border-radius:0 0 14px 14px;margin-top:-16px">
+          <button class="swp-machine-btn" id="picoBtn">✨ Ligar o CSS (Pico)</button>
+          <span class="swp-machine-note" id="picoNote">mesma página, mesmo HTML — só falta a roupa</span>
+        </div>
+      </div>
+
+      <div class="exercise guided">
+        <div class="exercise-header">
+          <span class="exercise-icon">👨‍🏫</span>
+          <div>
+            <div class="exercise-title">Bora aplicar: uma linha no head</div>
+            <div class="exercise-sub">Pico.css — estilo pronto, de graça, direto da internet</div>
+          </div>
+        </div>
+
+        <p style="color:var(--text-dim)">
+          Dentro do <code>&lt;head&gt;</code> da sua página (pode ser logo abaixo do
+          <code>&lt;title&gt;</code>), adicione esta linha:
+        </p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/index.html (dentro do head)</span>
+            <span class="lang-badge html">HTML</span>
+          </div>
+<pre><span class="tag">&lt;link</span> <span class="atr">rel</span>=<span class="st">"stylesheet"</span> <span class="atr">href</span>=<span class="st">"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"</span><span class="tag">&gt;</span></pre>
+        </div>
+
+        <p style="color:var(--text-dim)">
+          Salve, dê F5… e pronto: tipografia, cores e espaçamento de gente grande. 😎
+        </p>
+
+        <div class="tip">
+          <span class="tip-icon">🔍</span>
+          <div class="tip-content">
+            <strong>Traduzindo a linha:</strong> <code>&lt;link&gt;</code> conecta um arquivo
+            externo à página; <code>rel="stylesheet"</code> avisa que é uma folha de estilo;
+            <code>href</code> diz o endereço dela na internet. O navegador baixa e aplica sozinho.
+          </div>
+        </div>
+
+        <div class="warning">
+          <span class="tip-icon">🧭</span>
+          <div class="tip-content">
+            <strong>Neste curso, CSS é isso: uma linha.</strong> O Pico cuida do visual e a gente
+            foca no Python. Quer dominar CSS de verdade (layouts, animações, design)?
+            Esse é o território do <strong>curso Fullstack</strong> — te espero lá depois. 😉
+          </div>
+        </div>
+      </div>
+
+      <h3 style="margin:26px 0 10px">🤔 "E o JavaScript, professor?"</h3>
+      <p style="color:var(--text-dim)">
+        Boa pergunta! Existe uma terceira linguagem do navegador, o
+        <strong style="color:var(--text)">JavaScript</strong> — ela dá <em>vida</em> à página
+        (botões que reagem sem recarregar, animações, apps como o WhatsApp Web).
+        <strong style="color:var(--text)">Neste curso a gente não vai precisar dele</strong>:
+        o Python, do lado do servidor, vai fazer todo o trabalho pesado.
+        JavaScript a fundo — junto com React — é a outra metade do curso Fullstack.
+      </p>
+
+      <div class="keyword-grid">
+        <div class="keyword-chip">
+          <span class="emoji">🧱</span>
+          <span class="kw-name">HTML</span>
+          <span class="kw-desc">estrutura — VOCÊ usa hoje ✓</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">🎨</span>
+          <span class="kw-name">CSS</span>
+          <span class="kw-desc">aparência — o Pico resolve ✓</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">⚡</span>
+          <span class="kw-name">JavaScript</span>
+          <span class="kw-desc">interação — fica pro Fullstack 🔮</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       A DOR DO FILE://
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="dor">
+    <div class="step-header">
+      <div class="step-number sn-red">🚧</div>
+      <div>
+        <div class="step-title">O problema: sua página abre… só pra você</div>
+        <div class="step-sub">Olha a barra de endereço do seu navegador agora</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Repara no endereço da página que você abriu com duplo clique.
+        Começa com <code>file:///</code>… — isso significa:
+        <strong style="color:var(--text)">"arquivo local, lido direto do SEU disco"</strong>.
+        Não teve request, não teve servidor, não teve garçom.
+        Você entrou na cozinha e pegou o prato com a mão. 😬
+      </p>
+
+      <div class="flow-container">
+        <div class="flow-box fb-input">📄<br>file:///…/index.html</div>
+        <div class="flow-arrow">→<span class="flow-label">só funciona…</span></div>
+        <div class="flow-box fb-bug">💻<br>…no SEU computador</div>
+      </div>
+
+      <div class="warning">
+        <span class="tip-icon">🤔</span>
+        <div class="tip-content">
+          <strong>O teste da amiga:</strong> manda <code>file:///Users/voce/loja/index.html</code>
+          pra alguém no WhatsApp. Vai abrir? <strong>Nunca.</strong> Esse endereço aponta pra um
+          arquivo <em>no seu disco</em> — o celular dela não tem esse arquivo.
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 O que falta: um servidor</div>
+        <p>
+          Pra página virar um <strong>site</strong>, alguém precisa ficar de plantão
+          recebendo requests e entregando o HTML como response.
+          Esse alguém é o <strong>servidor</strong> — e você vai escrever um
+          <strong>agora, em Python</strong>, com o Flask. 🌶️
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="chapter-divider">
+    <div class="chapter-icon">🌶️</div>
+    <div class="chapter-number">Parte 3</div>
+    <h2 style="background:linear-gradient(135deg,var(--accent7),var(--python-y));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Olá, Flask!</h2>
+    <p class="chapter-subtitle">Seu primeiro servidor web — escrito em Python, do zero</p>
+  </div>
+
+<!-- ═══════════════════════════════════════════════════════
+       INSTALAÇÃO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="instalacao">
+    <div class="step-header">
+      <div class="step-number sn-mint">📦</div>
+      <div>
+        <div class="step-title">Preparando a cozinha: instalando o Flask</div>
+        <div class="step-sub">Dois comandos no terminal e pronto</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        O Flask é uma biblioteca Python como as que você já usou (TinyDB, Streamlit…).
+        Abra o terminal <strong style="color:var(--text)">dentro da pasta <code>loja</code></strong>
+        e vamos lá:
+      </p>
+
+      <div class="terminal" data-typewriter>
+        <div class="terminal-header">
+          <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+          <span class="title">terminal — pasta loja</span>
+        </div>
+        <div class="terminal-body">
+          <span class="prompt">$</span> <span class="typed" data-text="python -m venv venv"></span><br>
+          <span class="out" style="color:#5b6478"># cria o ambiente do projeto (só na primeira vez)</span><br>
+          <span class="prompt">$</span> <span class="typed" data-text="source venv/bin/activate"></span><br>
+          <span class="out" style="color:#5b6478"># Windows: venv\Scripts\activate</span><br>
+          <span class="prompt" style="color:var(--accent7)">(venv) $</span> <span class="typed" data-text="pip install flask"></span><span class="cursor"></span><br>
+          <span class="out">Successfully installed flask-3.1.1 ✓</span><br>
+        </div>
+      </div>
+
+      <div class="warning">
+        <span class="tip-icon">👁️</span>
+        <div class="tip-content">
+          <strong>Olha o <code>(venv)</code> no começo da linha!</strong> Ele é o crachá dizendo
+          "ambiente ativado". Se ele NÃO estiver aparecendo, o Flask vai ser instalado no lugar
+          errado — e daqui a pouco o BugZilla vem te visitar por causa disso. 🐛
+          <strong>Toda vez que abrir o terminal, ative o venv primeiro.</strong>
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🧰</span>
+        <div class="tip-content">
+          <strong>Relembrando o pré-curso:</strong> o venv é a caixa de ferramentas exclusiva
+          do projeto — as bibliotecas ficam instaladas ali dentro, sem bagunçar o resto do
+          computador. Criou uma vez, ativa sempre.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       PRIMEIRO APP — rastreado linha a linha
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="primeiro-app">
+    <div class="step-header">
+      <div class="step-number sn-py">🌶️</div>
+      <div>
+        <div class="step-title">Seu primeiro servidor: 7 linhas de Python</div>
+        <div class="step-sub">Acompanhe o destaque passando por cada linha — sem pressa</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Crie um arquivo <code>app.py</code> na pasta <code>loja</code> (do lado do
+        <code>index.html</code>). Este é o programa inteiro — e ele é
+        <strong style="color:var(--text)">um servidor web completo</strong>:
+      </p>
+
+      <div class="swp-trace" data-seq="2600">
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/app.py</span>
+            <span class="lang-badge python">Python</span>
+          </div>
+<pre><span class="swp-tline" data-seq-step="0"><span class="kw">from</span> flask <span class="kw">import</span> <span class="tp">Flask</span></span><span class="swp-tline"> </span><span class="swp-tline" data-seq-step="1">app = <span class="tp">Flask</span>(__name__)</span><span class="swp-tline"> </span><span class="swp-tline" data-seq-step="2"><span class="dec">@app.route</span>(<span class="st">"/"</span>)</span><span class="swp-tline" data-seq-step="3"><span class="kw">def</span> <span class="fn">home</span>():</span><span class="swp-tline" data-seq-step="4">    <span class="kw">return</span> <span class="st">"Minha Loja no ar! 🎉"</span></span><span class="swp-tline"> </span><span class="swp-tline" data-seq-step="5">app.run(debug=<span class="bool">True</span>)</span></pre>
+        </div>
+
+        <div class="swp-trace-msgs">
+          <div data-seq-frame="0"><span class="tm-emoji">📦</span><span>Importa a <strong>Flask</strong>, a peça que sabe ser um servidor web. Igualzinho você importava o TinyDB.</span></div>
+          <div data-seq-frame="1"><span class="tm-emoji">🍳</span><span>Cria a sua "cozinha": <strong>app</strong> é o servidor. O <code>__name__</code> só diz ao Flask "o projeto começa neste arquivo".</span></div>
+          <div data-seq-frame="2"><span class="tm-emoji">📍</span><span>A linha com <strong>@</strong> é um aviso grudado na função de baixo: <strong>"quando alguém pedir a URL <code>/</code>, chama ela"</strong>. Cada URL do site vai ter uma dessas.</span></div>
+          <div data-seq-frame="3"><span class="tm-emoji">🐍</span><span>Uma função Python normal, como as do bootcamp. O nome <code>home</code> é escolha sua — quem manda é o <code>@app.route</code> de cima.</span></div>
+          <div data-seq-frame="4"><span class="tm-emoji">📦</span><span>O <strong>return é a response!</strong> O que a função devolve é exatamente o que o navegador recebe e mostra.</span></div>
+          <div data-seq-frame="5"><span class="tm-emoji">🔌</span><span><strong>Liga o servidor</strong> e deixa de plantão, esperando requests. O <code>debug=True</code> faz ele reiniciar sozinho quando você salva o arquivo. 🙌</span></div>
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 Rota</div>
+        <p>
+          O par <code>@app.route("/") + def funcao()</code> se chama <strong>rota</strong>:
+          a ligação entre <strong>uma URL</strong> e <strong>a função Python que responde por ela</strong>.
+          Grava essa palavra — ela é o coração do Flask.
+        </p>
+      </div>
+
+      <div class="exercise guided">
+        <div class="exercise-header">
+          <span class="exercise-icon">👨‍🏫</span>
+          <div>
+            <div class="exercise-title">Bora rodar!</div>
+            <div class="exercise-sub">O momento em que o seu computador vira um servidor</div>
+          </div>
+        </div>
+
+        <p style="color:var(--text-dim)">
+          Digite o <code>app.py</code> acima, salve, e no terminal
+          (com o <code>(venv)</code> aparecendo!):
+        </p>
+
+        <div class="terminal" data-typewriter>
+          <div class="terminal-header">
+            <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+            <span class="title">terminal — pasta loja</span>
+          </div>
+          <div class="terminal-body">
+            <span class="prompt" style="color:var(--accent7)">(venv) $</span> <span class="typed" data-text="python app.py"></span><span class="cursor"></span><br>
+            <span class="out"> * Serving Flask app 'app'</span><br>
+            <span class="out" style="color:var(--accent7)"> * Running on http://127.0.0.1:5000</span><br>
+            <span class="out">Press CTRL+C to quit</span><br>
+          </div>
+        </div>
+
+        <p style="color:var(--text-dim)">
+          Agora abra o navegador em <strong style="color:var(--accent7)">localhost:5000</strong> —
+          e olha a sua mensagem servida por um servidor DE VERDADE. 🎉
+        </p>
+
+        <div class="mini-browser" data-url="localhost:5000">
+          <script type="text/html" data-mp="html">
+            <p style="font-size:1.05rem;margin:4px 0">Minha Loja no ar! 🎉</p>
+          </script>
+          <div class="mb-loading">montando a prévia…</div>
+        </div>
+
+        <div class="tip">
+          <span class="tip-icon">🔢</span>
+          <div class="tip-content">
+            <strong>"Mas o terminal disse 127.0.0.1, não localhost!"</strong> — mesma coisa:
+            <code>127.0.0.1</code> é o número, <code>localhost</code> é o apelido.
+            Tipo "Avenida Brasil, 100" e "minha casa". Os dois funcionam no navegador.
+          </div>
+        </div>
+
+        <div class="warning">
+          <span class="tip-icon">🛑</span>
+          <div class="tip-content">
+            <strong>O terminal "travou"?</strong> Travou nada — ele está <strong>de plantão</strong>,
+            que é o trabalho de um servidor. Repare: cada F5 no navegador imprime uma linha nova ali
+            (é o request chegando!). Pra desligar o servidor: <code>CTRL+C</code>.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       RENDER_TEMPLATE
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="render-template">
+    <div class="step-header">
+      <div class="step-number sn-main">🖼️</div>
+      <div>
+        <div class="step-title">render_template: servindo sua página de verdade</div>
+        <div class="step-sub">Juntando as duas metades da aula</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Devolver uma frase é bonitinho, mas você tem uma <strong style="color:var(--text)">página
+        HTML inteira</strong> pronta! Será que dá pra devolver ela? Até dá… assim… 😬
+      </p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">a ideia ruim ❌</span>
+          <span class="lang-badge python">Python</span>
+        </div>
+<pre><span class="kw">def</span> <span class="fn">home</span>():
+    <span class="kw">return</span> <span class="st">"&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;title&gt;Minha Loja&lt;/title&gt;..."</span>
+    <span class="cm"># 16 linhas de HTML espremidas numa string?! 🤢 NÃO.</span></pre>
+      </div>
+
+      <p style="color:var(--text-dim)">
+        HTML misturado com Python vira uma sopa impossível de manter. O Flask tem o caminho certo:
+        <strong style="color:var(--text)">cada coisa no seu arquivo</strong>. Python no
+        <code>app.py</code>, HTML numa pasta especial chamada <code>templates</code>:
+      </p>
+
+      <div class="swp-file-tree">📁 <span class="dir">loja/</span>
+├── 📁 <span class="dir">venv/</span>                <span class="note">← ambiente (não mexe)</span>
+├── 🐍 <span class="file">app.py</span>
+└── 📁 <span class="new">templates/</span>          <span class="note">← crie esta pasta (nome EXATO!)</span>
+    └── 🧱 <span class="new">index.html</span>      <span class="note">← mova sua página pra cá</span></div>
+
+      <p style="color:var(--text-dim);margin-top:14px">
+        E o <code>app.py</code> muda pouquinho — repara nas <strong style="color:var(--text)">duas</strong> diferenças:
+      </p>
+
+      <div class="code-block with-lines">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">loja/app.py</span>
+          <span class="lang-badge python">Python</span>
+        </div>
+        <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9</div>
+<pre><span class="kw">from</span> flask <span class="kw">import</span> <span class="tp">Flask</span>, <span class="fn">render_template</span>   <span class="cm"># ← novidade 1</span>
+
+app = <span class="tp">Flask</span>(__name__)
+
+<span class="dec">@app.route</span>(<span class="st">"/"</span>)
+<span class="kw">def</span> <span class="fn">home</span>():
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"index.html"</span>)   <span class="cm"># ← novidade 2</span>
+
+app.run(debug=<span class="bool">True</span>)</pre>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 render_template("index.html")</div>
+        <p>
+          Significa: <strong>"Flask, abre a pasta <code>templates</code>, pega o
+          <code>index.html</code> e manda ele como response"</strong>. O navegador recebe seu
+          HTML e renderiza — exatamente como na Forja de Tags lá de cima. 🪄
+        </p>
+      </div>
+
+      <div class="exercise guided">
+        <div class="exercise-header">
+          <span class="exercise-icon">👨‍🏫</span>
+          <div>
+            <div class="exercise-title">Bora fazer a mudança</div>
+            <div class="exercise-sub">3 passinhos e um F5</div>
+          </div>
+        </div>
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">1.</strong> Crie a pasta <code>templates</code> dentro de <code>loja</code>.<br>
+          <strong style="color:var(--text)">2.</strong> Arraste o <code>index.html</code> pra dentro dela.<br>
+          <strong style="color:var(--text)">3.</strong> Faça as duas mudanças no <code>app.py</code> e salve
+          (o <code>debug=True</code> reinicia o servidor sozinho).<br>
+          <strong style="color:var(--text)">4.</strong> F5 em <code>localhost:5000</code> — sua página, com Pico e tudo,
+          <strong>servida pelo SEU servidor</strong>! 🥳
+        </p>
+      </div>
+
+      <div class="bugzilla-card">
+        <div class="bugzilla-header">
+          <span class="bugzilla-emoji">🐛</span>
+          <div>
+            <div class="bugzilla-title">BugZilla apareceu: TemplateNotFound!</div>
+            <div class="bugzilla-sub">O erro mais clássico do primeiro dia de Flask</div>
+          </div>
+        </div>
+        <div class="bugzilla-body">
+          <div class="code-block">
+            <div class="code-header">
+              <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+              <span class="filename">navegador — tela vermelha de erro</span>
+              <span class="lang-badge terminal">erro</span>
+            </div>
+<pre><span class="cm">jinja2.exceptions.</span><span style="color:var(--bug)">TemplateNotFound</span>: index.html</pre>
+          </div>
+          <p>
+            Tradução: <strong>"procurei o index.html na pasta <code>templates</code> e não achei"</strong>.
+            99% das vezes é um destes três:
+          </p>
+          <p>
+            ① a pasta chama <code>template</code> (sem o <strong>s</strong>) ou <code>Templates</code> (maiúscula) —
+            tem que ser <code>templates</code>, exatinho; <br>
+            ② o arquivo ficou <strong>fora</strong> da pasta; <br>
+            ③ a pasta <code>templates</code> foi criada no lugar errado (ela mora do LADO do <code>app.py</code>).
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ DUAS ROTAS — cada URL é uma página
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="duas-rotas">
+    <div class="step-header">
+      <div class="step-number sn-purple">⭐</div>
+      <div>
+        <div class="step-title">Cada URL é uma página</div>
+        <div class="step-sub">O clique no link vira request, o Flask escolhe a função — veja ao vivo</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Sites têm várias páginas: <code>/</code>, <code>/sobre</code>, <code>/contato</code>…
+        No Flask, isso é simplesmente <strong style="color:var(--text)">uma rota pra cada
+        URL</strong>. Clique nos botões do navegador de mentira e observe o
+        <strong style="color:var(--text)">Flask escolher a função certa</strong>:
+      </p>
+
+      <div class="swp-router" id="swpRouter">
+        <div class="swp-router-stage">
+          <div class="swp-router-pane">
+            <div class="fp-head">🌐 navegador</div>
+            <div class="swp-router-browser">
+              <div class="mb-chrome">
+                <span class="mb-dots"><i></i><i></i><i></i></span>
+                <span class="mb-url"><span class="lock">🔒</span><span class="addr swp-router-url">localhost:5000<span class="path" id="routerPath">/</span></span></span>
+              </div>
+              <div class="swp-router-nav">
+                <button data-route="/" class="here">🏠 Início</button>
+                <button data-route="/sobre">ℹ️ Sobre</button>
+                <button data-route="/contato">📞 Contato</button>
+              </div>
+              <div class="swp-router-view" id="routerView">
+                <div class="rv on" data-rv="/">
+                  <h1>🛍️ Minha Loja</h1>
+                  <p>As melhores ofertas da cidade.</p>
+                </div>
+                <div class="rv" data-rv="/sobre">
+                  <h1>ℹ️ Sobre a loja</h1>
+                  <p>Nascemos num bootcamp de Python e nunca mais paramos.</p>
+                </div>
+                <div class="rv" data-rv="404">
+                  <div class="swp-page-err" style="padding:4px 0">
+                    <div class="big" style="font-size:1.3rem;margin-top:0">404</div>
+                    <small>Not Found — o servidor não tem rota pra esse pedido</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="swp-router-pane code">
+            <div class="fp-head">🐍 loja/app.py — o Flask decide aqui</div>
+            <div class="swp-route" data-routecode="/"><div class="glow"></div><span class="dec">@app.route</span>(<span class="st">"/"</span>)
+<span class="kw">def</span> <span class="fn">home</span>():
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"index.html"</span>)</div>
+            <div class="swp-route" data-routecode="/sobre"><div class="glow"></div><span class="dec">@app.route</span>(<span class="st">"/sobre"</span>)
+<span class="kw">def</span> <span class="fn">sobre</span>():
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"sobre.html"</span>)</div>
+            <div class="swp-route" data-routecode="none" style="border-style:dashed;color:#5b6478"><div class="glow"></div><span class="cm"># /contato … ainda não existe 👻</span></div>
+          </div>
+        </div>
+        <div class="swp-router-note" id="routerNote">👆 clica em um botão do navegador pra disparar um request</div>
+      </div>
+
+      <div class="analogy">
+        <div class="analogy-title">O cardápio do garçom 📋</div>
+        <p>
+          As rotas são o <strong>cardápio</strong> do seu servidor: pediu <code>/</code>,
+          sai o prato <code>home()</code>; pediu <code>/sobre</code>, sai o <code>sobre()</code>.
+          Pediu algo fora do cardápio? O garçom devolve <strong>404 — "não temos isso, chefe"</strong>.
+          Lembra das 4 abas do seu <code>app_loja.py</code> no Streamlit? Aqui, cada aba vai
+          virar uma rota com URL própria.
+        </p>
+      </div>
+
+      <div class="exercise guided">
+        <div class="exercise-header">
+          <span class="exercise-icon">👨‍🏫</span>
+          <div>
+            <div class="exercise-title">Bora criar a página /sobre</div>
+            <div class="exercise-sub">Uma rota nova + um template novo</div>
+          </div>
+        </div>
+
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">1.</strong> Crie <code>templates/sobre.html</code>
+          (pode copiar o esqueleto do <code>index.html</code> e trocar o conteúdo do body):
+        </p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/templates/sobre.html (o body)</span>
+            <span class="lang-badge html">HTML</span>
+          </div>
+<pre><span class="tag">&lt;h1&gt;</span>ℹ️ Sobre a loja<span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;p&gt;</span>Loja criada por MIM, com Python, num curso da programa AI. 😄<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;p&gt;</span><span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/"</span><span class="tag">&gt;</span>← voltar pro início<span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/p&gt;</span></pre>
+        </div>
+
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">2.</strong> No <code>app.py</code>, adicione a rota nova
+          <strong>embaixo da primeira</strong> (e antes do <code>app.run</code>):
+        </p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/app.py (adicione este bloco)</span>
+            <span class="lang-badge python">Python</span>
+          </div>
+<pre><span class="dec">@app.route</span>(<span class="st">"/sobre"</span>)
+<span class="kw">def</span> <span class="fn">sobre</span>():
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"sobre.html"</span>)</pre>
+        </div>
+
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">3.</strong> Salve e visite
+          <strong style="color:var(--accent7)">localhost:5000/sobre</strong> 🎉 Depois volta pro
+          <code>index.html</code> e planta um link lá (olha a tag <code>&lt;a&gt;</code> brilhando!):
+        </p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/templates/index.html (no fim do body)</span>
+            <span class="lang-badge html">HTML</span>
+          </div>
+<pre><span class="tag">&lt;p&gt;</span><span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/sobre"</span><span class="tag">&gt;</span>Conheça a loja →<span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/p&gt;</span></pre>
+        </div>
+
+        <div class="tip">
+          <span class="tip-icon">🤯</span>
+          <div class="tip-content">
+            <strong>Parou pra pensar?</strong> Você acabou de fazer um site com
+            <strong>navegação entre páginas</strong>. Clicou no link → request pro
+            <code>/sobre</code> → Flask chama <code>sobre()</code> → response com a página.
+            O ciclo completo, rodando na sua máquina.
+          </div>
+        </div>
+      </div>
+
+      <div class="exercise solo">
+        <div class="exercise-header">
+          <span class="exercise-icon">🧑‍💻</span>
+          <div>
+            <div class="exercise-title">Sozinho/a: a rota /contato</div>
+            <div class="exercise-sub">Aquele 404 da máquina lá em cima? Conserta ele!</div>
+          </div>
+        </div>
+
+        <div class="drill-tags">
+          <span class="drill-level lv2"><span class="stars">★★</span> médio</span>
+          <span class="drill-tag">@app.route</span>
+          <span class="drill-tag">render_template</span>
+          <span class="drill-tag">&lt;a&gt;</span>
+        </div>
+
+        <p style="color:var(--text-dim)">
+          Missão: crie a página <code>/contato</code> mostrando seu e-mail (pode ser inventado)
+          e um link de volta pro início. São os mesmos 2 passos de sempre: template novo + rota nova.
+        </p>
+
+        <div class="concept">
+          <div class="concept-title">💡 Dica</div>
+          <p>
+            Template: <code>templates/contato.html</code>. Rota: <code>@app.route("/contato")</code>
+            em cima de uma função <code>contato()</code>. O nome da função é livre —
+            o que manda é a URL no <code>@app.route</code>.
+          </p>
+        </div>
+
+        <div class="try-first">
+          <div class="try-first-icon">🚨</div>
+          <div class="try-first-content">
+            <strong>Tenta primeiro!</strong> Se aparecer erro, LÊ a mensagem — você já conhece
+            o TemplateNotFound e sabe caçar ele. Só espia depois de ver
+            <code>localhost:5000/contato</code> funcionando (ou de brigar 10 minutos com ele 😄).
+          </div>
+        </div>
+
+        <div class="toggler">
+          <div class="toggler-header" onclick="toggleSection(this)">
+            <span>👀 Só clique aqui DEPOIS de tentar — ver a solução</span>
+            <span class="toggler-arrow">▼</span>
+          </div>
+          <div class="toggler-body">
+            <div class="code-block">
+              <div class="code-header">
+                <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+                <span class="filename">loja/templates/contato.html (o body)</span>
+                <span class="lang-badge html">HTML</span>
+              </div>
+<pre><span class="tag">&lt;h1&gt;</span>📞 Fale com a gente<span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;p&gt;</span>E-mail: contato@minhaloja.com<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;p&gt;</span><span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/"</span><span class="tag">&gt;</span>← voltar pro início<span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/p&gt;</span></pre>
+            </div>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+                <span class="filename">loja/app.py (bloco novo)</span>
+                <span class="lang-badge python">Python</span>
+              </div>
+<pre><span class="dec">@app.route</span>(<span class="st">"/contato"</span>)
+<span class="kw">def</span> <span class="fn">contato</span>():
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"contato.html"</span>)</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="chapter-divider">
+    <div class="chapter-icon">🏁</div>
+    <div class="chapter-number">Parte 4</div>
+    <h2 style="background:linear-gradient(135deg,var(--accent5),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Fechamento do dia</h2>
+    <p class="chapter-subtitle">Caçar bugs, fixar e treinar</p>
+  </div>
+
+<!-- ═══════════════════════════════════════════════════════
+       BUGZILLA DO DIA
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="bugzilla">
+    <div class="step-header">
+      <div class="step-number sn-red">🐛</div>
+      <div>
+        <div class="step-title">BugZilla do dia: os 3 tropeços clássicos</div>
+        <div class="step-sub">TODO MUNDO cai nesses. A diferença é saber levantar rápido.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="bugzilla-card">
+        <div class="bugzilla-header">
+          <span class="bugzilla-emoji">🐛</span>
+          <div>
+            <div class="bugzilla-title">Bug 1 — "No module named 'flask'"</div>
+            <div class="bugzilla-sub">Mas eu instalei! Instalou… em outro lugar.</div>
+          </div>
+        </div>
+        <div class="bugzilla-body">
+          <div class="code-block">
+            <div class="code-header">
+              <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+              <span class="filename">terminal</span>
+              <span class="lang-badge terminal">erro</span>
+            </div>
+<pre>$ python app.py
+Traceback (most recent call last):
+  File "app.py", line 1, in &lt;module&gt;
+    from flask import Flask
+<span style="color:var(--bug)">ModuleNotFoundError: No module named 'flask'</span></pre>
+          </div>
+          <p>
+            Olha o começo da linha do terminal: <strong>cadê o <code>(venv)</code>?</strong>
+            Você abriu um terminal novo e esqueceu de ativar o ambiente. O Flask está instalado
+            <em>dentro</em> do venv — com ele desativado, o Python não enxerga.
+          </p>
+          <p>
+            💊 <strong>Remédio:</strong> <code>source venv/bin/activate</code>
+            (Windows: <code>venv\Scripts\activate</code>) e rode de novo.
+          </p>
+        </div>
+      </div>
+
+      <div class="bugzilla-card">
+        <div class="bugzilla-header">
+          <span class="bugzilla-emoji">🐛</span>
+          <div>
+            <div class="bugzilla-title">Bug 2 — TemplateNotFound: index.html</div>
+            <div class="bugzilla-sub">O hit do dia (você já conhece esse)</div>
+          </div>
+        </div>
+        <div class="bugzilla-body">
+          <p>
+            O Flask só procura templates <strong>na pasta <code>templates</code></strong>,
+            com esse nome exato, morando do lado do <code>app.py</code>. Checklist relâmpago:
+            nome da pasta tem <strong>s</strong> no final? é tudo minúsculo? o arquivo está
+            <strong>dentro</strong> dela? a pasta está no lugar certo?
+          </p>
+        </div>
+      </div>
+
+      <div class="bugzilla-card">
+        <div class="bugzilla-header">
+          <span class="bugzilla-emoji">🐛</span>
+          <div>
+            <div class="bugzilla-title">Bug 3 — o dinossauro 🦖 em localhost:5000</div>
+            <div class="bugzilla-sub">"Este site não pode ser alcançado"</div>
+          </div>
+        </div>
+        <div class="bugzilla-body">
+          <p>
+            Você JÁ SABE o que isso significa (lembra da máquina Pedido ao Vivo?):
+            o request saiu, mas <strong>não tinha servidor ligado pra atender</strong>.
+            O <code>python app.py</code> não está rodando — ou você deu <code>CTRL+C</code>
+            sem perceber, ou fechou aquele terminal, ou o app quebrou ao iniciar
+            (aí olha a mensagem de erro no terminal!).
+          </p>
+          <p>
+            💊 <strong>Remédio:</strong> volta no terminal, confere se o
+            <code>Running on http://127.0.0.1:5000</code> está lá. Não está? Roda
+            <code>python app.py</code> de novo.
+          </p>
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🎁</span>
+        <div class="tip-content">
+          <strong>Bônus raro — "Address already in use":</strong> significa que já TEM um
+          servidor rodando na porta 5000 (provavelmente outro terminal seu, esquecido).
+          Ache o outro terminal e dê <code>CTRL+C</code> nele.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       QUIZ DE FIXAÇÃO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="quiz">
+    <div class="step-header">
+      <div class="step-number sn-yellow">🧠</div>
+      <div>
+        <div class="step-title">Quiz de fixação</div>
+        <div class="step-sub">4 perguntas pra carimbar o dia 1</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">1️⃣</span> Você digita <code>localhost:5000</code> e aperta Enter. O que acontece PRIMEIRO?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">O servidor manda a página</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">O navegador envia um request</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">O Python abre o arquivo HTML</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">O navegador renderiza a página</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Isso!" data-wrong="Opa, ordem errada!"
+             data-explain="a conversa SEMPRE começa com o pedido: navegador faz o request, e só então o servidor prepara e devolve a response."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">2️⃣</span> O que significa <code>localhost</code>?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Um site do Google</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">O servidor da programa AI</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">O meu próprio computador</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">A pasta onde o site está salvo</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Exato!" data-wrong="Não!"
+             data-explain="localhost é o apelido que todo computador dá pra si mesmo (o número dele é 127.0.0.1). Mesa e cozinha na mesma casa."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">3️⃣</span> O que o <code>@app.route("/sobre")</code> faz?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Cria o arquivo sobre.html</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Abre o navegador em /sobre</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Liga a URL /sobre à função de baixo</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Deixa a página mais bonita</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Boa!" data-wrong="Quase!"
+             data-explain="é o item do cardápio: quando chegar request pra /sobre, o Flask chama a função logo abaixo e devolve o que ela retornar."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">4️⃣</span> Onde o <code>render_template("index.html")</code> procura o arquivo?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Na mesma pasta do app.py</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Na pasta templates</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Em qualquer pasta do computador</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Na internet, pelo Pico.css</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Cravou!" data-wrong="Cuidado!"
+             data-explain="SEMPRE na pasta templates (com s, minúscula, do lado do app.py). Fora dela = TemplateNotFound na certa."></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ARENA DE TREINO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="arena">
+    <div class="step-header">
+      <div class="step-number sn-purple">🏟️</div>
+      <div>
+        <div class="step-title">Arena: evolua a SUA loja</div>
+        <div class="step-sub">Cinco missões em escadinha — as últimas são pra casa</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="arena-banner">
+        <span class="ab-emoji">🏟️</span>
+        <div>
+          <div class="ab-tag">treino do dia 1</div>
+          <div class="ab-title">Cada missão continua a anterior</div>
+          <div class="ab-sub">No fim, sua loja terá 4 páginas navegáveis — tudo servido pelo seu Flask</div>
+        </div>
+      </div>
+
+      <div class="arena-track">
+        <span class="at-dot lv1">1</span><span class="at-arrow">→</span>
+        <span class="at-dot lv1">2</span><span class="at-arrow">→</span>
+        <span class="at-dot lv2">3</span><span class="at-arrow">→</span>
+        <span class="at-dot lv2">4</span><span class="at-arrow">→</span>
+        <span class="at-dot lv3">🏆</span>
+      </div>
+
+      <div class="exercise solo">
+        <div class="exercise-header">
+          <span class="exercise-icon">🧑‍💻</span>
+          <div>
+            <div class="exercise-title">Missão 1 — Página /promocoes</div>
+            <div class="exercise-sub">A receita de sempre: template + rota</div>
+          </div>
+        </div>
+        <div class="drill-tags">
+          <span class="drill-level lv1"><span class="stars">★</span> fácil</span>
+          <span class="drill-tag">@app.route</span>
+          <span class="drill-tag">&lt;ul&gt;</span>
+        </div>
+        <p style="color:var(--text-dim)">
+          Crie a página <code>/promocoes</code> com um título e uma lista de 3 promoções
+          malucas da sua loja. Sem olhar os exemplos anteriores primeiro — tenta de memória!
+        </p>
+        <div class="toggler">
+          <div class="toggler-header" onclick="toggleSection(this)">
+            <span>👀 Ver solução (depois de tentar!)</span>
+            <span class="toggler-arrow">▼</span>
+          </div>
+          <div class="toggler-body">
+            <div class="code-block">
+              <div class="code-header">
+                <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+                <span class="filename">loja/templates/promocoes.html (o body)</span>
+                <span class="lang-badge html">HTML</span>
+              </div>
+<pre><span class="tag">&lt;h1&gt;</span>🔥 Promoções da semana<span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;ul&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Fone + Teclado: 20% off<span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Frete grátis acima de R$ 99<span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Mouse em dobro (é sério)<span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ul&gt;</span>
+<span class="tag">&lt;p&gt;</span><span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/"</span><span class="tag">&gt;</span>← início<span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/p&gt;</span></pre>
+            </div>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+                <span class="filename">loja/app.py (bloco novo)</span>
+                <span class="lang-badge python">Python</span>
+              </div>
+<pre><span class="dec">@app.route</span>(<span class="st">"/promocoes"</span>)
+<span class="kw">def</span> <span class="fn">promocoes</span>():
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"promocoes.html"</span>)</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="exercise solo">
+        <div class="exercise-header">
+          <span class="exercise-icon">🧑‍💻</span>
+          <div>
+            <div class="exercise-title">Missão 2 — Menu em todas as páginas</div>
+            <div class="exercise-sub">Navegar sem digitar URL na mão</div>
+          </div>
+        </div>
+        <div class="drill-tags">
+          <span class="drill-level lv1"><span class="stars">★</span> fácil</span>
+          <span class="drill-tag">&lt;a&gt;</span>
+        </div>
+        <p style="color:var(--text-dim)">
+          No comecinho do <code>&lt;body&gt;</code> de CADA página, coloque o mesmo menu de links:
+          Início · Sobre · Contato · Promoções. Sim, é copiar 4 vezes — sinta o incômodo…
+          esse incômodo tem remédio, e ele chama <em>template base</em> (spoiler do Dia 2 😉).
+        </p>
+        <div class="toggler">
+          <div class="toggler-header" onclick="toggleSection(this)">
+            <span>👀 Ver solução (depois de tentar!)</span>
+            <span class="toggler-arrow">▼</span>
+          </div>
+          <div class="toggler-body">
+            <div class="code-block">
+              <div class="code-header">
+                <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+                <span class="filename">no topo do body de cada página</span>
+                <span class="lang-badge html">HTML</span>
+              </div>
+<pre><span class="tag">&lt;p&gt;</span>
+  <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/"</span><span class="tag">&gt;</span>Início<span class="tag">&lt;/a&gt;</span> ·
+  <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/sobre"</span><span class="tag">&gt;</span>Sobre<span class="tag">&lt;/a&gt;</span> ·
+  <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/contato"</span><span class="tag">&gt;</span>Contato<span class="tag">&lt;/a&gt;</span> ·
+  <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/promocoes"</span><span class="tag">&gt;</span>Promoções<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;/p&gt;</span></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="exercise home">
+        <div class="exercise-header">
+          <span class="exercise-icon">🏠</span>
+          <div>
+            <div class="exercise-title">Missão 3 — Quebre de propósito (e conserte)</div>
+            <div class="exercise-sub">Treinando a habilidade nº 1 de dev: ler o erro sem pânico</div>
+          </div>
+        </div>
+        <div class="drill-tags">
+          <span class="drill-level lv2"><span class="stars">★★</span> médio</span>
+          <span class="drill-tag">TemplateNotFound</span>
+          <span class="drill-tag">🐛</span>
+        </div>
+        <p style="color:var(--text-dim)">
+          Em casa, com calma: <strong style="color:var(--text)">1)</strong> renomeie a pasta
+          <code>templates</code> pra <code>template</code> e dê F5 — olha o BugZilla aí! Leia a
+          mensagem em voz alta e desfaça. <strong style="color:var(--text)">2)</strong> Pare o
+          servidor com <code>CTRL+C</code> e dê F5 — reconheceu o dinossauro? 🦖 Religue.
+          Errar DE PROPÓSITO tira o medo de errar sem querer.
+        </p>
+      </div>
+
+      <div class="exercise home">
+        <div class="exercise-header">
+          <span class="exercise-icon">🏠</span>
+          <div>
+            <div class="exercise-title">Missão 4 — Título da aba + rodapé</div>
+            <div class="exercise-sub">Detalhes que dão cara de site de verdade</div>
+          </div>
+        </div>
+        <div class="drill-tags">
+          <span class="drill-level lv2"><span class="stars">★★</span> médio</span>
+          <span class="drill-tag">&lt;title&gt;</span>
+        </div>
+        <p style="color:var(--text-dim)">
+          Dê a cada página um <code>&lt;title&gt;</code> diferente ("Minha Loja — Sobre",
+          "Minha Loja — Contato"…) e um parágrafo de rodapé com seu nome.
+          Repare onde cada um aparece: um na <strong>aba</strong>, outro na <strong>página</strong> —
+          head e body em ação.
+        </p>
+      </div>
+
+      <div class="exercise home">
+        <div class="exercise-header">
+          <span class="exercise-icon">🏆</span>
+          <div>
+            <div class="exercise-title">Missão final — A quarta página é sua</div>
+            <div class="exercise-sub">Liberdade total (quase)</div>
+          </div>
+        </div>
+        <div class="drill-tags">
+          <span class="drill-level lv3"><span class="stars">★★★</span> desafio</span>
+          <span class="drill-tag">rota</span>
+          <span class="drill-tag">template</span>
+          <span class="drill-tag">menu</span>
+        </div>
+        <p style="color:var(--text-dim)">
+          Invente uma quarta página pra sua loja (<code>/equipe</code>? <code>/historia</code>?
+          <code>/avaliacoes</code>?), com título, parágrafos e uma lista. Regras: precisa ter
+          rota própria, template próprio e entrar no menu de todas as páginas.
+          Traga ela pronta no Dia 2 — vai ser a cobaia dos formulários. 😈
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       RESUMO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="resumo">
+    <div class="step-header">
+      <div class="step-number sn-green">🎒</div>
+      <div>
+        <div class="step-title">O que você leva do Dia 1</div>
+        <div class="step-sub">Não era pouca coisa. Olha isso.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="about-bullets">
+        <div>🌐 <strong>Como a web funciona:</strong> navegador pede (request), servidor responde (response) — o garçom nunca falha</div>
+        <div>📮 <strong>URL por dentro:</strong> protocolo, domínio, porta e caminho — e o segredo do <code>localhost:5000</code></div>
+        <div>🩻 <strong>Streamlit desmascarado:</strong> era um servidor web esse tempo todo (localhost:8501!)</div>
+        <div>🧱 <strong>HTML de verdade:</strong> tags, aninhamento, esqueleto — você ESCREVEU uma página na mão</div>
+        <div>🌶️ <strong>Flask:</strong> servidor em 7 linhas de Python, rotas com <code>@app.route</code> e páginas com <code>render_template</code></div>
+        <div>🐛 <strong>3 bugs clássicos dominados:</strong> venv esquecido, TemplateNotFound e o dinossauro 🦖</div>
+      </div>
+
+      <div class="concept" style="margin-top:18px">
+        <div class="concept-title">🎯 A frase pra levar pra casa</div>
+        <p>
+          <strong>"Meu computador agora sabe ser um servidor."</strong> O que falta pro mundo
+          inteiro acessar? Só o deploy — e ele vem no Dia 8. Tudo que você fizer até lá
+          já nasce pronto pra ir ao ar.
+        </p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">👀</span>
+        <div class="tip-content">
+          <strong>No próximo encontro:</strong> sua loja ainda é só vitrine — ninguém consegue
+          <em>mandar</em> nada pra ela. No Dia 2 entram os <strong>formulários</strong>
+          (o cliente digita, o Python recebe!) e o <strong>Jinja</strong>, que deixa o HTML
+          dinâmico com dados vindos do Python. A loja começa a virar sistema.
+        </div>
+      </div>
+
+      <div class="next-chapter">
+        <h3>📬 Dia 02 · Formulários &amp; Jinja</h3>
+        <p style="color:var(--text-dim)">O visitante fala, o Python escuta</p>
+        <a href="javascript:void(0)" class="btn-next disabled">🚧 Em construção — disponível antes do encontro 2</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="footer">
+  <p>Feito com 🌶️ pelo prof. Kelson Almeida — programa AI</p>
+</footer>
+
+<script src="../../shared/scripts.js" defer></script>
+<script type="module" src="../../shared/motion-fx.js"></script>
+<script type="module" src="../../shared/tag-forge.js"></script>
+<script>
+/* ══════════ Máquinas didáticas do capítulo 01 (vanilla, sem dependências) ══════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- MÁQUINA 1: Pedido ao Vivo ---------- */
+  (function(){
+    const live = document.getElementById('swpLive');
+    if (!live) return;
+    const $ = (id) => document.getElementById(id);
+    const pktReq = $('pktReq'), pktRes = $('pktRes');
+    const server = $('liveServer'), note = $('liveNote');
+    const goBtn = $('liveGo'), powerBtn = $('livePower');
+    const srvIco = $('srvIco'), srvSub = $('srvSub');
+    let ligado = true, rodando = false;
+    const timers = [];
+    const after = (ms, fn) => timers.push(setTimeout(fn, ms));
+
+    const show = (id) => ['stIdle','stLoading','stOk','stErr']
+      .forEach(s => $(s).classList.toggle('on', s === id));
+
+    function resetPackets(){
+      [pktReq, pktRes].forEach(p => { p.classList.remove('show'); });
+      // request nasce no navegador (esquerda); response nasce no servidor (direita)
+      pktReq.classList.remove('cross');
+      pktRes.classList.add('cross');
+    }
+
+    function run(){
+      if (rodando) return;
+      rodando = true;
+      timers.forEach(clearTimeout); timers.length = 0;
+      resetPackets();
+      show('stLoading');
+      note.textContent = 'o navegador montou o pedido: "GET / — me manda a página inicial"…';
+
+      // request atravessa o fio
+      after(150, () => {
+        pktReq.classList.add('show');
+        requestAnimationFrame(() => pktReq.classList.add('cross'));
+      });
+
+      after(1350, () => {
+        pktReq.classList.remove('show');
+        if (!ligado){
+          note.textContent = 'o pedido chegou no endereço… e ninguém atendeu. A cozinha está fechada. 🥀';
+          after(900, () => {
+            show('stErr');
+            note.textContent = 'sem servidor não tem response — o navegador desiste e mostra o erro. Religa o servidor e tenta de novo!';
+            rodando = false;
+          });
+          return;
+        }
+        server.classList.add('working');
+        srvIco.textContent = '🍳';
+        srvSub.textContent = 'preparando a página…';
+        note.textContent = 'o servidor recebeu o request e está montando a response…';
+
+        // response volta pelo fio
+        after(950, () => {
+          server.classList.remove('working');
+          srvIco.textContent = '🖥️';
+          srvSub.textContent = 'ligado, esperando pedidos';
+          pktRes.classList.add('show');
+          requestAnimationFrame(() => pktRes.classList.remove('cross'));
+        });
+
+        after(2200, () => {
+          pktRes.classList.remove('show');
+          show('stOk');
+          note.textContent = 'response entregue! O navegador renderizou o HTML que veio no pacote. 🎉 Agora desliga o servidor e tenta de novo… 😈';
+          rodando = false;
+        });
+      });
+    }
+
+    goBtn.addEventListener('click', run);
+    powerBtn.addEventListener('click', () => {
+      ligado = !ligado;
+      server.classList.toggle('off', !ligado);
+      srvIco.textContent = ligado ? '🖥️' : '💤';
+      srvSub.textContent = ligado ? 'ligado, esperando pedidos' : 'DESLIGADO';
+      powerBtn.textContent = ligado ? '🔌 Desligar servidor' : '🔌 Ligar servidor';
+      note.textContent = ligado
+        ? 'servidor de pé de novo — visita o site pra confirmar'
+        : 'cozinha fechada… agora aperta ▶ e vê o que acontece 😈';
+    });
+
+    // primeiro disparo sozinho, quando entra na tela
+    if (!reduceMotion){
+      new IntersectionObserver((es, obs) => {
+        es.forEach(e => { if (e.isIntersecting){ run(); obs.disconnect(); } });
+      }, {threshold:0.45}).observe(live);
+    }
+  })();
+
+  /* ---------- MÁQUINA 2: Anatomia da URL (2 instâncias) ---------- */
+  function setupUrlAna(rootId, infoId, infos){
+    const root = document.getElementById(rootId);
+    if (!root) return;
+    const info = document.getElementById(infoId);
+    const segs = [...root.querySelectorAll('.swp-seg')];
+    let autoTimer = null, idx = -1, touched = false;
+
+    function select(i, manual){
+      idx = i;
+      segs.forEach((s, k) => s.classList.toggle('active', k === i));
+      info.innerHTML = '<span class="si-emoji">' + infos[i].emoji + '</span><span>' + infos[i].html + '</span>';
+      if (manual){
+        touched = true;
+        if (autoTimer){ clearInterval(autoTimer); autoTimer = null; }
+      }
+    }
+
+    segs.forEach((s, i) => s.addEventListener('click', () => select(i, true)));
+
+    // passeio automático até o aluno clicar
+    if (!reduceMotion){
+      new IntersectionObserver((es, obs) => {
+        es.forEach(e => {
+          if (e.isIntersecting){
+            obs.disconnect();
+            if (touched) return;
+            select(0, false);
+            autoTimer = setInterval(() => {
+              if (idx >= segs.length - 1){ clearInterval(autoTimer); autoTimer = null; return; }
+              select(idx + 1, false);
+            }, 2700);
+          }
+        });
+      }, {threshold:0.5}).observe(root);
+    }
+  }
+
+  setupUrlAna('urlAna', 'segInfo', [
+    {emoji:'🔐', html:'<strong>Protocolo</strong> — o idioma da conversa: "vamos falar HTTP". O <strong>S</strong> é o cadeado: conversa criptografada. É o "vamos falar português, em sigilo".'},
+    {emoji:'🏙️', html:'<strong>Domínio</strong> — QUAL computador-servidor procurar no mundo. É a cidade + rua do endereço. Alguém paga pra ter esse nome (spoiler do Dia 8 😉).'},
+    {emoji:'🚪', html:'<strong>Porta</strong> — um mesmo computador atende vários serviços; cada um numa "porta" numerada. A <code>:443</code> é a padrão do https — tão padrão que o navegador nem mostra.'},
+    {emoji:'📄', html:'<strong>Caminho</strong> — QUAL página você quer DESSE servidor. O apartamento dentro do prédio. <code>/sobre</code>, <code>/produtos</code>, <code>/</code> (a inicial)…'},
+  ]);
+
+  setupUrlAna('urlAna2', 'segInfo2', [
+    {emoji:'🔓', html:'<strong>http sem S</strong> — sem cadeado. Tudo bem AQUI: a conversa nem sai do seu computador. Na internet de verdade, só com https.'},
+    {emoji:'🏠', html:'<strong>localhost</strong> — o apelido do SEU computador. O request sai do navegador e chega… nele mesmo. Mesa e cozinha na mesma casa.'},
+    {emoji:'🚪', html:'<strong>Porta 5000</strong> — onde o Flask atende por padrão. Lembra do Streamlit na <code>:8501</code>? Mesma ideia, porta diferente. Cada servidor escolhe a sua.'},
+    {emoji:'📄', html:'<strong>Caminho /</strong> — a "raiz", a página inicial. Hoje você cria a <code>/</code> e a <code>/sobre</code>. Amanhã, o sistema inteiro.'},
+  ]);
+
+  /* ---------- MÁQUINA 3: Cada URL é uma página ---------- */
+  (function(){
+    const router = document.getElementById('swpRouter');
+    if (!router) return;
+    const note = document.getElementById('routerNote');
+    const path = document.getElementById('routerPath');
+    const buttons = [...router.querySelectorAll('.swp-router-nav button')];
+    const routes = [...router.querySelectorAll('.swp-route')];
+    const views = [...router.querySelectorAll('.rv')];
+    let busy = false;
+
+    const NOTES = {
+      '/':        'request <strong>GET /</strong> chegou → o Flask olhou o cardápio, achou <code>@app.route("/")</code> e chamou <code>home()</code> → response com o index.html',
+      '/sobre':   'request <strong>GET /sobre</strong> chegou → bateu com <code>@app.route("/sobre")</code> → <code>sobre()</code> montou a response com o sobre.html',
+      '/contato': 'request <strong>GET /contato</strong> chegou → o Flask varreu o cardápio e… nada. Resposta: <strong>404 Not Found</strong>. Você conserta isso no exercício 😉',
+    };
+
+    buttons.forEach(btn => btn.addEventListener('click', () => {
+      if (busy) return;
+      busy = true;
+      const r = btn.dataset.route;
+      buttons.forEach(b => b.classList.toggle('here', b === btn));
+      routes.forEach(x => x.classList.remove('lit'));
+      note.innerHTML = 'request <strong>GET ' + r + '</strong> viajando até o servidor…';
+
+      setTimeout(() => {
+        const alvo = routes.find(x => x.dataset.routecode === r);
+        (alvo || routes.find(x => x.dataset.routecode === 'none')).classList.add('lit');
+        note.innerHTML = NOTES[r];
+        setTimeout(() => {
+          path.textContent = r;
+          const rv = views.find(v => v.dataset.rv === r) || views.find(v => v.dataset.rv === '404');
+          views.forEach(v => v.classList.toggle('on', v === rv));
+          busy = false;
+        }, 420);
+      }, 520);
+    }));
+  })();
+
+  /* ---------- Widget: ligar o Pico.css ---------- */
+  (function(){
+    const btn = document.getElementById('picoBtn');
+    if (!btn) return;
+    const view = document.getElementById('picoView');
+    const tag = document.getElementById('picoTag');
+    const noteEl = document.getElementById('picoNote');
+    btn.addEventListener('click', () => {
+      const on = view.classList.toggle('pretty');
+      tag.textContent = on ? 'com pico ✓' : 'sem css';
+      btn.textContent = on ? '↩ Tirar o CSS' : '✨ Ligar o CSS (Pico)';
+      noteEl.textContent = on
+        ? 'MESMO HTML — só entrou a linha do <link>. Uma linha! 🤯'
+        : 'mesma página, mesmo HTML — só falta a roupa';
+    });
+  })();
+});
+</script>
+</body>
+</html>
