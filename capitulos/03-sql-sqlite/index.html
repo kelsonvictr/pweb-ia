@@ -1,0 +1,1712 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dia 03 · Banco de dados de verdade — Sistemas Web com Python | programa AI</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../shared/styles.css">
+<link rel="stylesheet" href="../../shared/components.css">
+<link rel="stylesheet" href="../../shared/animations.css">
+<style>
+/* ══════════ CSS local do capítulo 03 (prefixo swp-) ══════════ */
+
+/* Ligatures OFF em toda classe mono local */
+.swp-seg,.swp-seg-info code,.swp-tline,.swp-sql-cmd,.swp-inj-sql,.swp-postit,
+.swp-vault-body{
+  font-variant-ligatures:none;
+  font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+}
+
+.step-section.visible .reveal-stagger > *:nth-child(7){transition-delay:0.65s}
+.step-section.visible .reveal-stagger > *:nth-child(8){transition-delay:0.75s}
+
+/* botões/hud padrão das máquinas */
+.swp-machine-btn{
+  background:linear-gradient(135deg,var(--accent5),#e8960c);color:#241a02;
+  border:0;font-weight:800;padding:9px 18px;border-radius:10px;cursor:pointer;
+  font-size:0.84rem;transition:transform .2s;font-family:'Nunito',sans-serif;
+}
+.swp-machine-btn:hover{transform:translateY(-2px)}
+.swp-machine-btn:disabled{opacity:0.35;cursor:default;transform:none}
+.swp-machine-btn.ghost{
+  background:rgba(255,255,255,0.06);color:var(--text-dim);
+  border:1px solid rgba(255,255,255,0.12);
+}
+.swp-machine-hud{
+  display:flex;align-items:center;gap:12px;padding:12px 16px;flex-wrap:wrap;
+  background:rgba(255,255,255,0.03);border-top:1px solid rgba(255,255,255,0.06);
+}
+.swp-machine-note{font-size:0.8rem;color:var(--text-dim);line-height:1.5;flex:1;min-width:180px}
+.swp-machine-note strong{color:var(--accent5)}
+
+/* ---------- comparativo caderninho vs cofre ---------- */
+.swp-duel{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0}
+@media(max-width:700px){.swp-duel{grid-template-columns:1fr}}
+.swp-duel-col{
+  border-radius:16px;padding:18px;border:1px solid rgba(255,255,255,0.08);
+  background:var(--surface);
+}
+.swp-duel-col .dc-title{font-weight:800;font-size:0.95rem;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.swp-duel-col.bad{border-color:rgba(247,183,49,0.25)}
+.swp-duel-col.good{border-color:rgba(6,214,160,0.30)}
+.swp-duel-item{
+  display:flex;gap:10px;align-items:flex-start;font-size:0.86rem;color:var(--text-dim);
+  padding:7px 0;border-bottom:1px dashed rgba(255,255,255,0.06);line-height:1.5;
+}
+.swp-duel-item:last-child{border-bottom:none}
+.swp-duel-item .di-ico{flex-shrink:0}
+.swp-duel-item strong{color:var(--text)}
+
+/* ---------- anatomia (segmentos clicáveis — padrão do cap 01) ---------- */
+.swp-urlana{
+  border:1px solid rgba(247,183,49,0.25);border-radius:18px;margin:18px 0;overflow:hidden;
+  background:linear-gradient(180deg,#0d1020,#0d0d1a);
+}
+.swp-urlana-row{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:6px;
+  padding:22px 16px 8px;
+}
+.swp-seg{
+  font-family:'JetBrains Mono',monospace;font-size:clamp(0.7rem,2vw,0.9rem);
+  font-weight:700;padding:8px 10px;border-radius:10px;cursor:pointer;
+  border:1px solid rgba(255,255,255,0.10);background:rgba(255,255,255,0.03);
+  color:var(--text-dim);transition:all .3s ease;user-select:none;
+}
+.swp-seg:hover{border-color:rgba(255,255,255,0.3)}
+.swp-seg.active{
+  color:#0a0a12;transform:translateY(-4px);
+  box-shadow:0 8px 24px rgba(0,0,0,0.4);
+}
+.swp-seg.c1.active{background:var(--accent3)}
+.swp-seg.c2.active{background:var(--accent5)}
+.swp-seg.c3.active{background:var(--accent2);color:#fff}
+.swp-seg.c4.active{background:var(--accent6)}
+.swp-seg-info{
+  margin:10px 16px 16px;padding:14px 18px;border-radius:12px;min-height:74px;
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);
+  font-size:0.9rem;color:var(--text-dim);line-height:1.6;
+  display:flex;align-items:center;gap:12px;
+}
+.swp-seg-info .si-emoji{font-size:1.6rem;flex-shrink:0}
+.swp-seg-info strong{color:var(--text)}
+.swp-seg-info code{background:rgba(255,255,255,0.07);padding:1px 6px;border-radius:5px;font-size:0.82rem}
+
+/* ---------- MÁQUINA: Simulador SQL ---------- */
+.swp-sql{
+  border:1px solid rgba(247,183,49,0.30);border-radius:18px;overflow:hidden;margin:18px 0;
+  background:
+    radial-gradient(1100px 280px at 50% -12%, rgba(247,183,49,0.10), transparent 70%),
+    linear-gradient(180deg,#0b1020,#0d0d1a);
+  box-shadow:0 22px 60px rgba(0,0,0,0.45);
+}
+.swp-sql-tabs{display:flex;gap:6px;padding:14px 16px 0;flex-wrap:wrap}
+.swp-sql-tab{
+  border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);
+  color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-weight:700;
+  font-size:0.76rem;padding:7px 14px;border-radius:10px 10px 0 0;cursor:pointer;
+  transition:all .25s;
+}
+.swp-sql-tab.on{background:var(--accent5);border-color:var(--accent5);color:#241a02}
+.swp-sql-cmd{
+  margin:0 16px;padding:14px 16px;
+  background:var(--code-bg);border:1px solid rgba(255,255,255,0.08);
+  border-radius:0 12px 12px 12px;
+  font-family:'JetBrains Mono',monospace;font-size:0.8rem;line-height:1.8;color:#c9d1d9;
+  white-space:pre;overflow-x:auto;
+  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.15) transparent;
+}
+.swp-sql-cmd::-webkit-scrollbar{height:5px}
+.swp-sql-cmd::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:3px}
+.swp-sql-table{padding:14px 16px 4px}
+.swp-sql-msg{
+  margin:0 16px 6px;font-family:'JetBrains Mono',monospace;font-size:0.72rem;
+  color:var(--accent7);min-height:20px;
+}
+
+/* ---------- MÁQUINA: Rascunho e Carimbo (commit) ---------- */
+.swp-vault{
+  border:1px solid rgba(6,214,160,0.30);border-radius:18px;overflow:hidden;margin:18px 0;
+  background:
+    radial-gradient(1100px 280px at 50% -12%, rgba(6,214,160,0.10), transparent 70%),
+    linear-gradient(180deg,#0b1020,#0d0d1a);
+}
+.swp-vault-stage{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:18px}
+@media(max-width:700px){.swp-vault-stage{grid-template-columns:1fr}}
+.swp-vault-pane .pane-label{
+  font-size:0.66rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--text-dim);margin-bottom:10px;text-align:center;
+}
+.swp-postit{
+  min-height:120px;border-radius:4px 4px 14px 4px;padding:14px 16px;
+  background:linear-gradient(180deg,#f7e8a0,#f2d878);color:#4a3f10;
+  font-family:'JetBrains Mono',monospace;font-size:0.74rem;line-height:1.8;
+  box-shadow:0 10px 24px rgba(0,0,0,0.4);
+  transform:rotate(-1.2deg);transition:all .5s ease;white-space:pre-wrap;
+}
+.swp-postit .pt-title{font-weight:700;font-size:0.66rem;letter-spacing:1px;text-transform:uppercase;opacity:0.65;display:block;margin-bottom:6px}
+.swp-postit.gone{transform:rotate(18deg) translateY(60px) scale(0.5);opacity:0}
+.swp-vault-file{
+  min-height:120px;border-radius:14px;padding:14px 16px;
+  background:linear-gradient(180deg,#1a2233,#121826);
+  border:2px solid rgba(6,214,160,0.35);position:relative;transition:box-shadow .4s;
+}
+.swp-vault-file.stamp{box-shadow:0 0 34px rgba(6,214,160,0.35)}
+.swp-vault-file .vf-title{
+  font-size:0.66rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--accent7);margin-bottom:8px;display:flex;align-items:center;gap:6px;
+}
+.swp-vault-body{
+  font-family:'JetBrains Mono',monospace;font-size:0.74rem;line-height:1.9;color:#c9d1d9;
+  white-space:pre-wrap;
+}
+.swp-vault-body .vrow{display:block;border-radius:6px;padding:0 6px}
+.swp-vault-body .vrow.fresh{background:rgba(6,214,160,0.18);animation:swpCellHot 1.2s ease both}
+
+/* ---------- MÁQUINA: placeholders / injection ---------- */
+.swp-inj{
+  border:1px solid rgba(255,71,87,0.30);border-radius:18px;overflow:hidden;margin:18px 0;
+  background:linear-gradient(180deg,#140d14,#0d0d1a);
+}
+.swp-inj-input{
+  display:flex;align-items:center;gap:10px;padding:16px 16px 4px;flex-wrap:wrap;
+}
+.swp-inj-input .lbl{font-size:0.82rem;color:var(--text-dim)}
+.swp-inj-input code{
+  font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:#ff8a8a;
+  background:var(--code-bg);border:1px solid rgba(255,71,87,0.3);
+  border-radius:8px;padding:6px 12px;
+  font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+}
+.swp-inj-cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:16px}
+@media(max-width:760px){.swp-inj-cols{grid-template-columns:1fr}}
+.swp-inj-col{
+  border-radius:14px;border:1px solid rgba(255,255,255,0.08);
+  background:var(--surface);padding:14px 16px;
+}
+.swp-inj-col .ic-title{font-weight:800;font-size:0.85rem;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.swp-inj-col.bad{border-color:rgba(255,71,87,0.35)}
+.swp-inj-col.good{border-color:rgba(6,214,160,0.35)}
+.swp-inj-sql{
+  font-family:'JetBrains Mono',monospace;font-size:0.72rem;line-height:1.9;color:#c9d1d9;
+  background:var(--code-bg);border-radius:10px;padding:10px 12px;
+  white-space:pre-wrap;word-break:break-word;margin-bottom:10px;
+}
+.swp-inj-sql .evil{color:#ff5c5c;font-weight:700}
+.swp-inj-sql .safe{color:#7ee2c9}
+.swp-inj-verdict{font-size:0.8rem;line-height:1.55;color:var(--text-dim)}
+.swp-inj-verdict strong{color:var(--text)}
+.swp-inj-col.bad.armed .swp-inj-sql{animation:wrongShake 0.5s ease}
+
+/* ---------- rastreador (padrão do cap 01) ---------- */
+.swp-trace .swp-tline{
+  display:block;padding:2px 10px;border-left:3px solid transparent;border-radius:4px;
+  transition:all .35s ease;
+}
+.swp-trace .swp-tline.active{
+  background:rgba(247,183,49,0.13);border-left-color:var(--accent5);
+}
+.swp-trace-msgs{position:relative;min-height:64px;margin-top:12px}
+.swp-trace-msgs > div{
+  position:absolute;inset:0;opacity:0;transition:opacity .4s ease;
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);
+  border-radius:12px;padding:12px 16px;font-size:0.88rem;color:var(--text-dim);
+  display:flex;align-items:center;gap:10px;line-height:1.5;
+}
+.swp-trace-msgs > div.on{opacity:1}
+.swp-trace-msgs strong{color:var(--text)}
+.swp-trace-msgs .tm-emoji{font-size:1.4rem;flex-shrink:0}
+
+/* chips "SQLite no seu bolso" */
+.swp-pocket{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:16px 0}
+.swp-pocket .pk{
+  display:flex;align-items:center;gap:8px;
+  background:var(--surface2);border:1px solid rgba(255,255,255,0.08);
+  border-radius:50px;padding:8px 16px;font-size:0.82rem;font-weight:700;color:var(--text-dim);
+}
+.swp-pocket .pk .e{font-size:1.1rem}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-orbs">
+  <div class="orb"></div>
+  <div class="orb"></div>
+  <div class="orb"></div>
+</div>
+
+<div class="progress-track"><div class="progress-bar"></div></div>
+
+<button class="menu-toggle" onclick="openSidebar()" aria-label="Abrir menu">☰</button>
+<aside class="sidebar-nav" id="sidebar">
+  <button class="sidebar-close" onclick="closeSidebar()" aria-label="Fechar menu">✕</button>
+  <div class="sidebar-header">
+    <h3>🗄️ Dia 03 · Banco de verdade</h3>
+    <a href="../../index.html" class="sidebar-back">← Voltar ao hub</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">📓 Por que mudar</div>
+    <a class="sidebar-link" onclick="goTo('aquecimento')"><span class="dot" style="background:var(--accent5)"></span>Aquecimento</a>
+    <a class="sidebar-link" onclick="goTo('caderninho')"><span class="dot" style="background:var(--tinydb)"></span>Caderninho vs cofre</a>
+    <a class="sidebar-link" onclick="goTo('relacional')"><span class="dot" style="background:var(--accent4)"></span>O modelo relacional</a>
+    <a class="sidebar-link" onclick="goTo('sqlite-everywhere')"><span class="dot" style="background:var(--accent3)"></span>SQLite no seu bolso</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🏗️ Criando a tabela</div>
+    <a class="sidebar-link" onclick="goTo('create')"><span class="dot" style="background:var(--accent5)"></span>Anatomia do CREATE TABLE</a>
+    <a class="sidebar-link" onclick="goTo('db-browser')"><span class="dot" style="background:var(--accent6)"></span>O espião: DB Browser</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">⚡ Os 4 verbos do SQL</div>
+    <a class="sidebar-link" onclick="goTo('simulador')"><span class="dot" style="background:var(--accent5)"></span>⭐ Simulador SQL</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🐍 SQL dentro do Python</div>
+    <a class="sidebar-link" onclick="goTo('sqlite3')"><span class="dot" style="background:var(--python-y)"></span>O ritual do sqlite3</a>
+    <a class="sidebar-link" onclick="goTo('commit')"><span class="dot" style="background:var(--accent7)"></span>⭐ Rascunho e Carimbo</a>
+    <a class="sidebar-link" onclick="goTo('placeholders')"><span class="dot" style="background:var(--bug)"></span>⭐ O ? que salva seu banco</a>
+    <a class="sidebar-link" onclick="goTo('bora-sql')"><span class="dot" style="background:var(--accent7)"></span>Bora: seus scripts</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🏁 Fechamento</div>
+    <a class="sidebar-link" onclick="goTo('bugzilla')"><span class="dot" style="background:var(--bug)"></span>BugZilla do dia 🐛</a>
+    <a class="sidebar-link" onclick="goTo('quiz')"><span class="dot" style="background:var(--accent5)"></span>Quiz de fixação</a>
+    <a class="sidebar-link" onclick="goTo('arena')"><span class="dot" style="background:var(--accent6)"></span>Arena de treino</a>
+    <a class="sidebar-link" onclick="goTo('resumo')"><span class="dot" style="background:var(--accent7)"></span>Resumo do dia</a>
+  </div>
+</aside>
+<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-icons">📓 ➡️ 🗄️</div>
+  <span class="hero-badge python">Dia 03 · Sistemas Web com Python</span>
+  <h1><span style="background:linear-gradient(135deg,var(--accent5),var(--accent7));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Banco de dados<br>de verdade</span></h1>
+  <p class="subtitle">
+    O TinyDB era um caderninho. Hoje você ganha um
+    <strong style="color:var(--accent7)">arquivo de aço com fichário indexado</strong> —
+    o mesmo tipo de banco que roda em app de banco e e-commerce.
+    E aprende a língua oficial dele: <strong style="color:var(--accent5)">SQL</strong>. 🗝️
+  </p>
+  <div class="hero-stack">
+    <span class="stack-chip python">🐍 Python</span>
+    <span class="stack-chip">🗄️ SQLite</span>
+    <span class="stack-chip">⚡ SQL</span>
+    <span class="stack-chip">🛡️ placeholders ?</span>
+  </div>
+</section>
+
+<div class="container">
+
+  <!-- ═══════════════════════════════════════════════════════
+       AQUECIMENTO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="aquecimento">
+    <div class="step-header">
+      <div class="step-number sn-yellow">🔥</div>
+      <div>
+        <div class="step-title">Aquecimento: o trauma do apagão</div>
+        <div class="step-sub">Hoje é dia de aposentar o CTRL+C assassino</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        No fim do Dia 2 você viu seus produtos <strong style="color:var(--text)">evaporarem
+        num restart</strong>. A causa: lista em memória. A cura tem duas partes —
+        hoje você aprende a <strong style="color:var(--text)">guardar dados num banco de
+        verdade</strong> (sem Flask, foco total!), e no Dia 4 pluga esse banco na Loja.
+      </p>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">1️⃣</span> Por que os produtos sumiram quando o servidor reiniciou?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Bug do Flask</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">A lista morava na memória RAM</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">O navegador apagou</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Faltou internet</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Isso!" data-wrong="Lembra do apagão!"
+             data-explain="RAM é memória de trabalho: morre com o processo. Dado importante precisa morar num ARQUIVO — e o banco de dados é o arquivo profissional pra isso."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">2️⃣</span> E o TinyDB do bootcamp? Ele já salvava num arquivo (o db.json)…</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Então já resolve tudo</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Salva, mas não aguenta sistema de verdade</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">TinyDB não salvava nada</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">O db.json também evapora</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Na mosca!" data-wrong="Quase!"
+             data-explain="o TinyDB persiste sim — mas relê e regrava o JSON inteiro, sofre com volume, busca e vários acessos ao mesmo tempo. A próxima seção mostra o duelo completo."></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       CADERNINHO VS COFRE
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="caderninho">
+    <div class="step-header">
+      <div class="step-number" style="background:linear-gradient(135deg,var(--tinydb),#e8960c)">📓</div>
+      <div>
+        <div class="step-title">O caderninho vs. o fichário de aço</div>
+        <div class="step-sub">Com todo respeito ao TinyDB — ele te trouxe até aqui</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="analogy">
+        <div class="analogy-title">A mercearia e o mercado 🏪</div>
+        <p>
+          Uma mercearia pequena anota vendas num <strong>caderninho</strong>: funciona!
+          Mas o mercado grande tem <strong>um fichário de aço indexado</strong>: acha qualquer
+          ficha em segundos, várias pessoas consultam ao mesmo tempo, e nada se perde nem
+          rasga. Seu sistema está crescendo — chegou a hora do fichário.
+        </p>
+      </div>
+
+      <div class="swp-duel">
+        <div class="swp-duel-col bad">
+          <div class="dc-title">📓 TinyDB (o caderninho)</div>
+          <div class="swp-duel-item"><span class="di-ico">🐌</span><span><strong>Volume:</strong> relê e regrava o JSON INTEIRO a cada operação — 10 mil produtos = sofrimento</span></div>
+          <div class="swp-duel-item"><span class="di-ico">🔦</span><span><strong>Busca:</strong> percorre tudo na unha pra achar um registro</span></div>
+          <div class="swp-duel-item"><span class="di-ico">💥</span><span><strong>Concorrência:</strong> dois acessos gravando juntos = risco de arquivo corrompido</span></div>
+          <div class="swp-duel-item"><span class="di-ico">🤷</span><span><strong>Mercado:</strong> nenhuma vaga pede TinyDB</span></div>
+        </div>
+        <div class="swp-duel-col good">
+          <div class="dc-title">🗄️ SQLite (o fichário de aço)</div>
+          <div class="swp-duel-item"><span class="di-ico">🚀</span><span><strong>Volume:</strong> mexe só no pedacinho certo do arquivo — milhões de linhas, numa boa</span></div>
+          <div class="swp-duel-item"><span class="di-ico">🎯</span><span><strong>Busca:</strong> índices — acha 1 registro entre milhões sem varrer tudo</span></div>
+          <div class="swp-duel-item"><span class="di-ico">🔒</span><span><strong>Concorrência:</strong> controla os acessos pra ninguém corromper nada</span></div>
+          <div class="swp-duel-item"><span class="di-ico">💼</span><span><strong>Mercado:</strong> SQL é exigência em praticamente TODA vaga de backend e dados</span></div>
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 O superpoder de hoje não é o SQLite. É o SQL.</div>
+        <p>
+          <strong>SQL</strong> é a língua universal dos bancos relacionais — a MESMA que
+          você usaria com PostgreSQL, MySQL, Oracle… Aprendeu uma vez, usa em qualquer
+          emprego. O SQLite é só o nosso primeiro carro pra treinar a direção.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       MODELO RELACIONAL
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="relacional">
+    <div class="step-header">
+      <div class="step-number sn-blue">📋</div>
+      <div>
+        <div class="step-title">Tabelas, colunas, linhas</div>
+        <div class="step-sub">Uma planilha turbinada — com regras rígidas de propósito</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Um banco <strong style="color:var(--text)">relacional</strong> organiza tudo em
+        <strong style="color:var(--text)">tabelas</strong> — como uma planilha:
+        cada <strong style="color:var(--text)">coluna</strong> é um campo com nome e tipo,
+        cada <strong style="color:var(--text)">linha</strong> é um registro.
+        A tabela da Loja vai ser assim:
+      </p>
+
+      <table class="swp-data-table">
+        <thead><tr><th>id</th><th>nome</th><th>preco</th><th>quantidade</th></tr></thead>
+        <tbody>
+          <tr><td class="n">1</td><td>Fone Bluetooth</td><td class="n">149.9</td><td class="n">12</td></tr>
+          <tr><td class="n">2</td><td>Teclado Mecânico</td><td class="n">299.0</td><td class="n">5</td></tr>
+          <tr><td class="n">3</td><td>Mouse Gamer</td><td class="n">89.9</td><td class="n">23</td></tr>
+        </tbody>
+      </table>
+
+      <div class="keyword-grid">
+        <div class="keyword-chip">
+          <span class="emoji">🗂️</span>
+          <span class="kw-name">Tabela</span>
+          <span class="kw-desc">um "assunto": produtos, clientes, vendas — cada um na sua</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">📐</span>
+          <span class="kw-name">Coluna</span>
+          <span class="kw-desc">um campo com nome E tipo fixo (nome é texto, preco é número)</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">📄</span>
+          <span class="kw-name">Linha</span>
+          <span class="kw-desc">um registro completo — o dict do bootcamp, domado</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">🔑</span>
+          <span class="kw-name">id</span>
+          <span class="kw-desc">o número único de cada linha — o "número da ficha"</span>
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🆚</span>
+        <div class="tip-content">
+          <strong>Diferença pro TinyDB:</strong> lá, cada dict podia ter as chaves que quisesse
+          (um produto com preço, outro sem…). No relacional, <strong>a tabela define as colunas
+          UMA vez</strong> e toda linha obedece. Essa rigidez parece chata — é ela que deixa
+          o banco rápido e confiável.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SQLITE EVERYWHERE
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="sqlite-everywhere">
+    <div class="step-header">
+      <div class="step-number sn-mint">📱</div>
+      <div>
+        <div class="step-title">SQLite: o banco que está no seu bolso agora</div>
+        <div class="step-sub">Sério. Pega o celular. Ele está cheio de SQLite.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        O SQLite é um banco relacional completo que vive
+        <strong style="color:var(--text)">num único arquivo</strong> (o nosso vai chamar
+        <code>loja.db</code>) e <strong style="color:var(--text)">já vem com o Python</strong> —
+        zero instalação. E não é banco "de brinquedo":
+      </p>
+
+      <div class="swp-pocket">
+        <span class="pk"><span class="e">💬</span> WhatsApp (suas conversas)</span>
+        <span class="pk"><span class="e">📸</span> galeria de fotos</span>
+        <span class="pk"><span class="e">🎵</span> apps de música</span>
+        <span class="pk"><span class="e">🌐</span> histórico do navegador</span>
+        <span class="pk"><span class="e">🎮</span> saves de jogos</span>
+        <span class="pk"><span class="e">✈️</span> sistemas de avião</span>
+      </div>
+
+      <p style="color:var(--text-dim);text-align:center">
+        É provavelmente <strong style="color:var(--text)">o software mais implantado do
+        mundo</strong> — bilhões de cópias rodando agora. E hoje ele trabalha pra você. 😎
+      </p>
+
+      <div class="concept">
+        <div class="concept-title">💡 Um arquivo = o banco inteiro</div>
+        <p>
+          Tabelas, dados, índices… tudo dentro do <code>loja.db</code>. Quer backup?
+          Copia o arquivo. Quer levar pro deploy? Vai junto. Essa simplicidade é o motivo
+          de ele ser perfeito pra aprender — e pra MUITO sistema em produção.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="chapter-divider">
+    <div class="chapter-icon">🏗️</div>
+    <div class="chapter-number">Parte 2</div>
+    <h2 style="background:linear-gradient(135deg,var(--accent5),#e8960c);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Criando a tabela</h2>
+    <p class="chapter-subtitle">A primeira frase de SQL da sua vida</p>
+  </div>
+
+<!-- ═══════════════════════════════════════════════════════
+       ANATOMIA DO CREATE TABLE
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="create">
+    <div class="step-header">
+      <div class="step-number sn-yellow">🏗️</div>
+      <div>
+        <div class="step-title">CREATE TABLE: desenhando o fichário</div>
+        <div class="step-sub">Clique em cada pedaço do comando — igual fizemos com a URL</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Antes de guardar qualquer coisa, você <strong style="color:var(--text)">declara o
+        formato das fichas</strong>: quais colunas, de que tipo. Esse é o primeiro comando
+        SQL da sua vida — e cada pedaço dele tem um porquê:
+      </p>
+
+      <div class="swp-urlana" id="createAna">
+        <div class="swp-urlana-row">
+          <span class="swp-seg c1" data-seg="0">CREATE TABLE produtos (</span>
+          <span class="swp-seg c2" data-seg="1">id INTEGER PRIMARY KEY AUTOINCREMENT,</span>
+          <span class="swp-seg c3" data-seg="2">nome TEXT,</span>
+          <span class="swp-seg c4" data-seg="3">preco REAL, quantidade INTEGER )</span>
+        </div>
+        <div class="swp-seg-info" id="createInfo">
+          <span class="si-emoji">👆</span>
+          <span>Clique em cada pedaço do comando (ou espere o passeio automático).</span>
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 Todo dado tem tipo — e o banco COBRA</div>
+        <p>
+          <strong>TEXT</strong> = texto (a string do Python) ·
+          <strong>INTEGER</strong> = número inteiro ·
+          <strong>REAL</strong> = número com vírgula (o float).
+          No Python o tipo é implícito; no banco você declara na criação da tabela —
+          e é essa disciplina que permite busca rápida e dados confiáveis.
+        </p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🪄</span>
+        <div class="tip-content">
+          <strong>AUTOINCREMENT é mordomia:</strong> você nunca vai inventar id.
+          Insere a primeira linha → o banco carimba 1. A próxima → 2. Pra sempre único,
+          sem você pensar nisso. (Guarde esse id: ele brilha MUITO no Dia 5.)
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       DB BROWSER
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="db-browser">
+    <div class="step-header">
+      <div class="step-number sn-purple">🔍</div>
+      <div>
+        <div class="step-title">O espião: DB Browser for SQLite</div>
+        <div class="step-sub">Uma ferramenta opcional pra VER o arquivo por dentro</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        O <code>loja.db</code> é um arquivo binário — clique duplo nele não mostra nada útil.
+        O <strong style="color:var(--text)">DB Browser for SQLite</strong>
+        (<code>sqlitebrowser.org</code>, grátis) abre o arquivo e mostra as tabelas como
+        planilha, com uma aba pra executar SQL. Ótimo pra <strong style="color:var(--text)">conferir
+        com os olhos</strong> o que seus scripts fizeram.
+      </p>
+
+      <div class="warning">
+        <span class="tip-icon">🧭</span>
+        <div class="tip-content">
+          <strong>Mas o caminho principal é o Python.</strong> O DB Browser é o espião,
+          não o motorista: usaremos ele só pra espiar. Quem cria, insere e consulta —
+          em aula e no seu sistema — é o seu código. (E atenção: deixar o DB Browser aberto
+          <em>segurando</em> o arquivo pode travar seu script… guarda essa, o BugZilla volta nisso.)
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="chapter-divider">
+    <div class="chapter-icon">⚡</div>
+    <div class="chapter-number">Parte 3</div>
+    <h2 style="background:linear-gradient(135deg,var(--accent5),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Os 4 verbos do SQL</h2>
+    <p class="chapter-subtitle">Criar, ler, mudar, apagar — o vocabulário completo do fichário</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ SIMULADOR SQL
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="simulador">
+    <div class="step-header">
+      <div class="step-number sn-yellow">⭐</div>
+      <div>
+        <div class="step-title">Simulador SQL: execute e veja a tabela reagir</div>
+        <div class="step-sub">Cada aba é um verbo. Rode todos — inclusive fora de ordem.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Esta é a tabela <code>produtos</code> viva. Escolha um comando nas abas,
+        aperte <strong style="color:var(--text)">▶ Executar</strong> e observe o efeito.
+        Errou a ordem? Usa o 🔄 e recomeça.
+      </p>
+
+      <div class="swp-sql" id="swpSql">
+        <div class="swp-sql-tabs">
+          <button class="swp-sql-tab on" data-sql="insert">INSERT</button>
+          <button class="swp-sql-tab" data-sql="select">SELECT</button>
+          <button class="swp-sql-tab" data-sql="where">WHERE</button>
+          <button class="swp-sql-tab" data-sql="update">UPDATE</button>
+          <button class="swp-sql-tab" data-sql="delete">DELETE</button>
+        </div>
+        <div class="swp-sql-cmd" id="sqlCmd"></div>
+        <div class="swp-sql-table">
+          <table class="swp-data-table">
+            <thead><tr><th>id</th><th>nome</th><th>preco</th><th>quantidade</th></tr></thead>
+            <tbody id="sqlBody"></tbody>
+          </table>
+        </div>
+        <div class="swp-sql-msg" id="sqlMsg"></div>
+        <div class="swp-machine-hud">
+          <button class="swp-machine-btn" id="sqlGo">▶ Executar</button>
+          <button class="swp-machine-btn ghost" id="sqlReset">🔄 Restaurar a tabela</button>
+          <span class="swp-machine-note" id="sqlNote">começa pelo INSERT — cadastre a caixa de som</span>
+        </div>
+      </div>
+
+      <div class="keyword-grid">
+        <div class="keyword-chip">
+          <span class="emoji">➕</span>
+          <span class="kw-name">INSERT</span>
+          <span class="kw-desc">nova ficha no fichário (o .append de gente grande)</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">👀</span>
+          <span class="kw-name">SELECT</span>
+          <span class="kw-desc">ler fichas — todas, ou filtradas com WHERE</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">✏️</span>
+          <span class="kw-name">UPDATE</span>
+          <span class="kw-desc">corrigir uma ficha que já existe (SEMPRE com WHERE!)</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">🗑️</span>
+          <span class="kw-name">DELETE</span>
+          <span class="kw-desc">rasgar uma ficha (SEMPRE com WHERE — ou adeus, tabela)</span>
+        </div>
+      </div>
+
+      <div class="bug-box">
+        <span class="tip-icon">☠️</span>
+        <div class="tip-content">
+          <strong>A lenda do UPDATE sem WHERE:</strong> <code>UPDATE produtos SET preco = 1</code>
+          (sem WHERE) muda o preço de TODOS os produtos. <code>DELETE FROM produtos</code>
+          (sem WHERE) apaga TUDO. Todo dev sênior tem uma história de terror dessas.
+          Regra de sobrevivência: <strong>UPDATE e DELETE andam SEMPRE com WHERE.</strong>
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">📖</span>
+        <div class="tip-content">
+          <strong>SQL se lê como inglês:</strong> "SELECT nome FROM produtos WHERE preco &lt; 100"
+          = "selecione o nome, dos produtos, onde o preço é menor que 100". Maiúsculas nos
+          comandos são convenção (funciona minúsculo, mas todo mundo escreve assim).
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="chapter-divider">
+    <div class="chapter-icon">🐍</div>
+    <div class="chapter-number">Parte 4</div>
+    <h2 style="background:linear-gradient(135deg,var(--python-y),var(--accent7));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">SQL dentro do Python</h2>
+    <p class="chapter-subtitle">O módulo sqlite3 — já instalado, esperando você</p>
+  </div>
+
+<!-- ═══════════════════════════════════════════════════════
+       SQLITE3 NO PYTHON
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="sqlite3">
+    <div class="step-header">
+      <div class="step-number sn-py">🐍</div>
+      <div>
+        <div class="step-title">O ritual do sqlite3</div>
+        <div class="step-sub">Conectar → cursor → executar → salvar → fechar. Sempre essa dança.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Crie uma pasta de treino (ex.: <code>treino-sql</code>) e dentro dela o
+        <code>criar_banco.py</code>. Acompanhe o destaque — o ritual tem 5 passos e
+        vai se repetir a vida inteira:
+      </p>
+
+      <div class="swp-trace" data-seq="2600">
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">treino-sql/criar_banco.py</span>
+            <span class="lang-badge python">Python</span>
+          </div>
+<pre><span class="swp-tline" data-seq-step="0"><span class="kw">import</span> sqlite3</span><span class="swp-tline"> </span><span class="swp-tline" data-seq-step="1">conexao = sqlite3.<span class="fn">connect</span>(<span class="st">"loja.db"</span>)</span><span class="swp-tline" data-seq-step="2">cursor = conexao.<span class="fn">cursor</span>()</span><span class="swp-tline"> </span><span class="swp-tline" data-seq-step="3">cursor.<span class="fn">execute</span>(<span class="st">"""
+    CREATE TABLE IF NOT EXISTS produtos (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT,
+        preco REAL,
+        quantidade INTEGER
+    )
+"""</span>)</span><span class="swp-tline"> </span><span class="swp-tline" data-seq-step="4">conexao.<span class="fn">commit</span>()</span><span class="swp-tline" data-seq-step="5">conexao.<span class="fn">close</span>()</span><span class="swp-tline"> </span><span class="swp-tline" data-seq-step="6"><span class="bi">print</span>(<span class="st">"Banco criado! 🗄️"</span>)</span></pre>
+        </div>
+
+        <div class="swp-trace-msgs">
+          <div data-seq-frame="0"><span class="tm-emoji">📦</span><span><strong>import sqlite3</strong> — já vem com o Python. Nada de pip install hoje!</span></div>
+          <div data-seq-frame="1"><span class="tm-emoji">🔌</span><span><strong>connect</strong> abre (ou CRIA, se não existir) o arquivo <code>loja.db</code>. A conexão é o cabo ligando seu script ao cofre.</span></div>
+          <div data-seq-frame="2"><span class="tm-emoji">🖱️</span><span>O <strong>cursor</strong> é a "mão" que mexe no banco — é ele que executa comandos e pega resultados.</span></div>
+          <div data-seq-frame="3"><span class="tm-emoji">⚡</span><span><strong>execute</strong> roda o SQL — o MESMO CREATE TABLE do simulador, numa string de três aspas. O <code>IF NOT EXISTS</code> deixa rodar o script de novo sem erro.</span></div>
+          <div data-seq-frame="4"><span class="tm-emoji">📌</span><span><strong>commit</strong> = CARIMBAR no arquivo. Sem ele, mudanças ficam só no rascunho… (a próxima máquina mostra o desastre)</span></div>
+          <div data-seq-frame="5"><span class="tm-emoji">🚪</span><span><strong>close</strong> desliga o cabo, liberando o arquivo. Abriu, usou, fechou — educação de dev.</span></div>
+          <div data-seq-frame="6"><span class="tm-emoji">🎉</span><span>Rode com <code>python criar_banco.py</code> — e repare: nasceu um arquivo <code>loja.db</code> na pasta!</span></div>
+        </div>
+      </div>
+
+      <p style="color:var(--text-dim);margin-top:16px">
+        Agora inserindo e consultando — os scripts <code>inserir.py</code> e
+        <code>consultar.py</code>:
+      </p>
+
+      <div class="code-block with-lines">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">treino-sql/inserir.py</span>
+          <span class="lang-badge python">Python</span>
+        </div>
+        <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12</div>
+<pre><span class="kw">import</span> sqlite3
+
+conexao = sqlite3.<span class="fn">connect</span>(<span class="st">"loja.db"</span>)
+cursor = conexao.<span class="fn">cursor</span>()
+
+cursor.<span class="fn">execute</span>(
+    <span class="st">"INSERT INTO produtos (nome, preco, quantidade) VALUES (?, ?, ?)"</span>,
+    (<span class="st">"Fone Bluetooth"</span>, <span class="num">149.90</span>, <span class="num">12</span>)
+)
+
+conexao.<span class="fn">commit</span>()
+conexao.<span class="fn">close</span>()</pre>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">❓</span>
+        <div class="tip-content">
+          <strong>Reparou nos <code>?</code>?</strong> São <strong>placeholders</strong>:
+          o SQL fica com "vagas" e os valores vão numa tupla separada, na ordem.
+          O porquê de NUNCA colar o valor direto na string tem seção própria daqui a pouco —
+          por ora, grava o formato: <em>SQL com ?, valores na tupla</em>.
+        </div>
+      </div>
+
+      <div class="code-block with-lines">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">treino-sql/consultar.py</span>
+          <span class="lang-badge python">Python</span>
+        </div>
+        <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11</div>
+<pre><span class="kw">import</span> sqlite3
+
+conexao = sqlite3.<span class="fn">connect</span>(<span class="st">"loja.db"</span>)
+cursor = conexao.<span class="fn">cursor</span>()
+
+cursor.<span class="fn">execute</span>(<span class="st">"SELECT * FROM produtos"</span>)
+produtos = cursor.<span class="fn">fetchall</span>()
+
+<span class="kw">for</span> p <span class="kw">in</span> produtos:
+    <span class="bi">print</span>(p)
+
+conexao.<span class="fn">close</span>()</pre>
+      </div>
+
+      <div class="terminal" data-typewriter>
+        <div class="terminal-header">
+          <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+          <span class="title">terminal — pasta treino-sql</span>
+        </div>
+        <div class="terminal-body">
+          <span class="prompt">$</span> <span class="typed" data-text="python consultar.py"></span><span class="cursor"></span><br>
+          <span class="out">(1, 'Fone Bluetooth', 149.9, 12)</span><br>
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 fetchall devolve TUPLAS</div>
+        <p>
+          Cada linha vem como <code>(1, 'Fone Bluetooth', 149.9, 12)</code> — uma tupla na
+          <strong>ordem das colunas</strong>: id, nome, preco, quantidade. Então
+          <code>p[1]</code> é o nome, <code>p[2]</code> o preço. Guarde isso: o Dia 4
+          usa direto no template.
+        </p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🕵️</span>
+        <div class="tip-content">
+          <strong>Leitura não precisa de commit</strong> — carimbo é só pra ESCRITA
+          (INSERT/UPDATE/DELETE e CREATE). O SELECT só olha as fichas; não mudou nada,
+          nada a salvar.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ RASCUNHO E CARIMBO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="commit">
+    <div class="step-header">
+      <div class="step-number sn-mint">⭐</div>
+      <div>
+        <div class="step-title">Rascunho e Carimbo: o segredo do commit</div>
+        <div class="step-sub">Execute escreve a lápis. Commit passa a caneta. Teste os dois destinos.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Quando você dá <code>execute</code> num INSERT, o SQLite anota num
+        <strong style="color:var(--text)">rascunho</strong> (a "transação").
+        Só o <code>commit()</code> <strong style="color:var(--text)">carimba de verdade
+        no arquivo</strong>. Rode o INSERT e escolha o final da história:
+      </p>
+
+      <div class="swp-vault" id="swpVault">
+        <div class="swp-vault-stage">
+          <div class="swp-vault-pane">
+            <div class="pane-label">📝 o rascunho (na memória)</div>
+            <div class="swp-postit" id="vaultPostit"><span class="pt-title">rascunho da transação</span><span id="postitBody">(vazio — rode um INSERT)</span></div>
+          </div>
+          <div class="swp-vault-pane">
+            <div class="pane-label">🗄️ loja.db (o arquivo de aço)</div>
+            <div class="swp-vault-file" id="vaultFile">
+              <div class="vf-title">🔒 produtos</div>
+              <div class="swp-vault-body" id="vaultBody"><span class="vrow">(1, 'Fone Bluetooth', 149.9, 12)</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="swp-machine-hud">
+          <button class="swp-machine-btn" id="vaultExec">⚡ execute(INSERT …)</button>
+          <button class="swp-machine-btn" id="vaultCommit" disabled>📌 conexao.commit()</button>
+          <button class="swp-machine-btn ghost" id="vaultClose" disabled>😈 fechar SEM commit</button>
+          <span class="swp-machine-note" id="vaultNote">primeiro o execute — escreve no rascunho</span>
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 Por que existe o rascunho?</div>
+        <p>
+          Imagine transferência bancária: tirar R$ 100 de uma conta E pôr na outra.
+          Se o sistema cair NO MEIO, não pode ficar pela metade! O rascunho permite
+          fazer as duas coisas e carimbar <strong>tudo junto, ou nada</strong>.
+          Chama-se <em>transação</em> — hoje basta saber:
+          <strong>escreveu? commita.</strong>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ PLACEHOLDERS
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="placeholders">
+    <div class="step-header">
+      <div class="step-number sn-red">🛡️</div>
+      <div>
+        <div class="step-title">O ? que salva seu banco</div>
+        <div class="step-sub">Por que NUNCA colar texto do usuário dentro do SQL</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        No Dia 4, quem digita o nome do produto é <strong style="color:var(--text)">o
+        visitante</strong>. E se um visitante mal-intencionado digitar…
+        <em>um pedaço de SQL</em>? Veja os dois destinos do mesmo input maligno:
+      </p>
+
+      <div class="swp-inj" id="swpInj">
+        <div class="swp-inj-input">
+          <span class="lbl">👤 o "cliente" digitou no formulário:</span>
+          <code id="injPayload">Fone'); DELETE FROM produtos; --</code>
+        </div>
+        <div class="swp-inj-cols">
+          <div class="swp-inj-col bad" id="injBad">
+            <div class="ic-title">❌ colando na string (f-string)</div>
+            <div class="swp-inj-sql" id="injBadSql">f"INSERT INTO produtos (nome) VALUES ('{nome}')"</div>
+            <div class="swp-inj-verdict" id="injBadVerdict">aperte ▶ pra ver o estrago…</div>
+          </div>
+          <div class="swp-inj-col good" id="injGood">
+            <div class="ic-title">✅ com placeholder ?</div>
+            <div class="swp-inj-sql" id="injGoodSql">execute("INSERT INTO produtos (nome) VALUES (?)", (nome,))</div>
+            <div class="swp-inj-verdict" id="injGoodVerdict"> </div>
+          </div>
+        </div>
+        <div class="swp-machine-hud">
+          <button class="swp-machine-btn" id="injGo">▶ Rodar os dois destinos</button>
+          <span class="swp-machine-note" id="injNote">o mesmo input, dois códigos diferentes</span>
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 SQL injection — agora você conhece o golpe</div>
+        <p>
+          Colar input na string deixa o usuário <strong>escrever SQL no seu banco</strong> —
+          esse golpe (SQL injection) já vazou dados de empresas gigantes.
+          Com <code>?</code>, o SQLite trata o input como <strong>DADO, nunca como
+          comando</strong>: o texto maligno vira só um nome de produto esquisito na tabela.
+          Regra inegociável do curso: <strong>valor de fora → placeholder ?, sempre.</strong>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       EXERCÍCIOS
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="bora-sql">
+    <div class="step-header">
+      <div class="step-number sn-green">⌨️</div>
+      <div>
+        <div class="step-title">Bora codar: monte seu loja.db</div>
+        <div class="step-sub">Três scripts — e um banco de verdade nascendo na sua pasta</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="exercise guided">
+        <div class="exercise-header">
+          <span class="exercise-icon">👨‍🏫</span>
+          <div>
+            <div class="exercise-title">Passo a passo com o professor</div>
+            <div class="exercise-sub">criar_banco.py → inserir.py → consultar.py</div>
+          </div>
+        </div>
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">1.</strong> Crie a pasta <code>treino-sql</code> e
+          digite o <code>criar_banco.py</code> (da seção do ritual). Rode:
+          <code>python criar_banco.py</code> → confira o <code>loja.db</code> na pasta!<br>
+          <strong style="color:var(--text)">2.</strong> Digite o <code>inserir.py</code> e rode
+          <strong>3 vezes mudando os valores</strong> (fone, teclado, mouse — preços à sua escolha).<br>
+          <strong style="color:var(--text)">3.</strong> Digite o <code>consultar.py</code> e rode:
+          as 3 tuplas na tela, com ids 1, 2, 3 carimbados pelo banco. 🎉<br>
+          <strong style="color:var(--text)">4.</strong> A prova final: <strong>feche TUDO, reinicie
+          o computador se quiser</strong>… rode <code>consultar.py</code> de novo.
+          Os dados continuam lá. Sem apagão. Nunca mais. 🏆
+        </p>
+      </div>
+
+      <div class="exercise solo">
+        <div class="exercise-header">
+          <span class="exercise-icon">🧑‍💻</span>
+          <div>
+            <div class="exercise-title">Sozinho/a: a consulta com filtro</div>
+            <div class="exercise-sub">WHERE no seu próprio banco</div>
+          </div>
+        </div>
+        <div class="drill-tags">
+          <span class="drill-level lv1"><span class="stars">★</span> fácil</span>
+          <span class="drill-tag">SELECT</span>
+          <span class="drill-tag">WHERE</span>
+        </div>
+        <p style="color:var(--text-dim)">
+          Missão: crie o <code>baratos.py</code> que lista só os produtos com preço menor
+          que 100. (Cola mental: é o <code>consultar.py</code> com o SELECT do simulador.)
+        </p>
+        <div class="toggler">
+          <div class="toggler-header" onclick="toggleSection(this)">
+            <span>👀 Só clique aqui DEPOIS de tentar — ver a solução</span>
+            <span class="toggler-arrow">▼</span>
+          </div>
+          <div class="toggler-body">
+            <div class="code-block">
+              <div class="code-header">
+                <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+                <span class="filename">treino-sql/baratos.py (o miolo)</span>
+                <span class="lang-badge python">Python</span>
+              </div>
+<pre>cursor.<span class="fn">execute</span>(<span class="st">"SELECT * FROM produtos WHERE preco &lt; 100"</span>)
+<span class="kw">for</span> p <span class="kw">in</span> cursor.<span class="fn">fetchall</span>():
+    <span class="bi">print</span>(p)</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="exercise solo">
+        <div class="exercise-header">
+          <span class="exercise-icon">🧑‍💻</span>
+          <div>
+            <div class="exercise-title">Sozinho/a: promoção relâmpago</div>
+            <div class="exercise-sub">UPDATE com placeholder — o combo do dia</div>
+          </div>
+        </div>
+        <div class="drill-tags">
+          <span class="drill-level lv2"><span class="stars">★★</span> médio</span>
+          <span class="drill-tag">UPDATE</span>
+          <span class="drill-tag">?</span>
+          <span class="drill-tag">commit</span>
+        </div>
+        <p style="color:var(--text-dim)">
+          Missão: o <code>promocao.py</code> muda o preço do Mouse Gamer pra 59.90 —
+          usando <code>?</code> pros dois valores (preço novo e nome). Rode e confirme com
+          o <code>consultar.py</code>. Checklist mental: escreveu no banco… o que não pode faltar?
+        </p>
+        <div class="toggler">
+          <div class="toggler-header" onclick="toggleSection(this)">
+            <span>👀 Só clique aqui DEPOIS de tentar — ver a solução</span>
+            <span class="toggler-arrow">▼</span>
+          </div>
+          <div class="toggler-body">
+            <div class="code-block">
+              <div class="code-header">
+                <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+                <span class="filename">treino-sql/promocao.py (o miolo)</span>
+                <span class="lang-badge python">Python</span>
+              </div>
+<pre>cursor.<span class="fn">execute</span>(
+    <span class="st">"UPDATE produtos SET preco = ? WHERE nome = ?"</span>,
+    (<span class="num">59.90</span>, <span class="st">"Mouse Gamer"</span>)
+)
+conexao.<span class="fn">commit</span>()   <span class="cm"># ← escreveu? CARIMBA.</span></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="chapter-divider">
+    <div class="chapter-icon">🏁</div>
+    <div class="chapter-number">Parte 5</div>
+    <h2 style="background:linear-gradient(135deg,var(--accent5),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Fechamento do dia</h2>
+    <p class="chapter-subtitle">Bugs silenciosos, quiz e treino pesado</p>
+  </div>
+
+<!-- ═══════════════════════════════════════════════════════
+       BUGZILLA
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="bugzilla">
+    <div class="step-header">
+      <div class="step-number sn-red">🐛</div>
+      <div>
+        <div class="step-title">BugZilla do dia: os fantasmas do banco</div>
+        <div class="step-sub">Incluindo o pior tipo de bug: o que NÃO dá erro</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="bugzilla-card">
+        <div class="bugzilla-header">
+          <span class="bugzilla-emoji">🐛</span>
+          <div>
+            <div class="bugzilla-title">Bug 1 — o commit esquecido (SILENCIOSO ☠️)</div>
+            <div class="bugzilla-sub">Rodou, não deu erro… e não salvou nada</div>
+          </div>
+        </div>
+        <div class="bugzilla-body">
+          <p>
+            Você roda o <code>inserir.py</code> sem o <code>commit()</code>:
+            <strong>nenhuma mensagem de erro</strong>. Tudo parece bem.
+            Aí roda o <code>consultar.py</code> e… a tabela está vazia.
+            O INSERT ficou no rascunho e evaporou no <code>close()</code>
+            (você VIU isso na máquina do Rascunho e Carimbo).
+          </p>
+          <p>
+            💊 <strong>Remédio:</strong> desconfie de "funcionou mas não salvou" →
+            procure o <code>commit()</code>. Mantra do dia:
+            <strong>escreveu no banco? Carimba.</strong>
+          </p>
+        </div>
+      </div>
+
+      <div class="bugzilla-card">
+        <div class="bugzilla-header">
+          <span class="bugzilla-emoji">🐛</span>
+          <div>
+            <div class="bugzilla-title">Bug 2 — no such table: produtos</div>
+            <div class="bugzilla-sub">O banco certo… no lugar errado</div>
+          </div>
+        </div>
+        <div class="bugzilla-body">
+          <div class="code-block">
+            <div class="code-header">
+              <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+              <span class="filename">terminal</span>
+              <span class="lang-badge terminal">erro</span>
+            </div>
+<pre>Traceback (most recent call last):
+  File "consultar.py", line 6, in &lt;module&gt;
+    cursor.execute("SELECT * FROM produtos")
+<span style="color:var(--bug)">sqlite3.OperationalError: no such table: produtos</span></pre>
+          </div>
+          <p>
+            Pegadinha cruel: <code>connect("loja.db")</code> procura o arquivo
+            <strong>na pasta onde o terminal está</strong> — e se não achar,
+            <strong>CRIA UM NOVO, vazio</strong>! Rodou o script de outra pasta?
+            Nasceu um segundo loja.db zerado, sem a tabela.
+          </p>
+          <p>
+            💊 <strong>Remédio:</strong> confira a pasta do terminal antes de rodar
+            (<code>cd treino-sql</code>) — e se aparecer um loja.db misterioso em outra pasta,
+            já sabe de onde veio.
+          </p>
+        </div>
+      </div>
+
+      <div class="bugzilla-card">
+        <div class="bugzilla-header">
+          <span class="bugzilla-emoji">🐛</span>
+          <div>
+            <div class="bugzilla-title">Bug 3 — database is locked</div>
+            <div class="bugzilla-sub">Alguém está segurando o fichário</div>
+          </div>
+        </div>
+        <div class="bugzilla-body">
+          <p>
+            Seu script trava com <code>sqlite3.OperationalError: database is locked</code>.
+            Causa clássica em aula: o <strong>DB Browser aberto com alterações não salvas</strong>,
+            segurando o arquivo. O espião virou sequestrador.
+          </p>
+          <p>
+            💊 <strong>Remédio:</strong> no DB Browser, "Write Changes" (ou feche o programa)
+            e rode de novo.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       QUIZ
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="quiz">
+    <div class="step-header">
+      <div class="step-number sn-yellow">🧠</div>
+      <div>
+        <div class="step-title">Quiz de fixação</div>
+        <div class="step-sub">4 perguntas pra carimbar o dia 3</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">1️⃣</span> Quero os produtos com estoque menor que 10. Qual comando?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">INSERT INTO produtos</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">SELECT com WHERE</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">UPDATE produtos SET</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">DELETE FROM produtos</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Isso!" data-wrong="Revisa os verbos!"
+             data-explain="ler = SELECT; o WHERE filtra: SELECT * FROM produtos WHERE quantidade &amp;lt; 10."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">2️⃣</span> Rodei um INSERT pelo Python, não deu erro, mas o dado não apareceu depois. O suspeito nº 1 é…</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">O SQLite quebrou</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Faltou internet</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Esqueci o conexao.commit()</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">O execute não funciona com INSERT</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Cravou!" data-wrong="Lembra do post-it!"
+             data-explain="sem commit, o INSERT morre no rascunho quando a conexão fecha — sem NENHUMA mensagem de erro. O bug silencioso do dia."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">3️⃣</span> Por que usar ? em vez de colar o valor na string do SQL?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Fica mais bonito</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Roda mais rápido, só isso</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">O input vira DADO, nunca comando (anti-injection)</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">O SQLite exige, senão dá erro</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Exato!" data-wrong="Perigo!"
+             data-explain="com ? o texto do usuário jamais é interpretado como SQL — o golpe do '; DELETE FROM… vira só um nome esquisito na tabela."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">4️⃣</span> O que o fetchall() devolve?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Um dicionário por linha</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Uma lista de tuplas, na ordem das colunas</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Um arquivo .csv</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Só a primeira linha</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Boa!" data-wrong="Quase!"
+             data-explain="cada linha é uma tupla: (1, 'Fone', 149.9, 12) — índice 0 é o id, 1 o nome… Essa ordem importa no Dia 4."></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ARENA
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="arena">
+    <div class="step-header">
+      <div class="step-number sn-purple">🏟️</div>
+      <div>
+        <div class="step-title">Arena: dono do fichário</div>
+        <div class="step-sub">Cinco missões de SQL puro — o Dia 4 agradece</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="arena-banner">
+        <span class="ab-emoji">🏟️</span>
+        <div>
+          <div class="ab-tag">treino do dia 3</div>
+          <div class="ab-title">SQL na ponta dos dedos</div>
+          <div class="ab-sub">Tudo na pasta treino-sql, com o loja.db que você criou</div>
+        </div>
+      </div>
+
+      <div class="arena-track">
+        <span class="at-dot lv1">1</span><span class="at-arrow">→</span>
+        <span class="at-dot lv1">2</span><span class="at-arrow">→</span>
+        <span class="at-dot lv2">3</span><span class="at-arrow">→</span>
+        <span class="at-dot lv2">4</span><span class="at-arrow">→</span>
+        <span class="at-dot lv3">🏆</span>
+      </div>
+
+      <div class="exercise solo">
+        <div class="exercise-header">
+          <span class="exercise-icon">🧑‍💻</span>
+          <div>
+            <div class="exercise-title">Missão 1 — Estoque cheio</div>
+            <div class="exercise-sub">Mais 3 INSERTs</div>
+          </div>
+        </div>
+        <div class="drill-tags">
+          <span class="drill-level lv1"><span class="stars">★</span> fácil</span>
+          <span class="drill-tag">INSERT</span>
+        </div>
+        <p style="color:var(--text-dim)">
+          Cadastre mais 3 produtos (invente!) usando o <code>inserir.py</code>.
+          Confirme com o <code>consultar.py</code> — repare os ids subindo sozinhos.
+        </p>
+      </div>
+
+      <div class="exercise solo">
+        <div class="exercise-header">
+          <span class="exercise-icon">🧑‍💻</span>
+          <div>
+            <div class="exercise-title">Missão 2 — Baixou tudo</div>
+            <div class="exercise-sub">DELETE cirúrgico</div>
+          </div>
+        </div>
+        <div class="drill-tags">
+          <span class="drill-level lv1"><span class="stars">★</span> fácil</span>
+          <span class="drill-tag">DELETE</span>
+          <span class="drill-tag">WHERE</span>
+        </div>
+        <p style="color:var(--text-dim)">
+          Um produto saiu de linha: apague-o <strong style="color:var(--text)">pelo id</strong>
+          (<code>DELETE FROM produtos WHERE id = ?</code>). Antes de rodar, fale em voz alta
+          o que aconteceria SEM o WHERE. 😨
+        </p>
+      </div>
+
+      <div class="exercise home">
+        <div class="exercise-header">
+          <span class="exercise-icon">🏠</span>
+          <div>
+            <div class="exercise-title">Missão 3 — A tabela clientes</div>
+            <div class="exercise-sub">Seu segundo CREATE TABLE, do zero</div>
+          </div>
+        </div>
+        <div class="drill-tags">
+          <span class="drill-level lv2"><span class="stars">★★</span> médio</span>
+          <span class="drill-tag">CREATE TABLE</span>
+        </div>
+        <p style="color:var(--text-dim)">
+          Crie a tabela <code>clientes</code> no MESMO loja.db: id (autoincrement),
+          nome (texto), telefone (texto), cidade (texto). Insira você e dois amigos.
+          Telefone como TEXT? Sim — telefone não entra em conta de matemática,
+          e "081" perderia o zero como número. 😉
+        </p>
+      </div>
+
+      <div class="exercise home">
+        <div class="exercise-header">
+          <span class="exercise-icon">🏠</span>
+          <div>
+            <div class="exercise-title">Missão 4 — O filtro composto</div>
+            <div class="exercise-sub">WHERE com AND</div>
+          </div>
+        </div>
+        <div class="drill-tags">
+          <span class="drill-level lv2"><span class="stars">★★</span> médio</span>
+          <span class="drill-tag">WHERE</span>
+          <span class="drill-tag">AND</span>
+        </div>
+        <p style="color:var(--text-dim)">
+          Liste os produtos <strong style="color:var(--text)">baratos E com bastante
+          estoque</strong>: preço menor que 150 <em>e</em> quantidade maior que 10.
+          O AND do SQL funciona como o <code>and</code> do Python:
+          <code>WHERE preco &lt; 150 AND quantidade &gt; 10</code>.
+        </p>
+      </div>
+
+      <div class="exercise home">
+        <div class="exercise-header">
+          <span class="exercise-icon">🏆</span>
+          <div>
+            <div class="exercise-title">Missão final — O relatório do gerente</div>
+            <div class="exercise-sub">Python + SQL trabalhando juntos</div>
+          </div>
+        </div>
+        <div class="drill-tags">
+          <span class="drill-level lv3"><span class="stars">★★★</span> desafio</span>
+          <span class="drill-tag">fetchall</span>
+          <span class="drill-tag">f-string</span>
+          <span class="drill-tag">for</span>
+        </div>
+        <p style="color:var(--text-dim)">
+          Crie o <code>relatorio.py</code>: busca todos os produtos e imprime bonito,
+          uma linha por produto — <code>Fone Bluetooth ......... R$ 149.90 (12 un.)</code> —
+          e no final o total de itens no estoque (some as quantidades com um for,
+          como no bootcamp). Formatação é com f-string; o SQL só entrega a matéria-prima.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       RESUMO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="resumo">
+    <div class="step-header">
+      <div class="step-number sn-green">🎒</div>
+      <div>
+        <div class="step-title">O que você leva do Dia 3</div>
+        <div class="step-sub">Uma língua nova no currículo. Literalmente.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="about-bullets">
+        <div>🗄️ <strong>Relacional:</strong> tabelas com colunas tipadas e linhas — a planilha turbinada com regras</div>
+        <div>📱 <strong>SQLite:</strong> banco profissional num arquivo, já dentro do Python (e do seu celular)</div>
+        <div>🏗️ <strong>CREATE TABLE:</strong> colunas + tipos + id AUTOINCREMENT de mordomia</div>
+        <div>⚡ <strong>Os 4 verbos:</strong> INSERT, SELECT (+WHERE), UPDATE e DELETE — os dois últimos SEMPRE com WHERE</div>
+        <div>🐍 <strong>O ritual:</strong> connect → cursor → execute → commit (escreveu? carimba!) → close, e fetchall devolvendo tuplas</div>
+        <div>🛡️ <strong>Placeholders ?:</strong> input do usuário NUNCA colado no SQL — agora você conhece o golpe da injection</div>
+      </div>
+
+      <div class="concept" style="margin-top:18px">
+        <div class="concept-title">🎯 A frase pra levar pra casa</div>
+        <p>
+          <strong>"Meus dados agora sobrevivem a qualquer CTRL+C."</strong>
+          E melhor: você fala a língua que TODO banco relacional do mercado entende.
+        </p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">👀</span>
+        <div class="tip-content">
+          <strong>No próximo encontro:</strong> o casamento do ano — as telas do Dia 2 com o
+          banco de hoje. A Loja ganha um <code>banco.py</code>, o formulário passa a dar INSERT,
+          a tabela passa a dar SELECT… e o apagão vira história antiga. 💍
+        </div>
+      </div>
+
+      <div class="next-chapter">
+        <h3>🔗 Dia 04 · A Loja ganha banco</h3>
+        <p style="color:var(--text-dim)">Listar + cadastrar com SQLite — o CRUD começa</p>
+        <a href="javascript:void(0)" class="btn-next disabled">🚧 Em construção — disponível antes do encontro 4</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="footer">
+  <p>Feito com 🌶️ pelo prof. Kelson Almeida — programa AI</p>
+</footer>
+
+<script src="../../shared/scripts.js" defer></script>
+<script type="module" src="../../shared/motion-fx.js"></script>
+<script>
+/* ══════════ Máquinas didáticas do capítulo 03 (vanilla) ══════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  /* ---------- Anatomia do CREATE TABLE (padrão do cap 01) ---------- */
+  (function(){
+    const root = document.getElementById('createAna');
+    if (!root) return;
+    const info = document.getElementById('createInfo');
+    const segs = [...root.querySelectorAll('.swp-seg')];
+    const INFOS = [
+      {emoji:'🏗️', html:'<strong>CREATE TABLE produtos</strong> — "construa um fichário novo chamado produtos". O parêntese abre a lista de colunas.'},
+      {emoji:'🔑', html:'<strong>id INTEGER PRIMARY KEY AUTOINCREMENT</strong> — a coluna id é número inteiro, é a CHAVE que identifica cada ficha, e o banco numera sozinho: 1, 2, 3…'},
+      {emoji:'🔤', html:'<strong>nome TEXT</strong> — coluna nome, tipo texto (a string do Python). Toda linha TEM que respeitar o tipo.'},
+      {emoji:'🔢', html:'<strong>preco REAL, quantidade INTEGER</strong> — preço com vírgula (float) e quantidade inteira. Fecha parêntese = fichário pronto.'},
+    ];
+    let autoTimer = null, idx = -1, touched = false;
+
+    function select(i, manual){
+      idx = i;
+      segs.forEach((s, k) => s.classList.toggle('active', k === i));
+      info.innerHTML = '<span class="si-emoji">' + INFOS[i].emoji + '</span><span>' + INFOS[i].html + '</span>';
+      if (manual){
+        touched = true;
+        if (autoTimer){ clearInterval(autoTimer); autoTimer = null; }
+      }
+    }
+    segs.forEach((s, i) => s.addEventListener('click', () => select(i, true)));
+    if (!reduceMotion){
+      new IntersectionObserver((es, obs) => {
+        es.forEach(e => {
+          if (e.isIntersecting){
+            obs.disconnect();
+            if (touched) return;
+            select(0, false);
+            autoTimer = setInterval(() => {
+              if (idx >= segs.length - 1){ clearInterval(autoTimer); autoTimer = null; return; }
+              select(idx + 1, false);
+            }, 3000);
+          }
+        });
+      }, {threshold:0.5}).observe(root);
+    }
+  })();
+
+  /* ---------- ⭐ Simulador SQL ---------- */
+  (function(){
+    const box = document.getElementById('swpSql');
+    if (!box) return;
+    const cmd = document.getElementById('sqlCmd');
+    const body = document.getElementById('sqlBody');
+    const msg = document.getElementById('sqlMsg');
+    const note = document.getElementById('sqlNote');
+    const tabs = [...box.querySelectorAll('.swp-sql-tab')];
+    const INITIAL = [
+      [1, 'Fone Bluetooth', 149.9, 12],
+      [2, 'Teclado Mecânico', 299.0, 5],
+      [3, 'Mouse Gamer', 89.9, 23],
+      [4, 'Webcam Full HD', 199.0, 8],
+    ];
+    let rows = INITIAL.map(r => [...r]);
+    let nextId = 5, mode = 'insert', busy = false, inserted = false;
+
+    const CMDS = {
+      insert: '<span style="color:#c4a7e7">INSERT INTO</span> produtos (nome, preco, quantidade)\n<span style="color:#c4a7e7">VALUES</span> (<span style="color:#c3e88d">\'Caixa de Som\'</span>, <span style="color:#f78c6c">120.00</span>, <span style="color:#f78c6c">15</span>);',
+      select: '<span style="color:#c4a7e7">SELECT</span> * <span style="color:#c4a7e7">FROM</span> produtos;',
+      where:  '<span style="color:#c4a7e7">SELECT</span> * <span style="color:#c4a7e7">FROM</span> produtos <span style="color:#c4a7e7">WHERE</span> preco &lt; <span style="color:#f78c6c">100</span>;',
+      update: '<span style="color:#c4a7e7">UPDATE</span> produtos <span style="color:#c4a7e7">SET</span> preco = <span style="color:#f78c6c">79.90</span>\n<span style="color:#c4a7e7">WHERE</span> nome = <span style="color:#c3e88d">\'Mouse Gamer\'</span>;',
+      delete: '<span style="color:#c4a7e7">DELETE FROM</span> produtos <span style="color:#c4a7e7">WHERE</span> id = <span style="color:#f78c6c">2</span>;',
+    };
+    const HINTS = {
+      insert: 'uma ficha nova entra no fichário — repara no id que o banco carimba sozinho',
+      select: 'ler tudo: cada linha da tabela vira uma linha do resultado',
+      where:  'o filtro: só as fichas onde a condição é verdadeira acendem',
+      update: 'corrige UMA ficha (graças ao WHERE) — olha a célula do preço',
+      delete: 'rasga a ficha do id 2 — só ela, porque o WHERE mira certeiro',
+    };
+
+    function render(extra){
+      body.innerHTML = '';
+      rows.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.dataset.id = r[0];
+        r.forEach((v, i) => {
+          const td = document.createElement('td');
+          if (i !== 1) td.className = 'n';
+          td.textContent = (i === 2 && Number.isInteger(v)) ? v + '.0' : String(v);
+          tr.appendChild(td);
+        });
+        if (extra && extra.newId === r[0]) tr.classList.add('row-new');
+        body.appendChild(tr);
+      });
+    }
+
+    function setMode(m){
+      mode = m;
+      tabs.forEach(t => t.classList.toggle('on', t.dataset.sql === m));
+      cmd.innerHTML = CMDS[m];
+      note.textContent = HINTS[m];
+      msg.textContent = '';
+      render();
+    }
+
+    async function exec(){
+      if (busy) return;
+      busy = true;
+      msg.textContent = '';
+      const trs = [...body.querySelectorAll('tr')];
+      trs.forEach(tr => tr.classList.remove('row-match', 'row-dim', 'row-new'));
+
+      if (mode === 'insert'){
+        if (inserted){
+          msg.textContent = '(a caixa de som já está aí — o AUTOINCREMENT não repete id; usa o 🔄 pra rodar de novo)';
+          busy = false; return;
+        }
+        rows.push([nextId, 'Caixa de Som', 120.0, 15]);
+        render({newId: nextId});
+        msg.textContent = '✔ 1 linha inserida — id ' + nextId + ' carimbado pelo AUTOINCREMENT';
+        nextId++;
+        inserted = true;
+      }
+      else if (mode === 'select'){
+        for (const tr of trs){
+          tr.classList.add('row-match');
+          await sleep(reduceMotion ? 0 : 220);
+        }
+        msg.textContent = '✔ ' + rows.length + ' linha(s) retornada(s)';
+        await sleep(1600);
+        [...body.querySelectorAll('tr')].forEach(tr => tr.classList.remove('row-match'));
+      }
+      else if (mode === 'where'){
+        let n = 0;
+        trs.forEach((tr, i) => {
+          const match = rows[i] && rows[i][2] < 100;
+          tr.classList.add(match ? 'row-match' : 'row-dim');
+          if (match) n++;
+        });
+        msg.textContent = '✔ ' + n + ' linha(s) passaram no filtro preco < 100 — o resto ficou no fichário';
+        await sleep(2600);
+        [...body.querySelectorAll('tr')].forEach(tr => tr.classList.remove('row-match', 'row-dim'));
+      }
+      else if (mode === 'update'){
+        const row = rows.find(r => r[1] === 'Mouse Gamer');
+        if (!row){
+          msg.textContent = '(o Mouse Gamer não existe mais nesta simulação — usa o 🔄)';
+        } else if (row[2] === 79.9){
+          msg.textContent = '(já está 79.90 — rodar de novo não muda nada; usa o 🔄 pra voltar)';
+        } else {
+          row[2] = 79.9;
+          render();
+          const tr = body.querySelector('tr[data-id="' + row[0] + '"]');
+          tr?.children[2].classList.add('cell-hot');
+          msg.textContent = '✔ 1 linha atualizada — só a do WHERE. (Sem WHERE, TODOS os preços iam pra 79.90 😱)';
+        }
+      }
+      else if (mode === 'delete'){
+        const idx = rows.findIndex(r => r[0] === 2);
+        if (idx === -1){
+          msg.textContent = '(o id 2 já foi — DELETE de novo não acha nada; usa o 🔄 pra restaurar)';
+        } else {
+          const tr = body.querySelector('tr[data-id="2"]');
+          tr?.classList.add('row-del');
+          await sleep(reduceMotion ? 100 : 850);
+          rows.splice(idx, 1);
+          render();
+          msg.textContent = '✔ 1 linha apagada — pra sempre. (DELETE não tem CTRL+Z: por isso o WHERE é sagrado)';
+        }
+      }
+      busy = false;
+    }
+
+    tabs.forEach(t => t.addEventListener('click', () => { if (!busy) setMode(t.dataset.sql); }));
+    document.getElementById('sqlGo').addEventListener('click', exec);
+    document.getElementById('sqlReset').addEventListener('click', () => {
+      if (busy) return;
+      rows = INITIAL.map(r => [...r]);
+      nextId = 5;
+      inserted = false;
+      render();
+      msg.textContent = '↺ tabela restaurada ao estado original';
+    });
+    setMode('insert');
+  })();
+
+  /* ---------- ⭐ Rascunho e Carimbo ---------- */
+  (function(){
+    const vault = document.getElementById('swpVault');
+    if (!vault) return;
+    const postit = document.getElementById('vaultPostit');
+    const postitBody = document.getElementById('postitBody');
+    const file = document.getElementById('vaultFile');
+    const fileBody = document.getElementById('vaultBody');
+    const note = document.getElementById('vaultNote');
+    const bExec = document.getElementById('vaultExec');
+    const bCommit = document.getElementById('vaultCommit');
+    const bClose = document.getElementById('vaultClose');
+    const NEW = "(2, 'Teclado Mecânico', 299.0, 5)";
+    let staged = false;
+
+    function reset(){
+      staged = false;
+      postit.classList.remove('gone');
+      postitBody.textContent = '(vazio — rode um INSERT)';
+      bExec.disabled = false;
+      bCommit.disabled = true;
+      bClose.disabled = true;
+    }
+
+    bExec.addEventListener('click', () => {
+      if (staged) return;
+      staged = true;
+      postitBody.textContent = 'INSERT pendente:\n' + NEW;
+      bExec.disabled = true;
+      bCommit.disabled = false;
+      bClose.disabled = false;
+      note.innerHTML = 'o INSERT está <strong>no rascunho</strong> — o arquivo ainda não mudou. E agora: carimbar ou fechar sem carimbar? 🤔';
+    });
+
+    bCommit.addEventListener('click', async () => {
+      if (!staged) return;
+      const row = document.createElement('span');
+      row.className = 'vrow fresh';
+      row.textContent = NEW;
+      fileBody.appendChild(row);
+      file.classList.add('stamp');
+      postit.classList.add('gone');
+      note.innerHTML = '📌 <strong>CARIMBADO no arquivo!</strong> Agora o dado sobrevive a close, CTRL+C, queda de luz… Roda de novo pra testar o outro final 😈';
+      await sleep(1200);
+      file.classList.remove('stamp');
+      await sleep(600);
+      row.classList.remove('fresh');
+      fileBody.innerHTML = '<span class="vrow">(1, \'Fone Bluetooth\', 149.9, 12)</span>';
+      reset();
+    });
+
+    bClose.addEventListener('click', async () => {
+      if (!staged) return;
+      postit.classList.add('gone');
+      note.innerHTML = '😈 <strong>close() sem commit…</strong> o rascunho foi pro lixo. O arquivo? Intacto — <strong>seu INSERT nunca existiu</strong>. E o pior: SEM mensagem de erro.';
+      await sleep(2200);
+      reset();
+      note.innerHTML = 'viu como some em silêncio? Por isso o mantra: <strong>escreveu? carimba.</strong>';
+    });
+  })();
+
+  /* ---------- ⭐ Placeholders / injection ---------- */
+  (function(){
+    const inj = document.getElementById('swpInj');
+    if (!inj) return;
+    const bad = document.getElementById('injBad');
+    const badSql = document.getElementById('injBadSql');
+    const badVerdict = document.getElementById('injBadVerdict');
+    const goodVerdict = document.getElementById('injGoodVerdict');
+    const note = document.getElementById('injNote');
+    let ran = false;
+
+    document.getElementById('injGo').addEventListener('click', async () => {
+      if (ran) { note.textContent = 'pode rodar de novo à vontade — o resultado é sempre o mesmo 😅'; }
+      ran = true;
+      bad.classList.remove('armed');
+      void bad.offsetWidth;
+      bad.classList.add('armed');
+      badSql.innerHTML = 'INSERT INTO produtos (nome) VALUES (\'Fone<span class="evil">\'); DELETE FROM produtos; --</span>\')';
+      badVerdict.innerHTML = 'A aspa do input <strong>FECHOU a string do SQL</strong> — e o resto virou comando: um <strong style="color:#ff5c5c">DELETE FROM produtos</strong> executado de verdade. Tabela: 💥 esvaziada por um formulário.';
+      await sleep(700);
+      goodVerdict.innerHTML = 'Com <code>?</code>, o SQLite recebe o texto como <strong>valor</strong>: nasce um produto chamado <span class="safe">"Fone\'); DELETE FROM produtos; --"</span> — nome ridículo, banco <strong style="color:var(--accent7)">100% intacto</strong>. ✅';
+      note.innerHTML = 'mesmo input, destinos opostos — o <strong>?</strong> é a diferença entre notícia de vazamento e uma linha engraçada na tabela';
+    });
+  })();
+});
+</script>
+</body>
+</html>
