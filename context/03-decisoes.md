@@ -86,3 +86,29 @@ Decisão do professor ao escrever o cap 01:
    ERR_CONNECTION_REFUSED), Anatomia da URL (2 instâncias clicáveis), Raio-X do Streamlit
    (data-seq), Forja de Tags (tag-forge.js), rastreador do app.py linha a linha (data-seq) e
    roteador "Cada URL é uma página" (com 404 do /contato que vira exercício solo).
+
+## D11 · Capítulos 02–04 — ajustes de ementa ao escrever (2026-08-14)
+
+1. **Aluno digita o HTML novo do Dia 2 na mão** (form ~8 linhas, tabela ~10): a ementa previa
+   "starter kit já tem o HTML; aluno entende, não digita" — mas pela D10 não há starter kit e o
+   aluno aprendeu HTML no cap 01. Digitar reforça.
+2. **`{% extends %}`/base.html entrou no cap 02** (seção compacta "o remédio prometido"): cumpre
+   o spoiler plantado na arena do cap 01 (menu duplicado 4×) e prepara as telas do CRUD. A ementa
+   oficial do Dia 2 não listava extends; custo ~15min de aula.
+3. **Dia 3 é Python-first**: o caminho principal do SQL é o `sqlite3` em scripts; o DB Browser
+   for SQLite entrou como "espião" opcional (ver o arquivo por dentro), não como ferramenta de aula.
+4. **Jinja com `p["chave"]` no dia 2 e `p[0]`/`p[1]` no dia 4**: dicts em memória usam a sintaxe
+   de chave igual ao Python do bootcamp; quando o fetchall chega (dia 4), o material explica a
+   virada dict→tupla explicitamente (é pergunta de quiz nos dois capítulos).
+5. **Máquinas dos caps 02–04** (todas vanilla, IntersectionObserver, prefers-reduced-motion):
+   - Cap 02: Fábrica de Páginas ({{ }} preenchidas ao vivo, troca de dados), linha de produção
+     do {% for %}, GET vs POST (cartão-postal/envelope lacrado), A Volta Completa (form real →
+     POST → append → redirect → tabela) e O Apagão (CTRL+C evapora a lista — gancho do dia 3).
+   - Cap 03: anatomia clicável do CREATE TABLE, Simulador SQL (5 verbos animando a tabela),
+     Rascunho e Carimbo (execute vs commit, com final 😈 sem commit), demo de SQL injection.
+   - Cap 04: A Loja por dentro (request pelas 4 camadas, caminhos listar/cadastrar), O Apagão
+     parte 2 (dados sobrevivem — espelho proposital do cap 02) e O F5 duplicador (PRG, com o
+     diálogo de reenvio do navegador simulado).
+6. **`shared/` ganhou** (blocos `/* SWP */`): badges `lang-badge.jinja/.sql`, tokens `.jvar`/
+   `.jtag`, e `.swp-data-table` com estados animados (row-new/row-del/cell-hot/row-match/row-dim)
+   usados pelos três capítulos.
