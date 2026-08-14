@@ -1,0 +1,2130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dia 02 · Telas que falam com Python — Sistemas Web com Python | programa AI</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../shared/styles.css">
+<link rel="stylesheet" href="../../shared/components.css">
+<link rel="stylesheet" href="../../shared/animations.css">
+<style>
+/* ══════════ CSS local do capítulo 02 (prefixo swp-) ══════════ */
+
+/* Ligatures OFF em toda classe mono local */
+.swp-fab-code,.swp-slot,.swp-loop-code,.swp-gp-url,.swp-volta-code,.swp-py-list,
+.swp-envelope .env-data,.swp-fab-data{
+  font-variant-ligatures:none;
+  font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+}
+
+/* reveal-stagger do shared só cobre 6 filhos */
+.step-section.visible .reveal-stagger > *:nth-child(7){transition-delay:0.65s}
+.step-section.visible .reveal-stagger > *:nth-child(8){transition-delay:0.75s}
+
+/* botões padrão das máquinas (mesmo visual do cap 01) */
+.swp-machine-btn{
+  background:linear-gradient(135deg,var(--accent4),var(--accent7));color:#06281f;
+  border:0;font-weight:800;padding:9px 18px;border-radius:10px;cursor:pointer;
+  font-size:0.84rem;transition:transform .2s;font-family:'Nunito',sans-serif;
+}
+.swp-machine-btn:hover{transform:translateY(-2px)}
+.swp-machine-btn.ghost{
+  background:rgba(255,255,255,0.06);color:var(--text-dim);
+  border:1px solid rgba(255,255,255,0.12);
+}
+.swp-machine-hud{
+  display:flex;align-items:center;gap:12px;padding:12px 16px;flex-wrap:wrap;
+  background:rgba(255,255,255,0.03);border-top:1px solid rgba(255,255,255,0.06);
+}
+.swp-machine-note{font-size:0.8rem;color:var(--text-dim);line-height:1.5;flex:1;min-width:180px}
+.swp-machine-note strong{color:var(--accent7)}
+
+/* ---------- MÁQUINA 1: Fábrica de Páginas ---------- */
+.swp-fab{
+  border:1px solid rgba(78,205,196,0.30);border-radius:18px;overflow:hidden;margin:18px 0;
+  background:
+    radial-gradient(1100px 280px at 50% -12%, rgba(78,205,196,0.10), transparent 70%),
+    linear-gradient(180deg,#0b1020,#0d0d1a);
+  box-shadow:0 22px 60px rgba(0,0,0,0.45);
+}
+.swp-fab-stage{position:relative;display:grid;grid-template-columns:1.2fr 1fr;gap:0}
+@media(max-width:760px){.swp-fab-stage{grid-template-columns:1fr}}
+.swp-fab-pane{padding:16px 18px;min-width:0}
+.swp-fab-pane.code-pane{border-right:1px solid rgba(255,255,255,0.06)}
+@media(max-width:760px){.swp-fab-pane.code-pane{border-right:none;border-bottom:1px solid rgba(255,255,255,0.06)}}
+.swp-fab-code{
+  font-family:'JetBrains Mono',monospace;font-size:0.8rem;line-height:2.1;color:#8b96b0;
+  white-space:pre;overflow-x:auto;
+  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.15) transparent;
+}
+.swp-fab-code::-webkit-scrollbar{height:5px}
+.swp-fab-code::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:3px}
+.swp-slot{
+  display:inline-block;font-weight:700;color:#4ecdc4;
+  background:rgba(78,205,196,0.10);border:1px dashed rgba(78,205,196,0.45);
+  border-radius:7px;padding:0 7px;transition:all .35s ease;
+}
+.swp-slot.filled{
+  color:#0a0a12;background:var(--accent3);border-style:solid;
+  transform:scale(1.04);
+}
+.swp-fab-data{
+  font-family:'JetBrains Mono',monospace;font-size:0.8rem;line-height:2.1;color:#c9d1d9;
+  background:var(--code-bg);border:1px solid rgba(255,255,255,0.08);
+  border-radius:12px;padding:12px 16px;white-space:pre;overflow-x:auto;
+}
+.swp-fab-data .drow{display:block;border-radius:6px;padding:0 6px;transition:background .3s}
+.swp-fab-data .drow.lit{background:rgba(78,205,196,0.18)}
+/* valor voador */
+.swp-fly-val{
+  position:absolute;z-index:7;pointer-events:none;top:0;left:0;
+  font-family:'JetBrains Mono',monospace;font-weight:700;font-size:0.8rem;color:#0a0a12;
+  background:var(--accent3);padding:1px 8px;border-radius:7px;
+  box-shadow:0 10px 26px rgba(78,205,196,0.55);
+  transition:transform 0.85s cubic-bezier(0.22,1,0.36,1), opacity 0.85s ease;
+}
+.swp-fab-result{
+  border-top:1px solid rgba(255,255,255,0.06);
+}
+.swp-fab-result .fab-view{
+  background:#fff;padding:16px 20px;font-family:'Nunito',sans-serif;min-height:86px;
+  opacity:0.35;transition:opacity .5s ease;
+}
+.swp-fab-result .fab-view.ready{opacity:1}
+.swp-fab-result .fab-view h1{font-size:1.2rem;margin:0 0 4px;color:#15151f}
+.swp-fab-result .fab-view p{font-size:0.88rem;margin:3px 0;color:#3a3a4a}
+
+/* ---------- MÁQUINA 2: Linha de produção do for ---------- */
+.swp-loop{
+  border:1px solid rgba(247,183,49,0.28);border-radius:18px;overflow:hidden;margin:18px 0;
+  background:linear-gradient(180deg,#0d1020,#0d0d1a);
+}
+.swp-loop-stage{display:grid;grid-template-columns:1fr 1fr;gap:0}
+@media(max-width:760px){.swp-loop-stage{grid-template-columns:1fr}}
+.swp-loop-pane{padding:16px 18px;min-width:0}
+.swp-loop-pane.code-pane{border-right:1px solid rgba(255,255,255,0.06)}
+@media(max-width:760px){.swp-loop-pane.code-pane{border-right:none;border-bottom:1px solid rgba(255,255,255,0.06)}}
+.swp-loop-code{
+  font-family:'JetBrains Mono',monospace;font-size:0.78rem;line-height:2.1;color:#8b96b0;
+  white-space:pre;overflow-x:auto;
+  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.15) transparent;
+}
+.swp-loop-code .lp-line{display:block;border-left:3px solid transparent;border-radius:4px;padding:0 8px;transition:all .3s}
+.swp-loop-code .lp-line.lit{background:rgba(247,183,49,0.13);border-left-color:var(--accent5);color:#c9d1d9}
+.swp-loop-counter{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(247,183,49,0.10);border:1px solid rgba(247,183,49,0.35);
+  border-radius:50px;padding:4px 14px;font-size:0.78rem;color:var(--accent5);
+  font-weight:800;margin-bottom:10px;min-height:30px;
+}
+
+/* ---------- MÁQUINA 3: GET vs POST ---------- */
+.swp-gp{
+  border:1px solid rgba(167,139,250,0.30);border-radius:18px;overflow:hidden;margin:18px 0;
+  background:
+    radial-gradient(1100px 280px at 50% -12%, rgba(167,139,250,0.12), transparent 70%),
+    linear-gradient(180deg,#0b1020,#0d0d1a);
+}
+.swp-gp-tabs{display:flex;gap:8px;padding:14px 16px 0}
+.swp-gp-tab{
+  border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);
+  color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-weight:700;
+  font-size:0.82rem;padding:8px 22px;border-radius:10px 10px 0 0;cursor:pointer;
+  transition:all .25s;
+}
+.swp-gp-tab.on{background:var(--accent6);border-color:var(--accent6);color:#0a0a12}
+.swp-gp-body{padding:16px}
+.swp-gp-url{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.08);
+  border-radius:50px;padding:7px 16px;margin-bottom:14px;
+  font-family:'JetBrains Mono',monospace;font-size:0.76rem;color:#9fb0d0;
+  overflow-x:auto;white-space:nowrap;
+}
+.swp-gp-url .qs{color:var(--accent5);font-weight:700}
+.swp-envelope{
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);
+  border-radius:14px;padding:16px;
+}
+.swp-envelope .env-ico{font-size:2.6rem;flex-shrink:0}
+.swp-envelope .env-data{
+  font-family:'JetBrains Mono',monospace;font-size:0.78rem;line-height:1.8;color:#c9d1d9;
+  background:var(--code-bg);border-radius:10px;padding:10px 14px;flex:1;min-width:200px;
+  transition:filter .4s ease;
+}
+.swp-envelope .env-data.sealed{filter:blur(5px)}
+.swp-envelope .env-label{width:100%;font-size:0.8rem;color:var(--text-dim);line-height:1.5}
+.swp-envelope .env-label strong{color:var(--text)}
+
+/* ---------- MÁQUINA 4: A Volta Completa ---------- */
+.swp-volta{
+  border:1px solid rgba(108,99,255,0.30);border-radius:18px;overflow:hidden;margin:18px 0;
+  background:
+    radial-gradient(1100px 280px at 50% -12%, rgba(108,99,255,0.12), transparent 70%),
+    linear-gradient(180deg,#0b1020,#0d0d1a);
+  box-shadow:0 22px 60px rgba(0,0,0,0.45);
+}
+.swp-volta-stage{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:0}
+@media(max-width:760px){.swp-volta-stage{grid-template-columns:1fr}}
+.swp-volta-pane{padding:16px 18px;min-width:0}
+.swp-volta-pane.browser-pane{border-right:1px solid rgba(255,255,255,0.06)}
+@media(max-width:760px){.swp-volta-pane.browser-pane{border-right:none;border-bottom:1px solid rgba(255,255,255,0.06)}}
+.swp-volta-browser{border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.10);background:#0f1320}
+.swp-volta-view{background:#fff;padding:14px 16px;font-family:'Nunito',sans-serif}
+.swp-volta-view h2{font-size:0.95rem;margin:0 0 8px;color:#15151f}
+.swp-volta-view .vform{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.swp-volta-view .vform input{
+  font-family:'Nunito',sans-serif;font-size:0.85rem;padding:7px 10px;
+  border:1px solid #d0d4dd;border-radius:8px;background:#fff;color:#15151f;width:100%;
+}
+.swp-volta-view .vform input:focus{outline:2px solid #6c63ff33;border-color:#6c63ff}
+.swp-volta-view .vform button{
+  background:#3b3bd1;color:#fff;border:0;border-radius:8px;padding:8px 14px;
+  font-weight:800;font-size:0.85rem;cursor:pointer;align-self:flex-start;
+}
+.swp-volta-view .vform button:disabled{opacity:0.5;cursor:default}
+.swp-volta-view .swp-data-table{margin:6px 0 0;background:#fff;border-color:#e2e4ea}
+.swp-volta-view .swp-data-table th{background:#f2f3f7;color:#5a6270;border-color:#e2e4ea}
+.swp-volta-view .swp-data-table td{color:#26282e;border-color:#eceef2}
+.swp-volta-view .swp-data-table tr:nth-child(even) td{background:#fafbfd}
+.swp-volta-code{
+  font-family:'JetBrains Mono',monospace;font-size:0.74rem;line-height:2.05;color:#8b96b0;
+  white-space:pre;overflow-x:auto;
+  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.15) transparent;
+}
+.swp-volta-code .vc-line{display:block;border-left:3px solid transparent;border-radius:4px;padding:0 8px;transition:all .3s}
+.swp-volta-code .vc-line.lit{background:rgba(108,99,255,0.15);border-left-color:var(--accent);color:#c9d1d9}
+.swp-py-list{
+  font-family:'JetBrains Mono',monospace;font-size:0.72rem;line-height:1.9;color:#c3e88d;
+  background:var(--code-bg);border:1px solid rgba(255,255,255,0.08);
+  border-radius:10px;padding:8px 12px;margin-top:10px;white-space:pre;overflow-x:auto;
+}
+.swp-py-list .plabel{color:var(--text-dim);font-size:0.66rem;letter-spacing:1px;text-transform:uppercase;display:block}
+/* envelope que viaja na volta completa */
+.swp-volta-env{
+  position:absolute;z-index:7;pointer-events:none;font-size:1.7rem;top:0;left:0;opacity:0;
+  transition:transform 0.9s cubic-bezier(0.45,0,0.55,1), opacity .3s ease;
+  filter:drop-shadow(0 0 12px rgba(108,99,255,0.6));
+}
+
+/* ---------- WIDGET: O apagão ---------- */
+.swp-blackout{
+  border:1px solid rgba(255,71,87,0.30);border-radius:18px;overflow:hidden;margin:18px 0;
+  background:linear-gradient(180deg,#140d14,#0d0d1a);
+}
+.swp-blackout-stage{padding:18px;position:relative}
+.swp-blackout .swp-volta-browser{max-width:520px;margin:0 auto;transition:opacity .3s, filter .3s}
+.swp-blackout.dead .swp-volta-browser{opacity:0.35;filter:grayscale(0.8)}
+.swp-blackout-flash{
+  position:absolute;inset:0;background:#05050a;opacity:0;pointer-events:none;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;color:var(--accent7);font-size:0.85rem;
+  transition:opacity .25s ease;z-index:3;text-align:center;padding:20px;line-height:2;
+}
+.swp-blackout-flash.on{opacity:0.96;pointer-events:auto}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-orbs">
+  <div class="orb"></div>
+  <div class="orb"></div>
+  <div class="orb"></div>
+</div>
+
+<div class="progress-track"><div class="progress-bar"></div></div>
+
+<button class="menu-toggle" onclick="openSidebar()" aria-label="Abrir menu">☰</button>
+<aside class="sidebar-nav" id="sidebar">
+  <button class="sidebar-close" onclick="closeSidebar()" aria-label="Fechar menu">✕</button>
+  <div class="sidebar-header">
+    <h3>📬 Dia 02 · Telas que falam</h3>
+    <a href="../../index.html" class="sidebar-back">← Voltar ao hub</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🧩 Jinja</div>
+    <a class="sidebar-link" onclick="goTo('aquecimento')"><span class="dot" style="background:var(--accent5)"></span>Aquecimento</a>
+    <a class="sidebar-link" onclick="goTo('jinja')"><span class="dot" style="background:var(--accent3)"></span>O template tem lacunas</a>
+    <a class="sidebar-link" onclick="goTo('fabrica')"><span class="dot" style="background:var(--accent3)"></span>⭐ Fábrica de Páginas</a>
+    <a class="sidebar-link" onclick="goTo('for')"><span class="dot" style="background:var(--accent5)"></span>{% for %} — a linha de produção</a>
+    <a class="sidebar-link" onclick="goTo('if')"><span class="dot" style="background:var(--accent4)"></span>{% if %} — plano B na tela</a>
+    <a class="sidebar-link" onclick="goTo('bora-jinja')"><span class="dot" style="background:var(--accent7)"></span>Bora: loja com dados vivos</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🏗️ Template base</div>
+    <a class="sidebar-link" onclick="goTo('base')"><span class="dot" style="background:var(--accent6)"></span>base.html — o remédio</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">📬 Formulários</div>
+    <a class="sidebar-link" onclick="goTo('form')"><span class="dot" style="background:#ff7a52"></span>Anatomia do &lt;form&gt;</a>
+    <a class="sidebar-link" onclick="goTo('get-post')"><span class="dot" style="background:var(--accent6)"></span>⭐ GET vs POST</a>
+    <a class="sidebar-link" onclick="goTo('request-form')"><span class="dot" style="background:var(--python-y)"></span>request.form no Python</a>
+    <a class="sidebar-link" onclick="goTo('volta-completa')"><span class="dot" style="background:var(--accent)"></span>⭐ A Volta Completa</a>
+    <a class="sidebar-link" onclick="goTo('mini-app')"><span class="dot" style="background:var(--accent7)"></span>Bora: o mini-app do dia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🏁 Fechamento</div>
+    <a class="sidebar-link" onclick="goTo('dor-memoria')"><span class="dot" style="background:var(--bug)"></span>O apagão 😱</a>
+    <a class="sidebar-link" onclick="goTo('bugzilla')"><span class="dot" style="background:var(--bug)"></span>BugZilla do dia 🐛</a>
+    <a class="sidebar-link" onclick="goTo('quiz')"><span class="dot" style="background:var(--accent5)"></span>Quiz de fixação</a>
+    <a class="sidebar-link" onclick="goTo('arena')"><span class="dot" style="background:var(--accent6)"></span>Arena de treino</a>
+    <a class="sidebar-link" onclick="goTo('resumo')"><span class="dot" style="background:var(--accent7)"></span>Resumo do dia</a>
+  </div>
+</aside>
+<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-icons">🧩 📬 🌶️</div>
+  <span class="hero-badge python">Dia 02 · Sistemas Web com Python</span>
+  <h1><span style="background:linear-gradient(135deg,var(--accent3),var(--accent5));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Telas que falam<br>com Python</span></h1>
+  <p class="subtitle">
+    Ontem sua loja era uma vitrine parada. Hoje o
+    <strong style="color:var(--accent3)">Python passa a escrever dentro do HTML</strong> —
+    e o visitante ganha um <strong style="color:var(--accent5)">formulário pra responder</strong>.
+    No fim da aula: uma tela que <strong style="color:var(--accent7)">cadastra e lista produtos</strong>. 📋
+  </p>
+  <div class="hero-stack">
+    <span class="stack-chip python">🐍 Python</span>
+    <span class="stack-chip">🧩 Jinja</span>
+    <span class="stack-chip">📬 form</span>
+    <span class="stack-chip">🔀 GET vs POST</span>
+  </div>
+</section>
+
+<div class="container">
+
+  <!-- ═══════════════════════════════════════════════════════
+       AQUECIMENTO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="aquecimento">
+    <div class="step-header">
+      <div class="step-number sn-yellow">🔥</div>
+      <div>
+        <div class="step-title">Aquecimento: sua loja é bonita… e mentirosa</div>
+        <div class="step-sub">Um probleminha que você talvez nem notou no Dia 1</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Olha a lista de produtos que você digitou no <code>index.html</code>.
+        Aqueles preços, aquelas quantidades… são <strong style="color:var(--text)">texto
+        decorativo</strong>. Se o preço do fone mudar, você edita o HTML na mão.
+        Se tiver 200 produtos, são 200 <code>&lt;li&gt;</code> na mão.
+        Isso não é um sistema — é um cartaz. 😅
+      </p>
+
+      <div class="analogy">
+        <div class="analogy-title">O quadro de avisos vs. o painel do aeroporto ✈️</div>
+        <p>
+          Um <strong>quadro de avisos</strong> tem papel colado: pra mudar, alguém troca o papel.
+          O <strong>painel do aeroporto</strong> se atualiza sozinho: a ESTRUTURA é fixa,
+          mas os DADOS (voos, horários) chegam de outro lugar. Hoje sua loja
+          vira painel de aeroporto: o HTML fica fixo, <strong>os dados vêm do Python</strong>.
+        </p>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">1️⃣</span> No seu <code>app_loja.py</code> do bootcamp (Streamlit), de onde vinham os produtos da tela?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Digitados no meio da tela</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">De uma lista/banco no Python</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Da internet</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">O Streamlit inventava</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Isso!" data-wrong="Lembra!"
+             data-explain="no Streamlit os dados moravam no Python (TinyDB) e a tela só EXIBIA. É exatamente isso que vamos fazer no Flask hoje — com o Jinja de ponte."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">2️⃣</span> E pra RECEBER dados do visitante (nome de um produto novo, por exemplo), a página precisa de…</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Um banco de dados</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">JavaScript</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Um formulário</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Uma nova porta</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Exato!" data-wrong="Opa!"
+             data-explain="o &amp;lt;form&amp;gt; é o jeito clássico da web de coletar dados — e ele funciona SEM JavaScript, direto com o nosso Python. Segunda metade da aula é toda dele."></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       JINJA: LACUNAS
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="jinja">
+    <div class="step-header">
+      <div class="step-number" style="background:linear-gradient(135deg,var(--accent3),#2a9d8f)">🧩</div>
+      <div>
+        <div class="step-title">Jinja: o template ganha lacunas</div>
+        <div class="step-sub">{{ assim }} — e o Python preenche na hora de servir</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="analogy">
+        <div class="analogy-title">O diploma em branco 📜</div>
+        <p>
+          Uma faculdade não desenha um diploma novo pra cada aluno. Ela tem UM modelo
+          com lacunas — <em>"certificamos que <strong>______</strong> concluiu o curso de
+          <strong>______</strong>"</em> — e preenche na hora. O <strong>Jinja</strong> faz isso
+          com HTML: o template é o modelo, as lacunas são <code class="jvar">{{ assim }}</code>,
+          e quem preenche é o seu Python, a cada request.
+        </p>
+      </div>
+
+      <p style="color:var(--text-dim)">
+        Funciona em dupla. No <strong style="color:var(--text)">Python</strong>, você entrega os
+        dados pro template como argumentos do <code>render_template</code>:
+      </p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">loja/app.py</span>
+          <span class="lang-badge python">Python</span>
+        </div>
+<pre><span class="dec">@app.route</span>(<span class="st">"/"</span>)
+<span class="kw">def</span> <span class="fn">home</span>():
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"index.html"</span>,
+                           nome_loja=<span class="st">"Minha Loja"</span>,
+                           destaque=<span class="st">"Fone Bluetooth"</span>)</pre>
+      </div>
+
+      <p style="color:var(--text-dim)">
+        E no <strong style="color:var(--text)">template</strong>, você usa as lacunas
+        com o MESMO nome:
+      </p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">loja/templates/index.html</span>
+          <span class="lang-badge jinja">Jinja</span>
+        </div>
+<pre><span class="tag">&lt;h1&gt;</span>🛍️ <span class="jvar">{{ nome_loja }}</span><span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;p&gt;</span>Destaque de hoje: <span class="jvar">{{ destaque }}</span><span class="tag">&lt;/p&gt;</span></pre>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 A regra do casamento de nomes</div>
+        <p>
+          <code>nome_loja=</code> no Python ↔ <code class="jvar">{{ nome_loja }}</code> no template.
+          <strong>Mesmo nome dos dois lados</strong>, senão a lacuna fica vazia.
+          As chaves duplas <code>{{ }}</code> são o Jinja dizendo "aqui entra dado do Python".
+        </p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🕵️</span>
+        <div class="tip-content">
+          <strong>Detalhe importante:</strong> o visitante NUNCA vê <code class="jvar">{{ nome_loja }}</code>.
+          O Jinja preenche as lacunas <strong>no servidor</strong>, antes da response sair.
+          O navegador recebe HTML já pronto, sem sinal de Jinja. (Aperte F12 → "ver código-fonte"
+          na sua página e confira!)
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ FÁBRICA DE PÁGINAS
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="fabrica">
+    <div class="step-header">
+      <div class="step-number sn-mint">⭐</div>
+      <div>
+        <div class="step-title">Fábrica de Páginas: veja o Jinja preenchendo</div>
+        <div class="step-sub">Os dados voam do Python pras lacunas — e sai uma página nova</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Aperte ▶ e observe cada dado sair da caixa do Python e
+        <strong style="color:var(--text)">encaixar na sua lacuna</strong>.
+        Depois aperte <strong style="color:var(--text)">🔄 Trocar os dados</strong>:
+        MESMO template… página completamente diferente.
+      </p>
+
+      <div class="swp-fab" id="swpFab">
+        <div class="swp-fab-stage" id="fabStage">
+          <div class="swp-fab-pane code-pane">
+            <div class="fp-head">🧩 templates/index.html — o molde</div>
+            <div class="swp-fab-code"><span class="tag">&lt;h1&gt;</span>🛍️ <span class="swp-slot" data-slot="nome_loja">{{ nome_loja }}</span><span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;p&gt;</span>Destaque: <span class="swp-slot" data-slot="destaque">{{ destaque }}</span><span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;p&gt;</span>Por R$ <span class="swp-slot" data-slot="preco">{{ preco }}</span><span class="tag">&lt;/p&gt;</span></div>
+          </div>
+          <div class="swp-fab-pane">
+            <div class="fp-head">🐍 app.py manda os dados</div>
+            <div class="swp-fab-data" id="fabData"></div>
+          </div>
+        </div>
+        <div class="swp-fab-result">
+          <div class="mb-chrome">
+            <span class="mb-dots"><i></i><i></i><i></i></span>
+            <span class="mb-url"><span class="lock">🔒</span><span class="addr">localhost:5000</span></span>
+            <span class="mb-actions"><span class="mb-tag">response</span></span>
+          </div>
+          <div class="fab-view" id="fabView">
+            <h1 id="fabH1">…</h1>
+            <p id="fabP1">…</p>
+            <p id="fabP2">…</p>
+          </div>
+        </div>
+        <div class="swp-machine-hud">
+          <button class="swp-machine-btn" id="fabGo">▶ Renderizar</button>
+          <button class="swp-machine-btn ghost" id="fabSwap">🔄 Trocar os dados</button>
+          <span class="swp-machine-note" id="fabNote">o molde é fixo — os dados é que mudam</span>
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 Um molde, infinitas páginas</div>
+        <p>
+          É por isso que o Instagram não tem um HTML por usuário: tem <strong>UM template de
+          perfil</strong> e milhões de dados. Você acabou de aprender o truque central
+          de todo site dinâmico do planeta.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       {% FOR %}
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="for">
+    <div class="step-header">
+      <div class="step-number sn-yellow">🔁</div>
+      <div>
+        <div class="step-title">{% for %}: a linha de produção de HTML</div>
+        <div class="step-sub">Uma lista de produtos no Python → uma tabela inteira na tela</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        E quando o dado não é UM valor, mas uma <strong style="color:var(--text)">lista</strong>?
+        Seus produtos, por exemplo — uma lista de dicionários, igualzinho ao bootcamp:
+      </p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">loja/app.py</span>
+          <span class="lang-badge python">Python</span>
+        </div>
+<pre>produtos = [
+    {<span class="st">"nome"</span>: <span class="st">"Fone Bluetooth"</span>,   <span class="st">"preco"</span>: <span class="num">149.90</span>},
+    {<span class="st">"nome"</span>: <span class="st">"Teclado Mecânico"</span>,  <span class="st">"preco"</span>: <span class="num">299.00</span>},
+    {<span class="st">"nome"</span>: <span class="st">"Mouse Gamer"</span>,       <span class="st">"preco"</span>: <span class="num">89.90</span>},
+]
+
+<span class="dec">@app.route</span>(<span class="st">"/"</span>)
+<span class="kw">def</span> <span class="fn">home</span>():
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"index.html"</span>, produtos=produtos)</pre>
+      </div>
+
+      <p style="color:var(--text-dim)">
+        No template, o Jinja tem um <code class="jtag">{% for %}</code> — primo do
+        <code>for</code> do Python que você já domina. Tudo que estiver entre o
+        <code class="jtag">{% for %}</code> e o <code class="jtag">{% endfor %}</code>
+        é <strong style="color:var(--text)">carimbado uma vez por item</strong>:
+      </p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">loja/templates/index.html</span>
+          <span class="lang-badge jinja">Jinja</span>
+        </div>
+<pre><span class="tag">&lt;table&gt;</span>
+  <span class="tag">&lt;tr&gt;</span><span class="tag">&lt;th&gt;</span>Produto<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Preço<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;/tr&gt;</span>
+  <span class="jtag">{% for p in produtos %}</span>
+    <span class="tag">&lt;tr&gt;</span>
+      <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["nome"] }}</span><span class="tag">&lt;/td&gt;</span>
+      <span class="tag">&lt;td&gt;</span>R$ <span class="jvar">{{ p["preco"] }}</span><span class="tag">&lt;/td&gt;</span>
+    <span class="tag">&lt;/tr&gt;</span>
+  <span class="jtag">{% endfor %}</span>
+<span class="tag">&lt;/table&gt;</span></pre>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🆕</span>
+        <div class="tip-content">
+          <strong>Tags novas na área:</strong> <code>&lt;table&gt;</code> é a tabela,
+          <code>&lt;tr&gt;</code> é uma linha (<em>table row</em>), <code>&lt;th&gt;</code> é
+          célula de cabeçalho e <code>&lt;td&gt;</code> é célula de dado. Aninhamento em ação:
+          td dentro de tr, tr dentro de table.
+        </div>
+      </div>
+
+      <p style="color:var(--text-dim)">Veja a linha de produção rodando devagar:</p>
+
+      <div class="swp-loop" id="swpLoop">
+        <div class="swp-loop-stage">
+          <div class="swp-loop-pane code-pane">
+            <div class="fp-head">🧩 o carimbo (dentro do for)</div>
+            <div class="swp-loop-counter" id="loopCounter">esperando ▶ …</div>
+            <div class="swp-loop-code"><span class="lp-line" data-l="0"><span class="jtag">{% for p in produtos %}</span></span><span class="lp-line" data-l="1">  <span class="tag">&lt;tr&gt;</span></span><span class="lp-line" data-l="2">    <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["nome"] }}</span><span class="tag">&lt;/td&gt;</span></span><span class="lp-line" data-l="3">    <span class="tag">&lt;td&gt;</span>R$ <span class="jvar">{{ p["preco"] }}</span><span class="tag">&lt;/td&gt;</span></span><span class="lp-line" data-l="4">  <span class="tag">&lt;/tr&gt;</span></span><span class="lp-line" data-l="5"><span class="jtag">{% endfor %}</span></span></div>
+          </div>
+          <div class="swp-loop-pane">
+            <div class="fp-head">📦 a tabela saindo da esteira</div>
+            <table class="swp-data-table">
+              <thead><tr><th>Produto</th><th>Preço</th></tr></thead>
+              <tbody id="loopBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="swp-machine-hud">
+          <button class="swp-machine-btn" id="loopGo">▶ Rodar o for</button>
+          <span class="swp-machine-note" id="loopNote">3 produtos na lista = 3 voltas = 3 linhas de tabela</span>
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 Você não escreve a tabela. Você escreve O CARIMBO.</div>
+        <p>
+          Uma linha de template gera 3, 30 ou 3.000 linhas de tabela — depende só da lista.
+          Produto novo no Python? A tela atualiza sozinha no F5. <strong>Adeus, cartaz.</strong>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       {% IF %}
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="if">
+    <div class="step-header">
+      <div class="step-number sn-blue">🚦</div>
+      <div>
+        <div class="step-title">{% if %}: o plano B na tela</div>
+        <div class="step-sub">E se a lista estiver vazia? O aluno de vendas nunca esquece o caso triste.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Imagina a loja recém-aberta, sem produtos: <code>produtos = []</code>.
+        O <code class="jtag">{% for %}</code> roda <strong style="color:var(--text)">zero
+        vezes</strong> e a pessoa vê… uma tabela vazia, sem explicação. Feio.
+        O Jinja também tem <code class="jtag">{% if %}</code>:
+      </p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">loja/templates/index.html</span>
+          <span class="lang-badge jinja">Jinja</span>
+        </div>
+<pre><span class="jtag">{% if produtos %}</span>
+  <span class="tag">&lt;table&gt;</span> … a tabela com o for aqui … <span class="tag">&lt;/table&gt;</span>
+<span class="jtag">{% else %}</span>
+  <span class="tag">&lt;p&gt;</span>😢 Estoque vazio! Cadastre o primeiro produto.<span class="tag">&lt;/p&gt;</span>
+<span class="jtag">{% endif %}</span></pre>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 Lista vazia é "falsa" — igual no Python</div>
+        <p>
+          <code class="jtag">{% if produtos %}</code> segue a regra que você aprendeu no bootcamp:
+          lista com itens = verdadeiro, lista vazia <code>[]</code> = falso.
+          O mesmo raciocínio, agora decidindo <strong>o que aparece na tela</strong>.
+        </p>
+      </div>
+
+      <div class="bug-box">
+        <span class="tip-icon">✍️</span>
+        <div class="tip-content">
+          <strong>Pegadinha de digitação:</strong> as tags de comando usam
+          <code class="jtag">{%&nbsp;%}</code> (com porcento) e as de valor usam
+          <code class="jvar">{{&nbsp;}}</code> (chaves duplas). Misturar as duas é o erro de
+          digitação nº 1 do Jinja — e TODO for/if precisa do seu
+          <code class="jtag">{% endfor %}</code>/<code class="jtag">{% endif %}</code>.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       EXERCÍCIO GUIADO — LOJA COM DADOS VIVOS
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="bora-jinja">
+    <div class="step-header">
+      <div class="step-number sn-green">⌨️</div>
+      <div>
+        <div class="step-title">Bora codar: a loja com dados vivos</div>
+        <div class="step-sub">Tirar os produtos do HTML e entregar pro Python</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="exercise guided">
+        <div class="exercise-header">
+          <span class="exercise-icon">👨‍🏫</span>
+          <div>
+            <div class="exercise-title">Passo a passo com o professor</div>
+            <div class="exercise-sub">app.py ganha a lista; index.html ganha for + if</div>
+          </div>
+        </div>
+
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">1.</strong> No <code>app.py</code>, crie a lista
+          <code>produtos</code> (de dicts, como acima) antes das rotas, e passe
+          <code>produtos=produtos</code> no <code>render_template</code> da home.<br>
+          <strong style="color:var(--text)">2.</strong> No <code>templates/index.html</code>,
+          apague o <code>&lt;ul&gt;</code> de produtos do Dia 1 e digite no lugar:
+        </p>
+
+        <div class="code-block with-lines">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/templates/index.html (trecho)</span>
+            <span class="lang-badge jinja">Jinja</span>
+          </div>
+          <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13</div>
+<pre><span class="tag">&lt;h2&gt;</span>Produtos de hoje<span class="tag">&lt;/h2&gt;</span>
+<span class="jtag">{% if produtos %}</span>
+  <span class="tag">&lt;table&gt;</span>
+    <span class="tag">&lt;tr&gt;</span><span class="tag">&lt;th&gt;</span>Produto<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Preço<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;/tr&gt;</span>
+    <span class="jtag">{% for p in produtos %}</span>
+      <span class="tag">&lt;tr&gt;</span>
+        <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["nome"] }}</span><span class="tag">&lt;/td&gt;</span>
+        <span class="tag">&lt;td&gt;</span>R$ <span class="jvar">{{ p["preco"] }}</span><span class="tag">&lt;/td&gt;</span>
+      <span class="tag">&lt;/tr&gt;</span>
+    <span class="jtag">{% endfor %}</span>
+  <span class="tag">&lt;/table&gt;</span>
+<span class="jtag">{% else %}</span>
+  <span class="tag">&lt;p&gt;</span>😢 Estoque vazio! Cadastre o primeiro produto.<span class="tag">&lt;/p&gt;</span>
+<span class="jtag">{% endif %}</span></pre>
+        </div>
+
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">3.</strong> Salve tudo, F5 em <code>localhost:5000</code>
+          — a tabela nasce dos dados! <br>
+          <strong style="color:var(--text)">4.</strong> Prova dos nove: mude um preço NO PYTHON,
+          salve, F5 → a tela mudou sem tocar no HTML. 🤯 Depois teste
+          <code>produtos = []</code> e veja o plano B aparecer.
+        </p>
+
+        <div class="tip">
+          <span class="tip-icon">🎨</span>
+          <div class="tip-content">
+            <strong>Bônus grátis do Pico:</strong> repara que a tabela já nasce bonita —
+            zebrada, espaçada. É o Pico.css estilizando o <code>&lt;table&gt;</code>
+            sem você escrever uma linha de CSS. 😎
+          </div>
+        </div>
+      </div>
+
+      <div class="exercise solo">
+        <div class="exercise-header">
+          <span class="exercise-icon">🧑‍💻</span>
+          <div>
+            <div class="exercise-title">Sozinho/a: a coluna de quantidade</div>
+            <div class="exercise-sub">Dado novo no dict → coluna nova na tabela</div>
+          </div>
+        </div>
+
+        <div class="drill-tags">
+          <span class="drill-level lv1"><span class="stars">★</span> fácil</span>
+          <span class="drill-tag">dict</span>
+          <span class="drill-tag">{{ }}</span>
+        </div>
+
+        <p style="color:var(--text-dim)">
+          Missão: adicione a chave <code>"qtd"</code> em cada produto da lista
+          (ex.: <code>"qtd": 12</code>) e mostre uma coluna
+          <strong style="color:var(--text)">Estoque</strong> na tabela.
+        </p>
+
+        <div class="concept">
+          <div class="concept-title">💡 Dica</div>
+          <p>
+            São 3 mudanças: a chave nova nos dicts, um <code>&lt;th&gt;</code> novo no cabeçalho
+            e um <code>&lt;td&gt;</code> novo dentro do for. Mesmo padrão dos outros.
+          </p>
+        </div>
+
+        <div class="try-first">
+          <div class="try-first-icon">🚨</div>
+          <div class="try-first-content">
+            <strong>Tenta primeiro!</strong> Se aparecer a tabela torta (células a mais numa
+            linha), conte seus td e th — cabeçalho e corpo precisam ter o mesmo número de colunas.
+          </div>
+        </div>
+
+        <div class="toggler">
+          <div class="toggler-header" onclick="toggleSection(this)">
+            <span>👀 Só clique aqui DEPOIS de tentar — ver a solução</span>
+            <span class="toggler-arrow">▼</span>
+          </div>
+          <div class="toggler-body">
+            <div class="code-block">
+              <div class="code-header">
+                <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+                <span class="filename">app.py (a lista) + index.html (a tabela)</span>
+                <span class="lang-badge jinja">Jinja</span>
+              </div>
+<pre><span class="cm"># app.py</span>
+produtos = [
+    {<span class="st">"nome"</span>: <span class="st">"Fone Bluetooth"</span>, <span class="st">"preco"</span>: <span class="num">149.90</span>, <span class="st">"qtd"</span>: <span class="num">12</span>},
+    …
+]
+
+<span class="cm">&lt;!-- index.html --&gt;</span>
+<span class="tag">&lt;tr&gt;</span><span class="tag">&lt;th&gt;</span>Produto<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Preço<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Estoque<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;/tr&gt;</span>
+<span class="jtag">{% for p in produtos %}</span>
+  <span class="tag">&lt;tr&gt;</span>
+    <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["nome"] }}</span><span class="tag">&lt;/td&gt;</span>
+    <span class="tag">&lt;td&gt;</span>R$ <span class="jvar">{{ p["preco"] }}</span><span class="tag">&lt;/td&gt;</span>
+    <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["qtd"] }}</span> un.<span class="tag">&lt;/td&gt;</span>
+  <span class="tag">&lt;/tr&gt;</span>
+<span class="jtag">{% endfor %}</span></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="chapter-divider">
+    <div class="chapter-icon">🏗️</div>
+    <div class="chapter-number">Intervalo técnico</div>
+    <h2 style="background:linear-gradient(135deg,var(--accent6),var(--accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">O remédio prometido</h2>
+    <p class="chapter-subtitle">Aquele menu copiado 4 vezes no Dia 1? Cobrança na mesa.</p>
+  </div>
+
+<!-- ═══════════════════════════════════════════════════════
+       BASE.HTML
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="base">
+    <div class="step-header">
+      <div class="step-number sn-purple">🏗️</div>
+      <div>
+        <div class="step-title">base.html: escreva o menu UMA vez</div>
+        <div class="step-sub">A dor da Missão 2 do Dia 1 tem cura — e ela chama herança de template</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Na arena do Dia 1 você copiou o menu em TODAS as páginas — e sentiu o incômodo:
+        mudou um link? Edita 4 arquivos. O Jinja resolve com um
+        <strong style="color:var(--text)">template pai</strong>: o <code>base.html</code>
+        guarda tudo que se repete, e cada página só preenche o miolo.
+      </p>
+
+      <div class="analogy">
+        <div class="analogy-title">O papel timbrado 🖋️</div>
+        <p>
+          Uma empresa não redesenha o logotipo e o rodapé a cada carta — usa
+          <strong>papel timbrado</strong>: a moldura já vem pronta, você só escreve o miolo.
+          O <code>base.html</code> é o papel timbrado do seu site.
+        </p>
+      </div>
+
+      <div class="code-block with-lines">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">loja/templates/base.html (NOVO)</span>
+          <span class="lang-badge jinja">Jinja</span>
+        </div>
+        <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16</div>
+<pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="atr">lang</span>=<span class="st">"pt-BR"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="atr">charset</span>=<span class="st">"UTF-8"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;title&gt;</span>Minha Loja<span class="tag">&lt;/title&gt;</span>
+    <span class="tag">&lt;link</span> <span class="atr">rel</span>=<span class="st">"stylesheet"</span> <span class="atr">href</span>=<span class="st">"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;/head&gt;</span>
+  <span class="tag">&lt;body&gt;</span>
+    <span class="tag">&lt;p&gt;</span>
+      <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/"</span><span class="tag">&gt;</span>Início<span class="tag">&lt;/a&gt;</span> ·
+      <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/sobre"</span><span class="tag">&gt;</span>Sobre<span class="tag">&lt;/a&gt;</span> ·
+      <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/contato"</span><span class="tag">&gt;</span>Contato<span class="tag">&lt;/a&gt;</span>
+    <span class="tag">&lt;/p&gt;</span>
+    <span class="jtag">{% block conteudo %}{% endblock %}</span>
+  <span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+      </div>
+
+      <p style="color:var(--text-dim)">
+        E cada página encolhe pra <strong style="color:var(--text)">só o próprio miolo</strong>:
+      </p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">loja/templates/sobre.html (INTEIRO — sim, só isso)</span>
+          <span class="lang-badge jinja">Jinja</span>
+        </div>
+<pre><span class="jtag">{% extends "base.html" %}</span>
+
+<span class="jtag">{% block conteudo %}</span>
+  <span class="tag">&lt;h1&gt;</span>ℹ️ Sobre a loja<span class="tag">&lt;/h1&gt;</span>
+  <span class="tag">&lt;p&gt;</span>Loja criada por MIM, com Python. 😄<span class="tag">&lt;/p&gt;</span>
+<span class="jtag">{% endblock %}</span></pre>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 extends + block</div>
+        <p>
+          <code class="jtag">{% extends "base.html" %}</code> = "usa o papel timbrado".
+          <code class="jtag">{% block conteudo %}</code> = "meu miolo entra na janela que o
+          base deixou aberta". Esqueleto, menu e Pico agora moram num lugar SÓ.
+        </p>
+      </div>
+
+      <div class="exercise guided">
+        <div class="exercise-header">
+          <span class="exercise-icon">👨‍🏫</span>
+          <div>
+            <div class="exercise-title">Bora migrar a loja</div>
+            <div class="exercise-sub">4 páginas entrando na moldura</div>
+          </div>
+        </div>
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">1.</strong> Crie o <code>templates/base.html</code> acima
+          (mova pra ele o menu e a linha do Pico).<br>
+          <strong style="color:var(--text)">2.</strong> Em cada página
+          (<code>index</code>, <code>sobre</code>, <code>contato</code>, <code>promocoes</code>):
+          apague esqueleto + menu, deixe só o miolo, e embrulhe com
+          <code class="jtag">{% extends %}</code> + <code class="jtag">{% block conteudo %}</code>.<br>
+          <strong style="color:var(--text)">3.</strong> F5 em todas — mesma cara, metade do código.
+          Teste o poder: adicione um link novo no menu do <code>base.html</code> →
+          <strong>apareceu em TODAS as páginas de uma vez</strong>. 💪
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="chapter-divider">
+    <div class="chapter-icon">📬</div>
+    <div class="chapter-number">Parte 2</div>
+    <h2 style="background:linear-gradient(135deg,#ff7a52,var(--accent6));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">O visitante fala</h2>
+    <p class="chapter-subtitle">Até agora o site só cospe dados. Hora de ESCUTAR.</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ANATOMIA DO FORM
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="form">
+    <div class="step-header">
+      <div class="step-number" style="background:linear-gradient(135deg,#ff7a52,#e34f26)">📬</div>
+      <div>
+        <div class="step-title">Anatomia do &lt;form&gt;</div>
+        <div class="step-sub">O balcão de atendimento da sua página</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Todo cadastro, login e busca da internet começa igual: um
+        <strong style="color:var(--text)">formulário</strong>. Ele é HTML puro —
+        três tags novas e nenhum mistério:
+      </p>
+
+      <div class="code-block with-lines">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">o formulário de cadastro</span>
+          <span class="lang-badge html">HTML</span>
+        </div>
+        <div class="line-numbers">1<br>2<br>3<br>4<br>5</div>
+<pre><span class="tag">&lt;form</span> <span class="atr">action</span>=<span class="st">"/"</span> <span class="atr">method</span>=<span class="st">"POST"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"nome"</span> <span class="atr">placeholder</span>=<span class="st">"Nome do produto"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"preco"</span> <span class="atr">placeholder</span>=<span class="st">"Preço"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;button&gt;</span>Cadastrar<span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;/form&gt;</span></pre>
+      </div>
+
+      <div class="keyword-grid">
+        <div class="keyword-chip">
+          <span class="emoji">📮</span>
+          <span class="kw-name">action</span>
+          <span class="kw-desc">PRA ONDE o request vai quando apertar o botão (qual URL/rota)</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">🚚</span>
+          <span class="kw-name">method</span>
+          <span class="kw-desc">COMO o request viaja: GET ou POST (já já isso vira importante)</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">🏷️</span>
+          <span class="kw-name">name</span>
+          <span class="kw-desc">a ETIQUETA de cada dado — é por ela que o Python vai pescar o valor</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">🔘</span>
+          <span class="kw-name">&lt;button&gt;</span>
+          <span class="kw-desc">dentro de um form, o botão SUBMETE: empacota os dados e envia</span>
+        </div>
+      </div>
+
+      <div class="warning">
+        <span class="tip-icon">🏷️</span>
+        <div class="tip-content">
+          <strong>O <code>name</code> é a estrela.</strong> Input sem <code>name</code> viaja
+          SEM ETIQUETA — o dado chega no servidor e ninguém sabe o que é (na prática: não chega).
+          Grava: <em>todo input tem name</em>.
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">👁️</span>
+        <div class="tip-content">
+          <strong>placeholder</strong> é só a dica cinza dentro do campo — não viaja com o form.
+          Quem viaja é o par <code>name="nome"</code> + o que a pessoa digitou.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ GET VS POST
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="get-post">
+    <div class="step-header">
+      <div class="step-number sn-purple">⭐</div>
+      <div>
+        <div class="step-title">GET vs POST: cartão-postal ou envelope lacrado</div>
+        <div class="step-sub">Clique nas abas e repare na barra de endereço</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="analogy">
+        <div class="analogy-title">De volta ao restaurante 🍝</div>
+        <p>
+          <strong>GET</strong> é pedir o cardápio: "me MOSTRA algo" — pedido simples, aberto,
+          pode repetir à vontade. <strong>POST</strong> é entregar o pedido preenchido:
+          "toma, PROCESSA estes dados" — carrega conteúdo, muda as coisas na cozinha.
+        </p>
+      </div>
+
+      <p style="color:var(--text-dim)">
+        A mesma submissão do form, nos dois métodos — repara na
+        <strong style="color:var(--text)">URL</strong> e no
+        <strong style="color:var(--text)">envelope</strong>:
+      </p>
+
+      <div class="swp-gp" id="swpGp">
+        <div class="swp-gp-tabs">
+          <button class="swp-gp-tab on" data-gp="get">GET</button>
+          <button class="swp-gp-tab" data-gp="post">POST</button>
+        </div>
+        <div class="swp-gp-body">
+          <div class="swp-gp-url" id="gpUrl"></div>
+          <div class="swp-envelope">
+            <span class="env-ico" id="gpIco">📄</span>
+            <div class="env-data" id="gpData"></div>
+            <div class="env-label" id="gpLabel"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="keyword-grid">
+        <div class="keyword-chip">
+          <span class="emoji">📄</span>
+          <span class="kw-name">GET</span>
+          <span class="kw-desc">dados na URL, visíveis; pra BUSCAR/mostrar; F5 repete sem perigo</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">✉️</span>
+          <span class="kw-name">POST</span>
+          <span class="kw-desc">dados no corpo do request; pra CRIAR/mudar algo; URL fica limpa</span>
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 A regra prática</div>
+        <p>
+          Vai só <strong>ler/mostrar</strong>? GET. Vai <strong>cadastrar, alterar, enviar
+          senha</strong>? POST. Formulário de cadastro, portanto:
+          <code>method="POST"</code> — sempre.
+        </p>
+      </div>
+
+      <div class="warning">
+        <span class="tip-icon">🙈</span>
+        <div class="tip-content">
+          <strong>Nunca senha em GET!</strong> Dados de GET ficam na URL — que aparece na tela,
+          no histórico e nos registros do servidor. Imagina
+          <code>/login?senha=123456</code> no histórico do navegador da lan house. 💀
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       REQUEST.FORM
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="request-form">
+    <div class="step-header">
+      <div class="step-number sn-py">🐍</div>
+      <div>
+        <div class="step-title">request.form: o Python abre o envelope</div>
+        <div class="step-sub">Os dados chegaram — como pegar cada um?</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Duas novidades no <code>app.py</code>. Primeira: a rota precisa
+        <strong style="color:var(--text)">aceitar POST</strong> (por padrão, rota Flask só aceita
+        GET — segurança). Segunda: o Flask entrega os dados do form num objeto chamado
+        <code>request.form</code>, que funciona <strong style="color:var(--text)">como um
+        dicionário</strong>:
+      </p>
+
+      <div class="code-block with-lines">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">loja/app.py</span>
+          <span class="lang-badge python">Python</span>
+        </div>
+        <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11</div>
+<pre><span class="kw">from</span> flask <span class="kw">import</span> <span class="tp">Flask</span>, <span class="fn">render_template</span>, request, <span class="fn">redirect</span>
+
+<span class="dec">@app.route</span>(<span class="st">"/"</span>, methods=[<span class="st">"GET"</span>, <span class="st">"POST"</span>])
+<span class="kw">def</span> <span class="fn">home</span>():
+    <span class="kw">if</span> request.method == <span class="st">"POST"</span>:
+        nome  = request.form[<span class="st">"nome"</span>]
+        preco = <span class="bi">float</span>(request.form[<span class="st">"preco"</span>])
+        produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"</span>: preco})
+        <span class="kw">return</span> <span class="fn">redirect</span>(<span class="st">"/"</span>)
+
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"index.html"</span>, produtos=produtos)</pre>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 O casamento de nomes, parte 2</div>
+        <p>
+          <code>name="nome"</code> no HTML ↔ <code>request.form["nome"]</code> no Python.
+          A etiqueta do input vira a chave do dicionário. Mesmo nome dos dois lados —
+          igualzinho à regra do Jinja.
+        </p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🔢</span>
+        <div class="tip-content">
+          <strong>Tudo chega como texto!</strong> Mesmo que a pessoa digite 149.90, o form entrega
+          <code>"149.90"</code> (string). Por isso o <code>float(...)</code> — você já fazia
+          igual com o <code>input()</code> no bootcamp. Nada mudou. 😉
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">↩️</span>
+        <div class="tip-content">
+          <strong>E o <code>redirect("/")</code>?</strong> Depois de cadastrar, mandamos o navegador
+          "vai pra home de novo" — que recarrega a tabela já com o produto novo.
+          O PORQUÊ profundo desse redirect (e o bug que ele evita) é assunto nobre do Dia 4.
+          Por ora: <em>cadastrou → redirect</em>.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ A VOLTA COMPLETA
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="volta-completa">
+    <div class="step-header">
+      <div class="step-number sn-main">⭐</div>
+      <div>
+        <div class="step-title">A Volta Completa: cadastre um produto AQUI</div>
+        <div class="step-sub">Digite de verdade e veja o dado viajar: form → Python → lista → tela</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Esta máquina é o dia inteiro em 6 segundos.
+        <strong style="color:var(--text)">Preencha o form e clique Cadastrar</strong> —
+        e acompanhe o envelope: POST → <code>request.form</code> → <code>append</code> →
+        redirect → tabela nova.
+      </p>
+
+      <div class="swp-volta" id="swpVolta">
+        <div class="swp-volta-stage" id="voltaStage">
+          <div class="swp-volta-pane browser-pane">
+            <div class="fp-head">🌐 navegador</div>
+            <div class="swp-volta-browser">
+              <div class="mb-chrome">
+                <span class="mb-dots"><i></i><i></i><i></i></span>
+                <span class="mb-url"><span class="lock">🔒</span><span class="addr">localhost:5000/</span></span>
+              </div>
+              <div class="swp-volta-view">
+                <h2>🛍️ Minha Loja</h2>
+                <div class="vform">
+                  <input id="voltaNome" maxlength="24" placeholder="Nome do produto" aria-label="Nome do produto">
+                  <input id="voltaPreco" maxlength="9" placeholder="Preço (ex: 59.90)" aria-label="Preço" inputmode="decimal">
+                  <button id="voltaGo">Cadastrar</button>
+                </div>
+                <table class="swp-data-table">
+                  <thead><tr><th>Produto</th><th>Preço</th></tr></thead>
+                  <tbody id="voltaBody">
+                    <tr><td>Fone Bluetooth</td><td class="n">R$ 149.90</td></tr>
+                    <tr><td>Teclado Mecânico</td><td class="n">R$ 299.00</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="swp-volta-pane">
+            <div class="fp-head">🐍 loja/app.py</div>
+            <div class="swp-volta-code"><span class="vc-line" data-v="0"><span class="dec">@app.route</span>(<span class="st">"/"</span>, methods=[<span class="st">"GET"</span>,<span class="st">"POST"</span>])</span><span class="vc-line" data-v="1"><span class="kw">def</span> <span class="fn">home</span>():</span><span class="vc-line" data-v="2">  <span class="kw">if</span> request.method == <span class="st">"POST"</span>:</span><span class="vc-line" data-v="3">    nome  = request.form[<span class="st">"nome"</span>]</span><span class="vc-line" data-v="4">    preco = <span class="bi">float</span>(request.form[<span class="st">"preco"</span>])</span><span class="vc-line" data-v="5">    produtos.append({...})</span><span class="vc-line" data-v="6">    <span class="kw">return</span> <span class="fn">redirect</span>(<span class="st">"/"</span>)</span><span class="vc-line" data-v="7">  <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"index.html"</span>, ...)</span></div>
+            <div class="swp-py-list" id="voltaList"><span class="plabel">produtos (na memória)</span>[{"nome": "Fone Bluetooth", ...},
+ {"nome": "Teclado Mecânico", ...}]</div>
+          </div>
+          <span class="swp-volta-env" id="voltaEnv">✉️</span>
+        </div>
+        <div class="swp-machine-hud">
+          <span class="swp-machine-note" id="voltaNote">preencha os dois campos aí em cima e clique <strong>Cadastrar</strong> 👆</span>
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 A dança completa do dia 2</div>
+        <p>
+          <strong>form (POST) → rota aceita → request.form pesca os dados →
+          Python guarda na lista → redirect → GET → Jinja re-renderiza → tabela nova.</strong>
+          Essa dança é 80% de qualquer sistema web — inclusive os gigantes.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       MINI-APP DO DIA
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="mini-app">
+    <div class="step-header">
+      <div class="step-number sn-green">⌨️</div>
+      <div>
+        <div class="step-title">Bora codar: o mini-app do dia</div>
+        <div class="step-sub">O cadastro de verdade, rodando no SEU Flask</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="exercise guided">
+        <div class="exercise-header">
+          <span class="exercise-icon">👨‍🏫</span>
+          <div>
+            <div class="exercise-title">Passo a passo com o professor</div>
+            <div class="exercise-sub">Form no template + POST na rota</div>
+          </div>
+        </div>
+
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">1.</strong> No <code>index.html</code>, digite o
+          formulário logo acima da tabela (dentro do seu <code class="jtag">{% block conteudo %}</code>):
+        </p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/templates/index.html (acima da tabela)</span>
+            <span class="lang-badge html">HTML</span>
+          </div>
+<pre><span class="tag">&lt;h2&gt;</span>Cadastrar produto<span class="tag">&lt;/h2&gt;</span>
+<span class="tag">&lt;form</span> <span class="atr">action</span>=<span class="st">"/"</span> <span class="atr">method</span>=<span class="st">"POST"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"nome"</span> <span class="atr">placeholder</span>=<span class="st">"Nome do produto"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"preco"</span> <span class="atr">placeholder</span>=<span class="st">"Preço"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;button&gt;</span>Cadastrar<span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;/form&gt;</span></pre>
+        </div>
+
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">2.</strong> No <code>app.py</code>: importe
+          <code>request</code> e <code>redirect</code>, adicione
+          <code>methods=["GET", "POST"]</code> na rota da home e o bloco do
+          <code>if request.method == "POST":</code> (o código completo está na seção anterior —
+          digite olhando pra ele, entendendo linha a linha).<br>
+          <strong style="color:var(--text)">3.</strong> Salve → F5 → cadastre um produto de teste.
+          A tabela cresceu! Cadastre mais dois. 🎉
+        </p>
+
+        <div class="tip">
+          <span class="tip-icon">🎨</span>
+          <div class="tip-content">
+            <strong>De novo o Pico salvando:</strong> inputs e botão já nascem estilosos.
+            Repare que o form é HTML que VOCÊ digitou — sem mágica, sem framework de front.
+          </div>
+        </div>
+      </div>
+
+      <div class="exercise solo">
+        <div class="exercise-header">
+          <span class="exercise-icon">🧑‍💻</span>
+          <div>
+            <div class="exercise-title">Sozinho/a: o campo de quantidade</div>
+            <div class="exercise-sub">Fechando o trio nome + preço + estoque</div>
+          </div>
+        </div>
+
+        <div class="drill-tags">
+          <span class="drill-level lv2"><span class="stars">★★</span> médio</span>
+          <span class="drill-tag">name=</span>
+          <span class="drill-tag">request.form</span>
+          <span class="drill-tag">int()</span>
+        </div>
+
+        <p style="color:var(--text-dim)">
+          Missão: o form ganha um input de <strong style="color:var(--text)">quantidade</strong>,
+          o Python pesca com <code>request.form</code>, converte pra inteiro, guarda no dict —
+          e a coluna Estoque (do exercício de Jinja) mostra o valor de verdade.
+        </p>
+
+        <div class="concept">
+          <div class="concept-title">💡 Dica</div>
+          <p>
+            O caminho do dado tem 4 paradas: input com <code>name="qtd"</code> →
+            <code>request.form["qtd"]</code> → <code>int(...)</code> →
+            <code>"qtd":</code> no dict do append. Se a tabela mostrar vazio,
+            uma das 4 paradas tem nome errado.
+          </p>
+        </div>
+
+        <div class="try-first">
+          <div class="try-first-icon">🚨</div>
+          <div class="try-first-content">
+            <strong>Tenta primeiro!</strong> Se pintar <code>KeyError</code>, comemora:
+            é o bug mais famoso do dia, e a seção do BugZilla logo abaixo te ensina a lê-lo.
+          </div>
+        </div>
+
+        <div class="toggler">
+          <div class="toggler-header" onclick="toggleSection(this)">
+            <span>👀 Só clique aqui DEPOIS de tentar — ver a solução</span>
+            <span class="toggler-arrow">▼</span>
+          </div>
+          <div class="toggler-body">
+            <div class="code-block">
+              <div class="code-header">
+                <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+                <span class="filename">index.html + app.py (trechos)</span>
+                <span class="lang-badge python">Python</span>
+              </div>
+<pre><span class="cm">&lt;!-- index.html: input novo no form --&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"qtd"</span> <span class="atr">placeholder</span>=<span class="st">"Quantidade"</span><span class="tag">&gt;</span>
+
+<span class="cm"># app.py: dentro do if request.method == "POST":</span>
+qtd = <span class="bi">int</span>(request.form[<span class="st">"qtd"</span>])
+produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"</span>: preco, <span class="st">"qtd"</span>: qtd})</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="chapter-divider">
+    <div class="chapter-icon">🏁</div>
+    <div class="chapter-number">Parte 3</div>
+    <h2 style="background:linear-gradient(135deg,var(--accent5),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Fechamento do dia</h2>
+    <p class="chapter-subtitle">Uma má notícia, bugs pra domar e treino</p>
+  </div>
+
+<!-- ═══════════════════════════════════════════════════════
+       O APAGÃO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="dor-memoria">
+    <div class="step-header">
+      <div class="step-number sn-red">😱</div>
+      <div>
+        <div class="step-title">A má notícia: o apagão</div>
+        <div class="step-sub">Cadastrou 10 produtos? Reinicia o servidor e olha o que acontece.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Sua lista <code>produtos</code> mora <strong style="color:var(--text)">na memória RAM</strong>
+        do processo Python. Quando o servidor desliga (CTRL+C, queda de luz, deploy…),
+        a memória é devolvida — <strong style="color:var(--text)">com seus dados dentro</strong>.
+        Teste aqui, sem dó:
+      </p>
+
+      <div class="swp-blackout" id="swpBlackout">
+        <div class="swp-blackout-stage">
+          <div class="swp-blackout-flash" id="blackoutFlash">^C<br>(venv) $ python app.py<br>* Running on http://127.0.0.1:5000</div>
+          <div class="swp-volta-browser">
+            <div class="mb-chrome">
+              <span class="mb-dots"><i></i><i></i><i></i></span>
+              <span class="mb-url"><span class="lock">🔒</span><span class="addr">localhost:5000/</span></span>
+            </div>
+            <div class="swp-volta-view">
+              <h2>🛍️ Minha Loja</h2>
+              <div id="blackoutAlive">
+                <table class="swp-data-table">
+                  <thead><tr><th>Produto</th><th>Preço</th></tr></thead>
+                  <tbody>
+                    <tr><td>Fone Bluetooth</td><td class="n">R$ 149.90</td></tr>
+                    <tr><td>Teclado Mecânico</td><td class="n">R$ 299.00</td></tr>
+                    <tr><td>Mouse Gamer</td><td class="n">R$ 89.90</td></tr>
+                    <tr><td>Webcam Full HD</td><td class="n">R$ 199.00</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div id="blackoutDead" style="display:none">
+                <p style="color:#5f6368;margin:8px 0">😢 Estoque vazio! Cadastre o primeiro produto.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="swp-machine-hud">
+          <button class="swp-machine-btn ghost" id="blackoutBtn">🔌 Reiniciar o servidor (CTRL+C)</button>
+          <span class="swp-machine-note" id="blackoutNote">4 produtos cadastrados com carinho… por enquanto</span>
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 A dor é proposital</div>
+        <p>
+          Dados importantes não podem morar na RAM. Eles precisam de um lugar que
+          <strong>sobreviva ao desligamento</strong> — um arquivo. Mas não um arquivo qualquer:
+          um que aguente milhares de registros, busca rápida e várias operações ao mesmo tempo.
+          Esse lugar tem nome: <strong>banco de dados</strong>. Dia 3. 🗄️
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       BUGZILLA DO DIA
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="bugzilla">
+    <div class="step-header">
+      <div class="step-number sn-red">🐛</div>
+      <div>
+        <div class="step-title">BugZilla do dia: a dupla do formulário</div>
+        <div class="step-sub">Os dois erros que TODA turma encontra no dia de forms</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="bugzilla-card">
+        <div class="bugzilla-header">
+          <span class="bugzilla-emoji">🐛</span>
+          <div>
+            <div class="bugzilla-title">Bug 1 — Method Not Allowed (405)</div>
+            <div class="bugzilla-sub">Você apertou Cadastrar e o Flask bateu a porta</div>
+          </div>
+        </div>
+        <div class="bugzilla-body">
+          <div class="code-block">
+            <div class="code-header">
+              <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+              <span class="filename">navegador</span>
+              <span class="lang-badge terminal">erro</span>
+            </div>
+<pre><span style="color:var(--bug)">Method Not Allowed</span>
+The method is not allowed for the requested URL.</pre>
+          </div>
+          <p>
+            Tradução: o form mandou um <strong>POST</strong>, mas a rota só aceita GET —
+            porque faltou o <code>methods=["GET", "POST"]</code> no
+            <code>@app.route</code>. O Flask nem deixou o request entrar.
+          </p>
+          <p>
+            💊 <strong>Remédio:</strong> <code>@app.route("/", methods=["GET", "POST"])</code>
+            — e confere se o <code>action</code> do form aponta pra essa rota mesmo.
+          </p>
+        </div>
+      </div>
+
+      <div class="bugzilla-card">
+        <div class="bugzilla-header">
+          <span class="bugzilla-emoji">🐛</span>
+          <div>
+            <div class="bugzilla-title">Bug 2 — KeyError: 'nome'</div>
+            <div class="bugzilla-sub">O Python procurou a etiqueta e ela não existia</div>
+          </div>
+        </div>
+        <div class="bugzilla-body">
+          <div class="code-block">
+            <div class="code-header">
+              <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+              <span class="filename">navegador — tela de erro do Flask</span>
+              <span class="lang-badge terminal">erro</span>
+            </div>
+<pre>File "app.py", line 12, in home
+    nome = request.form["nome"]
+<span style="color:var(--bug)">KeyError: 'nome'</span></pre>
+          </div>
+          <p>
+            O <code>request.form</code> é um dict — e <code>KeyError</code> em dict você já
+            conhece do bootcamp: <strong>a chave não existe</strong>. Aqui significa:
+            nenhum input do form tem <code>name="nome"</code>. Ou o name está escrito diferente
+            (<code>name="Nome"</code>? maiúscula conta!), ou… você esqueceu o
+            <code>name</code> de vez.
+          </p>
+          <p>
+            💊 <strong>Remédio:</strong> compare LETRA POR LETRA o <code>name="..."</code>
+            do input com o <code>request.form["..."]</code> do Python.
+          </p>
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🎁</span>
+        <div class="tip-content">
+          <strong>Bônus sorrateiro — o form "mudo":</strong> tudo funciona, nada dá erro…
+          mas o produto chega vazio. Causa clássica: input <strong>sem</strong> <code>name</code>
+          (o dado nem viaja). Erro silencioso é o pior tipo — confere os names primeiro.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       QUIZ
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="quiz">
+    <div class="step-header">
+      <div class="step-number sn-yellow">🧠</div>
+      <div>
+        <div class="step-title">Quiz de fixação</div>
+        <div class="step-sub">4 perguntas pra carimbar o dia 2</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">1️⃣</span> No template, <code class="jvar">{{ nome_loja }}</code> é…</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Um comentário</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Uma lacuna que o Python preenche</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Código JavaScript</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Texto que aparece pro visitante</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Isso!" data-wrong="Quase!"
+             data-explain="o Jinja troca a lacuna pelo valor ANTES da response sair — o visitante só vê o resultado final."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">2️⃣</span> A lista tem 5 produtos. Quantas <code>&lt;tr&gt;</code> o <code class="jtag">{% for %}</code> carimba?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">1</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">5</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Depende do HTML</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">500</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Exato!" data-wrong="Opa!"
+             data-explain="uma volta por item da lista — 5 itens, 5 linhas. O template é o carimbo; a lista decide quantas vezes ele bate."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">3️⃣</span> Formulário de CADASTRO deve usar…</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">GET, que é mais simples</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">POST — dados no corpo, URL limpa</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Tanto faz</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Nenhum — precisa de JavaScript</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Cravou!" data-wrong="Cuidado!"
+             data-explain="regra prática: mostrar/buscar = GET; criar/mudar/senha = POST. Cadastro cria coisas → POST."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">4️⃣</span> O input é <code>&lt;input name="preco"&gt;</code>. No Python, o valor chega em…</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)"><code>request.form["valor"]</code></button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)"><code>request.preco</code></button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)"><code>request.form["preco"]</code></button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)"><code>form.get_preco()</code></button>
+        </div>
+        <div class="quiz-feedback" data-correct="Boa!" data-wrong="Quase!"
+             data-explain="a etiqueta name= vira a chave do dicionário request.form. Mesmo nome dos dois lados — sempre."></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ARENA
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="arena">
+    <div class="step-header">
+      <div class="step-number sn-purple">🏟️</div>
+      <div>
+        <div class="step-title">Arena: a Loja fica esperta</div>
+        <div class="step-sub">Cinco missões — as duas primeiras em aula, o resto em casa</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="arena-banner">
+        <span class="ab-emoji">🏟️</span>
+        <div>
+          <div class="ab-tag">treino do dia 2</div>
+          <div class="ab-title">Jinja + forms na veia</div>
+          <div class="ab-sub">Cada missão usa o que a anterior construiu</div>
+        </div>
+      </div>
+
+      <div class="arena-track">
+        <span class="at-dot lv1">1</span><span class="at-arrow">→</span>
+        <span class="at-dot lv1">2</span><span class="at-arrow">→</span>
+        <span class="at-dot lv2">3</span><span class="at-arrow">→</span>
+        <span class="at-dot lv2">4</span><span class="at-arrow">→</span>
+        <span class="at-dot lv3">🏆</span>
+      </div>
+
+      <div class="exercise solo">
+        <div class="exercise-header">
+          <span class="exercise-icon">🧑‍💻</span>
+          <div>
+            <div class="exercise-title">Missão 1 — Badge de produto barato</div>
+            <div class="exercise-sub">{% if %} DENTRO do for</div>
+          </div>
+        </div>
+        <div class="drill-tags">
+          <span class="drill-level lv1"><span class="stars">★</span> fácil</span>
+          <span class="drill-tag">{% if %}</span>
+        </div>
+        <p style="color:var(--text-dim)">
+          Na coluna do preço, mostre <strong style="color:var(--text)">🔥 BARATO!</strong> ao lado
+          do valor quando o preço for menor que 100. (Sim: dá pra pôr um
+          <code class="jtag">{% if %}</code> dentro do <code class="jtag">{% for %}</code> —
+          igual no Python.)
+        </p>
+        <div class="toggler">
+          <div class="toggler-header" onclick="toggleSection(this)">
+            <span>👀 Ver solução (depois de tentar!)</span>
+            <span class="toggler-arrow">▼</span>
+          </div>
+          <div class="toggler-body">
+            <div class="code-block">
+              <div class="code-header">
+                <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+                <span class="filename">dentro do for, na célula do preço</span>
+                <span class="lang-badge jinja">Jinja</span>
+              </div>
+<pre><span class="tag">&lt;td&gt;</span>
+  R$ <span class="jvar">{{ p["preco"] }}</span>
+  <span class="jtag">{% if p["preco"] &lt; 100 %}</span> 🔥 BARATO! <span class="jtag">{% endif %}</span>
+<span class="tag">&lt;/td&gt;</span></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="exercise solo">
+        <div class="exercise-header">
+          <span class="exercise-icon">🧑‍💻</span>
+          <div>
+            <div class="exercise-title">Missão 2 — /promocoes entra na moldura</div>
+            <div class="exercise-sub">Herança pra página que ficou de fora</div>
+          </div>
+        </div>
+        <div class="drill-tags">
+          <span class="drill-level lv1"><span class="stars">★</span> fácil</span>
+          <span class="drill-tag">{% extends %}</span>
+        </div>
+        <p style="color:var(--text-dim)">
+          Se ainda não fez na migração guiada: converta a <code>/promocoes</code> (da arena do
+          Dia 1) pro <code>base.html</code>. Bônus: passe a lista de promoções pelo
+          <code>render_template</code> e liste com <code class="jtag">{% for %}</code>
+          em vez de <code>&lt;li&gt;</code> fixos.
+        </p>
+      </div>
+
+      <div class="exercise home">
+        <div class="exercise-header">
+          <span class="exercise-icon">🏠</span>
+          <div>
+            <div class="exercise-title">Missão 3 — Total de produtos no topo</div>
+            <div class="exercise-sub">Python calcula, Jinja mostra</div>
+          </div>
+        </div>
+        <div class="drill-tags">
+          <span class="drill-level lv2"><span class="stars">★★</span> médio</span>
+          <span class="drill-tag">len()</span>
+          <span class="drill-tag">{{ }}</span>
+        </div>
+        <p style="color:var(--text-dim)">
+          Mostre "<em>Temos N produtos no estoque</em>" acima da tabela. A conta é do Python:
+          passe <code>total=len(produtos)</code> no <code>render_template</code> e use
+          <code class="jvar">{{ total }}</code> no template. Regra de ouro de hoje:
+          <strong style="color:var(--text)">quem calcula é o Python; o template só exibe</strong>.
+        </p>
+      </div>
+
+      <div class="exercise home">
+        <div class="exercise-header">
+          <span class="exercise-icon">🏠</span>
+          <div>
+            <div class="exercise-title">Missão 4 — Categoria no cadastro</div>
+            <div class="exercise-sub">A volta completa, com um dado a mais</div>
+          </div>
+        </div>
+        <div class="drill-tags">
+          <span class="drill-level lv2"><span class="stars">★★</span> médio</span>
+          <span class="drill-tag">name=</span>
+          <span class="drill-tag">request.form</span>
+        </div>
+        <p style="color:var(--text-dim)">
+          Campo novo <strong style="color:var(--text)">categoria</strong> no form
+          (ex.: "áudio", "periféricos"), pescado no Python, guardado no dict, exibido em coluna
+          própria. É o mesmo caminho de 4 paradas do exercício de quantidade — agora sem colinha.
+        </p>
+      </div>
+
+      <div class="exercise home">
+        <div class="exercise-header">
+          <span class="exercise-icon">🏆</span>
+          <div>
+            <div class="exercise-title">Missão final — A busca da loja</div>
+            <div class="exercise-sub">Um form GET fazendo sentido</div>
+          </div>
+        </div>
+        <div class="drill-tags">
+          <span class="drill-level lv3"><span class="stars">★★★</span> desafio</span>
+          <span class="drill-tag">GET</span>
+          <span class="drill-tag">request.args</span>
+          <span class="drill-tag">if</span>
+        </div>
+        <p style="color:var(--text-dim)">
+          Crie uma página <code>/buscar</code> com um form
+          <code>method="GET"</code> e um input <code>name="q"</code>. No Python, pegue o termo
+          com <code>request.args.get("q", "")</code> (o primo do <code>request.form</code>
+          pra dados de GET) e mostre só os produtos cujo nome contém o termo.
+          Repare na URL depois de buscar: <code>/buscar?q=fone</code> — o GET na prática,
+          e dá até pra mandar o link da busca pra alguém!
+        </p>
+        <div class="concept">
+          <div class="concept-title">💡 Dica do filtro</div>
+          <p>
+            No Python do bootcamp: <code>encontrados = [p for p in produtos if q.lower() in
+            p["nome"].lower()]</code> — ou um for com if, do jeito clássico. Os dois valem.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       RESUMO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="resumo">
+    <div class="step-header">
+      <div class="step-number sn-green">🎒</div>
+      <div>
+        <div class="step-title">O que você leva do Dia 2</div>
+        <div class="step-sub">A loja saiu do cartaz e virou conversa</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="about-bullets">
+        <div>🧩 <strong>Jinja:</strong> <code class="jvar">{{ lacunas }}</code> que o Python preenche — um molde, infinitas páginas</div>
+        <div>🔁 <strong>{% for %}:</strong> o carimbo que transforma lista de dicts em tabela — e {% if %} pro plano B da tela</div>
+        <div>🏗️ <strong>base.html:</strong> menu e esqueleto escritos UMA vez ({% extends %} + {% block %})</div>
+        <div>📬 <strong>&lt;form&gt;:</strong> action (pra onde), method (como), name (a etiqueta de cada dado)</div>
+        <div>🔀 <strong>GET vs POST:</strong> cardápio aberto vs envelope lacrado — e senha NUNCA em GET</div>
+        <div>🐍 <strong>request.form:</strong> o dict que chega pelo correio + redirect fechando o ciclo</div>
+      </div>
+
+      <div class="concept" style="margin-top:18px">
+        <div class="concept-title">🎯 A frase pra levar pra casa</div>
+        <p>
+          <strong>"O HTML é o molde; os dados moram no Python."</strong>
+          E agora eles fazem o caminho de ida E de volta: Python → tela (Jinja),
+          tela → Python (form).
+        </p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">👀</span>
+        <div class="tip-content">
+          <strong>No próximo encontro:</strong> resolver o apagão de uma vez por todas.
+          Seus dados vão ganhar um cofre à prova de CTRL+C: o <strong>SQLite</strong> — e você
+          vai aprender a língua oficial dos bancos de dados, o <strong>SQL</strong>.
+          Adeus, caderninho. 🗄️
+        </div>
+      </div>
+
+      <div class="next-chapter">
+        <h3>🗄️ Dia 03 · Banco de dados de verdade</h3>
+        <p style="color:var(--text-dim)">SQL + SQLite: o cofre dos seus dados</p>
+        <a href="javascript:void(0)" class="btn-next disabled">🚧 Em construção — disponível antes do encontro 3</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="footer">
+  <p>Feito com 🌶️ pelo prof. Kelson Almeida — programa AI</p>
+</footer>
+
+<script src="../../shared/scripts.js" defer></script>
+<script type="module" src="../../shared/motion-fx.js"></script>
+<script>
+/* ══════════ Máquinas didáticas do capítulo 02 (vanilla) ══════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  /* ---------- MÁQUINA 1: Fábrica de Páginas ---------- */
+  (function(){
+    const fab = document.getElementById('swpFab');
+    if (!fab) return;
+    const stage = document.getElementById('fabStage');
+    const dataBox = document.getElementById('fabData');
+    const view = document.getElementById('fabView');
+    const note = document.getElementById('fabNote');
+    const slots = new Map([...fab.querySelectorAll('.swp-slot')].map(s => [s.dataset.slot, s]));
+
+    const SETS = [
+      {nome_loja:'Minha Loja', destaque:'Fone Bluetooth', preco:'149.90'},
+      {nome_loja:'PetShop da Ana', destaque:'Ração Premium 10kg', preco:'89.90'},
+    ];
+    let setIdx = 0, running = false;
+
+    function renderData(){
+      const d = SETS[setIdx];
+      dataBox.innerHTML = 'render_template(<span style="color:#c3e88d">"index.html"</span>,' +
+        Object.entries(d).map(([k, v]) =>
+          '<span class="drow" data-k="' + k + '">  ' + k +
+          '=<span style="color:#c3e88d">"' + v + '"</span></span>').join('') + ')';
+    }
+
+    function resetSlots(){
+      slots.forEach((el, key) => {
+        el.classList.remove('filled');
+        el.textContent = '{{ ' + key + ' }}';
+      });
+      view.classList.remove('ready');
+      document.getElementById('fabH1').textContent = '…';
+      document.getElementById('fabP1').textContent = '…';
+      document.getElementById('fabP2').textContent = '…';
+    }
+
+    function fly(fromEl, toEl, text){
+      return new Promise(resolve => {
+        const sRect = stage.getBoundingClientRect();
+        const a = fromEl.getBoundingClientRect();
+        const b = toEl.getBoundingClientRect();
+        const el = document.createElement('span');
+        el.className = 'swp-fly-val';
+        el.textContent = text;
+        el.style.transform = 'translate(' + (a.left - sRect.left) + 'px,' + (a.top - sRect.top) + 'px)';
+        stage.appendChild(el);
+        requestAnimationFrame(() => {
+          el.style.transform = 'translate(' + (b.left - sRect.left) + 'px,' + (b.top - sRect.top) + 'px)';
+        });
+        setTimeout(() => { el.remove(); resolve(); }, 880);
+      });
+    }
+
+    async function run(){
+      if (running) return;
+      running = true;
+      resetSlots();
+      const d = SETS[setIdx];
+      note.textContent = 'o request chegou — o Jinja abre o molde e procura as lacunas…';
+      await sleep(500);
+      for (const [key, val] of Object.entries(d)){
+        const row = dataBox.querySelector('[data-k="' + key + '"]');
+        const slot = slots.get(key);
+        if (row) row.classList.add('lit');
+        note.textContent = key + '="' + val + '" indo pra lacuna {{ ' + key + ' }}…';
+        if (!reduceMotion && row && slot) await fly(row, slot, val);
+        if (slot){ slot.textContent = val; slot.classList.add('filled'); }
+        if (row) row.classList.remove('lit');
+        await sleep(reduceMotion ? 250 : 150);
+      }
+      document.getElementById('fabH1').textContent = '🛍️ ' + d.nome_loja;
+      document.getElementById('fabP1').textContent = 'Destaque: ' + d.destaque;
+      document.getElementById('fabP2').textContent = 'Por R$ ' + d.preco;
+      view.classList.add('ready');
+      note.textContent = '✅ lacunas preenchidas → HTML pronto → response enviada. Isso acontece a CADA request!';
+      running = false;
+    }
+
+    renderData();
+    document.getElementById('fabGo').addEventListener('click', run);
+    document.getElementById('fabSwap').addEventListener('click', () => {
+      if (running) return;
+      setIdx = (setIdx + 1) % SETS.length;
+      renderData();
+      resetSlots();
+      note.textContent = 'dados trocados! MESMO molde… aperta ▶ e vê a página nova';
+    });
+
+    if (!reduceMotion){
+      new IntersectionObserver((es, obs) => {
+        es.forEach(e => { if (e.isIntersecting){ run(); obs.disconnect(); } });
+      }, {threshold:0.45}).observe(fab);
+    }
+  })();
+
+  /* ---------- MÁQUINA 2: linha de produção do for ---------- */
+  (function(){
+    const loop = document.getElementById('swpLoop');
+    if (!loop) return;
+    const body = document.getElementById('loopBody');
+    const counter = document.getElementById('loopCounter');
+    const note = document.getElementById('loopNote');
+    const lines = [...loop.querySelectorAll('.lp-line')];
+    const PRODS = [
+      ['Fone Bluetooth', '149.90'],
+      ['Teclado Mecânico', '299.00'],
+      ['Mouse Gamer', '89.90'],
+    ];
+    let running = false;
+
+    const lit = (i) => lines.forEach(l => l.classList.toggle('lit', +l.dataset.l === i));
+
+    async function run(){
+      if (running) return;
+      running = true;
+      body.innerHTML = '';
+      lit(0);
+      counter.textContent = 'começando o for…';
+      await sleep(700);
+      for (let i = 0; i < PRODS.length; i++){
+        const [nome, preco] = PRODS[i];
+        counter.textContent = 'volta ' + (i+1) + ' de 3 — p = {"nome": "' + nome + '", ...}';
+        for (const l of [1, 2, 3, 4]){ lit(l); await sleep(340); }
+        const tr = document.createElement('tr');
+        tr.className = 'row-new';
+        const td1 = document.createElement('td'); td1.textContent = nome;
+        const td2 = document.createElement('td'); td2.className = 'n'; td2.textContent = 'R$ ' + preco;
+        tr.append(td1, td2);
+        body.appendChild(tr);
+        note.textContent = 'linha ' + (i+1) + ' carimbada e na esteira 📦';
+        await sleep(320);
+      }
+      lit(5);
+      counter.textContent = 'fim da lista → {% endfor %} encerra';
+      note.textContent = '✅ 3 produtos, 3 voltas, 3 linhas — o carimbo trabalhou, você não';
+      await sleep(600);
+      lit(-1);
+      running = false;
+    }
+
+    document.getElementById('loopGo').addEventListener('click', run);
+    if (!reduceMotion){
+      new IntersectionObserver((es, obs) => {
+        es.forEach(e => { if (e.isIntersecting){ run(); obs.disconnect(); } });
+      }, {threshold:0.45}).observe(loop);
+    }
+  })();
+
+  /* ---------- MÁQUINA 3: GET vs POST ---------- */
+  (function(){
+    const gp = document.getElementById('swpGp');
+    if (!gp) return;
+    const url = document.getElementById('gpUrl');
+    const ico = document.getElementById('gpIco');
+    const data = document.getElementById('gpData');
+    const label = document.getElementById('gpLabel');
+    const tabs = [...gp.querySelectorAll('.swp-gp-tab')];
+
+    const MODES = {
+      get: {
+        ico: '📄',
+        url: 'localhost:5000/?<span class="qs">nome=Fone&amp;preco=149.90</span>',
+        data: 'GET /?nome=Fone&preco=149.90\n(corpo do request: vazio)',
+        sealed: false,
+        label: '<strong>Cartão-postal:</strong> os dados viajam NA URL, à vista de todos — barra de endereço, histórico, print da tela. Bom pra busca e filtros (dá até pra compartilhar o link!).',
+      },
+      post: {
+        ico: '✉️',
+        url: 'localhost:5000/',
+        data: 'POST /\n\nnome=Fone&preco=149.90',
+        sealed: true,
+        label: '<strong>Envelope lacrado:</strong> a URL fica limpa; os dados vão no CORPO do request. É o método de quem cria/muda coisas — cadastro, login, compra.',
+      },
+    };
+
+    function show(mode){
+      const m = MODES[mode];
+      tabs.forEach(t => t.classList.toggle('on', t.dataset.gp === mode));
+      ico.textContent = m.ico;
+      url.innerHTML = '🔒 ' + m.url;
+      data.textContent = m.data;
+      data.classList.toggle('sealed', m.sealed);
+      label.innerHTML = m.label;
+    }
+
+    tabs.forEach(t => t.addEventListener('click', () => show(t.dataset.gp)));
+    show('get');
+  })();
+
+  /* ---------- MÁQUINA 4: A Volta Completa ---------- */
+  (function(){
+    const volta = document.getElementById('swpVolta');
+    if (!volta) return;
+    const stage = document.getElementById('voltaStage');
+    const env = document.getElementById('voltaEnv');
+    const note = document.getElementById('voltaNote');
+    const body = document.getElementById('voltaBody');
+    const listBox = document.getElementById('voltaList');
+    const inNome = document.getElementById('voltaNome');
+    const inPreco = document.getElementById('voltaPreco');
+    const btn = document.getElementById('voltaGo');
+    const lines = [...volta.querySelectorAll('.vc-line')];
+    const itens = [['Fone Bluetooth','149.90'], ['Teclado Mecânico','299.00']];
+    let running = false;
+
+    const lit = (i) => lines.forEach(l => l.classList.toggle('lit', +l.dataset.v === i));
+
+    function renderList(){
+      listBox.innerHTML = '<span class="plabel">produtos (na memória)</span>' +
+        '[' + itens.map(([n]) => '{"nome": "' + n + '", ...}').join(',\n ') + ']';
+    }
+
+    function flyEnv(fromEl, toEl){
+      return new Promise(resolve => {
+        const sRect = stage.getBoundingClientRect();
+        const a = fromEl.getBoundingClientRect();
+        const b = toEl.getBoundingClientRect();
+        env.style.transition = 'none';
+        env.style.transform = 'translate(' + (a.left - sRect.left + a.width/2) + 'px,' + (a.top - sRect.top) + 'px)';
+        env.style.opacity = '1';
+        void env.offsetWidth;
+        env.style.transition = '';
+        requestAnimationFrame(() => {
+          env.style.transform = 'translate(' + (b.left - sRect.left + b.width/2) + 'px,' + (b.top - sRect.top) + 'px)';
+        });
+        setTimeout(() => { env.style.opacity = '0'; resolve(); }, 950);
+      });
+    }
+
+    async function run(){
+      if (running) return;
+      const nome = inNome.value.trim();
+      const preco = inPreco.value.trim().replace(',', '.');
+      if (!nome || !preco){
+        note.innerHTML = 'preencha <strong>os dois campos</strong> — o form não viaja vazio 😉';
+        return;
+      }
+      if (isNaN(parseFloat(preco))){
+        note.innerHTML = 'esse preço não parece um número… tenta algo como <strong>59.90</strong>';
+        return;
+      }
+      running = true;
+      btn.disabled = true;
+      const precoFmt = parseFloat(preco).toFixed(2);
+
+      note.innerHTML = 'o botão submeteu: <strong>POST /</strong> com nome=' + '"' + nome + '" e preco="' + precoFmt + '" no envelope';
+      lit(0);
+      if (!reduceMotion) await flyEnv(btn, lines[2]);
+      else await sleep(600);
+
+      lit(2);
+      note.innerHTML = 'a rota aceita POST → caiu no <strong>if request.method == "POST"</strong>';
+      await sleep(750);
+      lit(3);
+      note.innerHTML = '<strong>request.form["nome"]</strong> → "' + nome + '"';
+      await sleep(750);
+      lit(4);
+      note.innerHTML = '<strong>float(request.form["preco"])</strong> → ' + precoFmt;
+      await sleep(750);
+      lit(5);
+      itens.push([nome, precoFmt]);
+      renderList();
+      note.innerHTML = '<strong>append</strong> — a lista cresceu na memória';
+      await sleep(750);
+      lit(6);
+      note.innerHTML = '<strong>redirect("/")</strong> → o navegador faz um GET novinho…';
+      await sleep(800);
+      lit(7);
+      const tr = document.createElement('tr');
+      tr.className = 'row-new';
+      const td1 = document.createElement('td'); td1.textContent = nome;
+      const td2 = document.createElement('td'); td2.className = 'n'; td2.textContent = 'R$ ' + precoFmt;
+      tr.append(td1, td2);
+      body.appendChild(tr);
+      note.innerHTML = '…e o Jinja re-renderizou a tabela — <strong>com o seu produto lá</strong> 🎉 Cadastra outro!';
+      inNome.value = ''; inPreco.value = '';
+      await sleep(700);
+      lit(-1);
+      btn.disabled = false;
+      running = false;
+    }
+
+    btn.addEventListener('click', run);
+    [inNome, inPreco].forEach(inp => inp.addEventListener('keydown', e => {
+      if (e.key === 'Enter') run();
+    }));
+  })();
+
+  /* ---------- WIDGET: O apagão ---------- */
+  (function(){
+    const box = document.getElementById('swpBlackout');
+    if (!box) return;
+    const flash = document.getElementById('blackoutFlash');
+    const alive = document.getElementById('blackoutAlive');
+    const dead = document.getElementById('blackoutDead');
+    const btn = document.getElementById('blackoutBtn');
+    const note = document.getElementById('blackoutNote');
+    let killed = false;
+
+    btn.addEventListener('click', async () => {
+      if (!killed){
+        flash.classList.add('on');
+        note.textContent = 'CTRL+C… o processo Python morreu — e a RAM foi devolvida';
+        await sleep(1400);
+        alive.style.display = 'none';
+        dead.style.display = 'block';
+        flash.classList.remove('on');
+        box.classList.remove('dead');
+        killed = true;
+        btn.textContent = '🔄 Cadastrar tudo de novo…';
+        note.innerHTML = 'servidor de volta… <strong>e os 4 produtos? Evaporaram.</strong> A lista renasceu vazia. 😱';
+      } else {
+        alive.style.display = 'block';
+        dead.style.display = 'none';
+        killed = false;
+        btn.textContent = '🔌 Reiniciar o servidor (CTRL+C)';
+        note.textContent = 'redigitou tudo na mão… até o PRÓXIMO restart. Cansativo, né? Pois é. Dia 3 resolve.';
+      }
+    });
+  })();
+});
+</script>
+</body>
+</html>
