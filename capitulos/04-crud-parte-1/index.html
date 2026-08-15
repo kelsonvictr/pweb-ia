@@ -818,7 +818,8 @@ app = <span class="tp">Flask</span>(__name__)
         <p>
           F5 = "repita o último request". Se o último foi um <strong>POST</strong>,
           o navegador reenvia o cadastro → produto duplicado. Com o
-          <strong>redirect</strong>, o último request vira um <strong>GET</strong> inofensivo —
+          <strong>redirect</strong> (aquela response de código <strong>302</strong> — "vai pra
+          lá" — do card do Dia 2), o último request vira um <strong>GET</strong> inofensivo —
           F5 à vontade, nada duplica. Uma linha (<code>return redirect(...)</code>)
           e o bug morre pra sempre. <strong>Recarregou, não duplica.</strong>
         </p>

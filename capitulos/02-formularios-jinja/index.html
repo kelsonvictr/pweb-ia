@@ -1507,6 +1507,53 @@ The method is not allowed for the requested URL.</pre>
           (o dado nem viaja). Erro silencioso é o pior tipo — confere os names primeiro.
         </div>
       </div>
+
+      <div class="concept">
+        <div class="concept-title">🪪 Os códigos que o servidor fala</div>
+        <p>
+          Reparou que os erros têm <strong>números</strong>? Não é decoração:
+          <strong>toda response chega com um código de 3 dígitos</strong> — o carimbo do
+          garçom dizendo como foi o pedido. Você já conheceu quase todos sem saber:
+        </p>
+      </div>
+
+      <div class="keyword-grid">
+        <div class="keyword-chip">
+          <span class="emoji">✅</span>
+          <span class="kw-name">200 OK</span>
+          <span class="kw-desc">"deu certo, segue a página" — toda tela que funcionou até hoje</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">↩️</span>
+          <span class="kw-name">302 Found</span>
+          <span class="kw-desc">"vai pra esse outro endereço" — é o que o seu redirect() responde!</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">🔍</span>
+          <span class="kw-name">404 Not Found</span>
+          <span class="kw-desc">"não tenho rota pra isso" — o /contato da máquina do Dia 1</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">🚫</span>
+          <span class="kw-name">405 Method Not Allowed</span>
+          <span class="kw-desc">"essa rota não aceita esse método" — o Bug 1 aí de cima</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">💥</span>
+          <span class="kw-name">500 Internal Server Error</span>
+          <span class="kw-desc">"quebrei AQUI dentro" — a tela de traceback do Flask é a versão detalhada dele</span>
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🧠</span>
+        <div class="tip-content">
+          <strong>Regra de bolso pra vida toda:</strong> começou com <strong>2</strong> = deu certo ·
+          <strong>3</strong> = vai pra outro lugar · <strong>4</strong> = o erro foi do
+          <em>pedido</em> · <strong>5</strong> = o erro foi do <em>servidor</em>.
+          No Dia 8, os registros do seu site no ar falam exatamente essa língua.
+        </div>
+      </div>
     </div>
   </section>
 
