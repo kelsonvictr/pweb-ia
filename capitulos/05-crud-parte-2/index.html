@@ -1,0 +1,1853 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dia 05 · Editar, excluir e vender — Sistemas Web com Python | programa AI</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../shared/styles.css">
+<link rel="stylesheet" href="../../shared/components.css">
+<link rel="stylesheet" href="../../shared/animations.css">
+<style>
+/* ══════════ CSS local do capítulo 05 (prefixo swp-) ══════════ */
+
+/* Ligatures OFF em toda classe mono local */
+.swp-ficha-url,.swp-flash-note,.swp-venda-msg,.swp-vs-line{
+  font-variant-ligatures:none;
+  font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+}
+
+.step-section.visible .reveal-stagger > *:nth-child(7){transition-delay:0.65s}
+.step-section.visible .reveal-stagger > *:nth-child(8){transition-delay:0.75s}
+
+/* botões/hud padrão das máquinas */
+.swp-machine-btn{
+  background:linear-gradient(135deg,var(--accent2),#e8564f);color:#fff;
+  border:0;font-weight:800;padding:9px 18px;border-radius:10px;cursor:pointer;
+  font-size:0.84rem;transition:transform .2s;font-family:'Nunito',sans-serif;
+}
+.swp-machine-btn:hover{transform:translateY(-2px)}
+.swp-machine-btn:disabled{opacity:0.35;cursor:default;transform:none}
+.swp-machine-btn.ghost{
+  background:rgba(255,255,255,0.06);color:var(--text-dim);
+  border:1px solid rgba(255,255,255,0.12);
+}
+.swp-machine-hud{
+  display:flex;align-items:center;gap:12px;padding:12px 16px;flex-wrap:wrap;
+  background:rgba(255,255,255,0.03);border-top:1px solid rgba(255,255,255,0.06);
+}
+.swp-machine-note{font-size:0.8rem;color:var(--text-dim);line-height:1.5;flex:1;min-width:180px}
+.swp-machine-note strong{color:var(--accent2)}
+
+/* ---------- navegador claro das máquinas ---------- */
+.swp-mini{border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.10);background:#0f1320}
+.swp-mini-view{background:#fff;padding:14px 16px;font-family:'Nunito',sans-serif}
+.swp-mini-view h2{font-size:0.95rem;margin:0 0 8px;color:#15151f}
+.swp-mini-view p{font-size:0.84rem;margin:4px 0;color:#3a3a4a}
+.swp-mini-view .swp-data-table{margin:6px 0 0;background:#fff;border-color:#e2e4ea}
+.swp-mini-view .swp-data-table th{background:#f2f3f7;color:#5a6270;border-color:#e2e4ea}
+.swp-mini-view .swp-data-table td{color:#26282e;border-color:#eceef2}
+.swp-mini-view .swp-data-table tr:nth-child(even) td{background:#fafbfd}
+.swp-mini-view .vform{display:flex;flex-direction:column;gap:8px;margin:10px 0}
+.swp-mini-view .vform input,.swp-mini-view .vform select{
+  font-family:'Nunito',sans-serif;font-size:0.85rem;padding:7px 10px;
+  border:1px solid #d0d4dd;border-radius:8px;background:#fff;color:#15151f;width:100%;
+}
+.swp-mini-view .vform button{
+  background:#3b3bd1;color:#fff;border:0;border-radius:8px;padding:8px 14px;
+  font-weight:800;font-size:0.85rem;cursor:pointer;align-self:flex-start;
+}
+.swp-mini-view .vform button:disabled{opacity:0.5;cursor:default}
+
+/* ---------- MÁQUINA 1: A ficha certa ---------- */
+.swp-ficha{
+  border:1px solid rgba(255,107,107,0.30);border-radius:18px;overflow:hidden;margin:18px 0;
+  background:
+    radial-gradient(1100px 280px at 50% -12%, rgba(255,107,107,0.10), transparent 70%),
+    linear-gradient(180deg,#0b1020,#0d0d1a);
+  box-shadow:0 22px 60px rgba(0,0,0,0.45);
+}
+.swp-ficha-stage{display:grid;grid-template-columns:1fr 1fr;gap:0}
+@media(max-width:760px){.swp-ficha-stage{grid-template-columns:1fr}}
+.swp-ficha-pane{padding:16px 18px;min-width:0}
+.swp-ficha-pane.left{border-right:1px solid rgba(255,255,255,0.06)}
+@media(max-width:760px){.swp-ficha-pane.left{border-right:none;border-bottom:1px solid rgba(255,255,255,0.06)}}
+.swp-ficha .rowbtn{
+  border:0;background:#eef;border-radius:7px;color:#3b3bd1;font-size:0.78rem;
+  padding:3px 9px;cursor:pointer;font-weight:800;
+}
+.swp-ficha .rowbtn:hover{background:#dfe3ff}
+.swp-ficha-url{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.08);
+  border-radius:50px;padding:6px 14px;margin-bottom:10px;
+  font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:#9fb0d0;
+  overflow-x:auto;white-space:nowrap;
+}
+.swp-ficha-url .idpart{color:var(--accent5);font-weight:700}
+.swp-ficha-flow{
+  font-family:'JetBrains Mono',monospace;font-size:0.74rem;line-height:2;color:#8b96b0;
+  background:var(--code-bg);border:1px solid rgba(255,255,255,0.08);
+  border-radius:12px;padding:12px 16px;margin-bottom:12px;
+  white-space:pre-wrap;
+  font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+}
+.swp-ficha-flow .ff{display:block;border-left:3px solid transparent;border-radius:4px;padding:1px 8px;transition:all .3s;opacity:0.45}
+.swp-ficha-flow .ff.lit{background:rgba(255,107,107,0.12);border-left-color:var(--accent2);opacity:1;color:#c9d1d9}
+
+/* ---------- WIDGET: o bilhete de uma vez só (flash) ---------- */
+.swp-flash{
+  border:1px solid rgba(6,214,160,0.30);border-radius:18px;overflow:hidden;margin:18px 0;
+  background:linear-gradient(180deg,#0d1410,#0d0d1a);
+}
+.swp-flash-stage{padding:18px}
+.swp-flash .swp-mini{max-width:520px;margin:0 auto}
+.swp-flash-toast{
+  background:#e6f9f2;border:1px solid #9be3cd;color:#0b7a58;
+  border-radius:10px;padding:9px 14px;font-size:0.84rem;font-weight:700;
+  margin-bottom:10px;display:none;
+}
+.swp-flash-toast.on{display:block;animation:popIn 0.4s ease}
+.swp-flash-pocket{
+  display:flex;align-items:center;gap:10px;justify-content:center;margin-top:12px;
+  font-size:0.8rem;color:var(--text-dim);min-height:34px;
+}
+.swp-flash-pocket .ticket{
+  background:linear-gradient(180deg,#f7e8a0,#f2d878);color:#4a3f10;
+  font-family:'JetBrains Mono',monospace;font-size:0.7rem;font-weight:700;
+  border-radius:6px;padding:4px 10px;transform:rotate(-2deg);
+  transition:all .4s ease;
+  font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+}
+.swp-flash-pocket .ticket.gone{transform:rotate(14deg) translateY(24px) scale(0.4);opacity:0}
+
+/* ---------- MÁQUINA: Venda ao vivo ---------- */
+.swp-venda{
+  border:1px solid rgba(247,183,49,0.32);border-radius:18px;overflow:hidden;margin:18px 0;
+  background:
+    radial-gradient(1100px 280px at 50% -12%, rgba(247,183,49,0.10), transparent 70%),
+    linear-gradient(180deg,#0b1020,#0d0d1a);
+  box-shadow:0 22px 60px rgba(0,0,0,0.45);
+}
+.swp-venda-top{padding:16px 18px 4px}
+.swp-venda-form{
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+  border-radius:12px;padding:12px 14px;
+}
+.swp-venda-form select,.swp-venda-form input{
+  font-family:'Nunito',sans-serif;font-size:0.85rem;padding:8px 10px;
+  border:1px solid rgba(255,255,255,0.15);border-radius:8px;
+  background:var(--surface2);color:var(--text);
+}
+.swp-venda-form input{width:110px}
+.swp-venda-tables{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:14px 18px}
+@media(max-width:760px){.swp-venda-tables{grid-template-columns:1fr}}
+.swp-venda-tables .vt-label{
+  font-size:0.66rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--text-dim);margin-bottom:8px;display:flex;align-items:center;gap:6px;
+}
+.swp-venda-msg{
+  margin:0 18px;font-family:'JetBrains Mono',monospace;font-size:0.72rem;
+  min-height:20px;color:var(--accent7);
+}
+.swp-venda-msg.err{color:#ff8a8a}
+
+/* ---------- comparação Streamlit vs Web ---------- */
+.swp-vs{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0}
+@media(max-width:700px){.swp-vs{grid-template-columns:1fr}}
+.swp-vs-col{
+  border-radius:16px;padding:18px;border:1px solid rgba(255,255,255,0.08);
+  background:var(--surface);
+}
+.swp-vs-col .vs-tag{
+  display:inline-block;font-size:0.66rem;font-weight:800;letter-spacing:1px;
+  text-transform:uppercase;padding:4px 12px;border-radius:50px;margin-bottom:12px;
+}
+.swp-vs-col.before .vs-tag{background:rgba(255,75,75,0.14);color:var(--streamlit)}
+.swp-vs-col.after .vs-tag{background:rgba(6,214,160,0.14);color:var(--accent7)}
+.swp-vs-col.after{border-color:rgba(6,214,160,0.30)}
+.swp-vs-line{
+  display:flex;justify-content:space-between;gap:10px;font-size:0.84rem;
+  padding:8px 4px;border-bottom:1px dashed rgba(255,255,255,0.07);
+  font-family:'JetBrains Mono',monospace;color:var(--text-dim);
+}
+.swp-vs-line:last-child{border-bottom:none}
+.swp-vs-line strong{color:var(--text);font-weight:700}
+.swp-vs-line .ok{color:var(--accent7)}
+
+/* rastreador (padrão dos caps anteriores) */
+.swp-trace .swp-tline{
+  display:block;padding:2px 10px;border-left:3px solid transparent;border-radius:4px;
+  transition:all .35s ease;
+}
+.swp-trace .swp-tline.active{
+  background:rgba(255,107,107,0.12);border-left-color:var(--accent2);
+}
+.swp-trace-msgs{position:relative;min-height:64px;margin-top:12px}
+.swp-trace-msgs > div{
+  position:absolute;inset:0;opacity:0;transition:opacity .4s ease;
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);
+  border-radius:12px;padding:12px 16px;font-size:0.88rem;color:var(--text-dim);
+  display:flex;align-items:center;gap:10px;line-height:1.5;
+}
+.swp-trace-msgs > div.on{opacity:1}
+.swp-trace-msgs strong{color:var(--text)}
+.swp-trace-msgs .tm-emoji{font-size:1.4rem;flex-shrink:0}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-orbs">
+  <div class="orb"></div>
+  <div class="orb"></div>
+  <div class="orb"></div>
+</div>
+
+<div class="progress-track"><div class="progress-bar"></div></div>
+
+<button class="menu-toggle" onclick="openSidebar()" aria-label="Abrir menu">☰</button>
+<aside class="sidebar-nav" id="sidebar">
+  <button class="sidebar-close" onclick="closeSidebar()" aria-label="Fechar menu">✕</button>
+  <div class="sidebar-header">
+    <h3>🛒 Dia 05 · A Loja completa</h3>
+    <a href="../../index.html" class="sidebar-back">← Voltar ao hub</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">✏️ Editar</div>
+    <a class="sidebar-link" onclick="goTo('aquecimento')"><span class="dot" style="background:var(--accent5)"></span>Aquecimento</a>
+    <a class="sidebar-link" onclick="goTo('url-id')"><span class="dot" style="background:var(--accent2)"></span>O id vira endereço</a>
+    <a class="sidebar-link" onclick="goTo('maquina-ficha')"><span class="dot" style="background:var(--accent2)"></span>⭐ A ficha certa</a>
+    <a class="sidebar-link" onclick="goTo('editar')"><span class="dot" style="background:var(--accent4)"></span>Editar, ponta a ponta</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🗑️ Excluir + avisos</div>
+    <a class="sidebar-link" onclick="goTo('excluir')"><span class="dot" style="background:var(--bug)"></span>Excluir com respeito</a>
+    <a class="sidebar-link" onclick="goTo('flash')"><span class="dot" style="background:var(--accent7)"></span>⭐ flash(): o bilhete</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🛒 Vender</div>
+    <a class="sidebar-link" onclick="goTo('vender-modelo')"><span class="dot" style="background:var(--accent5)"></span>Duas tabelas conversando</a>
+    <a class="sidebar-link" onclick="goTo('maquina-venda')"><span class="dot" style="background:var(--accent5)"></span>⭐ Venda ao vivo</a>
+    <a class="sidebar-link" onclick="goTo('vender-codigo')"><span class="dot" style="background:var(--python-y)"></span>O código da venda</a>
+    <a class="sidebar-link" onclick="goTo('vendas-historico')"><span class="dot" style="background:var(--accent6)"></span>Histórico + faturamento</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🏁 Fechamento</div>
+    <a class="sidebar-link" onclick="goTo('comparacao')"><span class="dot" style="background:var(--streamlit)"></span>⭐ Antes vs agora</a>
+    <a class="sidebar-link" onclick="goTo('bugzilla')"><span class="dot" style="background:var(--bug)"></span>BugZilla do dia 🐛</a>
+    <a class="sidebar-link" onclick="goTo('quiz')"><span class="dot" style="background:var(--accent5)"></span>Quiz de fixação</a>
+    <a class="sidebar-link" onclick="goTo('arena')"><span class="dot" style="background:var(--accent6)"></span>Arena de treino</a>
+    <a class="sidebar-link" onclick="goTo('resumo')"><span class="dot" style="background:var(--accent7)"></span>Resumo do dia</a>
+  </div>
+</aside>
+<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-icons">✏️ 🗑️ 🛒</div>
+  <span class="hero-badge python">Dia 05 · Sistemas Web com Python</span>
+  <h1><span style="background:linear-gradient(135deg,var(--accent2),var(--accent5));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Editar, excluir<br>e vender</span></h1>
+  <p class="subtitle">
+    O CRUD fecha o ciclo hoje: <strong style="color:var(--accent2)">consertar</strong> e
+    <strong style="color:var(--bug)">apagar</strong> fichas pelo navegador, avisos elegantes com
+    <strong style="color:var(--accent7)">flash()</strong> — e a tela mais "de sistema" do curso:
+    <strong style="color:var(--accent5)">Vender, com baixa de estoque de verdade</strong>.
+    No fim da aula, a Loja está COMPLETA. 🏆
+  </p>
+  <div class="hero-stack">
+    <span class="stack-chip python">🐍 &lt;int:id&gt;</span>
+    <span class="stack-chip">✏️ UPDATE</span>
+    <span class="stack-chip">💬 flash()</span>
+    <span class="stack-chip">🛒 Vender</span>
+  </div>
+</section>
+
+<div class="container">
+
+  <!-- ═══════════════════════════════════════════════════════
+       AQUECIMENTO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="aquecimento">
+    <div class="step-header">
+      <div class="step-number sn-yellow">🔥</div>
+      <div>
+        <div class="step-title">Aquecimento: o que falta pra Loja completa</div>
+        <div class="step-sub">Inventário honesto do sistema até aqui</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Estoque listando do banco ✓. Cadastro com INSERT e redirect ✓.
+        Mas experimenta: <strong style="color:var(--text)">errou o preço de um produto</strong> —
+        e agora? Não tem como consertar pela tela. Produto saiu de linha? Sem como apagar.
+        E as abas <strong style="color:var(--text)">Vender</strong> e
+        <strong style="color:var(--text)">Vendas</strong> do seu <code>app_loja.py</code>?
+        Ainda nem existem. Hoje resolve tudo.
+      </p>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">1️⃣</span> Pra EDITAR o produto de id 3, o servidor precisa saber…</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">O nome do produto</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">QUAL ficha mexer — o id</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">A senha do banco</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Nada, ele adivinha</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Exato!" data-wrong="Pensa na ficha!"
+             data-explain="editar e excluir são operações CIRÚRGICAS: precisam do número da ficha. E o jeito web de dizer 'qual' é… pela URL. Já já você vê."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">2️⃣</span> Vender 2 fones mexe em QUANTAS tabelas?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Uma — a de produtos</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Nenhuma, venda é só tela</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Duas — registra a venda E baixa o estoque</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Depende do preço</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Na mosca!" data-wrong="Quase!"
+             data-explain="INSERT na tabela de vendas + UPDATE na quantidade do produto. Duas escritas que precisam acontecer JUNTAS — lembra do rascunho e carimbo do Dia 3? Ele volta hoje com força."></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       URL COM ID
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="url-id">
+    <div class="step-header">
+      <div class="step-number sn-red">🎯</div>
+      <div>
+        <div class="step-title">O id vira endereço: /produtos/3/editar</div>
+        <div class="step-sub">O número da ficha entra na URL — e o Flask entrega pra função</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="analogy">
+        <div class="analogy-title">"Conserta a ficha 3, por favor" 🗂️</div>
+        <p>
+          No fichário de aço, você não fala "conserta a ficha do fone" — fichas têm
+          <strong>número</strong>. Na web é igual: a URL carrega o número.
+          <code>/produtos/3/editar</code> = "abre a tela de edição <strong>da ficha 3</strong>".
+          Cada produto ganha a própria URL de edição.
+        </p>
+      </div>
+
+      <p style="color:var(--text-dim)">
+        A novidade no Flask é um pedaço <strong style="color:var(--text)">variável</strong> na rota —
+        e repara que ele chega como <strong style="color:var(--text)">parâmetro da função</strong>:
+      </p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">loja/app.py</span>
+          <span class="lang-badge python">Python</span>
+        </div>
+<pre><span class="dec">@app.route</span>(<span class="st">"/produtos/&lt;int:id&gt;/editar"</span>)
+<span class="kw">def</span> <span class="fn">editar_produto</span>(id):
+    <span class="cm"># se a URL for /produtos/3/editar → id vale 3</span>
+    ...</pre>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 &lt;int:id&gt; — a lacuna da URL</div>
+        <p>
+          O <code>&lt;int:id&gt;</code> é uma <strong>lacuna na rota</strong> (lembra das lacunas
+          do Jinja? mesma ideia, no endereço): casa com qualquer número naquela posição e entrega
+          o valor pra função, <strong>já convertido pra int</strong>. O <code>int:</code> é o
+          segurança da porta: <code>/produtos/abc/editar</code> nem chega na função — 404 direto.
+        </p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🧠</span>
+        <div class="tip-content">
+          <strong>De onde vem esse id?</strong> Da tabela! O AUTOINCREMENT do Dia 3 carimbou um
+          número único em cada linha — e você exibiu ele na coluna ID do estoque no Dia 4.
+          Era preparação pra hoje. 😏
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ MÁQUINA: A FICHA CERTA
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="maquina-ficha">
+    <div class="step-header">
+      <div class="step-number sn-red">⭐</div>
+      <div>
+        <div class="step-title">A ficha certa: clique no ✏️ e siga o id</div>
+        <div class="step-sub">Da tabela até o formulário pré-preenchido — o caminho completo</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Clique no ✏️ de qualquer produto e acompanhe o id viajando:
+        URL → rota → <code>SELECT WHERE</code> → formulário
+        <strong style="color:var(--text)">já preenchido</strong> com os dados daquela ficha.
+        Depois teste o botão da ficha 99… 👻
+      </p>
+
+      <div class="swp-ficha" id="swpFicha">
+        <div class="swp-ficha-stage">
+          <div class="swp-ficha-pane left">
+            <div class="fp-head">🌐 /produtos — o estoque</div>
+            <div class="swp-mini">
+              <div class="mb-chrome">
+                <span class="mb-dots"><i></i><i></i><i></i></span>
+                <span class="mb-url"><span class="lock">🔒</span><span class="addr swp-ficha-url" style="background:none;border:none;padding:0;margin:0" id="fichaUrl">localhost:5000/produtos</span></span>
+              </div>
+              <div class="swp-mini-view">
+                <table class="swp-data-table">
+                  <thead><tr><th>ID</th><th>Produto</th><th>Preço</th><th></th></tr></thead>
+                  <tbody id="fichaBody"></tbody>
+                </table>
+                <p style="margin-top:8px"><button class="rowbtn" id="fichaGhost">✏️ editar a ficha 99 (não existe 👻)</button></p>
+              </div>
+            </div>
+          </div>
+          <div class="swp-ficha-pane">
+            <div class="fp-head">🐍 o que acontece no servidor</div>
+            <div class="swp-ficha-flow" id="fichaFlow"><span class="ff" data-f="0">GET /produtos/&lt;id&gt;/editar</span><span class="ff" data-f="1">def editar_produto(id):   # id = ?</span><span class="ff" data-f="2">SELECT * FROM produtos WHERE id = ?</span><span class="ff" data-f="3">fetchone() → a ficha (ou None…)</span><span class="ff" data-f="4">render_template(form pré-preenchido)</span></div>
+            <div class="swp-mini">
+              <div class="mb-chrome">
+                <span class="mb-dots"><i></i><i></i><i></i></span>
+                <span class="mb-url"><span class="lock">🔒</span><span class="addr" id="fichaFormUrl">…</span></span>
+              </div>
+              <div class="swp-mini-view" id="fichaFormView">
+                <p style="color:#9aa3b8;text-align:center;padding:20px 0">clique num ✏️ aí do lado 👈</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="swp-machine-hud">
+          <span class="swp-machine-note" id="fichaNote">cada linha da tabela tem a PRÓPRIA URL de edição — o id faz a ligação</span>
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 O padrão de TODO sistema que você já usou</div>
+        <p>
+          Gmail: <code>/mail/u/0/#inbox/<strong>FMfcgz…</strong></code>. YouTube:
+          <code>/watch?v=<strong>dQw4w9…</strong></code>. Instagram: <code>/p/<strong>Cx7…</strong></code>.
+          Toda tela de detalhe/edição do mundo carrega um identificador no endereço.
+          Você acabou de aprender o mecanismo por trás de todos eles.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       EDITAR PONTA A PONTA
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="editar">
+    <div class="step-header">
+      <div class="step-number sn-blue">✏️</div>
+      <div>
+        <div class="step-title">Editar, de ponta a ponta</div>
+        <div class="step-sub">Buscar a ficha (fetchone) → mostrar preenchido → UPDATE no salvar</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Duas funções novas no <code>banco.py</code> — repara na
+        <strong style="color:var(--text)">novidade do fetchone</strong>:
+      </p>
+
+      <div class="code-block with-lines">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">loja/banco.py (funções novas)</span>
+          <span class="lang-badge python">Python</span>
+        </div>
+        <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18</div>
+<pre><span class="kw">def</span> <span class="fn">buscar_produto</span>(id):
+    conexao = sqlite3.<span class="fn">connect</span>(<span class="st">"loja.db"</span>)
+    cursor = conexao.<span class="fn">cursor</span>()
+    cursor.<span class="fn">execute</span>(<span class="st">"SELECT * FROM produtos WHERE id = ?"</span>, (id,))
+    produto = cursor.<span class="fn">fetchone</span>()   <span class="cm"># ← UMA ficha (ou None)</span>
+    conexao.<span class="fn">close</span>()
+    <span class="kw">return</span> produto
+
+
+<span class="kw">def</span> <span class="fn">atualizar_produto</span>(id, nome, preco, qtd):
+    conexao = sqlite3.<span class="fn">connect</span>(<span class="st">"loja.db"</span>)
+    cursor = conexao.<span class="fn">cursor</span>()
+    cursor.<span class="fn">execute</span>(
+        <span class="st">"UPDATE produtos SET nome = ?, preco = ?, quantidade = ? WHERE id = ?"</span>,
+        (nome, preco, qtd, id)
+    )
+    conexao.<span class="fn">commit</span>()
+    conexao.<span class="fn">close</span>()</pre>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 fetchone vs fetchall</div>
+        <p>
+          <code>fetchall</code> = todas as fichas (uma <strong>lista</strong> de tuplas).
+          <code>fetchone</code> = a <strong>primeira</strong> ficha que casou
+          (uma tupla só) — ou <code>None</code>, se nenhuma casou. Como buscamos por id
+          (que é único), é a ferramenta perfeita. E o <code>None</code> é o nosso jeito de
+          descobrir a ficha 99. 👻
+        </p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🧐</span>
+        <div class="tip-content">
+          <strong>Detalhe fino: <code>(id,)</code> com vírgula.</strong> Os placeholders pedem uma
+          TUPLA, e tupla de um elemento só em Python é <code>(id,)</code> — sem a vírgula seria só
+          um parêntese. Erro clássico de digitação, guarda esse.
+        </div>
+      </div>
+
+      <p style="color:var(--text-dim)">A rota junta as duas pontas (GET mostra, POST salva):</p>
+
+      <div class="code-block with-lines">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">loja/app.py (rota nova)</span>
+          <span class="lang-badge python">Python</span>
+        </div>
+        <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15</div>
+<pre><span class="dec">@app.route</span>(<span class="st">"/produtos/&lt;int:id&gt;/editar"</span>, methods=[<span class="st">"GET"</span>, <span class="st">"POST"</span>])
+<span class="kw">def</span> <span class="fn">editar_produto</span>(id):
+    produto = banco.<span class="fn">buscar_produto</span>(id)
+
+    <span class="kw">if</span> produto <span class="kw">is</span> <span class="bool">None</span>:
+        <span class="kw">return</span> <span class="st">"Produto não encontrado!"</span>, <span class="num">404</span>
+
+    <span class="kw">if</span> request.method == <span class="st">"POST"</span>:
+        nome  = request.form[<span class="st">"nome"</span>]
+        preco = <span class="bi">float</span>(request.form[<span class="st">"preco"</span>])
+        qtd   = <span class="bi">int</span>(request.form[<span class="st">"qtd"</span>])
+        banco.<span class="fn">atualizar_produto</span>(id, nome, preco, qtd)
+        <span class="kw">return</span> <span class="fn">redirect</span>(<span class="st">"/produtos"</span>)
+
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"editar.html"</span>, p=produto)</pre>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🪪</span>
+        <div class="tip-content">
+          <strong>Reparou no <code>, 404</code>?</strong> É você escolhendo o código de status da
+          response — o card do Dia 2 em ação, agora do lado de quem ESCREVE o servidor. Ficha
+          inexistente = 404 honesto.
+        </div>
+      </div>
+
+      <p style="color:var(--text-dim)">
+        E o template — o truque todo é o <strong style="color:var(--text)">value=</strong>,
+        que faz o input já vir preenchido:
+      </p>
+
+      <div class="code-block with-lines">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">loja/templates/editar.html</span>
+          <span class="lang-badge jinja">Jinja</span>
+        </div>
+        <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13</div>
+<pre><span class="jtag">{% extends "base.html" %}</span>
+
+<span class="jtag">{% block conteudo %}</span>
+  <span class="tag">&lt;h1&gt;</span>✏️ Editar: <span class="jvar">{{ p[1] }}</span><span class="tag">&lt;/h1&gt;</span>
+
+  <span class="tag">&lt;form</span> <span class="atr">action</span>=<span class="st">"/produtos/{{ p[0] }}/editar"</span> <span class="atr">method</span>=<span class="st">"POST"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"nome"</span>  <span class="atr">value</span>=<span class="st">"{{ p[1] }}"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"preco"</span> <span class="atr">value</span>=<span class="st">"{{ p[2] }}"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"qtd"</span>   <span class="atr">value</span>=<span class="st">"{{ p[3] }}"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;button&gt;</span>Salvar alterações<span class="tag">&lt;/button&gt;</span>
+  <span class="tag">&lt;/form&gt;</span>
+  <span class="tag">&lt;p&gt;</span><span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/produtos"</span><span class="tag">&gt;</span>← cancelar e voltar<span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/p&gt;</span>
+<span class="jtag">{% endblock %}</span></pre>
+      </div>
+
+      <div class="exercise guided">
+        <div class="exercise-header">
+          <span class="exercise-icon">👨‍🏫</span>
+          <div>
+            <div class="exercise-title">Bora montar a edição</div>
+            <div class="exercise-sub">E o link ✏️ na tabela do estoque</div>
+          </div>
+        </div>
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">1.</strong> As duas funções no banco.py, a rota e o
+          <code>editar.html</code> acima.<br>
+          <strong style="color:var(--text)">2.</strong> Em <code>produtos.html</code>, uma coluna
+          nova na tabela com o link de cada linha:<br>
+        </p>
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/templates/produtos.html (dentro do for)</span>
+            <span class="lang-badge jinja">Jinja</span>
+          </div>
+<pre><span class="tag">&lt;td&gt;</span><span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/produtos/{{ p[0] }}/editar"</span><span class="tag">&gt;</span>✏️ editar<span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/td&gt;</span></pre>
+        </div>
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">3.</strong> Teste o ciclo: errar um preço de propósito
+          no cadastro → ✏️ → corrigir → salvar → conferir na tabela.
+          <strong style="color:var(--text)">4.</strong> Teste a ficha fantasma:
+          digite <code>/produtos/99/editar</code> na mão → seu 404 educado. 👻
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="chapter-divider">
+    <div class="chapter-icon">🗑️</div>
+    <div class="chapter-number">Parte 2</div>
+    <h2 style="background:linear-gradient(135deg,var(--bug),var(--accent7));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Excluir com respeito + avisos</h2>
+    <p class="chapter-subtitle">Apagar sem sustos e avisar com elegância</p>
+  </div>
+
+<!-- ═══════════════════════════════════════════════════════
+       EXCLUIR
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="excluir">
+    <div class="step-header">
+      <div class="step-number sn-red">🗑️</div>
+      <div>
+        <div class="step-title">Excluir com respeito</div>
+        <div class="step-sub">Por que apagar NUNCA pode ser um simples link</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="analogy">
+        <div class="analogy-title">A história de terror obrigatória 📖</div>
+        <p>
+          Um sistema antigo tinha links <code>/excluir/1</code>, <code>/excluir/2</code>…
+          Um robô de busca visitou o site e fez o que robôs fazem:
+          <strong>clicou em todos os links</strong>. Apagou o banco inteiro, educadamente,
+          um GET de cada vez. 💀 Moral: <strong>link (GET) é pra LER. Quem MUDA o banco
+          é POST</strong> — robô nenhum submete formulário.
+        </p>
+      </div>
+
+      <p style="color:var(--text-dim)">
+        E tem o dedo humano também: apagar sem perguntar é crueldade. O padrão simples e
+        sem JavaScript: uma <strong style="color:var(--text)">página de confirmação</strong> —
+        GET mostra o "tem certeza?", o botão (POST) executa.
+      </p>
+
+      <div class="code-block with-lines">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">loja/app.py + banco.py + excluir.html</span>
+          <span class="lang-badge python">Python</span>
+        </div>
+        <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22</div>
+<pre><span class="cm"># banco.py</span>
+<span class="kw">def</span> <span class="fn">excluir_produto</span>(id):
+    conexao = sqlite3.<span class="fn">connect</span>(<span class="st">"loja.db"</span>)
+    cursor = conexao.<span class="fn">cursor</span>()
+    cursor.<span class="fn">execute</span>(<span class="st">"DELETE FROM produtos WHERE id = ?"</span>, (id,))
+    conexao.<span class="fn">commit</span>()
+    conexao.<span class="fn">close</span>()
+
+<span class="cm"># app.py</span>
+<span class="dec">@app.route</span>(<span class="st">"/produtos/&lt;int:id&gt;/excluir"</span>, methods=[<span class="st">"GET"</span>, <span class="st">"POST"</span>])
+<span class="kw">def</span> <span class="fn">excluir_produto</span>(id):
+    produto = banco.<span class="fn">buscar_produto</span>(id)
+    <span class="kw">if</span> produto <span class="kw">is</span> <span class="bool">None</span>:
+        <span class="kw">return</span> <span class="st">"Produto não encontrado!"</span>, <span class="num">404</span>
+
+    <span class="kw">if</span> request.method == <span class="st">"POST"</span>:
+        banco.<span class="fn">excluir_produto</span>(id)
+        <span class="kw">return</span> <span class="fn">redirect</span>(<span class="st">"/produtos"</span>)
+
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"excluir.html"</span>, p=produto)
+
+<span class="cm"># templates/excluir.html vem no exercício ↓</span></pre>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 Reparou no padrão que se repete?</div>
+        <p>
+          Editar e excluir têm o MESMO esqueleto: <code>&lt;int:id&gt;</code> → buscar a ficha →
+          404 se não existe → GET mostra a tela → POST executa → redirect.
+          <strong>Você não está decorando rotas; está aprendendo UM padrão</strong> —
+          e ele vai valer pro seu projeto final inteiro.
+        </p>
+      </div>
+
+      <div class="exercise guided">
+        <div class="exercise-header">
+          <span class="exercise-icon">👨‍🏫</span>
+          <div>
+            <div class="exercise-title">Bora montar a exclusão</div>
+            <div class="exercise-sub">Com a página do "tem certeza?"</div>
+          </div>
+        </div>
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">1.</strong> Função + rota acima.
+          <strong style="color:var(--text)">2.</strong> O template de confirmação:
+        </p>
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/templates/excluir.html</span>
+            <span class="lang-badge jinja">Jinja</span>
+          </div>
+<pre><span class="jtag">{% extends "base.html" %}</span>
+
+<span class="jtag">{% block conteudo %}</span>
+  <span class="tag">&lt;h1&gt;</span>🗑️ Excluir produto<span class="tag">&lt;/h1&gt;</span>
+  <span class="tag">&lt;p&gt;</span>Tem certeza que quer excluir
+     <span class="tag">&lt;strong&gt;</span><span class="jvar">{{ p[1] }}</span><span class="tag">&lt;/strong&gt;</span>?
+     Não dá pra desfazer!<span class="tag">&lt;/p&gt;</span>
+
+  <span class="tag">&lt;form</span> <span class="atr">action</span>=<span class="st">"/produtos/{{ p[0] }}/excluir"</span> <span class="atr">method</span>=<span class="st">"POST"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;button&gt;</span>Sim, excluir<span class="tag">&lt;/button&gt;</span>
+  <span class="tag">&lt;/form&gt;</span>
+  <span class="tag">&lt;p&gt;</span><span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/produtos"</span><span class="tag">&gt;</span>← deixa pra lá<span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/p&gt;</span>
+<span class="jtag">{% endblock %}</span></pre>
+        </div>
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">3.</strong> Link 🗑️ na tabela (mesmo padrão do ✏️).
+          <strong style="color:var(--text)">4.</strong> Cadastre um "Produto Teste" só pra ter o
+          prazer de excluir com segurança. 😄
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ FLASH
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="flash">
+    <div class="step-header">
+      <div class="step-number sn-mint">⭐</div>
+      <div>
+        <div class="step-title">flash(): o bilhete de uma vez só</div>
+        <div class="step-sub">"Produto salvo! ✅" — o aviso que aparece uma vez e some</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Salvou, excluiu, vendeu… e a tela nem confirma? Sistema de verdade
+        <strong style="color:var(--text)">avisa</strong>. Mas tem um detalhe cabeludo: com o
+        redirect no meio, a mensagem precisa <strong style="color:var(--text)">sobreviver de uma
+        request pra outra</strong> — e sumir depois de lida. O Flask tem isso pronto:
+        <code>flash()</code>. Veja o ciclo do bilhete:
+      </p>
+
+      <div class="swp-flash" id="swpFlash">
+        <div class="swp-flash-stage">
+          <div class="swp-mini">
+            <div class="mb-chrome">
+              <span class="mb-dots"><i></i><i></i><i></i></span>
+              <span class="mb-url"><span class="lock">🔒</span><span class="addr" id="flashUrl">localhost:5000/produtos/3/editar</span></span>
+            </div>
+            <div class="swp-mini-view">
+              <div class="swp-flash-toast" id="flashToast">✅ Produto atualizado com sucesso!</div>
+              <div id="flashScreen">
+                <h2>✏️ Editar: Mouse Gamer</h2>
+                <p>… formulário preenchido …</p>
+              </div>
+            </div>
+          </div>
+          <div class="swp-flash-pocket" id="flashPocket">
+            <span>🎫 bolso da sessão:</span>
+            <span class="ticket" id="flashTicket" style="opacity:0">…</span>
+          </div>
+        </div>
+        <div class="swp-machine-hud">
+          <button class="swp-machine-btn" id="flashSave">💾 Salvar alterações (POST)</button>
+          <button class="swp-machine-btn ghost" id="flashF5" disabled>⟳ F5</button>
+          <span class="swp-machine-note" id="flashNote">salve e observe o bilhete entrar no bolso… e ser entregue UMA vez</span>
+        </div>
+      </div>
+
+      <p style="color:var(--text-dim)">No código, são três pecinhas:</p>
+
+      <div class="code-block with-lines">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">app.py + base.html</span>
+          <span class="lang-badge python">Python</span>
+        </div>
+        <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15</div>
+<pre><span class="cm"># app.py — ① a chave que assina os bilhetes (uma vez, perto do topo)</span>
+<span class="kw">from</span> flask <span class="kw">import</span> <span class="tp">Flask</span>, render_template, request, redirect, <span class="fn">flash</span>
+app = <span class="tp">Flask</span>(__name__)
+app.secret_key = <span class="st">"troque-por-algo-secreto-e-longo"</span>
+
+<span class="cm"># ② o bilhete, logo antes de cada redirect</span>
+banco.<span class="fn">atualizar_produto</span>(id, nome, preco, qtd)
+<span class="fn">flash</span>(<span class="st">"Produto atualizado com sucesso!"</span>)
+<span class="kw">return</span> <span class="fn">redirect</span>(<span class="st">"/produtos"</span>)</pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">loja/templates/base.html — ③ o quadro de avisos (logo após o menu)</span>
+          <span class="lang-badge jinja">Jinja</span>
+        </div>
+<pre><span class="jtag">{% for msg in get_flashed_messages() %}</span>
+  <span class="tag">&lt;p&gt;</span>✅ <span class="jvar">{{ msg }}</span><span class="tag">&lt;/p&gt;</span>
+<span class="jtag">{% endfor %}</span></pre>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 Por que no base.html?</div>
+        <p>
+          Porque TODA página herda dele — o aviso aparece onde quer que o redirect te leve,
+          sem repetir código. O papel timbrado do Dia 2 pagando dividendo de novo.
+        </p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🔑</span>
+        <div class="tip-content">
+          <strong>E o secret_key?</strong> O bilhete viaja num "bolso" chamado
+          <strong>sessão</strong>, e o Flask assina esse bolso pra ninguém falsificar —
+          a assinatura é o <code>secret_key</code>. Sem ele, <code>flash()</code> dá erro.
+          Guarde essa palavra <em>sessão</em>: ela volta com força no login do Dia 6. 😏
+        </div>
+      </div>
+
+      <div class="exercise guided">
+        <div class="exercise-header">
+          <span class="exercise-icon">👨‍🏫</span>
+          <div>
+            <div class="exercise-title">Bora espalhar os avisos</div>
+            <div class="exercise-sub">Cadastro, edição e exclusão avisando</div>
+          </div>
+        </div>
+        <p style="color:var(--text-dim)">
+          Adicione o <code>secret_key</code> + o quadro no base.html, e um
+          <code>flash(...)</code> antes de CADA redirect: "Produto cadastrado! 🎉",
+          "Produto atualizado!", "Produto excluído.". Teste os três e repare:
+          o aviso aparece <strong>uma vez</strong> — F5 e ele se foi.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="chapter-divider">
+    <div class="chapter-icon">🛒</div>
+    <div class="chapter-number">Parte 3</div>
+    <h2 style="background:linear-gradient(135deg,var(--accent5),var(--accent7));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">A tela Vender</h2>
+    <p class="chapter-subtitle">A operação mais "de sistema" do curso inteiro</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       MODELO DA VENDA
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="vender-modelo">
+    <div class="step-header">
+      <div class="step-number sn-yellow">🤝</div>
+      <div>
+        <div class="step-title">Duas tabelas conversando</div>
+        <div class="step-sub">A venda ganha tabela própria — apontando pra ficha do produto</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Uma venda é um FATO: "vendi 2 fones por R$ 299,80". Fato se registra —
+        tabela nova no <code>criar_banco.py</code>:
+      </p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">loja/criar_banco.py (adicione e rode ▶ de novo)</span>
+          <span class="lang-badge sql">SQL</span>
+        </div>
+<pre>cursor.<span class="fn">execute</span>(<span class="st">"""
+    CREATE TABLE IF NOT EXISTS vendas (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        produto_id INTEGER,
+        qtd INTEGER,
+        total REAL
+    )
+"""</span>)</pre>
+      </div>
+
+      <div class="analogy">
+        <div class="analogy-title">O post-it que aponta pra outra ficha 🗂️➡️🗂️</div>
+        <p>
+          Repara no <code>produto_id</code>: a ficha de venda <strong>não copia</strong> o nome
+          do produto — ela anota <em>"foi o produto da ficha 1"</em>. Duas tabelas se
+          conversando pelo número. <strong>É por isso que o banco se chama RELACIONAL</strong> —
+          e é a primeira vez que você vê a mágica acontecer.
+        </p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🤔</span>
+        <div class="tip-content">
+          <strong>"Por que não gravar o nome direto?"</strong> Se o produto for renomeado amanhã,
+          as vendas antigas continuariam com o nome velho — dados divergindo. Guardando o id,
+          a venda sempre aponta pra verdade atual. (E economiza espaço de brinde.)
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ MÁQUINA: VENDA AO VIVO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="maquina-venda">
+    <div class="step-header">
+      <div class="step-number sn-yellow">⭐</div>
+      <div>
+        <div class="step-title">Venda ao vivo: duas tabelas, um clique</div>
+        <div class="step-sub">Escolha, venda, e veja o INSERT e o UPDATE acontecendo juntos</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Escolha um produto, uma quantidade, e aperte <strong style="color:var(--text)">Vender</strong>.
+        Olho nas DUAS tabelas. Depois tente a maldade do dia:
+        <strong style="color:var(--text)">vender 50 fones</strong>. 😈
+      </p>
+
+      <div class="swp-venda" id="swpVenda">
+        <div class="swp-venda-top">
+          <div class="swp-venda-form">
+            <label style="font-size:0.82rem;color:var(--text-dim)">Produto:</label>
+            <select id="vendaSel"></select>
+            <label style="font-size:0.82rem;color:var(--text-dim)">Qtd:</label>
+            <input id="vendaQtd" type="number" min="1" value="2">
+            <button class="swp-machine-btn" id="vendaGo">🛒 Vender</button>
+          </div>
+        </div>
+        <div class="swp-venda-msg" id="vendaMsg"> </div>
+        <div class="swp-venda-tables">
+          <div>
+            <div class="vt-label">📦 produtos (o estoque baixa)</div>
+            <table class="swp-data-table">
+              <thead><tr><th>id</th><th>nome</th><th>qtd</th></tr></thead>
+              <tbody id="vendaProdBody"></tbody>
+            </table>
+          </div>
+          <div>
+            <div class="vt-label">🧾 vendas (o fato é registrado)</div>
+            <table class="swp-data-table">
+              <thead><tr><th>id</th><th>produto_id</th><th>qtd</th><th>total</th></tr></thead>
+              <tbody id="vendaVendBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="swp-machine-hud">
+          <button class="swp-machine-btn ghost" id="vendaReset">🔄 Restaurar</button>
+          <span class="swp-machine-note" id="vendaNote">repara: a venda NÃO grava o nome — grava o produto_id apontando pra ficha</span>
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 Duas escritas, um destino</div>
+        <p>
+          Toda venda = <strong>INSERT na vendas + UPDATE na produtos</strong>. E se o sistema
+          caísse entre uma e outra? Venda registrada sem baixar estoque — dado mentiroso.
+          Por isso as duas vão <strong>no MESMO commit</strong>: o rascunho e carimbo do Dia 3
+          garantindo o "tudo junto, ou nada". Você já sabia o porquê antes de precisar. 🎯
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="chapter-divider">
+    <div class="chapter-icon">🏁</div>
+    <div class="chapter-number">Parte 4</div>
+    <h2 style="background:linear-gradient(135deg,var(--accent5),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Fechando a Loja</h2>
+    <p class="chapter-subtitle">Código da venda, histórico, e o antes vs agora</p>
+  </div>
+
+<!-- ═══════════════════════════════════════════════════════
+       CÓDIGO DA VENDA
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="vender-codigo">
+    <div class="step-header">
+      <div class="step-number sn-py">🐍</div>
+      <div>
+        <div class="step-title">O código da venda, de ponta a ponta</div>
+        <div class="step-sub">Um elemento novo no form, uma função caprichada no banco</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        No form de venda o visitante <strong style="color:var(--text)">escolhe de uma
+        lista</strong> — entra em cena a última tag HTML do curso, o
+        <code>&lt;select&gt;</code>, com as opções carimbadas pelo Jinja:
+      </p>
+
+      <div class="code-block with-lines">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">loja/templates/vender.html</span>
+          <span class="lang-badge jinja">Jinja</span>
+        </div>
+        <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18</div>
+<pre><span class="jtag">{% extends "base.html" %}</span>
+
+<span class="jtag">{% block conteudo %}</span>
+  <span class="tag">&lt;h1&gt;</span>🛒 Vender<span class="tag">&lt;/h1&gt;</span>
+
+  <span class="jtag">{% if erro %}</span>
+    <span class="tag">&lt;p</span> <span class="atr">style</span>=<span class="st">"color: red"</span><span class="tag">&gt;</span>⚠️ <span class="jvar">{{ erro }}</span><span class="tag">&lt;/p&gt;</span>
+  <span class="jtag">{% endif %}</span>
+
+  <span class="tag">&lt;form</span> <span class="atr">action</span>=<span class="st">"/vender"</span> <span class="atr">method</span>=<span class="st">"POST"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;select</span> <span class="atr">name</span>=<span class="st">"produto_id"</span><span class="tag">&gt;</span>
+      <span class="jtag">{% for p in produtos %}</span>
+        <span class="tag">&lt;option</span> <span class="atr">value</span>=<span class="st">"{{ p[0] }}"</span><span class="tag">&gt;</span><span class="jvar">{{ p[1] }}</span> (<span class="jvar">{{ p[3] }}</span> em estoque)<span class="tag">&lt;/option&gt;</span>
+      <span class="jtag">{% endfor %}</span>
+    <span class="tag">&lt;/select&gt;</span>
+    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"qtd"</span> <span class="atr">placeholder</span>=<span class="st">"Quantidade"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;button&gt;</span>Registrar venda<span class="tag">&lt;/button&gt;</span>
+  <span class="tag">&lt;/form&gt;</span>
+<span class="jtag">{% endblock %}</span></pre>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🎛️</span>
+        <div class="tip-content">
+          <strong>Anatomia do select:</strong> cada <code>&lt;option&gt;</code> mostra um texto
+          bonito pro humano (<em>"Fone Bluetooth (12 em estoque)"</em>), mas quem viaja no form é o
+          <code>value</code> — <strong>o id da ficha</strong>. Humano vê nome; sistema fala id.
+          O padrão do capítulo inteiro, de novo.
+        </div>
+      </div>
+
+      <p style="color:var(--text-dim)">
+        A função do banco — as <strong style="color:var(--text)">duas escritas no mesmo
+        carimbo</strong>:
+      </p>
+
+      <div class="code-block with-lines">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">loja/banco.py</span>
+          <span class="lang-badge python">Python</span>
+        </div>
+        <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16</div>
+<pre><span class="kw">def</span> <span class="fn">registrar_venda</span>(produto_id, qtd, total):
+    conexao = sqlite3.<span class="fn">connect</span>(<span class="st">"loja.db"</span>)
+    cursor = conexao.<span class="fn">cursor</span>()
+
+    cursor.<span class="fn">execute</span>(
+        <span class="st">"INSERT INTO vendas (produto_id, qtd, total) VALUES (?, ?, ?)"</span>,
+        (produto_id, qtd, total)
+    )
+    cursor.<span class="fn">execute</span>(
+        <span class="st">"UPDATE produtos SET quantidade = quantidade - ? WHERE id = ?"</span>,
+        (qtd, produto_id)
+    )
+
+    conexao.<span class="fn">commit</span>()   <span class="cm"># ← UM carimbo pras DUAS escritas: tudo junto, ou nada</span>
+    conexao.<span class="fn">close</span>()</pre>
+      </div>
+
+      <p style="color:var(--text-dim)">E a rota, com a validação de estoque protegendo tudo:</p>
+
+      <div class="code-block with-lines">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">loja/app.py</span>
+          <span class="lang-badge python">Python</span>
+        </div>
+        <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21</div>
+<pre><span class="dec">@app.route</span>(<span class="st">"/vender"</span>, methods=[<span class="st">"GET"</span>, <span class="st">"POST"</span>])
+<span class="kw">def</span> <span class="fn">vender</span>():
+    produtos = banco.<span class="fn">listar_produtos</span>()
+
+    <span class="kw">if</span> request.method == <span class="st">"POST"</span>:
+        produto_id = <span class="bi">int</span>(request.form[<span class="st">"produto_id"</span>])
+        qtd        = <span class="bi">int</span>(request.form[<span class="st">"qtd"</span>])
+        produto    = banco.<span class="fn">buscar_produto</span>(produto_id)
+
+        <span class="kw">if</span> qtd &gt; produto[<span class="num">3</span>]:   <span class="cm"># quantidade em estoque</span>
+            <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"vender.html"</span>, produtos=produtos,
+                                   erro=<span class="st">"Estoque insuficiente!"</span>)
+
+        total = qtd * produto[<span class="num">2</span>]   <span class="cm"># qtd × preço</span>
+        banco.<span class="fn">registrar_venda</span>(produto_id, qtd, total)
+        <span class="fn">flash</span>(<span class="st">"Venda registrada! 🎉"</span>)
+        <span class="kw">return</span> <span class="fn">redirect</span>(<span class="st">"/vendas"</span>)
+
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"vender.html"</span>, produtos=produtos)</pre>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 Quem calcula o total é o SERVIDOR</div>
+        <p>
+          O preço vem do banco (<code>produto[2]</code>), nunca da tela. Se o total viesse do
+          formulário, qualquer espertinho compraria fone por R$ 0,01 editando o form.
+          <strong>Regra de sistema: o cliente escolhe; o servidor calcula e confere.</strong>
+        </p>
+      </div>
+
+      <div class="exercise guided">
+        <div class="exercise-header">
+          <span class="exercise-icon">👨‍🏫</span>
+          <div>
+            <div class="exercise-title">Bora montar a tela Vender</div>
+            <div class="exercise-sub">A operação-coração do sistema</div>
+          </div>
+        </div>
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">1.</strong> Tabela <code>vendas</code> no criar_banco →
+          ▶ de novo. <strong style="color:var(--text)">2.</strong> <code>registrar_venda</code> no
+          banco.py. <strong style="color:var(--text)">3.</strong> Rota + vender.html + "Vender" no
+          menu do base.html. <strong style="color:var(--text)">4.</strong> Venda 2 fones → flash →
+          confere o estoque baixando na tabela. <strong style="color:var(--text)">5.</strong>
+          Tente vender 500 — o segurança barra. 🛡️
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       HISTÓRICO + FATURAMENTO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="vendas-historico">
+    <div class="step-header">
+      <div class="step-number sn-purple">🧾</div>
+      <div>
+        <div class="step-title">A tela Vendas: histórico + faturamento</div>
+        <div class="step-sub">Juntando as fichas das duas tabelas — e somando o caixa</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        O histórico tem um dilema: a tabela <code>vendas</code> só guarda
+        <code>produto_id</code> — mas ninguém quer ler <em>"produto 3, 2 unidades"</em>.
+        O SQL resolve com o <strong style="color:var(--text)">JOIN</strong>:
+        "traga as vendas E, <strong style="color:var(--text)">junto</strong>, o nome que está na
+        ficha apontada":
+      </p>
+
+      <div class="code-block with-lines">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">loja/banco.py</span>
+          <span class="lang-badge python">Python</span>
+        </div>
+        <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21</div>
+<pre><span class="kw">def</span> <span class="fn">listar_vendas</span>():
+    conexao = sqlite3.<span class="fn">connect</span>(<span class="st">"loja.db"</span>)
+    cursor = conexao.<span class="fn">cursor</span>()
+    cursor.<span class="fn">execute</span>(<span class="st">"""
+        SELECT vendas.id, produtos.nome, vendas.qtd, vendas.total
+        FROM vendas
+        JOIN produtos ON produtos.id = vendas.produto_id
+    """</span>)
+    vendas = cursor.<span class="fn">fetchall</span>()
+    conexao.<span class="fn">close</span>()
+    <span class="kw">return</span> vendas
+
+
+<span class="kw">def</span> <span class="fn">faturamento</span>():
+    conexao = sqlite3.<span class="fn">connect</span>(<span class="st">"loja.db"</span>)
+    cursor = conexao.<span class="fn">cursor</span>()
+    cursor.<span class="fn">execute</span>(<span class="st">"SELECT SUM(total) FROM vendas"</span>)
+    soma = cursor.<span class="fn">fetchone</span>()[<span class="num">0</span>]   <span class="cm"># uma linha, uma coluna</span>
+    conexao.<span class="fn">close</span>()
+    <span class="kw">return</span> soma <span class="kw">or</span> <span class="num">0</span>   <span class="cm"># sem vendas, SUM devolve None → vira 0</span></pre>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 JOIN, na dose de hoje</div>
+        <p>
+          Leia como português: <em>"das vendas, JUNTE produtos ONDE o id do produto bate com o
+          produto_id da venda"</em>. O banco segue o post-it de ficha em ficha e devolve tudo
+          numa linha só. É a única dose de JOIN do curso — e é a que resolve 80% dos casos.
+          (JOINs de 3, 4 tabelas? Território do curso Fullstack. 😉)
+        </p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">➕</span>
+        <div class="tip-content">
+          <strong>E o SUM?</strong> Primeira função de AGREGAÇÃO que você vê: em vez de devolver
+          linhas, o banco <strong>calcula sobre elas</strong> — soma, na veia, direto no SQL.
+          Existem primas (COUNT, AVG, MAX…) — fica o aperitivo.
+        </div>
+      </div>
+
+      <div class="exercise guided">
+        <div class="exercise-header">
+          <span class="exercise-icon">👨‍🏫</span>
+          <div>
+            <div class="exercise-title">Bora fechar a última aba</div>
+            <div class="exercise-sub">/vendas com histórico e faturamento</div>
+          </div>
+        </div>
+        <p style="color:var(--text-dim)">
+          Rota <code>/vendas</code> passando <code>vendas=banco.listar_vendas()</code> e
+          <code>total=banco.faturamento()</code>; template com a tabela do histórico
+          (agora com NOME, graças ao JOIN) e um
+          <code>&lt;h2&gt;💰 Faturamento: R$ {{ total }}&lt;/h2&gt;</code>.
+          "Vendas" no menu. Venda mais umas coisas e veja o caixa crescer. 🤑
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ COMPARAÇÃO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="comparacao">
+    <div class="step-header">
+      <div class="step-number" style="background:linear-gradient(135deg,var(--streamlit),var(--accent7))">🏆</div>
+      <div>
+        <div class="step-title">Antes vs agora: a promessa cumprida</div>
+        <div class="step-sub">Lembra do "mesmo sistema, agora profissional"? Chegamos.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="swp-vs">
+        <div class="swp-vs-col before">
+          <span class="vs-tag">📓 bootcamp — app_loja.py</span>
+          <div class="swp-vs-line"><span>aba <strong>Estoque</strong></span><span>Streamlit + TinyDB</span></div>
+          <div class="swp-vs-line"><span>aba <strong>Cadastrar</strong></span><span>st.form</span></div>
+          <div class="swp-vs-line"><span>aba <strong>Vender</strong></span><span>st.selectbox</span></div>
+          <div class="swp-vs-line"><span>aba <strong>Vendas</strong></span><span>st.dataframe</span></div>
+          <div class="swp-vs-line"><span>acesso</span><span>só na SUA máquina</span></div>
+          <div class="swp-vs-line"><span>dados</span><span>db.json (caderninho)</span></div>
+        </div>
+        <div class="swp-vs-col after">
+          <span class="vs-tag">🌶️ hoje — a Loja web</span>
+          <div class="swp-vs-line"><span><strong>/produtos</strong></span><span class="ok">SELECT + Jinja ✓</span></div>
+          <div class="swp-vs-line"><span><strong>/produtos/novo</strong></span><span class="ok">POST + INSERT + PRG ✓</span></div>
+          <div class="swp-vs-line"><span><strong>/vender</strong></span><span class="ok">2 tabelas, 1 commit ✓</span></div>
+          <div class="swp-vs-line"><span><strong>/vendas</strong></span><span class="ok">JOIN + SUM ✓</span></div>
+          <div class="swp-vs-line"><span>acesso</span><span class="ok">URLs — e Dia 8: o mundo 🌍</span></div>
+          <div class="swp-vs-line"><span>dados</span><span class="ok">SQLite (fichário de aço) ✓</span></div>
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 Pare 10 segundos e olhe isso</div>
+        <p>
+          Editar, excluir, validação, avisos, duas tabelas relacionadas, transação…
+          <strong>Você reconstruiu o desafio final do bootcamp como um sistema web
+          profissional.</strong> O que falta? Um cadeado na porta (login — Dia 6, com um
+          estagiário genial te ajudando 🤖) e um endereço público (Dia 8).
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       BUGZILLA
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="bugzilla">
+    <div class="step-header">
+      <div class="step-number sn-red">🐛</div>
+      <div>
+        <div class="step-title">BugZilla do dia: os perigos do id</div>
+        <div class="step-sub">Operações cirúrgicas pedem cirurgião atento</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="bugzilla-card">
+        <div class="bugzilla-header">
+          <span class="bugzilla-emoji">🐛</span>
+          <div>
+            <div class="bugzilla-title">Bug 1 — o estoque negativo</div>
+            <div class="bugzilla-sub">Vendeu 50 fones tendo 12… e o banco aceitou</div>
+          </div>
+        </div>
+        <div class="bugzilla-body">
+          <p>
+            Sem a validação, o UPDATE faz <code>12 - 50</code> alegremente e seu estoque vira
+            <strong>-38</strong>. Nenhum erro, nenhum aviso — só um sistema mentindo pro dono.
+            O banco obedece; <strong>quem protege a regra do negócio é o SEU if</strong>.
+          </p>
+          <p>
+            💊 <strong>Remédio:</strong> validar ANTES de escrever
+            (<code>if qtd &gt; produto[3]</code>) — e o teste de aceitação é tentar quebrar:
+            venda 500 de propósito no seu sistema. Barrou? Passou.
+          </p>
+        </div>
+      </div>
+
+      <div class="bugzilla-card">
+        <div class="bugzilla-header">
+          <span class="bugzilla-emoji">🐛</span>
+          <div>
+            <div class="bugzilla-title">Bug 2 — a cirurgia na ficha errada</div>
+            <div class="bugzilla-sub">Editou o Mouse… e mudou o Teclado</div>
+          </div>
+        </div>
+        <div class="bugzilla-body">
+          <p>
+            Sintoma: salvou a edição e OUTRO produto mudou. Causa quase sempre: o
+            <code>action</code> do form apontando pra URL fixa
+            (<code>/produtos/1/editar</code> chumbado em vez de
+            <code>/produtos/{{ p[0] }}/editar</code>) — todo salvar cai na ficha 1.
+          </p>
+          <p>
+            💊 <strong>Remédio:</strong> na tela de edição, <strong>olhe a URL</strong>: o número
+            lá em cima é a ficha que será alterada. E confira se o action usa
+            <code>{{ p[0] }}</code>, nunca número fixo.
+          </p>
+        </div>
+      </div>
+
+      <div class="bugzilla-card">
+        <div class="bugzilla-header">
+          <span class="bugzilla-emoji">🐛</span>
+          <div>
+            <div class="bugzilla-title">Bug 3 — o formulário amnésico</div>
+            <div class="bugzilla-sub">Abriu a edição, tava tudo vazio… salvou assim mesmo</div>
+          </div>
+        </div>
+        <div class="bugzilla-body">
+          <p>
+            Esqueceu o <code>value="{{ p[1] }}"</code> nos inputs → o form de edição abre EM
+            BRANCO. Quem não percebe e salva, <strong>substitui os dados reais por
+            vazio</strong> — perda de dados por distração.
+          </p>
+          <p>
+            💊 <strong>Remédio:</strong> form de edição SEMPRE nasce preenchido
+            (<code>value=</code> em cada input). Abriu vazio? Pare, não salve, conserte o template.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       QUIZ
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="quiz">
+    <div class="step-header">
+      <div class="step-number sn-yellow">🧠</div>
+      <div>
+        <div class="step-title">Quiz de fixação</div>
+        <div class="step-sub">4 perguntas pra carimbar o dia 5</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">1️⃣</span> Na rota <code>/produtos/&lt;int:id&gt;/editar</code>, o que o Flask faz com o pedaço &lt;int:id&gt;?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Ignora, é comentário</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Captura o número da URL e entrega como parâmetro da função</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Cria um id novo no banco</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Esconde o id do usuário</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Isso!" data-wrong="Revisa a lacuna!"
+             data-explain="é a lacuna da URL: /produtos/3/editar → def editar_produto(id) recebe 3, já convertido pra int."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">2️⃣</span> Busquei UM produto por id. A ferramenta certa é…</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">fetchall() e pego o [0]</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">fetchone() — uma tupla ou None</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">fetchmany(1000)</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">SUM()</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Exato!" data-wrong="Quase!"
+             data-explain="fetchone devolve a primeira ficha que casou — e None se nenhuma casou, que é como tratamos a ficha 99 com um 404."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">3️⃣</span> Por que EXCLUIR não pode ser um link (GET)?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Porque link é feio</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Porque GET é mais lento</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Robôs e pré-carregamento CLICAM links — GET tem que ser inofensivo</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Pode sim, tanto faz</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Cravou!" data-wrong="Lembra do robô!"
+             data-explain="GET é pra LER (qualquer um pode disparar, inclusive máquinas). Mexeu no banco = POST, com confirmação. A regra vale pra sempre."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">4️⃣</span> Salvei com flash("Salvo!") e dei redirect. Quando a mensagem aparece?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Nunca — o redirect apaga</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Em todas as próximas páginas, pra sempre</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Na PRÓXIMA página, uma vez só — depois some</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Só se o usuário der F5</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Boa!" data-wrong="Revisa o bilhete!"
+             data-explain="o bilhete sobrevive ao redirect no bolso da sessão, é entregue uma vez pelo get_flashed_messages… e é destruído. F5 de novo = sem mensagem."></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ARENA
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="arena">
+    <div class="step-header">
+      <div class="step-number sn-purple">🏟️</div>
+      <div>
+        <div class="step-title">Arena: acabamento de sistema profissional</div>
+        <div class="step-sub">Cinco lapidações na Loja completa</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="arena-banner">
+        <span class="ab-emoji">🏟️</span>
+        <div>
+          <div class="ab-tag">treino do dia 5</div>
+          <div class="ab-title">Os detalhes que separam "funciona" de "é bom"</div>
+          <div class="ab-sub">Tudo em cima da Loja que você acabou de completar</div>
+        </div>
+      </div>
+
+      <div class="arena-track">
+        <span class="at-dot lv1">1</span><span class="at-arrow">→</span>
+        <span class="at-dot lv1">2</span><span class="at-arrow">→</span>
+        <span class="at-dot lv2">3</span><span class="at-arrow">→</span>
+        <span class="at-dot lv2">4</span><span class="at-arrow">→</span>
+        <span class="at-dot lv3">🏆</span>
+      </div>
+
+      <div class="exercise solo">
+        <div class="exercise-header">
+          <span class="exercise-icon">🧑‍💻</span>
+          <div>
+            <div class="exercise-title">Missão 1 — Vender qtd zero?</div>
+            <div class="exercise-sub">O segurança pega mais um caso</div>
+          </div>
+        </div>
+        <div class="drill-tags">
+          <span class="drill-level lv1"><span class="stars">★</span> fácil</span>
+          <span class="drill-tag">if</span>
+        </div>
+        <p style="color:var(--text-dim)">
+          Hoje dá pra "vender" 0 unidades (ou -3! 😱). Adicione a validação:
+          qtd menor que 1 → erro "A quantidade precisa ser pelo menos 1".
+        </p>
+      </div>
+
+      <div class="exercise solo">
+        <div class="exercise-header">
+          <span class="exercise-icon">🧑‍💻</span>
+          <div>
+            <div class="exercise-title">Missão 2 — Aviso vermelho pro excluir</div>
+            <div class="exercise-sub">Nem todo flash é festa</div>
+          </div>
+        </div>
+        <div class="drill-tags">
+          <span class="drill-level lv1"><span class="stars">★</span> fácil</span>
+          <span class="drill-tag">flash</span>
+        </div>
+        <p style="color:var(--text-dim)">
+          "Produto excluído" com ✅ verde fica estranho. Investigue: o
+          <code>flash()</code> aceita uma <strong>categoria</strong> —
+          <code>flash("Produto excluído.", "aviso")</code> — e o
+          <code>get_flashed_messages(with_categories=true)</code> devolve os pares.
+          Faça avisos de exclusão saírem diferentes dos de sucesso.
+        </p>
+      </div>
+
+      <div class="exercise home">
+        <div class="exercise-header">
+          <span class="exercise-icon">🏠</span>
+          <div>
+            <div class="exercise-title">Missão 3 — A data da venda</div>
+            <div class="exercise-sub">Todo fato tem carimbo de quando</div>
+          </div>
+        </div>
+        <div class="drill-tags">
+          <span class="drill-level lv2"><span class="stars">★★</span> médio</span>
+          <span class="drill-tag">coluna nova</span>
+          <span class="drill-tag">datetime</span>
+        </div>
+        <p style="color:var(--text-dim)">
+          Coluna <code>data TEXT</code> na tabela vendas (apague o loja.db e recrie — ou só
+          pros novos), preenchida no INSERT com
+          <code>datetime.now().strftime("%d/%m/%Y %H:%M")</code>
+          (<code>from datetime import datetime</code> — colega do bootcamp). Mostre no histórico.
+        </p>
+      </div>
+
+      <div class="exercise home">
+        <div class="exercise-header">
+          <span class="exercise-icon">🏠</span>
+          <div>
+            <div class="exercise-title">Missão 4 — Some só o que importa</div>
+            <div class="exercise-sub">COUNT entra em campo</div>
+          </div>
+        </div>
+        <div class="drill-tags">
+          <span class="drill-level lv2"><span class="stars">★★</span> médio</span>
+          <span class="drill-tag">COUNT</span>
+        </div>
+        <p style="color:var(--text-dim)">
+          Na tela Vendas, mostre também <strong>quantas vendas</strong> foram feitas:
+          <code>SELECT COUNT(*) FROM vendas</code> — prima do SUM, mesma receita do
+          <code>faturamento()</code>.
+        </p>
+      </div>
+
+      <div class="exercise home">
+        <div class="exercise-header">
+          <span class="exercise-icon">🏆</span>
+          <div>
+            <div class="exercise-title">Missão final — Faturamento por produto</div>
+            <div class="exercise-sub">JOIN + SUM + uma pitada de GROUP BY</div>
+          </div>
+        </div>
+        <div class="drill-tags">
+          <span class="drill-level lv3"><span class="stars">★★★</span> desafio</span>
+          <span class="drill-tag">JOIN</span>
+          <span class="drill-tag">SUM</span>
+          <span class="drill-tag">GROUP BY</span>
+        </div>
+        <p style="color:var(--text-dim)">
+          Tabela "quanto cada produto rendeu": junte as duas queries que você já sabe e
+          adicione <code>GROUP BY produtos.nome</code> no final —
+          <code>SELECT produtos.nome, SUM(vendas.total) FROM vendas JOIN produtos ON
+          produtos.id = vendas.produto_id GROUP BY produtos.nome</code>.
+          O GROUP BY é o "some SEPARADO por cada nome" — aperitivo do que os relatórios
+          de verdade fazem.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       RESUMO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="resumo">
+    <div class="step-header">
+      <div class="step-number sn-green">🎒</div>
+      <div>
+        <div class="step-title">O que você leva do Dia 5</div>
+        <div class="step-sub">A Loja está COMPLETA. Leia essa frase de novo.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="about-bullets">
+        <div>🎯 <strong>&lt;int:id&gt;:</strong> o número da ficha viaja na URL e cai como parâmetro na função</div>
+        <div>✏️ <strong>Editar:</strong> fetchone → form com value= preenchido → UPDATE → redirect (e 404 pra ficha fantasma)</div>
+        <div>🗑️ <strong>Excluir:</strong> NUNCA por link — página de confirmação + POST (a história do robô)</div>
+        <div>💬 <strong>flash():</strong> o bilhete de uma vez só, com secret_key assinando a sessão</div>
+        <div>🛒 <strong>Vender:</strong> duas tabelas relacionadas por produto_id, INSERT + UPDATE no MESMO commit, servidor calculando o total</div>
+        <div>🧾 <strong>Vendas:</strong> o JOIN essencial juntando as fichas + SUM somando o caixa</div>
+      </div>
+
+      <div class="concept" style="margin-top:18px">
+        <div class="concept-title">🎯 A frase pra levar pra casa</div>
+        <p>
+          <strong>"As 4 abas do meu app_loja.py agora são um sistema web completo."</strong>
+          CRUD inteiro, operação de negócio, validações, avisos. O que um dev júnior de backend
+          faz no dia a dia? Isso. Exatamente isso.
+        </p>
+      </div>
+
+      <div class="warning">
+        <span class="tip-icon">📥</span>
+        <div class="tip-content">
+          <strong>DEVER DE CASA OBRIGATÓRIO pro Dia 6:</strong> instale o
+          <strong>Gemini CLI</strong> antes do encontro (leva ~10min). O passo a passo está no
+          comecinho do próximo capítulo, seção "Antes do encontro". Quem chegar com ele
+          instalado sai na frente — o encontro inteiro é mão na massa com o agente. 🤖
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">👀</span>
+        <div class="tip-content">
+          <strong>No próximo encontro:</strong> a Loja ganha <strong>login</strong> — mas você
+          não vai digitá-lo: vai <strong>especificar, dirigir e revisar</strong> um agente de IA
+          escrevendo por você. Programar em 2026 é isso — e tem jeito certo de fazer.
+        </div>
+      </div>
+
+      <div class="next-chapter">
+        <h3>🤖 Dia 06 · Programando com agentes de IA</h3>
+        <p style="color:var(--text-dim)">Claude Code, Gemini CLI — e o hábito de revisar</p>
+        <a href="javascript:void(0)" class="btn-next disabled">🚧 Em construção — disponível antes do encontro 6</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="footer">
+  <p>Feito com 🌶️ pelo prof. Kelson Almeida — programa AI</p>
+</footer>
+
+<script src="../../shared/scripts.js" defer></script>
+<script type="module" src="../../shared/motion-fx.js"></script>
+<script>
+/* ══════════ Máquinas didáticas do capítulo 05 (vanilla) ══════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  /* ---------- ⭐ A ficha certa ---------- */
+  (function(){
+    const ficha = document.getElementById('swpFicha');
+    if (!ficha) return;
+    const body = document.getElementById('fichaBody');
+    const url = document.getElementById('fichaUrl');
+    const formUrl = document.getElementById('fichaFormUrl');
+    const formView = document.getElementById('fichaFormView');
+    const note = document.getElementById('fichaNote');
+    const flows = [...ficha.querySelectorAll('.ff')];
+    const PRODS = [
+      [1, 'Fone Bluetooth', '149.90', 12],
+      [2, 'Teclado Mecânico', '299.00', 5],
+      [3, 'Mouse Gamer', '89.90', 23],
+    ];
+    let busy = false;
+
+    const lit = (i) => flows.forEach(f => f.classList.toggle('lit', +f.dataset.f === i));
+
+    PRODS.forEach(p => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td class="n">' + p[0] + '</td><td>' + p[1] + '</td><td class="n">R$ ' + p[2] + '</td>';
+      const td = document.createElement('td');
+      const btn = document.createElement('button');
+      btn.className = 'rowbtn';
+      btn.textContent = '✏️';
+      btn.addEventListener('click', () => run(p));
+      td.appendChild(btn);
+      tr.appendChild(td);
+      body.appendChild(tr);
+    });
+
+    async function run(p, ghost){
+      if (busy) return;
+      busy = true;
+      const id = ghost ? 99 : p[0];
+      url.innerHTML = 'localhost:5000/produtos/<span class="idpart">' + id + '</span>/editar';
+      formUrl.textContent = '…';
+      formView.innerHTML = '<p style="color:#9aa3b8;text-align:center;padding:20px 0">carregando…</p>';
+
+      lit(0);
+      note.innerHTML = 'o clique virou <strong>GET /produtos/' + id + '/editar</strong> — o id foi na URL';
+      await sleep(900);
+      lit(1);
+      note.innerHTML = 'a lacuna &lt;int:id&gt; capturou: <strong>id = ' + id + '</strong>, entregue pra função';
+      await sleep(900);
+      lit(2);
+      note.innerHTML = '<strong>SELECT * FROM produtos WHERE id = ' + id + '</strong> — buscando a ficha exata';
+      await sleep(900);
+      lit(3);
+      if (ghost){
+        note.innerHTML = 'fetchone() voltou <strong>None</strong> — a ficha 99 não existe! 👻';
+        await sleep(900);
+        lit(-1);
+        formUrl.textContent = 'localhost:5000/produtos/99/editar';
+        formView.innerHTML = '<div style="text-align:center;color:#5f6368;padding:12px 0">' +
+          '<div style="font-weight:700;font-size:1.3rem;color:#202124">404</div>' +
+          '<small>Produto não encontrado!</small></div>';
+        note.innerHTML = 'sem ficha → <strong>404 honesto</strong>. Sistema bom não finge que achou.';
+        busy = false;
+        return;
+      }
+      note.innerHTML = 'fetchone() trouxe a tupla: <strong>(' + p[0] + ", '" + p[1] + "', " + p[2] + ', ' + p[3] + ')</strong>';
+      await sleep(1000);
+      lit(4);
+      formUrl.textContent = 'localhost:5000/produtos/' + id + '/editar';
+      formView.innerHTML =
+        '<h2>✏️ Editar: ' + p[1] + '</h2>' +
+        '<div class="vform">' +
+        '<input value="' + p[1] + '" readonly>' +
+        '<input value="' + p[2] + '" readonly>' +
+        '<input value="' + p[3] + '" readonly>' +
+        '<button disabled>Salvar alterações</button></div>';
+      note.innerHTML = 'o form nasceu <strong>PRÉ-PREENCHIDO</strong> com os dados da ficha ' + id + ' (o value= em ação) ✅';
+      await sleep(800);
+      lit(-1);
+      busy = false;
+    }
+
+    document.getElementById('fichaGhost').addEventListener('click', () => run(null, true));
+    if (!reduceMotion){
+      new IntersectionObserver((es, obs) => {
+        es.forEach(e => { if (e.isIntersecting){ run(PRODS[0]); obs.disconnect(); } });
+      }, {threshold:0.45}).observe(ficha);
+    }
+  })();
+
+  /* ---------- ⭐ O bilhete de uma vez só (flash) ---------- */
+  (function(){
+    const box = document.getElementById('swpFlash');
+    if (!box) return;
+    const toast = document.getElementById('flashToast');
+    const screen = document.getElementById('flashScreen');
+    const urlEl = document.getElementById('flashUrl');
+    const ticket = document.getElementById('flashTicket');
+    const note = document.getElementById('flashNote');
+    const bSave = document.getElementById('flashSave');
+    const bF5 = document.getElementById('flashF5');
+    let fase = 0;   // 0=form, 1=redirecionado com toast, 2=depois do F5
+
+    bSave.addEventListener('click', async () => {
+      if (fase !== 0) return;
+      fase = 1;
+      bSave.disabled = true;
+      ticket.style.opacity = '1';
+      ticket.classList.remove('gone');
+      ticket.textContent = '"Produto atualizado!"';
+      note.innerHTML = 'o <strong>flash()</strong> guardou o bilhete no bolso da sessão… e o redirect disparou';
+      await sleep(1300);
+      urlEl.textContent = 'localhost:5000/produtos';
+      screen.innerHTML = '<h2>📋 Estoque</h2><p>… tabela de produtos …</p>';
+      toast.classList.add('on');
+      ticket.classList.add('gone');
+      note.innerHTML = 'a página nova encontrou o bilhete, <strong>mostrou</strong>… e o bolso já está vazio. Agora dá um F5 👇';
+      bF5.disabled = false;
+    });
+
+    bF5.addEventListener('click', () => {
+      if (fase !== 1) return;
+      fase = 2;
+      toast.classList.remove('on');
+      note.innerHTML = 'F5 → GET de novo → <strong>bolso vazio, sem aviso</strong>. O bilhete era de UMA vez só. (Recarrega a página pra brincar de novo.)';
+      bF5.disabled = true;
+    });
+  })();
+
+  /* ---------- ⭐ Venda ao vivo ---------- */
+  (function(){
+    const box = document.getElementById('swpVenda');
+    if (!box) return;
+    const sel = document.getElementById('vendaSel');
+    const qtdInp = document.getElementById('vendaQtd');
+    const msg = document.getElementById('vendaMsg');
+    const note = document.getElementById('vendaNote');
+    const prodBody = document.getElementById('vendaProdBody');
+    const vendBody = document.getElementById('vendaVendBody');
+    const INITIAL = [
+      [1, 'Fone Bluetooth', 149.9, 12],
+      [2, 'Teclado Mecânico', 299.0, 5],
+      [3, 'Mouse Gamer', 89.9, 23],
+    ];
+    let prods = INITIAL.map(r => [...r]);
+    let vendas = [];
+    let nextVendaId = 1, busy = false;
+
+    function render(hotId, newVendaId){
+      prodBody.innerHTML = '';
+      prods.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = '<td class="n">' + p[0] + '</td><td>' + p[1] + '</td>';
+        const td = document.createElement('td');
+        td.className = 'n';
+        td.textContent = p[3];
+        if (hotId === p[0]) td.classList.add('cell-hot');
+        tr.appendChild(td);
+        prodBody.appendChild(tr);
+      });
+      vendBody.innerHTML = '';
+      if (!vendas.length){
+        vendBody.innerHTML = '<tr><td colspan="4" style="color:#5b6478;font-style:italic">— nenhuma venda ainda —</td></tr>';
+      }
+      vendas.forEach(v => {
+        const tr = document.createElement('tr');
+        if (newVendaId === v[0]) tr.className = 'row-new';
+        tr.innerHTML = '<td class="n">' + v[0] + '</td><td class="n">' + v[1] + '</td><td class="n">' + v[2] + '</td><td class="n">' + v[3].toFixed(2) + '</td>';
+        vendBody.appendChild(tr);
+      });
+      const selecionado = sel.value;
+      sel.innerHTML = '';
+      prods.forEach(p => {
+        const o = document.createElement('option');
+        o.value = p[0];
+        o.textContent = p[1] + ' (' + p[3] + ' em estoque)';
+        sel.appendChild(o);
+      });
+      if (selecionado && prods.some(p => String(p[0]) === selecionado)) sel.value = selecionado;
+    }
+
+    document.getElementById('vendaGo').addEventListener('click', async () => {
+      if (busy) return;
+      const pid = +sel.value;
+      const qtd = parseInt(qtdInp.value, 10);
+      const p = prods.find(x => x[0] === pid);
+      msg.classList.remove('err');
+      if (!qtd || qtd < 1){
+        msg.classList.add('err');
+        msg.textContent = '⚠ quantidade inválida — pelo menos 1';
+        return;
+      }
+      if (qtd > p[3]){
+        msg.classList.add('err');
+        msg.textContent = '⚠ Estoque insuficiente! (' + p[1] + ' tem só ' + p[3] + ') — NADA foi gravado';
+        note.innerHTML = 'o <strong>if qtd &gt; produto[3]</strong> barrou ANTES de qualquer escrita — as duas tabelas nem souberam da tentativa 🛡️';
+        return;
+      }
+      busy = true;
+      const total = +(qtd * p[2]).toFixed(2);
+      msg.textContent = '→ INSERT INTO vendas (produto_id=' + pid + ', qtd=' + qtd + ', total=' + total.toFixed(2) + ') …';
+      vendas.push([nextVendaId, pid, qtd, total]);
+      render(null, nextVendaId);
+      await sleep(reduceMotion ? 250 : 900);
+      msg.textContent = '→ UPDATE produtos SET quantidade = quantidade - ' + qtd + ' WHERE id = ' + pid + ' …';
+      p[3] -= qtd;
+      render(pid, nextVendaId);
+      await sleep(reduceMotion ? 250 : 900);
+      msg.textContent = '✔ commit() — as DUAS escritas carimbadas juntas. Venda #' + nextVendaId + ' registrada!';
+      note.innerHTML = 'estoque baixou, fato registrado — <strong>um commit, duas tabelas</strong>. Vende mais! (ou tenta vender 50 😈)';
+      nextVendaId++;
+      busy = false;
+    });
+
+    document.getElementById('vendaReset').addEventListener('click', () => {
+      if (busy) return;
+      prods = INITIAL.map(r => [...r]);
+      vendas = [];
+      nextVendaId = 1;
+      msg.textContent = '↺ tudo restaurado';
+      msg.classList.remove('err');
+      render();
+    });
+
+    render();
+  })();
+});
+</script>
+</body>
+</html>
