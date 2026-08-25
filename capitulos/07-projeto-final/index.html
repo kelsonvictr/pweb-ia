@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dia 07 · Seu sistema, seu tema — Sistemas Web com Python | programa AI</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../shared/styles.css">
+<link rel="stylesheet" href="../../shared/components.css">
+<link rel="stylesheet" href="../../shared/animations.css">
+<style>
+/* ══════════ CSS local do capítulo 07 (prefixo swp-) ══════════ */
+
+.swp-map-table td,.swp-sheet,.swp-help td{
+  font-variant-ligatures:none;
+  font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+}
+
+.step-section.visible .reveal-stagger > *:nth-child(7){transition-delay:0.65s}
+.step-section.visible .reveal-stagger > *:nth-child(8){transition-delay:0.75s}
+
+/* ---------- MÁQUINA: é o mesmo esqueleto ---------- */
+.swp-skel{
+  border:1px solid rgba(6,214,160,0.32);border-radius:18px;overflow:hidden;margin:18px 0;
+  background:
+    radial-gradient(1100px 280px at 50% -12%, rgba(6,214,160,0.10), transparent 70%),
+    linear-gradient(180deg,#0b1020,#0d0d1a);
+  box-shadow:0 22px 60px rgba(0,0,0,0.45);
+}
+.swp-skel-themes{display:flex;gap:8px;flex-wrap:wrap;padding:16px 16px 4px}
+.swp-theme{
+  border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);
+  color:var(--text-dim);font-weight:800;font-size:0.82rem;padding:8px 16px;
+  border-radius:50px;cursor:pointer;transition:all .25s;font-family:'Nunito',sans-serif;
+}
+.swp-theme:hover{border-color:rgba(255,255,255,0.35);color:var(--text)}
+.swp-theme.on{background:var(--accent7);border-color:var(--accent7);color:#06281f}
+.swp-map{padding:8px 16px 16px}
+.swp-map-table{
+  width:100%;border-collapse:collapse;font-size:0.85rem;
+  background:var(--code-bg);border:1px solid rgba(255,255,255,0.08);
+  border-radius:12px;overflow:hidden;display:table;
+}
+.swp-map-table th{
+  background:var(--surface2);color:var(--text-dim);font-size:0.66rem;font-weight:800;
+  letter-spacing:1px;text-transform:uppercase;padding:9px 14px;text-align:left;
+}
+.swp-map-table td{
+  padding:9px 14px;color:var(--text-dim);border-top:1px solid rgba(255,255,255,0.05);
+  font-family:'JetBrains Mono',monospace;font-size:0.76rem;transition:background .4s;
+}
+.swp-map-table td:first-child{color:#8b96b0}
+.swp-map-table td:last-child{color:var(--accent7);font-weight:700}
+.swp-map-table tr.zap td:last-child{animation:swpCellHot 1s ease both}
+.swp-skel-note{
+  padding:0 16px 14px;font-size:0.84rem;color:var(--text-dim);line-height:1.55;
+}
+.swp-skel-note strong{color:var(--accent7)}
+
+/* ---------- checklist com localStorage ---------- */
+.swp-check{margin:14px 0}
+.swp-check label{
+  display:flex;gap:12px;align-items:flex-start;padding:11px 14px;margin:7px 0;
+  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);
+  border-radius:12px;font-size:0.92rem;color:var(--text-dim);cursor:pointer;line-height:1.5;
+  transition:all .25s;
+}
+.swp-check input{accent-color:var(--accent7);width:19px;height:19px;flex-shrink:0;margin-top:2px}
+.swp-check label:has(input:checked){
+  border-color:rgba(6,214,160,0.45);color:var(--text);background:rgba(6,214,160,0.05);
+}
+.swp-check label strong{color:var(--text)}
+.swp-check-bar{
+  height:8px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:hidden;margin:10px 0 4px;
+}
+.swp-check-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent7),var(--accent3));width:0;transition:width .4s ease}
+.swp-check-status{font-size:0.82rem;color:var(--text-dim);min-height:22px}
+.swp-check-status strong{color:var(--accent7)}
+
+/* ---------- folha de projeto ---------- */
+.swp-sheet{
+  font-family:'JetBrains Mono',monospace;font-size:0.8rem;line-height:2;
+  background:var(--code-bg);border:1px solid rgba(255,255,255,0.08);
+  border-radius:12px;padding:16px 20px;color:var(--text-dim);
+  white-space:pre-wrap;overflow-x:auto;
+}
+.swp-sheet .sh{color:var(--accent5);font-weight:700}
+.swp-sheet .sv{color:var(--text)}
+.swp-sheet .sc{color:#5b6478;font-style:italic}
+
+/* ---------- tabela travou→volta lá ---------- */
+.swp-help{
+  width:100%;border-collapse:collapse;font-size:0.86rem;margin:12px 0;
+  background:var(--code-bg);border:1px solid rgba(255,255,255,0.08);
+  border-radius:12px;overflow:hidden;display:table;
+}
+.swp-help th{
+  background:var(--surface2);color:var(--text-dim);font-size:0.66rem;font-weight:800;
+  letter-spacing:1px;text-transform:uppercase;padding:9px 14px;text-align:left;
+}
+.swp-help td{padding:9px 14px;color:var(--text-dim);border-top:1px solid rgba(255,255,255,0.05);line-height:1.5}
+.swp-help td a{color:var(--accent4);font-weight:700;text-decoration:none}
+.swp-help td a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-orbs">
+  <div class="orb"></div>
+  <div class="orb"></div>
+  <div class="orb"></div>
+</div>
+
+<div class="progress-track"><div class="progress-bar"></div></div>
+
+<button class="menu-toggle" onclick="openSidebar()" aria-label="Abrir menu">☰</button>
+<aside class="sidebar-nav" id="sidebar">
+  <button class="sidebar-close" onclick="closeSidebar()" aria-label="Fechar menu">✕</button>
+  <div class="sidebar-header">
+    <h3>🚀 Dia 07 · Projeto final</h3>
+    <a href="../../index.html" class="sidebar-back">← Voltar ao hub</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🎨 Seu sistema</div>
+    <a class="sidebar-link" onclick="goTo('aquecimento')"><span class="dot" style="background:var(--accent5)"></span>Aquecimento</a>
+    <a class="sidebar-link" onclick="goTo('temas')"><span class="dot" style="background:var(--accent7)"></span>⭐ É o mesmo esqueleto</a>
+    <a class="sidebar-link" onclick="goTo('requisitos')"><span class="dot" style="background:var(--accent4)"></span>O checklist do projeto</a>
+    <a class="sidebar-link" onclick="goTo('planejamento')"><span class="dot" style="background:var(--accent5)"></span>A folha de projeto</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">⚒️ Mão na massa</div>
+    <a class="sidebar-link" onclick="goTo('roteiro')"><span class="dot" style="background:var(--python-y)"></span>O roteiro da aula</a>
+    <a class="sidebar-link" onclick="goTo('travou')"><span class="dot" style="background:var(--accent4)"></span>Travou? Volta lá</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🏁 Fechamento</div>
+    <a class="sidebar-link" onclick="goTo('bugzilla')"><span class="dot" style="background:var(--bug)"></span>BugZilla de projeto 🐛</a>
+    <a class="sidebar-link" onclick="goTo('quiz')"><span class="dot" style="background:var(--accent5)"></span>Mini-quiz</a>
+    <a class="sidebar-link" onclick="goTo('resumo')"><span class="dot" style="background:var(--accent7)"></span>Resumo + Demo Day</a>
+  </div>
+</aside>
+<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-icons">💈 🐾 🔧</div>
+  <span class="hero-badge python">Dia 07 · Sistemas Web com Python</span>
+  <h1><span style="background:linear-gradient(135deg,var(--accent7),var(--accent5));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Seu sistema,<br>seu tema</span></h1>
+  <p class="subtitle">
+    Chega de Loja: hoje nasce <strong style="color:var(--accent7)">O SEU sistema</strong> —
+    barbearia, brechó, petshop, o que você quiser. Mesmo esqueleto que você já domina,
+    <strong style="color:var(--accent5)">tema seu, decisões suas</strong> — com o agente de
+    par e o professor circulando. É o dia de provar (pra você) que você sabe.
+  </p>
+  <div class="hero-stack">
+    <span class="stack-chip python">🐍 tudo que você aprendeu</span>
+    <span class="stack-chip">📋 planejar primeiro</span>
+    <span class="stack-chip">🤖 agente de par</span>
+  </div>
+</section>
+
+<div class="container">
+
+  <!-- ═══════════════════════════════════════════════════════
+       AQUECIMENTO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="aquecimento">
+    <div class="step-header">
+      <div class="step-number sn-yellow">🔥</div>
+      <div>
+        <div class="step-title">Aquecimento: você não vai aprender nada hoje</div>
+        <div class="step-sub">…porque hoje é dia de USAR. E isso muda tudo.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Inventário completo: rotas, templates, forms, SQL, CRUD inteiro, relacionamento entre
+        tabelas, transação, flash, login. <strong style="color:var(--text)">Não falta
+        NENHUMA peça</strong> pro sistema que você vai construir hoje. O que muda é uma coisa
+        só: <strong style="color:var(--text)">as decisões agora são suas</strong> —
+        que entidades, que colunas, que telas. E decidir é exatamente a habilidade que
+        separa quem segue tutorial de quem constrói.
+      </p>
+
+      <div class="analogy">
+        <div class="analogy-title">A autoescola acabou 🚗</div>
+        <p>
+          Até ontem você dirigiu com instrutor do lado (o material dizendo cada passo).
+          Hoje pega o carro sozinho — mas <strong>na mesma cidade</strong>, com as mesmas
+          ruas que você já conhece. E o instrutor (professor + agente) continua a um
+          aceno de distância.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ TEMAS — É O MESMO ESQUELETO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="temas">
+    <div class="step-header">
+      <div class="step-number sn-mint">⭐</div>
+      <div>
+        <div class="step-title">Escolha o tema — é o mesmo esqueleto</div>
+        <div class="step-sub">Clique num tema e veja a Loja se transformar nele</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        A prova de que você JÁ sabe construir qualquer um destes sistemas:
+        clique num tema e olhe o mapeamento. <strong style="color:var(--text)">É a Loja
+        com outros nomes.</strong>
+      </p>
+
+      <div class="swp-skel" id="swpSkel">
+        <div class="swp-skel-themes" id="skelThemes"></div>
+        <div class="swp-map">
+          <table class="swp-map-table">
+            <thead><tr><th>na Loja era…</th><th id="skelColName">no seu sistema vira…</th></tr></thead>
+            <tbody id="skelBody"></tbody>
+          </table>
+        </div>
+        <div class="swp-skel-note" id="skelNote">👆 escolha um tema</div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 A fórmula de TODO sistema deste tipo</div>
+        <p>
+          <strong>2 entidades</strong> (as coisas que se cadastram) +
+          <strong>1 operação de movimento</strong> (o fato que acontece entre elas e mexe nos
+          números). Loja: produtos + vendas. Barbearia: serviços + agendamentos.
+          Biblioteca: livros + empréstimos. Reconheceu a fórmula? Então você sabe
+          construir <em>qualquer</em> um. Pode inventar um tema fora da lista — desde que
+          caiba na fórmula.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       REQUISITOS
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="requisitos">
+    <div class="step-header">
+      <div class="step-number sn-blue">✅</div>
+      <div>
+        <div class="step-title">O checklist do projeto</div>
+        <div class="step-sub">O mínimo pro demo day — marque conforme constrói (fica salvo aqui)</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="swp-check" id="projCheck">
+        <div class="swp-check-bar"><i id="checkBar"></i></div>
+        <div class="swp-check-status" id="checkStatus">0 de 8 — bora começar!</div>
+
+        <label><input type="checkbox" data-k="p1"> <span><strong>Banco criado</strong> — criar_banco.py com as 2 tabelas (colunas e tipos planejados ANTES)</span></label>
+        <label><input type="checkbox" data-k="p2"> <span><strong>Listar</strong> a entidade principal (rota + SELECT + tabela Jinja com {% if %} de vazio)</span></label>
+        <label><input type="checkbox" data-k="p3"> <span><strong>Cadastrar</strong> (form + POST + INSERT + redirect + flash)</span></label>
+        <label><input type="checkbox" data-k="p4"> <span><strong>Editar</strong> (&lt;int:id&gt; + fetchone + form com value= + UPDATE)</span></label>
+        <label><input type="checkbox" data-k="p5"> <span><strong>Excluir</strong> (página de confirmação + POST + DELETE)</span></label>
+        <label><input type="checkbox" data-k="p6"> <span><strong>A tela de operação</strong> (o "Vender" do seu tema: INSERT + UPDATE no mesmo commit + validação)</span></label>
+        <label><input type="checkbox" data-k="p7"> <span><strong>Histórico</strong> da operação (JOIN essencial + um SUM ou COUNT)</span></label>
+        <label><input type="checkbox" data-k="p8"> <span><strong>Login protegendo tudo</strong> (o do Dia 6 adaptado — pode usar o agente)</span></label>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">✨</span>
+        <div class="tip-content">
+          <strong>Extras (só DEPOIS dos 8):</strong> busca com GET, badge de "acabando",
+          data nas operações, faturamento por item (GROUP BY), página "sobre" com sua
+          história. Extras impressionam no demo day — mas <strong>mínimo completo &gt;
+          extra pela metade</strong>, sempre.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       PLANEJAMENTO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="planejamento">
+    <div class="step-header">
+      <div class="step-number sn-yellow">📋</div>
+      <div>
+        <div class="step-title">A folha de projeto — ANTES de codar</div>
+        <div class="step-sub">15 minutos de papel economizam 2 horas de retrabalho</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Regra de ouro do dia: <strong style="color:var(--text)">nenhuma linha de código antes
+        da folha preenchida</strong>. Exemplo completo (barbearia) — repare que ela é
+        praticamente a espec pro agente:
+      </p>
+
+      <div class="swp-sheet"><span class="sh">SISTEMA:</span> <span class="sv">Barbearia do Zé</span>
+
+<span class="sh">ENTIDADE 1 (a principal):</span> <span class="sv">servicos</span>
+  <span class="sv">id INTEGER PK AUTOINCREMENT</span>
+  <span class="sv">nome TEXT</span>          <span class="sc">← "Corte degradê", "Barba"…</span>
+  <span class="sv">preco REAL</span>
+  <span class="sv">duracao INTEGER</span>    <span class="sc">← minutos</span>
+
+<span class="sh">ENTIDADE 2:</span> <span class="sv">clientes</span>
+  <span class="sv">id, nome TEXT, telefone TEXT</span>
+
+<span class="sh">OPERAÇÃO DE MOVIMENTO:</span> <span class="sv">agendamentos</span>
+  <span class="sv">id, servico_id, cliente_id, data TEXT, valor REAL</span>
+  <span class="sc">← o "Vender" daqui: registra o fato + histórico + faturamento</span>
+
+<span class="sh">TELAS:</span> <span class="sv">/servicos (CRUD) · /clientes (CRUD) · /agendar · /agenda</span>
+<span class="sh">VALIDAÇÃO PRINCIPAL:</span> <span class="sv">não agendar sem cliente e serviço escolhidos</span></div>
+
+      <div class="exercise guided">
+        <div class="exercise-header">
+          <span class="exercise-icon">👨‍🏫</span>
+          <div>
+            <div class="exercise-title">Preencha a SUA folha agora</div>
+            <div class="exercise-sub">No caderno, num .txt, onde quiser — mas por escrito</div>
+          </div>
+        </div>
+        <p style="color:var(--text-dim)">
+          Copie o formato: sistema, entidade 1 (com TODAS as colunas e tipos), entidade 2,
+          operação de movimento, telas, validação principal.
+          <strong style="color:var(--text)">Mostre pro professor antes de codar</strong> —
+          2 minutos de conferência evitam a tarde inteira de refazer banco.
+          (Quem fez a missão final do Dia 6 já chegou com ela pronta. 😎)
+        </p>
+      </div>
+
+      <div class="warning">
+        <span class="tip-icon">📏</span>
+        <div class="tip-content">
+          <strong>Trave o escopo:</strong> 2 entidades. Não 3, não 5. Deu vontade de fazer
+          "estoque + fornecedores + funcionários + promoções"? Anota num papel chamado
+          "versão 2" e volta pro mínimo. Sistema PEQUENO e COMPLETO impressiona;
+          sistema grande pela metade, não.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="chapter-divider">
+    <div class="chapter-icon">⚒️</div>
+    <div class="chapter-number">Mão na massa</div>
+    <h2 style="background:linear-gradient(135deg,var(--python-y),var(--accent7));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Bora construir</h2>
+    <p class="chapter-subtitle">O roteiro da aula e o mapa de socorro</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ROTEIRO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="roteiro">
+    <div class="step-header">
+      <div class="step-number sn-py">🗺️</div>
+      <div>
+        <div class="step-title">O roteiro da aula</div>
+        <div class="step-sub">Na mão primeiro, agente pra acelerar — nesta ordem</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="flow-container">
+        <div class="flow-box fb-input">📋<br>Folha ok</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box">🗄️<br>criar_banco</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box fb-process">✋<br>CRUD 1 na MÃO</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box">🤖<br>agente acelera</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box fb-output">🛡️<br>login + testes</div>
+      </div>
+
+      <ul style="color:var(--text-dim);line-height:2;margin:16px 0 0;padding-left:22px">
+        <li><strong style="color:var(--text)">New Project</strong> no PyCharm com o nome do seu sistema (venv de brinde) + <code>pip install flask</code>.</li>
+        <li><strong style="color:var(--text)">criar_banco.py</strong> direto da folha — as colunas já estão decididas, é só digitar. ▶ uma vez.</li>
+        <li><strong style="color:var(--text)">CRUD da entidade 1 NA MÃO</strong> — o mesmo caminho que você fez 2 vezes (Loja dias 4 e 5). Pode consultar o material à vontade; copiar-adaptar do SEU código da Loja é jogo limpo.</li>
+        <li><strong style="color:var(--text)">Agente entra AQUI</strong>: entidade 2, a tela de operação, o login — com espec no formato do Dia 6, lendo cada diff.</li>
+        <li><strong style="color:var(--text)">Checklist + testes</strong>: caminho feliz E caminhos de erro (vender sem estoque, editar id 99, form vazio…).</li>
+      </ul>
+
+      <div class="concept">
+        <div class="concept-title">💡 A regra do agente no projeto (combinado do curso)</div>
+        <p>
+          <strong>① Primeiro tenta na mão; agente destrava e acelera</strong> — não substitui.
+          <strong>② Todo código gerado terá que ser EXPLICADO por você no demo day.</strong>
+          Se não sabe explicar, não entra no projeto — peça pro agente explicar até saber
+          (Missão 1 do Dia 6), ou faça na mão.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       TRAVOU
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="travou">
+    <div class="step-header">
+      <div class="step-number sn-blue">🆘</div>
+      <div>
+        <div class="step-title">Travou? Volta lá</div>
+        <div class="step-sub">O mapa de socorro — cada peça tem capítulo e seção</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <table class="swp-help">
+        <thead><tr><th>Travei em…</th><th>O socorro está em…</th></tr></thead>
+        <tbody>
+          <tr><td>rota não abre / dinossauro 🦖 / servidor</td><td><a href="../01-ola-web-ola-flask/">Dia 1</a> — rotas, ▶/⏹, BugZilla</td></tr>
+          <tr><td>tabela Jinja, {% for %}, {% if %}, form, base.html</td><td><a href="../02-formularios-jinja/">Dia 2</a> — Jinja + formulários</td></tr>
+          <tr><td>CREATE TABLE, INSERT, WHERE, commit sumindo dados</td><td><a href="../03-sql-sqlite/">Dia 3</a> — SQL + Rascunho e Carimbo</td></tr>
+          <tr><td>banco.py, listar/cadastrar, F5 duplicando, validação</td><td><a href="../04-crud-parte-1/">Dia 4</a> — CRUD parte 1</td></tr>
+          <tr><td>&lt;int:id&gt;, editar/excluir, flash, a operação de venda, JOIN</td><td><a href="../05-crud-parte-2/">Dia 5</a> — CRUD parte 2 + Vender</td></tr>
+          <tr><td>agente fazendo coisa errada, espec, diff, login</td><td><a href="../06-agentes-de-ia/">Dia 6</a> — o fluxo + caça ao bug</td></tr>
+          <tr><td>erro que você não reconhece</td><td><strong>LEIA a mensagem em voz alta</strong> — 80% se resolve aí. Depois: BugZilla do capítulo do assunto → professor.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="tip">
+        <span class="tip-icon">🤝</span>
+        <div class="tip-content">
+          <strong>Ordem de socorro em aula:</strong> mensagem de erro → material →
+          colega do lado → agente ("explique este erro") → professor. Cada degrau que você
+          resolve sozinho vira músculo.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       BUGZILLA
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="bugzilla">
+    <div class="step-header">
+      <div class="step-number sn-red">🐛</div>
+      <div>
+        <div class="step-title">BugZilla de projeto</div>
+        <div class="step-sub">Os dois bugs que não dão erro no terminal — dão erro na entrega</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="bugzilla-card">
+        <div class="bugzilla-header">
+          <span class="bugzilla-emoji">🐛</span>
+          <div>
+            <div class="bugzilla-title">Bug 1 — o escopo gigante</div>
+            <div class="bugzilla-sub">"vou fazer um iFood" → demo day com tela em branco</div>
+          </div>
+        </div>
+        <div class="bugzilla-body">
+          <p>
+            5 entidades planejadas = 0 entidades entregues. É o bug mais comum de projeto
+            final DO MUNDO, e ele não avisa: você só percebe quando o tempo acaba.
+          </p>
+          <p>
+            💊 <strong>Remédio:</strong> 2 entidades, 1 operação, checklist de 8 itens.
+            Terminou sobrando tempo? Aí sim, extras. (Nunca sobra. 😄)
+          </p>
+        </div>
+      </div>
+
+      <div class="bugzilla-card">
+        <div class="bugzilla-header">
+          <span class="bugzilla-emoji">🐛</span>
+          <div>
+            <div class="bugzilla-title">Bug 2 — codar antes de planejar as colunas</div>
+            <div class="bugzilla-sub">"depois eu vejo os campos" → refazer o banco 3 vezes</div>
+          </div>
+        </div>
+        <div class="bugzilla-body">
+          <p>
+            Começou o CRUD e NO MEIO descobriu que faltava a coluna preço? Agora é apagar o
+            .db, mexer no CREATE TABLE, no form, no INSERT, no template… Cada coluna
+            esquecida custa 20 minutos espalhados por 5 arquivos.
+          </p>
+          <p>
+            💊 <strong>Remédio:</strong> a folha de projeto — colunas com tipos, POR ESCRITO,
+            conferida antes da primeira linha. É literalmente o passo 1 do roteiro.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       MINI-QUIZ
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="quiz">
+    <div class="step-header">
+      <div class="step-number sn-yellow">🧠</div>
+      <div>
+        <div class="step-title">Mini-quiz de prontidão</div>
+        <div class="step-sub">2 perguntas antes de soltar você no projeto</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">1️⃣</span> Qual é a PRIMEIRA coisa a fazer no projeto?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Pedir tudo pro agente</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Escrever o app.py</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">A folha de projeto: entidades, colunas, tipos, telas</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Escolher as cores do site</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Isso!" data-wrong="Calma!"
+             data-explain="planejar as colunas por escrito é o antídoto do Bug 2 — e a folha vira sua espec pro agente de brinde."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">2️⃣</span> O agente gerou a tela de operação inteira. Pra ela entrar no projeto, você precisa…</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">De nada, gerou tá valendo</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Ler o diff, testar com o checklist e saber EXPLICAR no demo day</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Gerar uma segunda versão pra comparar</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Esconder do professor</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Cravou!" data-wrong="Revê o combinado!"
+             data-explain="a regra do curso: código que você não sabe explicar não entra. No demo day, cada trecho gerado será seu na hora de apresentar."></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       RESUMO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="resumo">
+    <div class="step-header">
+      <div class="step-number sn-green">🎒</div>
+      <div>
+        <div class="step-title">Saindo daqui hoje</div>
+        <div class="step-sub">~80% pronto — e o plano pros 20% finais</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="about-bullets">
+        <div>🎨 <strong>Tema escolhido</strong> e folha de projeto preenchida (e conferida)</div>
+        <div>🗄️ <strong>Banco criado</strong> com as tabelas planejadas</div>
+        <div>✋ <strong>CRUD da entidade 1 na mão</strong> — a prova de que você sabe</div>
+        <div>🤖 <strong>Agente acelerando o resto</strong> — com diff lido e teste feito</div>
+        <div>📋 <strong>Checklist andando</strong> — os 8 itens salvos nesta página</div>
+      </div>
+
+      <div class="warning">
+        <span class="tip-icon">🏠</span>
+        <div class="tip-content">
+          <strong>Tarefa (a única): terminar o checklist em casa.</strong> Faltou item?
+          O material inteiro + o agente + o grupo da turma estão aí. No Dia 8 o sistema
+          precisa estar FUNCIONANDO — porque ele vai pro ar, de verdade, com link.
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🎤</span>
+        <div class="tip-content">
+          <strong>Já prepare o demo day (3–5 min):</strong> ① o que é o sistema e pra quem;
+          ② login entrando; ③ um CRUD completo; ④ a operação de movimento acontecendo
+          (com a validação barrando o caso de erro!); ⑤ UM trecho gerado por agente,
+          explicado por você. Treine uma vez em voz alta — muda tudo.
+        </div>
+      </div>
+
+      <div class="next-chapter">
+        <h3>🌍 Dia 08 · No ar + Demo Day</h3>
+        <p style="color:var(--text-dim)">Seu sistema com URL pública — e a apresentação</p>
+        <a href="javascript:void(0)" class="btn-next disabled">🚧 Em construção — disponível antes do encontro 8</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="footer">
+  <p>Feito com 🌶️ pelo prof. Kelson Almeida — programa AI</p>
+</footer>
+
+<script src="../../shared/scripts.js" defer></script>
+<script type="module" src="../../shared/motion-fx.js"></script>
+<script>
+/* ══════════ Máquinas do capítulo 07 (vanilla) ══════════ */
+document.addEventListener('DOMContentLoaded', () => {
+
+  /* ---------- ⭐ É o mesmo esqueleto ---------- */
+  (function(){
+    const box = document.getElementById('swpSkel');
+    if (!box) return;
+    const themesEl = document.getElementById('skelThemes');
+    const body = document.getElementById('skelBody');
+    const colName = document.getElementById('skelColName');
+    const note = document.getElementById('skelNote');
+
+    const BASE = ['tabela produtos', 'tabela vendas', 'tela /produtos (Estoque)', 'tela /produtos/novo', 'a operação /vender', 'o histórico /vendas', 'validação de estoque'];
+    const THEMES = {
+      '💈 Barbearia': {
+        col: 'na Barbearia vira…',
+        map: ['tabela servicos', 'tabela agendamentos', '/servicos', '/servicos/novo', '/agendar (cliente + serviço + data)', '/agenda (o dia do barbeiro)', 'não agendar 2 no mesmo horário'],
+        note: 'a "venda" virou <strong>agendamento</strong> — INSERT do fato + o que ele mexe. Mesmo motor.',
+      },
+      '👗 Brechó': {
+        col: 'no Brechó vira…',
+        map: ['tabela pecas', 'tabela vendas', '/pecas (o acervo)', '/pecas/nova', '/vender (peça sai do acervo)', '/vendas + faturamento', 'peça vendida não vende de novo'],
+        note: 'quase a Loja pura — com a graça de cada peça ser <strong>única</strong> (quantidade 1).',
+      },
+      '🐾 Petshop': {
+        col: 'no Petshop vira…',
+        map: ['tabela servicos (banho, tosa…)', 'tabela atendimentos', '/servicos', '/servicos/novo', '/atender (pet + serviço)', '/atendimentos do dia', 'não atender sem serviço escolhido'],
+        note: 'bônus natural: a entidade 2 pode ser <strong>pets</strong> (nome, dono, telefone) — cadastro fofo.',
+      },
+      '🔧 Oficina': {
+        col: 'na Oficina vira…',
+        map: ['tabela pecas', 'tabela ordens_servico', '/pecas (estoque de peças)', '/pecas/nova', '/abrir-os (peça + carro + valor)', '/ordens (as OS do mês)', 'não usar peça sem estoque'],
+        note: 'a OS é a operação de movimento: <strong>consome peça do estoque</strong> — igualzinho ao Vender.',
+      },
+      '📚 Biblioteca': {
+        col: 'na Biblioteca vira…',
+        map: ['tabela livros', 'tabela emprestimos', '/livros', '/livros/novo', '/emprestar (livro + pessoa)', '/emprestimos abertos', 'não emprestar livro já emprestado'],
+        note: 'aqui o "estoque" é disponível/emprestado — o UPDATE muda um status em vez de subtrair. Variação elegante.',
+      },
+      '🍔 Lanchonete': {
+        col: 'na Lanchonete vira…',
+        map: ['tabela lanches', 'tabela pedidos', '/cardapio', '/lanches/novo', '/pedir (lanche + quantidade)', '/pedidos + total do caixa', 'não pedir quantidade zero'],
+        note: 'o clássico — e o total do caixa é o seu SUM brilhando no balcão.',
+      },
+    };
+
+    function render(name){
+      const t = THEMES[name];
+      [...themesEl.children].forEach(b => b.classList.toggle('on', b.textContent === name));
+      colName.textContent = t.col;
+      body.innerHTML = '';
+      BASE.forEach((b, i) => {
+        const tr = document.createElement('tr');
+        tr.className = 'zap';
+        tr.style.animationDelay = (i * 0.08) + 's';
+        tr.innerHTML = '<td>' + b + '</td><td>' + t.map[i] + '</td>';
+        body.appendChild(tr);
+      });
+      note.innerHTML = '💡 ' + t.note;
+    }
+
+    Object.keys(THEMES).forEach(name => {
+      const b = document.createElement('button');
+      b.className = 'swp-theme';
+      b.textContent = name;
+      b.addEventListener('click', () => render(name));
+      themesEl.appendChild(b);
+    });
+    render('💈 Barbearia');
+  })();
+
+  /* ---------- checklist com localStorage ---------- */
+  (function(){
+    const box = document.getElementById('projCheck');
+    if (!box) return;
+    const KEY = 'swp-projeto-final';
+    const inputs = [...box.querySelectorAll('input[type="checkbox"]')];
+    const bar = document.getElementById('checkBar');
+    const status = document.getElementById('checkStatus');
+
+    const load = () => { try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e){ return {}; } };
+
+    function update(){
+      const done = inputs.filter(i => i.checked).length;
+      bar.style.width = (done / inputs.length * 100) + '%';
+      const frases = [
+        'bora começar!', 'primeiro passo dado 💪', 'o banco vive!', 'metade do CRUD…',
+        'CRUD quase lá', 'CRUD COMPLETO! 🎉', 'a operação rodou — é um sistema!',
+        'falta só o cadeado…', 'PROJETO MÍNIMO COMPLETO! 🏆 Agora: extras ou descanso (mereceu)',
+      ];
+      status.innerHTML = '<strong>' + done + ' de ' + inputs.length + '</strong> — ' + frases[done];
+    }
+
+    const st = load();
+    inputs.forEach(i => {
+      if (st[i.dataset.k]) i.checked = true;
+      i.addEventListener('change', () => {
+        const cur = load();
+        cur[i.dataset.k] = i.checked;
+        localStorage.setItem(KEY, JSON.stringify(cur));
+        update();
+        if (i.checked && inputs.every(x => x.checked)) confettiAt(i);
+      });
+    });
+    update();
+  })();
+});
+</script>
+</body>
+</html>
