@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dia 08 · No ar + Demo Day — Sistemas Web com Python | programa AI</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../shared/styles.css">
+<link rel="stylesheet" href="../../shared/components.css">
+<link rel="stylesheet" href="../../shared/animations.css">
+<style>
+/* ══════════ CSS local do capítulo 08 (prefixo swp-) ══════════ */
+
+.swp-world-url,.swp-step-code,.swp-evo-api{
+  font-variant-ligatures:none;
+  font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+}
+
+.step-section.visible .reveal-stagger > *:nth-child(7){transition-delay:0.65s}
+.step-section.visible .reveal-stagger > *:nth-child(8){transition-delay:0.75s}
+
+.swp-machine-btn{
+  background:linear-gradient(135deg,var(--accent7),#04b389);color:#06281f;
+  border:0;font-weight:800;padding:9px 18px;border-radius:10px;cursor:pointer;
+  font-size:0.84rem;transition:transform .2s;font-family:'Nunito',sans-serif;
+}
+.swp-machine-btn:hover{transform:translateY(-2px)}
+.swp-machine-btn:disabled{opacity:0.35;cursor:default;transform:none}
+.swp-machine-btn.ghost{
+  background:rgba(255,255,255,0.06);color:var(--text-dim);
+  border:1px solid rgba(255,255,255,0.12);
+}
+.swp-machine-hud{
+  display:flex;align-items:center;gap:12px;padding:12px 16px;flex-wrap:wrap;
+  background:rgba(255,255,255,0.03);border-top:1px solid rgba(255,255,255,0.06);
+}
+.swp-machine-note{font-size:0.8rem;color:var(--text-dim);line-height:1.5;flex:1;min-width:180px}
+.swp-machine-note strong{color:var(--accent7)}
+
+/* ---------- MÁQUINA: do localhost pro mundo ---------- */
+.swp-world{
+  border:1px solid rgba(6,214,160,0.32);border-radius:18px;overflow:hidden;margin:18px 0;
+  background:
+    radial-gradient(1100px 280px at 50% -12%, rgba(6,214,160,0.10), transparent 70%),
+    linear-gradient(180deg,#0b1020,#0d0d1a);
+  box-shadow:0 22px 60px rgba(0,0,0,0.45);
+}
+.swp-world-stage{display:grid;grid-template-columns:1fr 1fr;gap:0}
+@media(max-width:760px){.swp-world-stage{grid-template-columns:1fr}}
+.swp-world-side{padding:18px;min-width:0;position:relative}
+.swp-world-side.before{border-right:1px solid rgba(255,255,255,0.06)}
+@media(max-width:760px){.swp-world-side.before{border-right:none;border-bottom:1px solid rgba(255,255,255,0.06)}}
+.swp-world-side .ws-tag{
+  display:inline-block;font-size:0.64rem;font-weight:800;letter-spacing:1.5px;
+  text-transform:uppercase;padding:4px 12px;border-radius:50px;margin-bottom:14px;
+}
+.swp-world-side.before .ws-tag{background:rgba(255,255,255,0.07);color:var(--text-dim)}
+.swp-world-side.after .ws-tag{background:rgba(6,214,160,0.14);color:var(--accent7)}
+.swp-world-server{
+  margin:0 auto;width:120px;text-align:center;padding:14px 8px;border-radius:14px;
+  border:1px solid rgba(255,255,255,0.15);background:var(--surface2);position:relative;
+}
+.swp-world-server .glow{
+  position:absolute;inset:-1px;border-radius:14px;opacity:0;pointer-events:none;
+  box-shadow:0 0 30px 3px rgba(6,214,160,0.4);transition:opacity .4s;
+}
+.swp-world-server.hot .glow{opacity:1}
+.swp-world-server .ico{font-size:2rem}
+.swp-world-server .nm{font-size:0.68rem;font-weight:800;margin-top:4px}
+.swp-world-url{
+  font-family:'JetBrains Mono',monospace;font-size:0.64rem;color:var(--accent7);
+  margin-top:4px;display:block;word-break:break-all;
+}
+.swp-world-clients{
+  display:flex;justify-content:center;gap:14px;margin-top:22px;flex-wrap:wrap;
+}
+.swp-world-client{
+  text-align:center;font-size:1.6rem;position:relative;opacity:0.85;
+}
+.swp-world-client .cl-name{display:block;font-size:0.56rem;color:var(--text-dim);font-weight:700}
+.swp-world-client .pkt{
+  position:absolute;left:50%;top:-16px;transform:translateX(-50%);
+  font-size:0.85rem;opacity:0;
+}
+.swp-world-client.ping .pkt{animation:swpWorldPkt 1.6s ease-in-out}
+@keyframes swpWorldPkt{
+  0%{opacity:0;transform:translate(-50%,0)}
+  25%{opacity:1}
+  50%{opacity:1;transform:translate(-50%,-34px)}
+  75%{opacity:1}
+  100%{opacity:0;transform:translate(-50%,0)}
+}
+.swp-world-note{font-size:0.8rem;color:var(--text-dim);text-align:center;margin-top:14px;line-height:1.5;min-height:40px}
+.swp-world-note strong{color:var(--text)}
+
+/* ---------- passo a passo do deploy ---------- */
+.swp-step{
+  border:1px solid rgba(255,255,255,0.08);border-radius:14px;background:var(--surface);
+  margin:12px 0;overflow:hidden;
+}
+.swp-step-head{
+  display:flex;align-items:center;gap:12px;padding:12px 18px;
+  background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.swp-step-num{
+  width:34px;height:34px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--accent7),var(--accent3));color:#06281f;
+  display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.95rem;
+}
+.swp-step-title{font-weight:800;font-size:0.98rem}
+.swp-step-body{padding:14px 18px;font-size:0.9rem;color:var(--text-dim);line-height:1.65}
+.swp-step-body strong{color:var(--text)}
+.swp-step-body code{background:rgba(255,255,255,0.07);padding:1px 6px;border-radius:5px;font-size:0.82rem}
+.swp-step-code{
+  font-family:'JetBrains Mono',monospace;font-size:0.78rem;line-height:1.9;color:#c9d1d9;
+  background:var(--code-bg);border:1px solid rgba(255,255,255,0.08);
+  border-radius:10px;padding:10px 14px;margin:10px 0;white-space:pre;overflow-x:auto;
+  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.15) transparent;
+}
+.swp-step-code::-webkit-scrollbar{height:5px}
+.swp-step-code::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:3px}
+/* mockup simplificado de tela do PythonAnywhere */
+.swp-pa{
+  border:1px solid rgba(255,255,255,0.10);border-radius:10px;overflow:hidden;margin:10px 0;
+  background:#fff;font-family:'Nunito',sans-serif;
+}
+.swp-pa-bar{
+  background:#1e4258;color:#fff;font-size:0.72rem;font-weight:800;padding:7px 12px;
+  display:flex;gap:12px;
+}
+.swp-pa-bar span{opacity:0.7}
+.swp-pa-bar span.on{opacity:1;border-bottom:2px solid #6bd6b7}
+.swp-pa-body{padding:12px 14px;color:#26282e;font-size:0.8rem;line-height:1.7}
+.swp-pa-body .btnish{
+  display:inline-block;background:#2f7d5d;color:#fff;border-radius:6px;
+  padding:4px 12px;font-weight:700;font-size:0.74rem;
+}
+.swp-pa-body .field{
+  background:#f2f3f7;border:1px solid #d8dce4;border-radius:6px;
+  padding:3px 9px;font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:#1e4258;
+  display:inline-block;
+}
+
+/* ---------- chat final feliz ---------- */
+.swp-chat{display:flex;flex-direction:column;gap:10px;max-width:480px;margin:18px auto}
+.swp-bubble{
+  padding:11px 16px;border-radius:16px;font-size:0.92rem;line-height:1.5;
+  max-width:85%;opacity:0.25;transform:translateY(6px);transition:all .5s ease;
+}
+.swp-bubble.active{opacity:1;transform:none}
+.swp-bubble .who{display:block;font-size:0.64rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;opacity:0.6;margin-bottom:3px}
+.swp-bubble.them{background:var(--surface2);border:1px solid rgba(255,255,255,0.08);align-self:flex-start;border-bottom-left-radius:4px}
+.swp-bubble.me{background:linear-gradient(135deg,rgba(6,214,160,0.18),rgba(6,214,160,0.08));border:1px solid rgba(6,214,160,0.35);align-self:flex-end;border-bottom-right-radius:4px}
+.swp-bubble.big{font-size:1.05rem;font-weight:700}
+.swp-bubble a{color:var(--accent7);font-family:'JetBrains Mono',monospace;font-size:0.82rem;word-break:break-all}
+
+/* ---------- MÁQUINA: a evolução (ponte fullstack) ---------- */
+.swp-evo{
+  border:1px solid rgba(97,218,251,0.32);border-radius:18px;overflow:hidden;margin:18px 0;
+  background:
+    radial-gradient(1100px 280px at 50% -12%, rgba(97,218,251,0.10), transparent 70%),
+    linear-gradient(180deg,#0b1020,#0d0d1a);
+}
+.swp-evo-stage{padding:22px 18px;min-height:190px;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+.swp-evo-box{
+  border-radius:14px;border:1px solid rgba(255,255,255,0.14);background:var(--surface2);
+  padding:14px 18px;text-align:center;transition:all .6s ease;min-width:130px;
+}
+.swp-evo-box .eb-ico{font-size:1.8rem}
+.swp-evo-box .eb-nm{font-weight:800;font-size:0.85rem;margin-top:4px}
+.swp-evo-box .eb-sub{font-size:0.66rem;color:var(--text-dim);margin-top:2px;line-height:1.4}
+.swp-evo-box.mono{border-color:rgba(6,214,160,0.4)}
+.swp-evo-box.front{border-color:rgba(97,218,251,0.5)}
+.swp-evo-box.back{border-color:rgba(248,152,32,0.5)}
+.swp-evo-box.hidden-box{opacity:0;transform:scale(0.7);position:absolute;pointer-events:none}
+.swp-evo-api{
+  font-family:'JetBrains Mono',monospace;font-size:0.66rem;color:var(--accent5);
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  opacity:0;transition:opacity .6s ease .3s;
+}
+.swp-evo-api.on{opacity:1}
+.swp-evo-api .wire{width:70px;height:2px;background:linear-gradient(90deg,var(--react),var(--accent5));border-radius:2px;position:relative;overflow:visible}
+.swp-evo-api .wire::after{
+  content:'';position:absolute;width:8px;height:8px;border-radius:50%;top:-3px;left:0;
+  background:var(--accent5);box-shadow:0 0 10px var(--accent5);
+  animation:swpEvoPkt 1.6s linear infinite;
+}
+@keyframes swpEvoPkt{0%{left:-4px;opacity:0}15%{opacity:1}85%{opacity:1}100%{left:100%;opacity:0}}
+.swp-evo-note{padding:0 18px 14px;font-size:0.84rem;color:var(--text-dim);text-align:center;line-height:1.6;min-height:44px}
+.swp-evo-note strong{color:var(--text)}
+
+/* lista final de conquistas */
+.swp-final{margin:14px 0}
+.swp-final .fitem{
+  display:flex;gap:12px;align-items:flex-start;padding:9px 0;
+  border-bottom:1px dashed rgba(255,255,255,0.07);
+  font-size:0.94rem;color:var(--text-dim);line-height:1.55;
+}
+.swp-final .fitem:last-child{border-bottom:none}
+.swp-final .fitem .fi{flex-shrink:0}
+.swp-final .fitem strong{color:var(--text)}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-orbs">
+  <div class="orb"></div>
+  <div class="orb"></div>
+  <div class="orb"></div>
+</div>
+
+<div class="progress-track"><div class="progress-bar"></div></div>
+
+<button class="menu-toggle" onclick="openSidebar()" aria-label="Abrir menu">☰</button>
+<aside class="sidebar-nav" id="sidebar">
+  <button class="sidebar-close" onclick="closeSidebar()" aria-label="Fechar menu">✕</button>
+  <div class="sidebar-header">
+    <h3>🌍 Dia 08 · No ar!</h3>
+    <a href="../../index.html" class="sidebar-back">← Voltar ao hub</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🚀 Deploy</div>
+    <a class="sidebar-link" onclick="goTo('aquecimento')"><span class="dot" style="background:var(--accent5)"></span>A conversa pendente</a>
+    <a class="sidebar-link" onclick="goTo('o-que-e-deploy')"><span class="dot" style="background:var(--accent7)"></span>⭐ Do localhost pro mundo</a>
+    <a class="sidebar-link" onclick="goTo('preparar')"><span class="dot" style="background:var(--python-y)"></span>Preparando o app</a>
+    <a class="sidebar-link" onclick="goTo('pythonanywhere')"><span class="dot" style="background:var(--accent4)"></span>O passo a passo</a>
+    <a class="sidebar-link" onclick="goTo('celular')"><span class="dot" style="background:var(--accent7)"></span>⭐ O momento do celular</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🎤 Demo Day</div>
+    <a class="sidebar-link" onclick="goTo('demo-day')"><span class="dot" style="background:var(--accent6)"></span>O roteiro dos 5 minutos</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🌉 E agora?</div>
+    <a class="sidebar-link" onclick="goTo('ponte')"><span class="dot" style="background:var(--react)"></span>⭐ A evolução</a>
+    <a class="sidebar-link" onclick="goTo('quiz')"><span class="dot" style="background:var(--accent5)"></span>Quiz final do curso</a>
+    <a class="sidebar-link" onclick="goTo('resumo')"><span class="dot" style="background:var(--accent7)"></span>O que você conquistou</a>
+  </div>
+</aside>
+<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-icons">🚀 🌍 🎤</div>
+  <span class="hero-badge python">Dia 08 · Sistemas Web com Python — o último</span>
+  <h1><span style="background:linear-gradient(135deg,var(--accent7),var(--accent4));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">No ar +<br>Demo Day</span></h1>
+  <p class="subtitle">
+    Oito encontros atrás, seu sistema "não tinha link". Hoje ele ganha um —
+    <strong style="color:var(--accent7)">público, de verdade, no ar</strong> — você
+    apresenta pra turma, e a gente conversa sobre
+    <strong style="color:var(--accent4)">o que vem depois</strong>. 🥂
+  </p>
+  <div class="hero-stack">
+    <span class="stack-chip">🚀 deploy</span>
+    <span class="stack-chip">📱 link no celular</span>
+    <span class="stack-chip">🎤 demo day</span>
+    <span class="stack-chip">🌉 a ponte</span>
+  </div>
+</section>
+
+<div class="container">
+
+  <!-- ═══════════════════════════════════════════════════════
+       AQUECIMENTO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="aquecimento">
+    <div class="step-header">
+      <div class="step-number sn-yellow">💬</div>
+      <div>
+        <div class="step-title">A conversa pendente</div>
+        <div class="step-sub">Lembra dela? Hoje ela termina diferente.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Na apresentação do curso, uma conversa doeu:
+        <em>"me manda o LINK que eu abro aqui no celular"</em> —
+        e não tinha link. Oito encontros. CRUD, banco, transação, login.
+        <strong style="color:var(--text)">Só falta o link.</strong>
+        E "deploy" é exatamente isso: dar um endereço público pro sistema que
+        <strong style="color:var(--text)">já está pronto</strong>.
+      </p>
+
+      <div class="concept">
+        <div class="concept-title">💡 O plano do dia</div>
+        <p>
+          ① Preparar o app (2 ajustes) → ② subir no <strong>PythonAnywhere</strong>
+          (grátis) → ③ abrir NO CELULAR → ④ apresentar no demo day → ⑤ a conversa sobre
+          o próximo passo. Sem conteúdo novo pesado — hoje é dia de colheita. 🌾
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ DO LOCALHOST PRO MUNDO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="o-que-e-deploy">
+    <div class="step-header">
+      <div class="step-number sn-mint">⭐</div>
+      <div>
+        <div class="step-title">Do localhost pro mundo</div>
+        <div class="step-sub">O que muda (e o que NÃO muda) quando o sistema vai pro ar</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        A cozinha (o servidor Flask) é a mesma. O que muda é
+        <strong style="color:var(--text)">ONDE ela fica</strong> e
+        <strong style="color:var(--text)">QUEM alcança a mesa</strong>:
+      </p>
+
+      <div class="swp-world" id="swpWorld">
+        <div class="swp-world-stage">
+          <div class="swp-world-side before">
+            <span class="ws-tag">até ontem — localhost</span>
+            <div class="swp-world-server">
+              <div class="glow"></div>
+              <div class="ico">💻</div>
+              <div class="nm">seu notebook</div>
+              <span class="swp-world-url">localhost:5000</span>
+            </div>
+            <div class="swp-world-clients">
+              <div class="swp-world-client" data-side="before"><span class="pkt">✉️</span>🌐<span class="cl-name">só você</span></div>
+            </div>
+            <div class="swp-world-note">a cozinha desliga quando o notebook fecha — e <strong>ninguém mais tem o endereço</strong></div>
+          </div>
+          <div class="swp-world-side after">
+            <span class="ws-tag">hoje — na nuvem 🌍</span>
+            <div class="swp-world-server" id="worldCloud">
+              <div class="glow"></div>
+              <div class="ico">☁️</div>
+              <div class="nm">PythonAnywhere</div>
+              <span class="swp-world-url">voce.pythonanywhere.com</span>
+            </div>
+            <div class="swp-world-clients" id="worldClients">
+              <div class="swp-world-client" data-side="after"><span class="pkt">✉️</span>📱<span class="cl-name">sua mãe</span></div>
+              <div class="swp-world-client" data-side="after"><span class="pkt">✉️</span>📱<span class="cl-name">a amiga</span></div>
+              <div class="swp-world-client" data-side="after"><span class="pkt">✉️</span>💻<span class="cl-name">o RH 👀</span></div>
+              <div class="swp-world-client" data-side="after"><span class="pkt">✉️</span>📱<span class="cl-name">a turma</span></div>
+            </div>
+            <div class="swp-world-note">um computador <strong>que nunca desliga</strong>, com endereço público — requests chegando de qualquer lugar</div>
+          </div>
+        </div>
+        <div class="swp-machine-hud">
+          <button class="swp-machine-btn" id="worldGo">▶ Simular os acessos</button>
+          <span class="swp-machine-note" id="worldNote">é a máquina Pedido ao Vivo do Dia 1 — só que agora com o mundo inteiro na mesa</span>
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🧠</span>
+        <div class="tip-content">
+          <strong>Nada de novo por dentro:</strong> request → rota → banco.py → SQLite →
+          response. O ciclo que você domina desde o Dia 1, num computador alugado
+          (de graça) que fica ligado por você.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       PREPARAR
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="preparar">
+    <div class="step-header">
+      <div class="step-number sn-py">🔧</div>
+      <div>
+        <div class="step-title">Preparando o app: 2 ajustes</div>
+        <div class="step-sub">Uma linha nova no fim do app.py — e uma conferência</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        <strong style="color:var(--text)">Ajuste 1:</strong> na nuvem, quem LIGA o seu app é a
+        plataforma — o <code>app.run()</code> é só pra sua máquina. O jeito profissional de
+        dizer isso em Python:
+      </p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">app.py — a ÚLTIMA linha vira isto</span>
+          <span class="lang-badge python">Python</span>
+        </div>
+<pre><span class="kw">if</span> __name__ == <span class="st">"__main__"</span>:
+    app.run(debug=<span class="bool">True</span>)</pre>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 O if do "quem me chamou?"</div>
+        <p>
+          <code>__name__</code> vale <code>"__main__"</code> quando VOCÊ roda o arquivo
+          (▶ no PyCharm) — aí o app.run liga o servidor local, como sempre.
+          Quando o PythonAnywhere <strong>importa</strong> seu app, o if é falso e o
+          app.run nem roda — a plataforma liga do jeito dela. Um if, dois mundos.
+          (Você já viu esse padrão em código por aí — agora sabe o que ele faz.)
+        </p>
+      </div>
+
+      <p style="color:var(--text-dim)">
+        <strong style="color:var(--text)">Ajuste 2 — conferência:</strong> seu
+        <code>secret_key</code> está definido? (Sem ele, flash e login quebram na nuvem
+        igual quebrariam local.) E o <code>debug=True</code> pode ficar — dentro do if,
+        ele nunca roda no servidor público. ✅
+      </p>
+    </div>
+  </section>
+
+  <div class="chapter-divider">
+    <div class="chapter-icon">🚀</div>
+    <div class="chapter-number">A subida</div>
+    <h2 style="background:linear-gradient(135deg,var(--accent4),var(--accent7));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">PythonAnywhere, passo a passo</h2>
+    <p class="chapter-subtitle">Do zip ao link público em 7 passos</p>
+  </div>
+
+<!-- ═══════════════════════════════════════════════════════
+       PYTHONANYWHERE PASSO A PASSO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="pythonanywhere">
+    <div class="step-header">
+      <div class="step-number sn-blue">🗺️</div>
+      <div>
+        <div class="step-title">Os 7 passos (com o professor junto no telão)</div>
+        <div class="step-sub">Siga na ordem — cada passo tem seu checkpoint</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="swp-step">
+        <div class="swp-step-head"><span class="swp-step-num">1</span><span class="swp-step-title">Conta gratuita — e o nome IMPORTA</span></div>
+        <div class="swp-step-body">
+          Em <code>pythonanywhere.com</code> → <strong>Create a Beginner account</strong> (grátis).
+          Atenção máxima ao <strong>username</strong>: ele vira sua URL pública pra sempre —
+          <code>SEUNOME.pythonanywhere.com</code>. Escolha algo apresentável
+          (o RH vai ver 👀). Confirme o e-mail.
+        </div>
+      </div>
+
+      <div class="swp-step">
+        <div class="swp-step-head"><span class="swp-step-num">2</span><span class="swp-step-title">Compacte o projeto (SEM o venv!)</span></div>
+        <div class="swp-step-body">
+          No seu computador, selecione <strong>só o conteúdo</strong> do projeto:
+          <code>app.py</code>, <code>banco.py</code>, <code>criar_banco.py</code> e a pasta
+          <code>templates</code> → botão direito → <strong>Comprimir</strong> →
+          <code>projeto.zip</code>.
+          <div class="note" style="margin-top:8px"></div>
+          <strong>⚠️ NÃO inclua a pasta venv</strong> (são milhares de arquivos do SEU
+          computador — a nuvem tem o Python dela) nem o <code>loja.db</code>
+          (banco novo nasce lá, limpinho).
+        </div>
+      </div>
+
+      <div class="swp-step">
+        <div class="swp-step-head"><span class="swp-step-num">3</span><span class="swp-step-title">Upload + unzip no console</span></div>
+        <div class="swp-step-body">
+          Aba <strong>Files</strong> → botão <strong>Upload a file</strong> → mande o
+          <code>projeto.zip</code>. Depois, aba <strong>Consoles → Bash</strong>
+          (é um terminal — na nuvem!):
+          <div class="swp-step-code">unzip projeto.zip -d loja
+cd loja
+python3 criar_banco.py</div>
+          <strong>Checkpoint:</strong> o console imprime "Banco criado! 🗄️" — o
+          <code>loja.db</code> nasceu NA NUVEM, na pasta certa.
+        </div>
+      </div>
+
+      <div class="swp-step">
+        <div class="swp-step-head"><span class="swp-step-num">4</span><span class="swp-step-title">Criar o web app (Manual configuration)</span></div>
+        <div class="swp-step-body">
+          Aba <strong>Web</strong> → <strong>Add a new web app</strong> →
+          <em>Next</em> → escolha <strong>Manual configuration</strong> (NÃO o atalho "Flask"!)
+          → Python 3.10 (ou o mais novo) → <em>Next</em>.
+          <div class="swp-pa">
+            <div class="swp-pa-bar"><span>Dashboard</span><span>Consoles</span><span>Files</span><span class="on">Web</span><span>Databases</span></div>
+            <div class="swp-pa-body">
+              <span class="btnish">+ Add a new web app</span> &nbsp;→&nbsp; Manual configuration → Python 3.10
+            </div>
+          </div>
+          Por que manual? Porque VOCÊ sabe configurar — o atalho esconde exatamente as
+          partes que você entende.
+        </div>
+      </div>
+
+      <div class="swp-step">
+        <div class="swp-step-head"><span class="swp-step-num">5</span><span class="swp-step-title">Apontar os caminhos (o passo que evita o BugZilla)</span></div>
+        <div class="swp-step-body">
+          Ainda na aba Web, seção <strong>Code</strong>, preencha os DOIS campos com a
+          pasta do projeto:
+          <div class="swp-pa">
+            <div class="swp-pa-bar"><span class="on">Web</span></div>
+            <div class="swp-pa-body">
+              Source code: <span class="field">/home/SEUNOME/loja</span><br>
+              <strong>Working directory:</strong> <span class="field">/home/SEUNOME/loja</span>
+            </div>
+          </div>
+          O <strong>working directory</strong> é ONDE o app "está parado" quando roda —
+          é ele que faz o <code>connect("loja.db")</code> achar o arquivo certo.
+          Lembra do <em>no such table</em> do Dia 3? <strong>É a mesma pegadinha,
+          agora em produção.</strong> Este campo é o remédio.
+        </div>
+      </div>
+
+      <div class="swp-step">
+        <div class="swp-step-head"><span class="swp-step-num">6</span><span class="swp-step-title">O arquivo WSGI — a ponte da plataforma</span></div>
+        <div class="swp-step-body">
+          Na seção Code, clique no link do <strong>WSGI configuration file</strong>.
+          Apague TUDO que está lá e deixe só isto (trocando SEUNOME):
+          <div class="swp-step-code">import sys
+
+path = "/home/SEUNOME/loja"
+if path not in sys.path:
+    sys.path.append(path)
+
+from app import app as application</div>
+          Traduzindo: "Python, olhe na minha pasta… e o <code>app</code> do meu
+          <code>app.py</code> é o aplicativo que você vai servir". É por ISSO que o
+          <code>if __name__</code> importa: aqui o seu arquivo é <strong>importado</strong>,
+          não executado. Salve (o disquete verde).
+        </div>
+      </div>
+
+      <div class="swp-step">
+        <div class="swp-step-head"><span class="swp-step-num">7</span><span class="swp-step-title">Reload — e o link existe 🎉</span></div>
+        <div class="swp-step-body">
+          De volta à aba Web: o botão verde <strong>Reload SEUNOME.pythonanywhere.com</strong>.
+          Clique. Espere os segundinhos. E abra:
+          <div class="swp-pa">
+            <div class="swp-pa-bar"><span class="on">🌍 seunome.pythonanywhere.com</span></div>
+            <div class="swp-pa-body">🛍️ <strong>Minha Loja</strong> — no ar. Com login. Pro mundo.</div>
+          </div>
+          <strong>Checkpoint final:</strong> logue, cadastre um produto, faça uma venda —
+          NA URL PÚBLICA. Funciona? Respira. Você tem um sistema em produção.
+        </div>
+      </div>
+
+      <div class="bugzilla-card">
+        <div class="bugzilla-header">
+          <span class="bugzilla-emoji">🐛</span>
+          <div>
+            <div class="bugzilla-title">BugZilla do deploy — os 3 de sempre</div>
+            <div class="bugzilla-sub">Todo deploy do mundo passa por isso. Sério.</div>
+          </div>
+        </div>
+        <div class="bugzilla-body">
+          <p>
+            <strong>① "Something went wrong :-("</strong> → aba Web →
+            <strong>Error log</strong> (o último erro fica no FINAL do arquivo).
+            É um traceback Python — você lê traceback desde o Dia 1.
+            💊 90% das vezes: nome errado no WSGI (SEUNOME!) ou esqueceu o Reload.
+          </p>
+          <p>
+            <strong>② no such table: produtos</strong> → o velho conhecido:
+            <strong>working directory</strong> não configurado (passo 5) ou esqueceu o
+            <code>criar_banco.py</code> no console (passo 3). 💊 Conferir os dois → Reload.
+          </p>
+          <p>
+            <strong>③ ModuleNotFoundError: flask</strong> → raro no PythonAnywhere (o Flask
+            já vem), mas se pintar: console Bash →
+            <code>pip3 install --user flask</code> → Reload.
+          </p>
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🔁</span>
+        <div class="tip-content">
+          <strong>Atualizou o código depois?</strong> O ciclo é: upload do arquivo novo
+          (ou edite direto na aba Files — tem editor!) → <strong>Reload</strong>.
+          Sem reload, a nuvem continua servindo a versão antiga.
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🛤️</span>
+        <div class="tip-content">
+          <strong>Alternativa que você verá por aí:</strong> o Render (render.com) faz deploy
+          direto do GitHub — mais "de mercado", porém pede Git, que não aprofundamos.
+          Fica o nome anotado pra sua segunda subida. O conceito é idêntico.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ O MOMENTO DO CELULAR
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="celular">
+    <div class="step-header">
+      <div class="step-number sn-mint">⭐</div>
+      <div>
+        <div class="step-title">O momento do celular</div>
+        <div class="step-sub">A conversa do primeiro dia — take 2</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Pegue o celular. Saia do Wi-Fi (4G, pra não ter dúvida). Abra a SUA URL.
+        <strong style="color:var(--text)">Está no ar. De verdade.</strong>
+        E aquela conversa lá do começo?
+      </p>
+
+      <div class="swp-chat" data-seq="1800">
+        <div class="swp-bubble them" data-seq-step="0,1,2,3,4">
+          <span class="who">A amiga</span>
+          e aquele sistema que você tava fazendo no curso? 👀
+        </div>
+        <div class="swp-bubble me" data-seq-step="1,2,3,4">
+          <span class="who">Você</span>
+          toma: <a href="javascript:void(0)">minhaloja.pythonanywhere.com</a> 😎
+        </div>
+        <div class="swp-bubble them" data-seq-step="2,3,4">
+          abriu AQUI NO MEU CELULAR
+        </div>
+        <div class="swp-bubble them big" data-seq-step="3,4">
+          CARAAA 😱 tem até LOGIN?? você que fez MESMO??
+        </div>
+        <div class="swp-bubble me" data-seq-step="4">
+          cada linha. bom, quase — umas partes eu só dirigi 🤖😄
+        </div>
+        <span data-seq-step="99" style="display:none"></span>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">📣</span>
+        <div class="tip-content">
+          <strong>Agora manda no grupo da família.</strong> É sério. Programador júnior com
+          sistema NO AR e link pra mostrar é raridade em entrevista — e você acabou de
+          virar um. Aliás: <strong>põe a URL no seu LinkedIn e no currículo hoje.</strong>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="chapter-divider">
+    <div class="chapter-icon">🎤</div>
+    <div class="chapter-number">A festa</div>
+    <h2 style="background:linear-gradient(135deg,var(--accent6),var(--accent5));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Demo Day</h2>
+    <p class="chapter-subtitle">3 a 5 minutos que valem por um portfólio</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       DEMO DAY
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="demo-day">
+    <div class="step-header">
+      <div class="step-number sn-purple">🎤</div>
+      <div>
+        <div class="step-title">O roteiro dos seus 5 minutos</div>
+        <div class="step-sub">Apresente como quem construiu — porque construiu</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="swp-step">
+        <div class="swp-step-head"><span class="swp-step-num">1</span><span class="swp-step-title">O pitch (30s)</span></div>
+        <div class="swp-step-body">"Este é o <em>[nome]</em>, um sistema pra <em>[quem]</em> resolver <em>[o quê]</em>." Uma frase. Abra JÁ na URL pública — deploy é a primeira coisa a mostrar.</div>
+      </div>
+      <div class="swp-step">
+        <div class="swp-step-head"><span class="swp-step-num">2</span><span class="swp-step-title">Login + um CRUD completo (2min)</span></div>
+        <div class="swp-step-body">Entre com o login, cadastre um item AO VIVO, edite, mostre o flash aparecendo. Coisas funcionando &gt; slides falando.</div>
+      </div>
+      <div class="swp-step">
+        <div class="swp-step-head"><span class="swp-step-num">3</span><span class="swp-step-title">A operação de movimento — COM o erro (1min)</span></div>
+        <div class="swp-step-body">Faça a operação (venda/agendamento/empréstimo)… e <strong>tente quebrar de propósito</strong> (estoque insuficiente, campo vazio). A validação barrando impressiona MAIS que o caminho feliz — é o que separa sistema de protótipo.</div>
+      </div>
+      <div class="swp-step">
+        <div class="swp-step-head"><span class="swp-step-num">4</span><span class="swp-step-title">O trecho do agente, explicado (1min)</span></div>
+        <div class="swp-step-body">Abra UM código que o agente gerou e explique como se fosse seu — porque agora é. É o combinado do curso, e é a habilidade que o mercado está pagando caro: <strong>dirigir IA sabendo o que ela fez</strong>.</div>
+      </div>
+      <div class="swp-step">
+        <div class="swp-step-head"><span class="swp-step-num">5</span><span class="swp-step-title">Fecho (30s)</span></div>
+        <div class="swp-step-body">"O que eu faria na versão 2" — a sua lista de extras vira visão de produto. Encerra com a URL na tela.</div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">😅</span>
+        <div class="tip-content">
+          <strong>Se algo quebrar ao vivo:</strong> respira, lê o erro EM VOZ ALTA e conserta
+          ou contorna. Turma e professor já viram você domar o BugZilla 8 semanas —
+          debugar com plateia é a habilidade final. Ninguém esquece a demo de quem
+          consertou ao vivo. 😄
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="chapter-divider">
+    <div class="chapter-icon">🌉</div>
+    <div class="chapter-number">E agora?</div>
+    <h2 style="background:linear-gradient(135deg,var(--react),var(--spring));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">A ponte</h2>
+    <p class="chapter-subtitle">O que o seu sistema NÃO faz — e o que o mercado usa</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ A EVOLUÇÃO (PONTE)
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="ponte">
+    <div class="step-header">
+      <div class="step-number" style="background:linear-gradient(135deg,var(--react),var(--spring))">⭐</div>
+      <div>
+        <div class="step-title">A evolução: o que vem depois do monólito</div>
+        <div class="step-sub">Três perguntas que o seu sistema (ainda) não responde</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Seu sistema é o que o mercado chama de <strong style="color:var(--text)">monólito
+        server-rendered</strong>: um Flask que faz tudo — telas E dados. Pra um negócio
+        pequeno, é PERFEITO (e há empresas grandes rodando assim!). Mas três perguntas
+        quebram ele:
+      </p>
+
+      <div class="keyword-grid">
+        <div class="keyword-chip">
+          <span class="emoji">📱</span>
+          <span class="kw-name">"E o app do celular?"</span>
+          <span class="kw-desc">app não renderiza template Jinja — ele precisa dos DADOS crus</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">👥</span>
+          <span class="kw-name">"E se o front for de outro time?"</span>
+          <span class="kw-desc">designer e dev de tela não querem mexer no seu Python</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">📈</span>
+          <span class="kw-name">"E com 10 devs e 1 milhão de usuários?"</span>
+          <span class="kw-desc">todo mundo no mesmo app.py? escala de gente e de máquina pedem separação</span>
+        </div>
+      </div>
+
+      <p style="color:var(--text-dim);margin-top:14px">
+        A resposta do mercado é <strong style="color:var(--text)">separar</strong> —
+        aperte o botão e veja:
+      </p>
+
+      <div class="swp-evo" id="swpEvo">
+        <div class="swp-evo-stage" id="evoStage">
+          <div class="swp-evo-box mono" id="evoMono">
+            <div class="eb-ico">🌶️</div>
+            <div class="eb-nm">Seu Flask</div>
+            <div class="eb-sub">telas + regras + dados<br>tudo junto (monólito)</div>
+          </div>
+          <div class="swp-evo-box front hidden-box" id="evoFront">
+            <div class="eb-ico">⚛️</div>
+            <div class="eb-nm">Frontend</div>
+            <div class="eb-sub">React — só telas,<br>rodando no navegador</div>
+          </div>
+          <div class="swp-evo-api" id="evoApi">
+            <span>API · JSON</span>
+            <div class="wire"></div>
+            <span>a "garçonete de dados"</span>
+          </div>
+          <div class="swp-evo-box back hidden-box" id="evoBack">
+            <div class="eb-ico">☕</div>
+            <div class="eb-nm">Backend</div>
+            <div class="eb-sub">Java + Spring — regras<br>e dados, sem telas</div>
+          </div>
+        </div>
+        <div class="swp-evo-note" id="evoNote">o seu sistema de hoje: uma peça só, e funcionando 💪</div>
+        <div class="swp-machine-hud">
+          <button class="swp-machine-btn" id="evoGo">🌉 Evoluir a arquitetura</button>
+          <button class="swp-machine-btn ghost" id="evoBackBtn" disabled>↩ Voltar ao monólito</button>
+          <span class="swp-machine-note" id="evoHudNote">a separação que o mercado usa — e o assunto do próximo curso</span>
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 Você já conhece TODAS as peças da foto nova</div>
+        <p>
+          O backend continua sendo rotas + banco + validações — <strong>o que você fez 8
+          semanas</strong>, em outra linguagem. A API é o garçom que em vez de página
+          entrega <strong>dados puros (JSON — que você conhece do bootcamp!)</strong>,
+          num estilo chamado <strong>REST</strong>. E o front é o time das telas.
+          O curso <strong>Fullstack — React + Java/Spring</strong> é exatamente essa foto,
+          construída do zero. Quem veio deste curso entra com uma vantagem covarde:
+          já sabe o que há POR TRÁS da API.
+        </p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🎓</span>
+        <div class="tip-content">
+          <strong>Turma desta edição tem condição especial no Fullstack</strong> — fala com o
+          professor hoje (sim, hoje — a turma nova abre logo). E independente de curso:
+          seu próximo passo natural é <em>colocar mais um sistema no ar</em>. Repetição é
+          o que transforma "eu consegui" em "eu sei".
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       QUIZ FINAL
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="quiz">
+    <div class="step-header">
+      <div class="step-number sn-yellow">🧠</div>
+      <div>
+        <div class="step-title">Quiz final — os 8 dias em 4 perguntas</div>
+        <div class="step-sub">Repare como as respostas saem sozinhas agora</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">1️⃣</span> Sua amiga abre minhaloja.pythonanywhere.com no celular. O que acontece, na ordem?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">O site é baixado pro celular dela</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Request → rota no Flask → SELECT no SQLite → response com HTML renderizado</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">O Python roda no celular</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Mágica de nuvem</button>
+        </div>
+        <div class="quiz-feedback" data-correct="O ciclo completo!" data-wrong="Volta ao garçom!"
+             data-explain="o MESMO ciclo do Dia 1 — garçom, cozinha, despensa — só que a cozinha agora mora num endereço público."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">2️⃣</span> Por que o app.run() vai dentro do if __name__ == "__main__"?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Pra rodar mais rápido</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">É obrigatório em Python</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Na nuvem o app é IMPORTADO — quem liga o servidor é a plataforma</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Pra esconder o debug</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Exato!" data-wrong="Revisa o preparo!"
+             data-explain="rodou você (▶): __main__ → app.run liga local. Importou a plataforma (WSGI): o if é falso e ela assume. Um if, dois mundos."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">3️⃣</span> "no such table" SÓ na nuvem (local funciona). O suspeito número 1:</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">O SQLite não funciona em nuvem</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Working directory errado — ou o criar_banco.py não rodou lá</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Faltou pagar o plano</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">O zip corrompeu</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Diagnóstico de gente grande!" data-wrong="É o velho conhecido!"
+             data-explain="a pegadinha do Dia 3 em produção: connect procura o .db na pasta 'atual' — e quem define a pasta atual na nuvem é o working directory."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">4️⃣</span> No modelo separado (a evolução), o que viaja entre o React e o backend?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Páginas HTML prontas</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Arquivos .py</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Dados puros em JSON, via API (estilo REST)</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">O banco inteiro</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Pronto pro fullstack!" data-wrong="Revê a ponte!"
+             data-explain="o garçom da API entrega ingredientes (JSON), não o prato pronto (HTML) — e o front monta a tela. É o mundo do próximo curso."></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       RESUMO FINAL
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="resumo">
+    <div class="step-header">
+      <div class="step-number sn-green">🏆</div>
+      <div>
+        <div class="step-title">O que você conquistou em 8 encontros</div>
+        <div class="step-sub">Leia a lista inteira. Em voz alta, se possível.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="swp-final">
+        <div class="fitem"><span class="fi">🌐</span><span><strong>Você entende a web:</strong> request, response, URL, porta, GET, POST, status codes — o mecanismo por trás de TODO site que você usa</span></div>
+        <div class="fitem"><span class="fi">🧱</span><span><strong>Você escreve HTML</strong> e sabe o que o CSS e o JS fazem (e onde aprendê-los a fundo)</span></div>
+        <div class="fitem"><span class="fi">🌶️</span><span><strong>Você escreve servidores em Python:</strong> rotas, templates Jinja, formulários, validações, flash, sessão</span></div>
+        <div class="fitem"><span class="fi">🗄️</span><span><strong>Você fala SQL:</strong> CREATE, INSERT, SELECT (WHERE, JOIN, SUM, GROUP BY), UPDATE, DELETE — com placeholders, transação e a cicatriz honrosa do commit esquecido</span></div>
+        <div class="fitem"><span class="fi">🏗️</span><span><strong>Você arquiteta:</strong> camadas (app/banco/templates), PRG, duas tabelas relacionadas, operação de negócio com validação</span></div>
+        <div class="fitem"><span class="fi">🤖</span><span><strong>Você dirige agentes de IA</strong> com o fluxo profissional — especifica, lê diff, testa, e explica cada linha que entra</span></div>
+        <div class="fitem"><span class="fi">🚀</span><span><strong>Você fez deploy:</strong> tem um sistema COM LOGIN rodando numa URL pública, que você construiu e apresenta com a boca cheia</span></div>
+        <div class="fitem"><span class="fi">🐛</span><span><strong>E o mais raro:</strong> você lê mensagens de erro sem pânico. O BugZilla virou colega de trabalho.</span></div>
+      </div>
+
+      <div class="concept" style="margin-top:18px">
+        <div class="concept-title">🎯 A última frase do curso</div>
+        <p>
+          No primeiro dia, seu talento estava preso no seu computador.
+          Hoje ele tem <strong>endereço público</strong>.
+          O resto — Fullstack, mercado, os próximos sistemas — é continuação.
+          <strong>Obrigado por construir junto. 🌶️</strong>
+        </p>
+      </div>
+
+      <div class="next-chapter">
+        <h3>🗺️ Reveja qualquer encontro quando quiser</h3>
+        <p style="color:var(--text-dim)">O material fica no ar — ele é seu</p>
+        <a href="../../index.html" class="btn-next">🏠 Voltar ao hub do curso</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="footer">
+  <p>Feito com 🌶️ pelo prof. Kelson Almeida — programa AI · fim do curso, começo do resto 🚀</p>
+</footer>
+
+<script src="../../shared/scripts.js" defer></script>
+<script type="module" src="../../shared/motion-fx.js"></script>
+<script>
+/* ══════════ Máquinas do capítulo 08 (vanilla) ══════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  /* ---------- ⭐ Do localhost pro mundo ---------- */
+  (function(){
+    const box = document.getElementById('swpWorld');
+    if (!box) return;
+    const cloud = document.getElementById('worldCloud');
+    const note = document.getElementById('worldNote');
+    const clients = [...box.querySelectorAll('.swp-world-client')];
+    let busy = false;
+
+    async function run(){
+      if (busy) return;
+      busy = true;
+      note.innerHTML = 'requests chegando de todo lado — e a cozinha atendendo TODOS…';
+      for (let round = 0; round < 2; round++){
+        for (const c of clients){
+          c.classList.remove('ping');
+          void c.offsetWidth;
+          c.classList.add('ping');
+          if (c.dataset.side === 'after'){
+            cloud.classList.add('hot');
+            setTimeout(() => cloud.classList.remove('hot'), 700);
+          }
+          await sleep(reduceMotion ? 120 : 450);
+        }
+      }
+      note.innerHTML = 'o MESMO app.py, o MESMO ciclo — <strong>só mudou o endereço da cozinha</strong>. Deploy é isso.';
+      busy = false;
+    }
+
+    document.getElementById('worldGo').addEventListener('click', run);
+    if (!reduceMotion){
+      new IntersectionObserver((es, obs) => {
+        es.forEach(e => { if (e.isIntersecting){ run(); obs.disconnect(); } });
+      }, {threshold:0.4}).observe(box);
+    }
+  })();
+
+  /* ---------- ⭐ A evolução ---------- */
+  (function(){
+    const box = document.getElementById('swpEvo');
+    if (!box) return;
+    const mono = document.getElementById('evoMono');
+    const front = document.getElementById('evoFront');
+    const back = document.getElementById('evoBack');
+    const api = document.getElementById('evoApi');
+    const note = document.getElementById('evoNote');
+    const go = document.getElementById('evoGo');
+    const backBtn = document.getElementById('evoBackBtn');
+
+    function evolve(){
+      mono.classList.add('hidden-box');
+      front.classList.remove('hidden-box');
+      back.classList.remove('hidden-box');
+      api.classList.add('on');
+      note.innerHTML = '<strong>front</strong> cuida das telas · <strong>back</strong> cuida das regras e dados · a <strong>API</strong> conversa em JSON no meio — times separados, app mobile possível, escala destravada';
+      go.disabled = true;
+      backBtn.disabled = false;
+    }
+    function devolve(){
+      mono.classList.remove('hidden-box');
+      front.classList.add('hidden-box');
+      back.classList.add('hidden-box');
+      api.classList.remove('on');
+      note.innerHTML = 'o seu sistema de hoje: uma peça só, e funcionando 💪';
+      go.disabled = false;
+      backBtn.disabled = true;
+    }
+    go.addEventListener('click', evolve);
+    backBtn.addEventListener('click', devolve);
+  })();
+});
+</script>
+</body>
+</html>
+
+<footer class="footer">
+  <p>Feito com 🌶️ pelo prof. Kelson Almeida — programa AI</p>
+</footer>
+
+<script src="../../shared/scripts.js" defer></script>
+<script type="module" src="../../shared/motion-fx.js"></script>
+</body>
+</html>
