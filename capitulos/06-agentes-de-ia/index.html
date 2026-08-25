@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dia 06 · Programando com agentes de IA — Sistemas Web com Python | programa AI</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../shared/styles.css">
+<link rel="stylesheet" href="../../shared/components.css">
+<link rel="stylesheet" href="../../shared/animations.css">
+<style>
+/* ══════════ CSS local do capítulo 06 (prefixo swp-) ══════════ */
+
+/* Ligatures OFF em toda classe mono local */
+.swp-diff,.swp-agent-body,.swp-spec-text,.swp-cost td,.swp-hunt-line{
+  font-variant-ligatures:none;
+  font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+}
+
+.step-section.visible .reveal-stagger > *:nth-child(7){transition-delay:0.65s}
+.step-section.visible .reveal-stagger > *:nth-child(8){transition-delay:0.75s}
+
+.swp-machine-btn{
+  background:linear-gradient(135deg,var(--accent6),#8b7ce8);color:#1a1030;
+  border:0;font-weight:800;padding:9px 18px;border-radius:10px;cursor:pointer;
+  font-size:0.84rem;transition:transform .2s;font-family:'Nunito',sans-serif;
+}
+.swp-machine-btn:hover{transform:translateY(-2px)}
+.swp-machine-btn:disabled{opacity:0.35;cursor:default;transform:none}
+.swp-machine-btn.ghost{
+  background:rgba(255,255,255,0.06);color:var(--text-dim);
+  border:1px solid rgba(255,255,255,0.12);
+}
+.swp-machine-hud{
+  display:flex;align-items:center;gap:12px;padding:12px 16px;flex-wrap:wrap;
+  background:rgba(255,255,255,0.03);border-top:1px solid rgba(255,255,255,0.06);
+}
+.swp-machine-note{font-size:0.8rem;color:var(--text-dim);line-height:1.5;flex:1;min-width:180px}
+.swp-machine-note strong{color:var(--accent6)}
+
+/* ---------- box do pré-encontro ---------- */
+.swp-preflight{
+  border:2px dashed rgba(247,183,49,0.5);border-radius:18px;
+  background:rgba(247,183,49,0.05);padding:22px 24px;margin:18px 0;
+}
+.swp-preflight .pf-title{
+  font-weight:900;font-size:1.05rem;margin-bottom:6px;color:var(--accent5);
+  display:flex;align-items:center;gap:8px;
+}
+.swp-preflight ol{margin:10px 0 0;padding-left:22px;color:var(--text-dim);font-size:0.92rem;line-height:1.8}
+.swp-preflight li strong{color:var(--text)}
+.swp-preflight code{background:rgba(255,255,255,0.07);padding:1px 7px;border-radius:5px;font-size:0.84rem}
+
+/* ---------- MÁQUINA: agente em ação ---------- */
+.swp-agent{
+  border:1px solid rgba(167,139,250,0.32);border-radius:18px;overflow:hidden;margin:18px 0;
+  background:
+    radial-gradient(1100px 280px at 50% -12%, rgba(167,139,250,0.12), transparent 70%),
+    linear-gradient(180deg,#0b1020,#0d0d1a);
+  box-shadow:0 22px 60px rgba(0,0,0,0.45);
+}
+.swp-agent-term{background:#0b0b14;margin:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);overflow:hidden}
+.swp-agent-head{
+  display:flex;align-items:center;gap:8px;padding:8px 14px;
+  background:rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.06);
+  font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--text-dim);
+}
+.swp-agent-head .dots{display:flex;gap:6px}
+.swp-agent-head .dots i{width:10px;height:10px;border-radius:50%;display:block}
+.swp-agent-head .dots i:nth-child(1){background:#ff5f57}
+.swp-agent-head .dots i:nth-child(2){background:#febc2e}
+.swp-agent-head .dots i:nth-child(3){background:#28c840}
+.swp-agent-body{
+  padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:0.76rem;
+  line-height:1.85;color:#cdd6f4;min-height:280px;
+}
+.swp-agent-body .ln{display:block;opacity:0;transform:translateY(4px);transition:all .35s ease}
+.swp-agent-body .ln.on{opacity:1;transform:none}
+.swp-agent-body .you{color:var(--accent5)}
+.swp-agent-body .bot{color:var(--accent6)}
+.swp-agent-body .dim{color:#5b6478}
+.swp-agent-body .ok{color:var(--accent7)}
+
+/* ---------- diff ---------- */
+.swp-diff{
+  font-family:'JetBrains Mono',monospace;font-size:0.74rem;line-height:1.9;
+  background:var(--code-bg);border:1px solid rgba(255,255,255,0.08);
+  border-radius:12px;padding:10px 0;margin:10px 0;overflow-x:auto;
+  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.15) transparent;
+}
+.swp-diff::-webkit-scrollbar{height:5px}
+.swp-diff::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:3px}
+.swp-diff .dl{display:block;padding:0 14px;white-space:pre;color:#8b96b0}
+.swp-diff .dl.add{background:rgba(6,214,160,0.08);color:#9be3cd}
+.swp-diff .dl.add::before{content:'+ ';color:var(--accent7);font-weight:700}
+.swp-diff .dl.del{background:rgba(255,71,87,0.10);color:#f0a5ab;text-decoration:line-through}
+.swp-diff .dl.del::before{content:'- ';color:var(--bug);font-weight:700}
+.swp-diff .dl.ctx::before{content:'  '}
+
+/* ---------- MÁQUINA: caça ao bug no diff ---------- */
+.swp-hunt{
+  border:1px solid rgba(255,71,87,0.32);border-radius:18px;overflow:hidden;margin:18px 0;
+  background:linear-gradient(180deg,#140d14,#0d0d1a);
+}
+.swp-hunt-diff{padding:16px 16px 4px}
+.swp-hunt-line{
+  display:block;padding:1px 14px;white-space:pre;cursor:pointer;border-radius:6px;
+  font-family:'JetBrains Mono',monospace;font-size:0.74rem;line-height:1.95;
+  background:rgba(6,214,160,0.07);color:#9be3cd;transition:all .2s;
+  overflow-x:auto;
+}
+.swp-hunt-line::before{content:'+ ';color:var(--accent7);font-weight:700}
+.swp-hunt-line:hover{background:rgba(255,255,255,0.09)}
+.swp-hunt-line.nope{background:rgba(255,255,255,0.05);color:#8b96b0;animation:wrongShake 0.4s ease}
+.swp-hunt-line.gotcha{
+  background:rgba(255,71,87,0.2);color:#ffd9dc;
+  outline:2px solid rgba(255,71,87,0.6);animation:correctPop 0.5s ease;
+}
+.swp-hunt-verdict{
+  margin:10px 16px;padding:12px 16px;border-radius:12px;min-height:48px;
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);
+  font-size:0.86rem;color:var(--text-dim);line-height:1.55;
+}
+.swp-hunt-verdict strong{color:var(--text)}
+
+/* ---------- espec vaga vs boa ---------- */
+.swp-spec{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0}
+@media(max-width:760px){.swp-spec{grid-template-columns:1fr}}
+.swp-spec-col{
+  border-radius:16px;border:1px solid rgba(255,255,255,0.08);
+  background:var(--surface);overflow:hidden;
+}
+.swp-spec-col.bad{border-color:rgba(255,71,87,0.3)}
+.swp-spec-col.good{border-color:rgba(6,214,160,0.32)}
+.swp-spec-col .sp-head{
+  padding:10px 16px;font-weight:800;font-size:0.85rem;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.swp-spec-col.bad .sp-head{background:rgba(255,71,87,0.08);color:#ff9aa2}
+.swp-spec-col.good .sp-head{background:rgba(6,214,160,0.08);color:#7ee2c9}
+.swp-spec-text{
+  font-family:'JetBrains Mono',monospace;font-size:0.74rem;line-height:1.8;
+  color:#c9d1d9;padding:12px 16px;white-space:pre-wrap;
+  background:var(--code-bg);
+}
+.swp-spec-result{padding:12px 16px;font-size:0.83rem;color:var(--text-dim);line-height:1.6}
+.swp-spec-result strong{color:var(--text)}
+.swp-spec-result .li{display:flex;gap:8px;padding:3px 0}
+
+/* ---------- tabela de custos ---------- */
+.swp-cost{
+  width:100%;border-collapse:collapse;margin:14px 0;font-size:0.85rem;
+  background:var(--code-bg);border:1px solid rgba(255,255,255,0.08);
+  border-radius:12px;overflow:hidden;display:table;
+}
+.swp-cost th{
+  background:var(--surface2);color:var(--text-dim);font-size:0.68rem;font-weight:800;
+  letter-spacing:1px;text-transform:uppercase;padding:10px 14px;text-align:left;
+}
+.swp-cost td{padding:10px 14px;color:var(--text-dim);border-top:1px solid rgba(255,255,255,0.05);line-height:1.5}
+.swp-cost td:first-child{color:var(--text);font-weight:700}
+.swp-cost tr.hl td{background:rgba(6,214,160,0.06)}
+
+/* checklist de aceitação */
+.swp-accept{margin:12px 0}
+.swp-accept label{
+  display:flex;gap:10px;align-items:flex-start;padding:9px 12px;margin:6px 0;
+  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);
+  border-radius:10px;font-size:0.88rem;color:var(--text-dim);cursor:pointer;line-height:1.5;
+}
+.swp-accept input{accent-color:var(--accent7);width:17px;height:17px;flex-shrink:0;margin-top:2px}
+.swp-accept label:has(input:checked){border-color:rgba(6,214,160,0.4);color:var(--text)}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-orbs">
+  <div class="orb"></div>
+  <div class="orb"></div>
+  <div class="orb"></div>
+</div>
+
+<div class="progress-track"><div class="progress-bar"></div></div>
+
+<button class="menu-toggle" onclick="openSidebar()" aria-label="Abrir menu">☰</button>
+<aside class="sidebar-nav" id="sidebar">
+  <button class="sidebar-close" onclick="closeSidebar()" aria-label="Fechar menu">✕</button>
+  <div class="sidebar-header">
+    <h3>🤖 Dia 06 · Agentes de IA</h3>
+    <a href="../../index.html" class="sidebar-back">← Voltar ao hub</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">⚙️ Preparação</div>
+    <a class="sidebar-link" onclick="goTo('pre-encontro')"><span class="dot" style="background:var(--accent5)"></span>Antes do encontro</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🤖 O que é um agente</div>
+    <a class="sidebar-link" onclick="goTo('aquecimento')"><span class="dot" style="background:var(--accent5)"></span>Aquecimento</a>
+    <a class="sidebar-link" onclick="goTo('o-que-e')"><span class="dot" style="background:var(--accent6)"></span>O estagiário genial</a>
+    <a class="sidebar-link" onclick="goTo('maquina-agente')"><span class="dot" style="background:var(--accent6)"></span>⭐ Agente em ação</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🧭 O fluxo profissional</div>
+    <a class="sidebar-link" onclick="goTo('fluxo')"><span class="dot" style="background:var(--accent4)"></span>As 5 etapas</a>
+    <a class="sidebar-link" onclick="goTo('especificar')"><span class="dot" style="background:var(--accent7)"></span>⭐ Espec vaga vs boa</a>
+    <a class="sidebar-link" onclick="goTo('ler-diff')"><span class="dot" style="background:var(--bug)"></span>⭐ Caça ao bug no diff</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🔐 Missão: o login</div>
+    <a class="sidebar-link" onclick="goTo('missao-login')"><span class="dot" style="background:var(--python-y)"></span>O roteiro da missão</a>
+    <a class="sidebar-link" onclick="goTo('entender')"><span class="dot" style="background:var(--accent)"></span>Entendendo o código gerado</a>
+    <a class="sidebar-link" onclick="goTo('custos')"><span class="dot" style="background:var(--accent3)"></span>Ferramentas e custos</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🏁 Fechamento</div>
+    <a class="sidebar-link" onclick="goTo('bugzilla')"><span class="dot" style="background:var(--bug)"></span>BugZilla do dia 🐛</a>
+    <a class="sidebar-link" onclick="goTo('quiz')"><span class="dot" style="background:var(--accent5)"></span>Quiz de fixação</a>
+    <a class="sidebar-link" onclick="goTo('arena')"><span class="dot" style="background:var(--accent6)"></span>Arena de treino</a>
+    <a class="sidebar-link" onclick="goTo('resumo')"><span class="dot" style="background:var(--accent7)"></span>Resumo do dia</a>
+  </div>
+</aside>
+<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-icons">🧑‍💻 🤝 🤖</div>
+  <span class="hero-badge python">Dia 06 · Sistemas Web com Python</span>
+  <h1><span style="background:linear-gradient(135deg,var(--accent6),var(--accent3));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Programando<br>com agentes de IA</span></h1>
+  <p class="subtitle">
+    Hoje a Loja ganha <strong style="color:var(--python-y)">login</strong> — mas você não vai
+    digitá-lo. Vai <strong style="color:var(--accent6)">especificar, dirigir e revisar</strong>
+    um agente de IA escrevendo por você. É assim que se programa em 2026 —
+    e existe um <strong style="color:var(--accent7)">jeito profissional</strong> de fazer.
+  </p>
+  <div class="hero-stack">
+    <span class="stack-chip">🤖 Gemini CLI</span>
+    <span class="stack-chip">🟠 Claude Code</span>
+    <span class="stack-chip">📋 especificar → revisar</span>
+    <span class="stack-chip">🔐 login</span>
+  </div>
+</section>
+
+<div class="container">
+
+  <!-- ═══════════════════════════════════════════════════════
+       PRÉ-ENCONTRO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="pre-encontro">
+    <div class="step-header">
+      <div class="step-number sn-yellow">📥</div>
+      <div>
+        <div class="step-title">Antes do encontro: instale o Gemini CLI</div>
+        <div class="step-sub">~10 minutos em casa que valem o encontro inteiro</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="swp-preflight">
+        <div class="pf-title">⚠️ Faça ANTES do dia 6 — o encontro é 100% mão na massa</div>
+        <ol>
+          <li><strong>Instale o Node.js LTS</strong> — em <code>nodejs.org</code>, baixe a versão
+            <strong>LTS</strong> e instale com next-next-finish. (O Gemini CLI é feito em
+            JavaScript, e o Node é quem roda ele — só isso, não vamos programar em JS.)</li>
+          <li><strong>Feche e reabra o PyCharm</strong> (pro terminal enxergar o Node novo).</li>
+          <li>No <strong>Terminal do PyCharm</strong>: <code>npm install -g @google/gemini-cli</code></li>
+          <li>Ainda no terminal: <code>gemini</code> → ele abre e pede login —
+            <strong>entre com sua conta Google</strong> (o plano gratuito é generoso).</li>
+          <li>Apareceu o prompt do Gemini? <strong>Pronto.</strong> Digite <code>/quit</code> pra sair
+            e me conte no grupo que deu certo. ✅</li>
+        </ol>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🟠</span>
+        <div class="tip-content">
+          <strong>Tem assinatura do Claude (Pro) ou do ChatGPT (Plus)?</strong> Pode usar o
+          <strong>Claude Code</strong> (<code>npm install -g @anthropic-ai/claude-code</code>) ou o
+          <strong>Codex</strong> — o professor demonstra com Claude Code em aula.
+          O fluxo de trabalho que você vai aprender é <strong>o mesmo nos três</strong>.
+        </div>
+      </div>
+
+      <div class="warning">
+        <span class="tip-icon">🆘</span>
+        <div class="tip-content">
+          <strong>Não conseguiu instalar?</strong> Venha mesmo assim: no encontro você faz dupla
+          com um colega (dirigir o agente A DOIS é até melhor pra aprender) e resolvemos sua
+          instalação no intervalo.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       AQUECIMENTO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="aquecimento">
+    <div class="step-header">
+      <div class="step-number sn-yellow">🔥</div>
+      <div>
+        <div class="step-title">Aquecimento: por que SÓ AGORA?</div>
+        <div class="step-sub">O motivo de a IA entrar no dia 6, e não no dia 1</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Podíamos ter usado IA desde o primeiro dia. Não usamos <strong style="color:var(--text)">de
+        propósito</strong>: você construiu rota, template, SQL e CRUD <strong style="color:var(--text)">na
+        mão</strong> — e é exatamente por isso que hoje funciona. Um agente escreve código
+        RÁPIDO; só revisa bem quem <strong style="color:var(--text)">sabe o que está lendo</strong>.
+      </p>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">1️⃣</span> O agente gerou um código que "parece certo". O que você faz?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Aceito — IA não erra</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Leio o diff, testo, e SÓ ENTÃO aceito</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Peço pra gerar de novo, vai que melhora</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Aceito e testo semana que vem</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Exato!" data-wrong="Cuidado!"
+             data-explain="'parece certo' é a especialidade da IA — inclusive quando está errado. A regra do dia: ler o diff + testar, SEMPRE, antes de aceitar."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">2️⃣</span> Login guarda "quem está logado" entre um request e outro. Onde você JÁ viu essa mágica de guardar algo entre requests?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">No render_template</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">No flash() — o bolso da sessão</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">No fetchall</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Nunca vi</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Boa memória!" data-wrong="Dia 5!"
+             data-explain="o flash usava a SESSÃO (por isso o secret_key). O login usa a mesma sessão — só que guardando o usuário, não um bilhete. Você já sabe metade do login sem saber."></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       O QUE É
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="o-que-e">
+    <div class="step-header">
+      <div class="step-number sn-purple">🤖</div>
+      <div>
+        <div class="step-title">Agente ≠ chat: o estagiário genial</div>
+        <div class="step-sub">Ele não te dá código pra copiar — ele MEXE no seu projeto</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Você já colou código do ChatGPT. Um <strong style="color:var(--text)">agente de
+        codificação</strong> é outro bicho: roda <strong style="color:var(--text)">no terminal,
+        dentro do seu projeto</strong> — ele LÊ seus arquivos (app.py, banco.py, templates…),
+        PROPÕE mudanças neles e até RODA comandos. Você conversa; ele trabalha; você aprova.
+      </p>
+
+      <div class="analogy">
+        <div class="analogy-title">O estagiário genial 🧑‍🎓⚡</div>
+        <p>
+          Imagina um estagiário que digita a 3.000 palavras por minuto, leu todo o código do
+          mundo, nunca cansa… e é <strong>confiante demais</strong>: entrega tudo com o mesmo
+          sorriso, esteja certo ou errado. Você jamais deixaria esse estagiário dar commit
+          sem revisão. <strong>Você é o chefe. O agente é o estagiário. A revisão é o seu
+          trabalho.</strong>
+        </p>
+      </div>
+
+      <div class="keyword-grid">
+        <div class="keyword-chip">
+          <span class="emoji">👀</span>
+          <span class="kw-name">Lê o projeto</span>
+          <span class="kw-desc">conhece seu app.py, banco.py e templates antes de mexer</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">✍️</span>
+          <span class="kw-name">Propõe diffs</span>
+          <span class="kw-desc">mostra exatamente o que entra e o que sai de cada arquivo</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">▶️</span>
+          <span class="kw-name">Roda comandos</span>
+          <span class="kw-desc">pode executar o criar_banco.py, testar o app…</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">🛑</span>
+          <span class="kw-name">Espera aprovação</span>
+          <span class="kw-desc">nada muda sem você dizer sim — e é aí que você trabalha</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ AGENTE EM AÇÃO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="maquina-agente">
+    <div class="step-header">
+      <div class="step-number sn-purple">⭐</div>
+      <div>
+        <div class="step-title">Agente em ação: uma sessão de verdade</div>
+        <div class="step-sub">Assista ao replay — repare em CADA vez que o humano decide</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="swp-agent" id="swpAgent">
+        <div class="swp-agent-term">
+          <div class="swp-agent-head">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <span>Terminal do PyCharm — gemini · projeto loja</span>
+          </div>
+          <div class="swp-agent-body" id="agentBody"></div>
+        </div>
+        <div class="swp-machine-hud">
+          <button class="swp-machine-btn" id="agentPlay">▶ Rodar o replay</button>
+          <span class="swp-machine-note" id="agentNote">uma feature pequena, do pedido ao teste — em câmera lenta</span>
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 Reparou quantas vezes o HUMANO decidiu?</div>
+        <p>
+          O agente propôs; <strong>você</strong> leu o diff, <strong>você</strong> aprovou,
+          <strong>você</strong> testou. O agente é o motor — <strong>o volante continua na sua
+          mão</strong>. Sessão de agente sem decisão humana não é produtividade: é roleta.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="chapter-divider">
+    <div class="chapter-icon">🧭</div>
+    <div class="chapter-number">Parte 2</div>
+    <h2 style="background:linear-gradient(135deg,var(--accent4),var(--accent6));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">O fluxo profissional</h2>
+    <p class="chapter-subtitle">O que separa quem USA IA de quem é usado por ela</p>
+  </div>
+
+<!-- ═══════════════════════════════════════════════════════
+       O FLUXO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="fluxo">
+    <div class="step-header">
+      <div class="step-number sn-blue">🧭</div>
+      <div>
+        <div class="step-title">As 5 etapas — sempre, com qualquer agente</div>
+        <div class="step-sub">Grave este fluxo. Ele vale mais que qualquer ferramenta.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="flow-container autoplay">
+        <div class="flow-box fb-input">📋<br>Especificar</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box">🤖<br>Gerar</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box fb-process">👀<br>LER o diff</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box">🧪<br>Testar</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box fb-output">🔁<br>Ajustar</div>
+      </div>
+
+      <div class="keyword-grid" style="margin-top:16px">
+        <div class="keyword-chip">
+          <span class="emoji">📋</span>
+          <span class="kw-name">Especificar</span>
+          <span class="kw-desc">dizer O QUE quer, com detalhes — a etapa que decide tudo</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">👀</span>
+          <span class="kw-name">LER o diff</span>
+          <span class="kw-desc">a etapa que separa profissional de aventureiro</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">🧪</span>
+          <span class="kw-name">Testar</span>
+          <span class="kw-desc">com roteiro: caminho feliz E caminho do erro</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">🔁</span>
+          <span class="kw-name">Ajustar</span>
+          <span class="kw-desc">apontar o que não serviu e pedir de novo — sem drama</span>
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 A regra de ouro</div>
+        <p>
+          <strong>Nunca aceite às cegas.</strong> Todo código gerado passa por olho humano
+          (o seu) e por teste (o seu roteiro) antes de virar parte do sistema.
+          No demo day, cada trecho gerado por agente terá que ser <strong>explicado por
+          você</strong> — é o combinado do curso.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ ESPECIFICAR
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="especificar">
+    <div class="step-header">
+      <div class="step-number sn-mint">⭐</div>
+      <div>
+        <div class="step-title">Espec vaga vs espec boa</div>
+        <div class="step-sub">O mesmo pedido, dois destinos — a diferença é o detalhe</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="analogy">
+        <div class="analogy-title">O estagiário faz EXATAMENTE o que você pediu 🎯</div>
+        <p>
+          Peça "arruma a sala" e ele decide sozinho o que é "arrumado" — talvez jogue fora
+          seus papéis importantes. Peça "empilhe os livros por tamanho na estante da esquerda"
+          e sai perfeito. <strong>Espec vaga terceiriza as decisões pro agente.
+          Espec boa mantém as decisões com você.</strong>
+        </p>
+      </div>
+
+      <div class="swp-spec">
+        <div class="swp-spec-col bad">
+          <div class="sp-head">❌ a espec vaga</div>
+          <div class="swp-spec-text">faz um login no meu sistema</div>
+          <div class="swp-spec-result">
+            <strong>O que o agente decide sozinho (e você descobre depois):</strong>
+            <div class="li"><span>🎲</span><span>Cria tabela do jeito DELE — talvez incompatível com seu criar_banco.py</span></div>
+            <div class="li"><span>🎲</span><span>Talvez salve senha SEM hash (já vi acontecer)</span></div>
+            <div class="li"><span>🎲</span><span>Protege as rotas erradas — ou nenhuma</span></div>
+            <div class="li"><span>🎲</span><span>Instala biblioteca nova que você não conhece</span></div>
+            <div class="li"><span>🎲</span><span>Esquece o logout</span></div>
+          </div>
+        </div>
+        <div class="swp-spec-col good">
+          <div class="sp-head">✅ a espec boa (a que você vai colar hoje)</div>
+          <div class="swp-spec-text">Adicione login ao meu sistema Flask (app.py, banco.py, templates/).
+
+1. Tabela usuarios (id, nome, senha_hash) no criar_banco.py,
+   com um usuário inicial: nome "admin", senha "trocar123"
+   — senha SEMPRE com hash, nunca texto puro.
+2. Tela /login (form com nome e senha) e rota /logout.
+3. Use generate_password_hash e check_password_hash
+   (werkzeug, que já vem com o Flask).
+4. Proteja as rotas de /produtos, /vender e /vendas:
+   sem login, redirecionar para /login.
+5. No menu do base.html, mostrar "Olá, NOME · sair"
+   quando logado.
+6. NÃO mexer no que já funciona. NÃO instalar
+   bibliotecas novas.</div>
+          <div class="swp-spec-result">
+            <div class="li"><span>✅</span><span><strong>Cada decisão foi SUA</strong> — o agente só executa</span></div>
+            <div class="li"><span>✅</span><span>Dá pra conferir item por item (vira o checklist de teste!)</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 De onde saiu essa espec boa?</div>
+        <p>
+          Releia os 6 itens: tabela com colunas e tipos (Dia 3), rotas GET/POST (Dias 2 e 4),
+          proteger/redirect (Dia 1), sessão (Dia 5)… <strong>Especificar bem EXIGE saber o que
+          se está pedindo.</strong> É por isso que a IA entrou no dia 6 — e é por isso que
+          você, que fez tudo na mão, especifica melhor que muito dev por aí.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ CAÇA AO BUG
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="ler-diff">
+    <div class="step-header">
+      <div class="step-number sn-red">⭐</div>
+      <div>
+        <div class="step-title">Caça ao bug no diff</div>
+        <div class="step-sub">O agente gerou este login… com 1 bug. Clique na linha culpada.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Ler um diff é simples: <strong style="color:#9be3cd">verde entra</strong>,
+        <strong style="color:#f0a5ab">vermelho sai</strong>. Difícil é ler com
+        <strong style="color:var(--text)">desconfiança profissional</strong>. Treino real:
+        o diff abaixo foi gerado por um agente e tem <strong style="color:var(--text)">um bug
+        que quebra o login</strong>. Você tem o conhecimento pra achar. Clique na linha suspeita:
+      </p>
+
+      <div class="swp-hunt" id="swpHunt">
+        <div class="swp-hunt-diff" id="huntDiff"></div>
+        <div class="swp-hunt-verdict" id="huntVerdict">
+          🕵️ Dica: a espec pediu senha com HASH. Siga o caminho da senha…
+        </div>
+        <div class="swp-machine-hud">
+          <button class="swp-machine-btn ghost" id="huntReset">🔄 Recomeçar a caça</button>
+          <span class="swp-machine-note" id="huntNote">clique em qualquer linha — errar também ensina</span>
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 Por que o professor PLANTOU esse bug</div>
+        <p>
+          Porque agentes cometem exatamente esse tipo de erro: código que <strong>roda sem
+          crashar</strong>, parece profissional… e está funcionalmente errado. Nenhum erro
+          vermelho vai te avisar — <strong>só a sua leitura</strong>. É a habilidade nº 1
+          da era da IA.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="chapter-divider">
+    <div class="chapter-icon">🔐</div>
+    <div class="chapter-number">Parte 3</div>
+    <h2 style="background:linear-gradient(135deg,var(--python-y),var(--accent6));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Missão: o login</h2>
+    <p class="chapter-subtitle">Especificar, dirigir, revisar, testar — pra valer</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       MISSÃO LOGIN
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="missao-login">
+    <div class="step-header">
+      <div class="step-number sn-py">🔐</div>
+      <div>
+        <div class="step-title">O roteiro da missão</div>
+        <div class="step-sub">Do prompt ao teste de aceitação</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="exercise guided">
+        <div class="exercise-header">
+          <span class="exercise-icon">👨‍🏫</span>
+          <div>
+            <div class="exercise-title">Mão na massa com o agente</div>
+            <div class="exercise-sub">O professor vai junto no telão — com Claude Code</div>
+          </div>
+        </div>
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">1.</strong> Projeto <code>loja</code> aberto no
+          PyCharm → Terminal (<code>Alt+F12</code>) → <code>gemini</code>.<br>
+          <strong style="color:var(--text)">2.</strong> Cole a <strong>espec boa</strong>
+          (da seção anterior — digite ou copie do material com atenção, lendo cada item).<br>
+          <strong style="color:var(--text)">3.</strong> O agente vai propor mudanças arquivo por
+          arquivo. <strong>LEIA cada diff antes de aprovar</strong> — em voz alta com a dupla,
+          se estiver em dupla.<br>
+          <strong style="color:var(--text)">4.</strong> Terminou? Rode o
+          <code>criar_banco.py</code> (▶ — a tabela usuarios precisa nascer), suba o app e…
+          <strong>teste com o checklist abaixo</strong>.
+        </p>
+
+        <p style="color:var(--text-dim);margin-top:14px">
+          <strong style="color:var(--text)">Checklist de aceitação</strong> — a espec virou teste
+          (marque conforme confere no SEU sistema):
+        </p>
+        <div class="swp-accept">
+          <label><input type="checkbox"> Sem login, <code>/produtos</code> me manda pra <code>/login</code>?</label>
+          <label><input type="checkbox"> Senha ERRADA é barrada com mensagem?</label>
+          <label><input type="checkbox"> Senha certa entra e o menu mostra "Olá, admin"?</label>
+          <label><input type="checkbox"> Depois do login, <code>/produtos</code>, <code>/vender</code> e <code>/vendas</code> abrem normalmente?</label>
+          <label><input type="checkbox"> <code>/logout</code> me desloga (e /produtos volta a barrar)?</label>
+          <label><input type="checkbox"> No banco, a coluna senha_hash guarda uma SOPA DE LETRAS (hash), não "trocar123"?</label>
+        </div>
+
+        <div class="tip">
+          <span class="tip-icon">🔍</span>
+          <div class="tip-content">
+            <strong>O último item é o mais importante:</strong> espie a tabela usuarios
+            (DB Browser ou um consultar.py rápido). Se a senha estiver legível,
+            o agente ignorou a espec — <strong>rejeite e peça o hash</strong>.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ENTENDER O CÓDIGO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="entender">
+    <div class="step-header">
+      <div class="step-number sn-main">🔬</div>
+      <div>
+        <div class="step-title">Entendendo o que o agente escreveu</div>
+        <div class="step-sub">Você não precisa saber ESCREVER isto hoje — precisa saber LER</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        O coração do login gerado é algo assim — acompanhe o destaque:
+      </p>
+
+      <div class="swp-trace" data-seq="2800">
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/app.py (gerado pelo agente — trecho)</span>
+            <span class="lang-badge python">Python</span>
+          </div>
+<pre><span class="swp-tline" data-seq-step="0"><span class="kw">from</span> werkzeug.security <span class="kw">import</span> check_password_hash</span><span class="swp-tline" data-seq-step="1"><span class="kw">from</span> flask <span class="kw">import</span> session</span><span class="swp-tline"> </span><span class="swp-tline" data-seq-step="2"><span class="kw">if</span> check_password_hash(usuario[<span class="num">2</span>], senha):</span><span class="swp-tline" data-seq-step="3">    session[<span class="st">"usuario"</span>] = usuario[<span class="num">1</span>]</span><span class="swp-tline">    <span class="kw">return</span> <span class="fn">redirect</span>(<span class="st">"/produtos"</span>)</span><span class="swp-tline"> </span><span class="swp-tline" data-seq-step="4"><span class="dec">@login_required</span></span><span class="swp-tline"><span class="dec">@app.route</span>(<span class="st">"/produtos"</span>)
+<span class="kw">def</span> <span class="fn">produtos</span>(): ...</span></pre>
+        </div>
+
+        <div class="swp-trace-msgs">
+          <div data-seq-frame="0"><span class="tm-emoji">🔒</span><span><strong>check_password_hash</strong> — compara a senha digitada com o hash guardado, do jeito seguro. Vem do werkzeug, que o Flask já traz.</span></div>
+          <div data-seq-frame="1"><span class="tm-emoji">🎫</span><span>A <strong>session</strong> — o MESMO bolso assinado do flash() do Dia 5. Você já conhecia a peça-chave do login.</span></div>
+          <div data-seq-frame="2"><span class="tm-emoji">🧐</span><span>A comparação certa: <strong>nunca <code>senha == hash</code></strong> — o hash não "desfaz". A função confere sem nunca revelar a senha.</span></div>
+          <div data-seq-frame="3"><span class="tm-emoji">👤</span><span>Logou? O nome vai pro bolso: <strong>session["usuario"]</strong>. Em qualquer request futuro, o servidor sabe quem é — até o /logout esvaziar o bolso.</span></div>
+          <div data-seq-frame="4"><span class="tm-emoji">🏷️</span><span><strong>@login_required</strong> — uma etiqueta que ENVOLVE a função: antes de rodar, confere o crachá na session; sem crachá, redirect pro /login. Prima do @app.route que você usa desde o Dia 1.</span></div>
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 Hash, em 20 segundos</div>
+        <p>
+          Hash é um <strong>triturador de mão única</strong>: "trocar123" vira uma sopa de
+          letras — e NÃO existe caminho de volta. No login, o sistema tritura o que você digitou
+          e compara <strong>sopa com sopa</strong>. Nem o dono do site consegue ler sua senha —
+          e é assim que TODO site sério funciona. (Site que te manda a senha por e-mail?
+          Fuja. 🏃)
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       CUSTOS
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="custos">
+    <div class="step-header">
+      <div class="step-number sn-mint">💳</div>
+      <div>
+        <div class="step-title">As ferramentas (e quanto custam)</div>
+        <div class="step-sub">O fluxo é o mesmo — muda o crachá</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <table class="swp-cost">
+        <thead><tr><th>Agente</th><th>Como acessa</th><th>Custo</th></tr></thead>
+        <tbody>
+          <tr class="hl">
+            <td>🔷 Gemini CLI</td>
+            <td>conta Google (npm install)</td>
+            <td><strong style="color:var(--accent7)">grátis</strong>, com limite diário generoso — o padrão da turma</td>
+          </tr>
+          <tr>
+            <td>🟠 Claude Code</td>
+            <td>assinatura Claude Pro/Max</td>
+            <td>a partir de ~US$ 20/mês — o que o professor usa em aula</td>
+          </tr>
+          <tr>
+            <td>⚪ Codex</td>
+            <td>assinatura ChatGPT Plus</td>
+            <td>~US$ 20/mês — se você já paga o ChatGPT, já tem</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="tip">
+        <span class="tip-icon">🎓</span>
+        <div class="tip-content">
+          <strong>O que você aprendeu hoje NÃO é "usar o Gemini CLI".</strong> É o fluxo
+          especificar → gerar → ler → testar → ajustar — e ele é idêntico nos três (e nos
+          próximos dez que lançarem até o fim do ano 😄). Ferramenta muda; critério fica.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="chapter-divider">
+    <div class="chapter-icon">🏁</div>
+    <div class="chapter-number">Parte 4</div>
+    <h2 style="background:linear-gradient(135deg,var(--accent5),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Fechamento do dia</h2>
+    <p class="chapter-subtitle">Os bugs da era da IA, quiz e treino</p>
+  </div>
+
+<!-- ═══════════════════════════════════════════════════════
+       BUGZILLA
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="bugzilla">
+    <div class="step-header">
+      <div class="step-number sn-red">🐛</div>
+      <div>
+        <div class="step-title">BugZilla do dia: os bugs da era da IA</div>
+        <div class="step-sub">Nenhum deles é do agente. Todos são do piloto.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="bugzilla-card">
+        <div class="bugzilla-header">
+          <span class="bugzilla-emoji">🐛</span>
+          <div>
+            <div class="bugzilla-title">Bug 1 — aceitar sem ler</div>
+            <div class="bugzilla-sub">"Tava tudo verde, aprovei" — famosas últimas palavras</div>
+          </div>
+        </div>
+        <div class="bugzilla-body">
+          <p>
+            O diff parecia bom, você apertou "sim" em tudo… e três dias depois descobre que o
+            login aceita senha errada (o bug da caça, lembra?). Código gerado SEM revisão é
+            <strong>bug agendado</strong>: vai estourar, só não se sabe quando.
+          </p>
+          <p>
+            💊 <strong>Remédio:</strong> o combinado do curso — todo diff é lido, todo item da
+            espec vira teste. Se der preguiça de ler, o trecho é grande demais:
+            peça em pedaços menores.
+          </p>
+        </div>
+      </div>
+
+      <div class="bugzilla-card">
+        <div class="bugzilla-header">
+          <span class="bugzilla-emoji">🐛</span>
+          <div>
+            <div class="bugzilla-title">Bug 2 — a espec vaga</div>
+            <div class="bugzilla-sub">"faz um sistema completo" = retrabalho completo</div>
+          </div>
+        </div>
+        <div class="bugzilla-body">
+          <p>
+            Pedidos gigantes e vagos produzem montanhas de código que NÃO é o que você queria —
+            e aí você gasta mais tempo desfazendo do que gastaria fazendo. O agente não lê
+            mente; lê espec.
+          </p>
+          <p>
+            💊 <strong>Remédio:</strong> uma feature por vez, com itens numerados e limites
+            explícitos ("não mexer no que funciona", "não instalar bibliotecas").
+            A espec do login é seu modelo pra sempre.
+          </p>
+        </div>
+      </div>
+
+      <div class="bugzilla-card">
+        <div class="bugzilla-header">
+          <span class="bugzilla-emoji">🐛</span>
+          <div>
+            <div class="bugzilla-title">Bug 3 — o "conserto" que ninguém pediu</div>
+            <div class="bugzilla-sub">Pediu login… e ele "melhorou" seu banco.py de brinde</div>
+          </div>
+        </div>
+        <div class="bugzilla-body">
+          <p>
+            Agentes adoram "aproveitar que estou aqui": renomear suas funções, "otimizar" seu
+            SQL, reformatar arquivos inteiros. Se você só olha o pedaço do login,
+            essas mudanças extras passam — e quebram o que funcionava.
+          </p>
+          <p>
+            💊 <strong>Remédio:</strong> leia o diff <strong>INTEIRO</strong>, inclusive dos
+            arquivos que você não esperava ver mudados (principalmente eles!). Mudança fora
+            da espec → rejeite: "só o que pedi, por favor".
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       QUIZ
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="quiz">
+    <div class="step-header">
+      <div class="step-number sn-yellow">🧠</div>
+      <div>
+        <div class="step-title">Quiz de fixação</div>
+        <div class="step-sub">4 perguntas pra carimbar o dia 6</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">1️⃣</span> A diferença entre um agente e o chat de IA comum é que o agente…</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">É mais inteligente</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Lê e edita os arquivos DO SEU projeto, e roda comandos</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Não erra nunca</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Funciona sem internet</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Isso!" data-wrong="Quase!"
+             data-explain="chat te dá texto pra copiar; agente trabalha DENTRO do projeto — lê, propõe diffs, executa. Por isso a revisão é tão importante."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">2️⃣</span> Qual é a ordem do fluxo profissional?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Gerar → aceitar → torcer</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Testar → gerar → especificar</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Especificar → gerar → LER o diff → testar → ajustar</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Gerar → gerar de novo → gerar mais</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Cravou!" data-wrong="Revisa o fluxo!"
+             data-explain="e as duas etapas que dependem 100% de você — especificar e ler — são as que decidem a qualidade do resultado."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">3️⃣</span> No banco, a senha do usuário deve estar guardada como…</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Texto normal, pra recuperar depois</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Hash — o triturador de mão única</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Numa coluna escondida</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">No secret_key</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Exato!" data-wrong="Perigo!"
+             data-explain="hash não tem volta: o login compara sopa com sopa via check_password_hash. Senha legível no banco = vazamento esperando data."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">4️⃣</span> O agente propôs mudanças num arquivo que a sua espec nem mencionava. Você…</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Aceita — ele sabe o que faz</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Nem olha, só o arquivo principal importa</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Lê com atenção DOBRADA e rejeita o que está fora da espec</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Desinstala o agente</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Boa!" data-wrong="Cuidado!"
+             data-explain="mudança não pedida é o Bug 3 do dia: o 'conserto' de brinde que quebra o que funcionava. Fora da espec → fora do diff."></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ARENA
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="arena">
+    <div class="step-header">
+      <div class="step-number sn-purple">🏟️</div>
+      <div>
+        <div class="step-title">Arena: horas de voo com o copiloto</div>
+        <div class="step-sub">Cinco missões dirigindo o agente — na SUA Loja</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="arena-banner">
+        <span class="ab-emoji">🏟️</span>
+        <div>
+          <div class="ab-tag">treino do dia 6</div>
+          <div class="ab-title">Especificar é músculo — treina que cresce</div>
+          <div class="ab-sub">Toda missão segue o fluxo completo: espec → diff → teste</div>
+        </div>
+      </div>
+
+      <div class="arena-track">
+        <span class="at-dot lv1">1</span><span class="at-arrow">→</span>
+        <span class="at-dot lv1">2</span><span class="at-arrow">→</span>
+        <span class="at-dot lv2">3</span><span class="at-arrow">→</span>
+        <span class="at-dot lv2">4</span><span class="at-arrow">→</span>
+        <span class="at-dot lv3">🏆</span>
+      </div>
+
+      <div class="exercise solo">
+        <div class="exercise-header">
+          <span class="exercise-icon">🧑‍💻</span>
+          <div>
+            <div class="exercise-title">Missão 1 — O tradutor</div>
+            <div class="exercise-sub">Agente como professor particular</div>
+          </div>
+        </div>
+        <div class="drill-tags">
+          <span class="drill-level lv1"><span class="stars">★</span> fácil</span>
+          <span class="drill-tag">explicar</span>
+        </div>
+        <p style="color:var(--text-dim)">
+          Peça: <em>"explique linha por linha o decorator login_required que você criou,
+          como se eu fosse iniciante"</em>. Compare com a explicação do material.
+          Agente também serve pra ISSO — e é de graça.
+        </p>
+      </div>
+
+      <div class="exercise solo">
+        <div class="exercise-header">
+          <span class="exercise-icon">🧑‍💻</span>
+          <div>
+            <div class="exercise-title">Missão 2 — Feature pequena, espec completa</div>
+            <div class="exercise-sub">Botão "cancelar" nas telas de formulário</div>
+          </div>
+        </div>
+        <div class="drill-tags">
+          <span class="drill-level lv1"><span class="stars">★</span> fácil</span>
+          <span class="drill-tag">espec</span>
+        </div>
+        <p style="color:var(--text-dim)">
+          Especifique: link "Cancelar" voltando pro /produtos em TODAS as telas de form
+          (novo, editar, vender), sem mexer em mais nada. Leia o diff: ele tocou só nos
+          3 templates? Aprovado. Tocou em mais? Você já sabe o que fazer.
+        </p>
+      </div>
+
+      <div class="exercise home">
+        <div class="exercise-header">
+          <span class="exercise-icon">🏠</span>
+          <div>
+            <div class="exercise-title">Missão 3 — O roteiro de testes</div>
+            <div class="exercise-sub">Agente escrevendo o teste, você executando</div>
+          </div>
+        </div>
+        <div class="drill-tags">
+          <span class="drill-level lv2"><span class="stars">★★</span> médio</span>
+          <span class="drill-tag">testar</span>
+        </div>
+        <p style="color:var(--text-dim)">
+          Peça: <em>"escreva um roteiro de teste manual da minha tela de vendas: caminho feliz
+          e todos os casos de erro"</em>. Execute o roteiro no seu sistema. Ele achou casos que
+          você não tinha pensado? (Aposto que sim.)
+        </p>
+      </div>
+
+      <div class="exercise home">
+        <div class="exercise-header">
+          <span class="exercise-icon">🏠</span>
+          <div>
+            <div class="exercise-title">Missão 4 — A rejeição educada</div>
+            <div class="exercise-sub">Treinando dizer NÃO pro estagiário</div>
+          </div>
+        </div>
+        <div class="drill-tags">
+          <span class="drill-level lv2"><span class="stars">★★</span> médio</span>
+          <span class="drill-tag">ajustar</span>
+        </div>
+        <p style="color:var(--text-dim)">
+          Peça uma tela "Sobre o sistema" (/sobre-sistema) e, quando vier o diff,
+          <strong style="color:var(--text)">rejeite de propósito</strong> algum detalhe
+          ("sem esse CSS extra; use o base.html como as outras"). Refine até vir EXATO.
+          Saber ajustar sem recomeçar é metade do jogo.
+        </p>
+      </div>
+
+      <div class="exercise home">
+        <div class="exercise-header">
+          <span class="exercise-icon">🏆</span>
+          <div>
+            <div class="exercise-title">Missão final — A espec do SEU projeto</div>
+            <div class="exercise-sub">Preparando o Dia 7 hoje</div>
+          </div>
+        </div>
+        <div class="drill-tags">
+          <span class="drill-level lv3"><span class="stars">★★★</span> desafio</span>
+          <span class="drill-tag">especificar</span>
+          <span class="drill-tag">dia 7</span>
+        </div>
+        <p style="color:var(--text-dim)">
+          Semana que vem você constrói um sistema SEU (barbearia? brechó? petshop?).
+          Escreva HOJE, num arquivo de texto, a espec no formato da espec boa:
+          as 2 entidades com colunas e tipos, e a operação principal.
+          <strong style="color:var(--text)">Não peça pro agente gerar nada ainda</strong> —
+          só a espec. Quem chega no Dia 7 com espec pronta, sai com sistema pronto.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       RESUMO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="resumo">
+    <div class="step-header">
+      <div class="step-number sn-green">🎒</div>
+      <div>
+        <div class="step-title">O que você leva do Dia 6</div>
+        <div class="step-sub">Uma Loja com cadeado — e um superpoder com manual de segurança</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="about-bullets">
+        <div>🤖 <strong>Agente ≠ chat:</strong> lê seu projeto, propõe diffs, roda comandos — e espera SUA aprovação</div>
+        <div>🧭 <strong>O fluxo:</strong> especificar → gerar → LER o diff → testar → ajustar (nunca aceitar às cegas)</div>
+        <div>📋 <strong>Espec boa:</strong> itens numerados, decisões suas, limites explícitos — e ela vira o checklist de teste</div>
+        <div>👀 <strong>Ler diff com desconfiança:</strong> verde entra, vermelho sai — e o bug mora no que "parece certo"</div>
+        <div>🔐 <strong>O login por dentro:</strong> session (o bolso do flash!), hash de mão única, @login_required de crachá</div>
+        <div>💳 <strong>Ferramentas:</strong> Gemini CLI grátis, Claude Code/Codex por assinatura — critério não se assina, se aprende</div>
+      </div>
+
+      <div class="concept" style="margin-top:18px">
+        <div class="concept-title">🎯 A frase pra levar pra casa</div>
+        <p>
+          <strong>"O agente é o motor; o volante é meu."</strong>
+          Você especificou, revisou, testou e entendeu cada linha que entrou no seu sistema.
+          Isso é usar IA como profissional — e é raro. Você tem.
+        </p>
+      </div>
+
+      <div class="warning">
+        <span class="tip-icon">📝</span>
+        <div class="tip-content">
+          <strong>Pro Dia 7:</strong> traga a <strong>espec do seu projeto</strong> (missão final
+          da arena) e o tema decidido. Quem chegar com isso pronto começa a codar no minuto 10.
+        </div>
+      </div>
+
+      <div class="next-chapter">
+        <h3>🚀 Dia 07 · Seu sistema, seu tema</h3>
+        <p style="color:var(--text-dim)">O projeto final começa — com você no volante</p>
+        <a href="javascript:void(0)" class="btn-next disabled">🚧 Em construção — disponível antes do encontro 7</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="footer">
+  <p>Feito com 🌶️ pelo prof. Kelson Almeida — programa AI</p>
+</footer>
+
+<script src="../../shared/scripts.js" defer></script>
+<script type="module" src="../../shared/motion-fx.js"></script>
+<script>
+/* ══════════ Máquinas didáticas do capítulo 06 (vanilla) ══════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  /* ---------- ⭐ Agente em ação (replay) ---------- */
+  (function(){
+    const box = document.getElementById('swpAgent');
+    if (!box) return;
+    const body = document.getElementById('agentBody');
+    const note = document.getElementById('agentNote');
+    const btn = document.getElementById('agentPlay');
+    let busy = false;
+
+    const SCRIPT = [
+      ['you', '> Adicione um link "Cancelar" na tela de novo produto,', 'você especifica — curto e exato'],
+      ['you', '  voltando pro /produtos. Não mude mais nada.', ''],
+      ['dim', '', ''],
+      ['bot', '⏺ Lendo templates/novo.html…', 'o agente LÊ o projeto antes de mexer'],
+      ['bot', '⏺ Proposta de mudança em templates/novo.html:', ''],
+      ['ok',  '  + <p><a href="/produtos">Cancelar</a></p>', 'o diff: UMA linha verde, exatamente o pedido'],
+      ['bot', '  Aplicar esta mudança? (s/n)', 'o agente PARA e espera — nada muda sem você'],
+      ['you', '> s', 'você leu, conferiu que era só isso… e aprovou'],
+      ['bot', '✓ templates/novo.html atualizado.', ''],
+      ['dim', '', ''],
+      ['you', '> (no navegador: F5 em /produtos/novo… link lá, funcionando)', 'e TESTOU — o fluxo completo em 30 segundos'],
+      ['ok',  '✓ feature entregue: especificada, revisada, testada.', 'assim, sempre — do link simples ao login inteiro'],
+    ];
+
+    async function play(){
+      if (busy) return;
+      busy = true;
+      body.innerHTML = '';
+      const lines = SCRIPT.map(([cls, text]) => {
+        const ln = document.createElement('span');
+        ln.className = 'ln ' + cls;
+        ln.textContent = text || ' ';
+        body.appendChild(ln);
+        return ln;
+      });
+      for (let i = 0; i < lines.length; i++){
+        lines[i].classList.add('on');
+        const legenda = SCRIPT[i][2];
+        if (legenda) note.innerHTML = '💬 ' + legenda;
+        await sleep(reduceMotion ? 200 : (SCRIPT[i][2] ? 1400 : 500));
+      }
+      note.innerHTML = '💬 <strong>4 decisões humanas</strong> numa feature de 1 linha. Essa proporção não muda com o tamanho.';
+      busy = false;
+    }
+
+    btn.addEventListener('click', play);
+    if (!reduceMotion){
+      new IntersectionObserver((es, obs) => {
+        es.forEach(e => { if (e.isIntersecting){ play(); obs.disconnect(); } });
+      }, {threshold:0.4}).observe(box);
+    }
+  })();
+
+  /* ---------- ⭐ Caça ao bug no diff ---------- */
+  (function(){
+    const box = document.getElementById('swpHunt');
+    if (!box) return;
+    const diff = document.getElementById('huntDiff');
+    const verdict = document.getElementById('huntVerdict');
+    const note = document.getElementById('huntNote');
+    let found = false;
+
+    const LINES = [
+      ['@app.route("/login", methods=["GET", "POST"])', 'Rota com GET e POST — igualzinho às suas. Nada de errado aqui.'],
+      ['def login():', 'Só a definição da função. Segue a caça.'],
+      ['    if request.method == "POST":', 'O padrão que você usa desde o Dia 2. Inocente.'],
+      ['        nome  = request.form["nome"]', 'Pescando o campo do form — name="nome". Correto.'],
+      ['        senha = request.form["senha"]', 'A senha digitada chega aqui, em texto (normal: acabou de sair do form). O problema não é ESTA linha… é o que fazem com ela. Continue.'],
+      ['        usuario = banco.buscar_usuario(nome)', 'Busca no banco pelo nome — o fetchone do Dia 5. Ok.'],
+      ['        if usuario is None:', 'Usuário não existe → mensagem. Fluxo de erro correto.'],
+      ['            return render_template("login.html", erro="Usuário não existe")', 'Re-renderiza com erro, sem redirect — a assimetria certa do Dia 4.'],
+      ['        if senha == usuario[2]:', 'BUG'],
+      ['            session["usuario"] = usuario[1]', 'Guardar o nome no bolso da sessão é exatamente o esperado.'],
+      ['            return redirect("/produtos")', 'Logou → redirect. Padrão correto.'],
+      ['        return render_template("login.html", erro="Senha incorreta")', 'Senha errada → erro na tela. Certinho.'],
+    ];
+
+    LINES.forEach(([code, msg], i) => {
+      const ln = document.createElement('span');
+      ln.className = 'swp-hunt-line';
+      ln.textContent = code;
+      ln.addEventListener('click', () => {
+        if (found) return;
+        if (msg === 'BUG'){
+          found = true;
+          ln.classList.add('gotcha');
+          verdict.innerHTML = '🎯 <strong>ACHOU!</strong> <code>senha == usuario[2]</code> compara a senha digitada ' +
+            'com o <strong>HASH</strong> guardado — texto puro nunca vai ser igual à sopa de letras, então ' +
+            '<strong>NINGUÉM consegue logar</strong> (e se o agente tivesse guardado sem hash, seria pior: inseguro). ' +
+            'O certo: <code>if check_password_hash(usuario[2], senha):</code> — e é exatamente isso que você pediria na etapa AJUSTAR.';
+          note.innerHTML = 'repare: esse código <strong>roda sem nenhum erro</strong> — só a leitura humana pega';
+        } else {
+          ln.classList.remove('nope');
+          void ln.offsetWidth;
+          ln.classList.add('nope');
+          verdict.innerHTML = '🤔 Essa linha está ok: ' + msg;
+        }
+      });
+      diff.appendChild(ln);
+    });
+
+    document.getElementById('huntReset').addEventListener('click', () => {
+      found = false;
+      [...diff.children].forEach(l => l.classList.remove('gotcha', 'nope'));
+      verdict.innerHTML = '🕵️ Dica: a espec pediu senha com HASH. Siga o caminho da senha…';
+      note.textContent = 'clique em qualquer linha — errar também ensina';
+    });
+  })();
+});
+</script>
+</body>
+</html>
