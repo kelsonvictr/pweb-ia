@@ -140,3 +140,45 @@ convertido para esse fluxo, eliminando o atrito de aprender ferramenta nova junt
 - O terminal cru **permanece** só onde é historicamente fiel: o raio-X do `streamlit run` no cap 01.
 - O **guia do professor** (`guia-professor/`, fora do git) foi convertido junto e ganhou uma seção
   "Cola do PyCharm" com os atalhos e os dois tropeços mais comuns da turma.
+
+## D13 · Capítulos 05–08 — decisões dos capítulos finais (2026-08-25)
+
+**Cap 05 (CRUD parte 2 + Vender):**
+- Exclusão SEMPRE por **página de confirmação + POST** (a "história do robô que clicou em
+  todos os links"); nada de `onclick="confirm()"` — JS continua fora (D3).
+- `app.secret_key` é introduzido junto do `flash()` ("a assinatura dos bilhetes"), plantando
+  a palavra *sessão* que o login do dia 6 colhe.
+- **JOIN essencial sem alias** (`FROM vendas JOIN produtos ON produtos.id = vendas.produto_id`)
+  — nomes completos para leitura de iniciante; a única dose de JOIN do curso.
+- Total da venda calculado NO SERVIDOR (`qtd * produto[2]`) — regra "o cliente escolhe, o
+  servidor calcula e confere".
+- GROUP BY aparece só como desafio lv3 da arena (aperitivo, não conteúdo).
+
+**Cap 06 (agentes):**
+- **Pré-encontro obrigatório** no topo do capítulo (Node LTS + `npm install -g
+  @google/gemini-cli` + login Google, no Terminal do PyCharm) — avisado também no resumo do
+  cap 05. Fallback: dupla em sala.
+- O bug plantado da "caça ao bug no diff" é `senha == usuario[2]` (comparação com hash sem
+  `check_password_hash`) — código que roda sem erro e falha funcionalmente, o arquétipo do
+  bug de agente.
+- A "espec boa" do login é o texto literal que o aluno cola; ela vira o checklist de
+  aceitação interativo da missão.
+- Decorators ganham dose mínima ("etiqueta que envolve a função, prima do @app.route") —
+  ler, não escrever.
+
+**Cap 07 (projeto final):** formato workshop (~60% do tamanho), SEM arena (o projeto é a
+arena). Fórmula pública: **2 entidades + 1 operação de movimento**. Checklist de 8 itens com
+localStorage. Regra do agente reafirmada: na mão primeiro; código gerado é explicado no
+demo day.
+
+**Cap 08 (deploy):**
+- Plataforma: **PythonAnywhere free** (já era a URL da narrativa do cap 00); Render citado
+  como alternativa com Git. **Manual configuration** de propósito (o atalho Flask esconderia
+  o que o aluno entende).
+- `if __name__ == "__main__":` é ensinado AQUI (dose: "um if, dois mundos" — ▶ local roda
+  app.run; o WSGI importa e a plataforma liga).
+- **Working directory** apresentado como o remédio do `no such table` em produção (callback
+  do bug do Dia 3). Zip SEM venv e sem .db; criar_banco.py roda no console Bash da nuvem.
+- REST/JSON são NOMEADOS apenas na máquina "A evolução" (monólito → front/back), como
+  território do fullstack (D3 cumprida até o fim).
+- Chat do cap 00 refeito com final feliz no "momento do celular".
