@@ -38,6 +38,18 @@
   background:rgba(255,255,255,0.03);border-top:1px solid rgba(255,255,255,0.06);
 }
 .swp-machine-note{font-size:0.8rem;color:var(--text-dim);line-height:1.5;flex:1;min-width:180px}
+
+/* árvore de arquivos (mesmo visual do cap 01) */
+.swp-file-tree{
+  font-family:'JetBrains Mono',monospace;font-size:0.85rem;line-height:2;
+  background:var(--code-bg);border:1px solid rgba(255,255,255,0.07);
+  border-radius:12px;padding:16px 20px;color:var(--text-dim);white-space:pre;overflow-x:auto;
+  font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+}
+.swp-file-tree .dir{color:var(--accent5);font-weight:700}
+.swp-file-tree .file{color:var(--text)}
+.swp-file-tree .new{color:var(--accent7);font-weight:700}
+.swp-file-tree .note{color:#5b6478;font-style:italic}
 .swp-machine-note strong{color:var(--accent7)}
 
 /* ---------- MÁQUINA 1: Fábrica de Páginas ---------- */
@@ -271,6 +283,7 @@
     <a class="sidebar-link" onclick="goTo('bugzilla')"><span class="dot" style="background:var(--bug)"></span>BugZilla do dia 🐛</a>
     <a class="sidebar-link" onclick="goTo('quiz')"><span class="dot" style="background:var(--accent5)"></span>Quiz de fixação</a>
     <a class="sidebar-link" onclick="goTo('arena')"><span class="dot" style="background:var(--accent6)"></span>Arena de treino</a>
+    <a class="sidebar-link" onclick="goTo('codigo-completo')"><span class="dot" style="background:var(--accent3)"></span>📦 Código completo do dia</a>
     <a class="sidebar-link" onclick="goTo('resumo')"><span class="dot" style="background:var(--accent7)"></span>Resumo do dia</a>
   </div>
 </aside>
@@ -908,7 +921,64 @@ produtos = [
           <strong style="color:var(--text)">2.</strong> Em cada página
           (<code>index</code>, <code>sobre</code>, <code>contato</code>, <code>promocoes</code>):
           apague esqueleto + menu, deixe só o miolo, e embrulhe com
-          <code class="jtag">{% extends %}</code> + <code class="jtag">{% block conteudo %}</code>.<br>
+          <code class="jtag">{% extends %}</code> + <code class="jtag">{% block conteudo %}</code>.
+        </p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/templates/index.html (INTEIRO, depois da migração)</span>
+            <span class="lang-badge jinja">Jinja</span>
+          </div>
+<pre><span class="jtag">{% extends "base.html" %}</span>
+
+<span class="jtag">{% block conteudo %}</span>
+  <span class="tag">&lt;h1&gt;</span>🛍️ Minha Loja<span class="tag">&lt;/h1&gt;</span>
+
+  <span class="tag">&lt;h2&gt;</span>Produtos de hoje<span class="tag">&lt;/h2&gt;</span>
+  <span class="jtag">{% if produtos %}</span>
+    <span class="tag">&lt;table&gt;</span>
+      <span class="tag">&lt;tr&gt;</span><span class="tag">&lt;th&gt;</span>Produto<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Preço<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;/tr&gt;</span>
+      <span class="jtag">{% for p in produtos %}</span>
+        <span class="tag">&lt;tr&gt;</span>
+          <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["nome"] }}</span><span class="tag">&lt;/td&gt;</span>
+          <span class="tag">&lt;td&gt;</span>R$ <span class="jvar">{{ p["preco"] }}</span><span class="tag">&lt;/td&gt;</span>
+        <span class="tag">&lt;/tr&gt;</span>
+      <span class="jtag">{% endfor %}</span>
+    <span class="tag">&lt;/table&gt;</span>
+  <span class="jtag">{% else %}</span>
+    <span class="tag">&lt;p&gt;</span>😢 Estoque vazio! Cadastre o primeiro produto.<span class="tag">&lt;/p&gt;</span>
+  <span class="jtag">{% endif %}</span>
+<span class="jtag">{% endblock %}</span></pre>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/templates/contato.html (INTEIRO)</span>
+            <span class="lang-badge jinja">Jinja</span>
+          </div>
+<pre><span class="jtag">{% extends "base.html" %}</span>
+
+<span class="jtag">{% block conteudo %}</span>
+  <span class="tag">&lt;h1&gt;</span>📞 Fale com a gente<span class="tag">&lt;/h1&gt;</span>
+  <span class="tag">&lt;p&gt;</span>E-mail: contato@minhaloja.com<span class="tag">&lt;/p&gt;</span>
+<span class="jtag">{% endblock %}</span></pre>
+        </div>
+
+        <div class="tip">
+          <span class="tip-icon">🧹</span>
+          <div class="tip-content">
+            <strong>Some coisa — e é pra sumir:</strong> aquele
+            <code>&lt;p&gt;&lt;a href="/"&gt;← voltar pro início&lt;/a&gt;&lt;/p&gt;</code>
+            que você tinha em cada página do Dia 1 pode sair: o menu do
+            <code>base.html</code> já leva pra home de qualquer lugar. O
+            <code>&lt;!DOCTYPE&gt;</code>, o <code>&lt;head&gt;</code> e a linha do Pico também
+            <strong>não ficam mais aqui</strong> — moram só no base.
+          </div>
+        </div>
+
+        <p style="color:var(--text-dim)">
           <strong style="color:var(--text)">3.</strong> F5 em todas — mesma cara, metade do código.
           Teste o poder: adicione um link novo no menu do <code>base.html</code> →
           <strong>apareceu em TODAS as páginas de uma vez</strong>. 💪
@@ -1269,8 +1339,54 @@ produtos = [
           <strong style="color:var(--text)">2.</strong> No <code>app.py</code>: importe
           <code>request</code> e <code>redirect</code>, adicione
           <code>methods=["GET", "POST"]</code> na rota da home e o bloco do
-          <code>if request.method == "POST":</code> (o código completo está na seção anterior —
-          digite olhando pra ele, entendendo linha a linha).<br>
+          <code>if request.method == "POST":</code>. Este é o
+          <strong style="color:var(--text)">arquivo inteiro</strong> como ele fica agora —
+          digite olhando pra ele, entendendo linha a linha:
+        </p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/app.py (INTEIRO, no fim da aula de hoje)</span>
+            <span class="lang-badge python">Python</span>
+          </div>
+<pre><span class="kw">from</span> flask <span class="kw">import</span> <span class="tp">Flask</span>, <span class="fn">render_template</span>, request, <span class="fn">redirect</span>
+
+app = <span class="tp">Flask</span>(__name__)
+
+<span class="cm"># os dados moram aqui — na MEMÓRIA (por enquanto!)</span>
+produtos = [
+    {<span class="st">"nome"</span>: <span class="st">"Fone Bluetooth"</span>,   <span class="st">"preco"</span>: <span class="num">149.90</span>},
+    {<span class="st">"nome"</span>: <span class="st">"Teclado Mecânico"</span>, <span class="st">"preco"</span>: <span class="num">299.00</span>},
+    {<span class="st">"nome"</span>: <span class="st">"Mouse Gamer"</span>,      <span class="st">"preco"</span>: <span class="num">89.90</span>},
+]
+
+
+<span class="dec">@app.route</span>(<span class="st">"/"</span>, methods=[<span class="st">"GET"</span>, <span class="st">"POST"</span>])
+<span class="kw">def</span> <span class="fn">home</span>():
+    <span class="kw">if</span> request.method == <span class="st">"POST"</span>:
+        nome = request.form[<span class="st">"nome"</span>]
+        preco = <span class="bi">float</span>(request.form[<span class="st">"preco"</span>])
+        produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"</span>: preco})
+        <span class="kw">return</span> <span class="fn">redirect</span>(<span class="st">"/"</span>)
+
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"index.html"</span>, produtos=produtos)
+
+
+<span class="dec">@app.route</span>(<span class="st">"/sobre"</span>)
+<span class="kw">def</span> <span class="fn">sobre</span>():
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"sobre.html"</span>)
+
+
+<span class="dec">@app.route</span>(<span class="st">"/contato"</span>)
+<span class="kw">def</span> <span class="fn">contato</span>():
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"contato.html"</span>)
+
+
+app.run(debug=<span class="bool">True</span>)</pre>
+        </div>
+
+        <p style="color:var(--text-dim)">
           <strong style="color:var(--text)">3.</strong> Salve → F5 → cadastre um produto de teste.
           A tabela cresceu! Cadastre mais dois. 🎉
         </p>
@@ -1711,6 +1827,59 @@ The method is not allowed for the requested URL.</pre>
           <code>render_template</code> e liste com <code class="jtag">{% for %}</code>
           em vez de <code>&lt;li&gt;</code> fixos.
         </p>
+        <div class="toggler">
+          <div class="toggler-header" onclick="toggleSection(this)">
+            <span>👀 Ver solução (depois de tentar!)</span>
+            <span class="toggler-arrow">▼</span>
+          </div>
+          <div class="toggler-body">
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/templates/promocoes.html (INTEIRO)</span>
+            <span class="lang-badge jinja">Jinja</span>
+          </div>
+<pre><span class="jtag">{% extends "base.html" %}</span>
+
+<span class="jtag">{% block conteudo %}</span>
+  <span class="tag">&lt;h1&gt;</span>🔥 Promoções da semana<span class="tag">&lt;/h1&gt;</span>
+  <span class="tag">&lt;ul&gt;</span>
+    <span class="jtag">{% for promo in promocoes %}</span>
+      <span class="tag">&lt;li&gt;</span><span class="jvar">{{ promo }}</span><span class="tag">&lt;/li&gt;</span>
+    <span class="jtag">{% endfor %}</span>
+  <span class="tag">&lt;/ul&gt;</span>
+<span class="jtag">{% endblock %}</span></pre>
+        </div>
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/app.py (a lista + a rota)</span>
+            <span class="lang-badge python">Python</span>
+          </div>
+<pre><span class="cm"># a lista fica lá em cima, junto de produtos</span>
+promocoes = [
+    <span class="st">"Fone + Teclado: 20% off"</span>,
+    <span class="st">"Frete grátis acima de R$ 99"</span>,
+    <span class="st">"Mouse em dobro (é sério)"</span>,
+]
+
+
+<span class="dec">@app.route</span>(<span class="st">"/promocoes"</span>)
+<span class="kw">def</span> <span class="fn">ver_promocoes</span>():
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"promocoes.html"</span>, promocoes=promocoes)</pre>
+        </div>
+          </div>
+        </div>
+        <div class="tip">
+          <span class="tip-icon">🏷️</span>
+          <div class="tip-content">
+            <strong>Por que a função virou <code>ver_promocoes</code>?</strong> Porque o nome
+            <code>promocoes</code> já está ocupado pela lista. Se você chamar a função de
+            <code>promocoes</code> também, o Python <em>substitui</em> a lista pela função e
+            você toma um erro estranho na hora de renderizar. Nome de lista e nome de função
+            não podem ser iguais — vale pra qualquer código Python.
+          </div>
+        </div>
       </div>
 
       <div class="exercise home">
@@ -1732,6 +1901,47 @@ The method is not allowed for the requested URL.</pre>
           <code class="jvar">{{ total }}</code> no template. Regra de ouro de hoje:
           <strong style="color:var(--text)">quem calcula é o Python; o template só exibe</strong>.
         </p>
+        <div class="toggler">
+          <div class="toggler-header" onclick="toggleSection(this)">
+            <span>👀 Ver solução (depois de tentar!)</span>
+            <span class="toggler-arrow">▼</span>
+          </div>
+          <div class="toggler-body">
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/app.py (o render_template da home)</span>
+            <span class="lang-badge python">Python</span>
+          </div>
+<pre><span class="dec">@app.route</span>(<span class="st">"/"</span>, methods=[<span class="st">"GET"</span>, <span class="st">"POST"</span>])
+<span class="kw">def</span> <span class="fn">home</span>():
+    <span class="kw">if</span> request.method == <span class="st">"POST"</span>:
+        ...
+
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"index.html"</span>,
+                           produtos=produtos,
+                           total=<span class="bi">len</span>(produtos))</pre>
+        </div>
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/templates/index.html (acima da tabela)</span>
+            <span class="lang-badge jinja">Jinja</span>
+          </div>
+<pre><span class="tag">&lt;h1&gt;</span>🛍️ Minha Loja<span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;p&gt;</span>Temos <span class="jvar">{{ total }}</span> produtos no estoque.<span class="tag">&lt;/p&gt;</span></pre>
+        </div>
+          </div>
+        </div>
+        <div class="warning">
+          <span class="tip-icon">🚫</span>
+          <div class="tip-content">
+            <strong>Não tente <code class="jvar">{{ len(produtos) }}</code> no template.</strong>
+            O Jinja não é Python: ele não conhece o <code>len()</code>. Ou você calcula no Python
+            e passa pronto (o jeito que a gente ensina hoje), ou usa o filtro do Jinja
+            <code class="jvar">{{ produtos|length }}</code>. Fica com o primeiro.
+          </div>
+        </div>
       </div>
 
       <div class="exercise home">
@@ -1752,6 +1962,56 @@ The method is not allowed for the requested URL.</pre>
           (ex.: "áudio", "periféricos"), pescado no Python, guardado no dict, exibido em coluna
           própria. É o mesmo caminho de 4 paradas do exercício de quantidade — agora sem colinha.
         </p>
+        <div class="toggler">
+          <div class="toggler-header" onclick="toggleSection(this)">
+            <span>👀 Ver solução (depois de tentar!)</span>
+            <span class="toggler-arrow">▼</span>
+          </div>
+          <div class="toggler-body">
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/templates/index.html (três trechos)</span>
+            <span class="lang-badge jinja">Jinja</span>
+          </div>
+<pre><span class="cm">&lt;!-- 1) no form, mais um input --&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"categoria"</span> <span class="atr">placeholder</span>=<span class="st">"Categoria (ex: áudio)"</span><span class="tag">&gt;</span>
+
+<span class="cm">&lt;!-- 2) no cabeçalho da tabela, mais um th --&gt;</span>
+<span class="tag">&lt;tr&gt;</span><span class="tag">&lt;th&gt;</span>Produto<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Preço<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Estoque<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Categoria<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;/tr&gt;</span>
+
+<span class="cm">&lt;!-- 3) dentro do </span><span class="jtag">{% for %}</span><span class="cm">, mais um td --&gt;</span>
+<span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["categoria"] }}</span><span class="tag">&lt;/td&gt;</span></pre>
+        </div>
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/app.py (dois trechos)</span>
+            <span class="lang-badge python">Python</span>
+          </div>
+<pre><span class="cm"># 4) na lista lá de cima, a chave nova nos produtos que JÁ existem</span>
+produtos = [
+    {<span class="st">"nome"</span>: <span class="st">"Fone Bluetooth"</span>, <span class="st">"preco"</span>: <span class="num">149.90</span>, <span class="st">"qtd"</span>: <span class="num">12</span>, <span class="st">"categoria"</span>: <span class="st">"áudio"</span>},
+    ...
+]
+
+<span class="cm"># 5) dentro do if request.method == "POST":</span>
+categoria = request.form[<span class="st">"categoria"</span>]
+produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"</span>: preco,
+                 <span class="st">"qtd"</span>: qtd, <span class="st">"categoria"</span>: categoria})</pre>
+        </div>
+          </div>
+        </div>
+        <div class="warning">
+          <span class="tip-icon">🐛</span>
+          <div class="tip-content">
+            <strong>O passo 4 é o que todo mundo esquece.</strong> Se você só mexer no form, os
+            produtos antigos da lista continuam SEM a chave <code>"categoria"</code> — e o
+            <code class="jvar">{{ p["categoria"] }}</code> vai explodir na tela com
+            <code>UndefinedError</code> na primeira linha da tabela. Dado novo no dict:
+            põe em TODOS os produtos, inclusive os que já estavam lá.
+          </div>
+        </div>
       </div>
 
       <div class="exercise home">
@@ -1783,7 +2043,493 @@ The method is not allowed for the requested URL.</pre>
             p["nome"].lower()]</code> — ou um for com if, do jeito clássico. Os dois valem.
           </p>
         </div>
+        <div class="toggler">
+          <div class="toggler-header" onclick="toggleSection(this)">
+            <span>👀 Ver solução (depois de tentar!)</span>
+            <span class="toggler-arrow">▼</span>
+          </div>
+          <div class="toggler-body">
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/templates/buscar.html (INTEIRO)</span>
+            <span class="lang-badge jinja">Jinja</span>
+          </div>
+<pre><span class="jtag">{% extends "base.html" %}</span>
+
+<span class="jtag">{% block conteudo %}</span>
+  <span class="tag">&lt;h1&gt;</span>🔎 Buscar produto<span class="tag">&lt;/h1&gt;</span>
+
+  <span class="tag">&lt;form</span> <span class="atr">action</span>=<span class="st">"/buscar"</span> <span class="atr">method</span>=<span class="st">"GET"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"q"</span> <span class="atr">placeholder</span>=<span class="st">"Nome do produto"</span> <span class="atr">value</span>=<span class="st">"</span><span class="jvar">{{ q }}</span><span class="st">"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;button&gt;</span>Buscar<span class="tag">&lt;/button&gt;</span>
+  <span class="tag">&lt;/form&gt;</span>
+
+  <span class="jtag">{% if q %}</span>
+    <span class="tag">&lt;p&gt;</span>Resultados para "<span class="jvar">{{ q }}</span>":<span class="tag">&lt;/p&gt;</span>
+    <span class="jtag">{% if produtos %}</span>
+      <span class="tag">&lt;ul&gt;</span>
+        <span class="jtag">{% for p in produtos %}</span>
+          <span class="tag">&lt;li&gt;</span><span class="jvar">{{ p["nome"] }}</span> — R$ <span class="jvar">{{ p["preco"] }}</span><span class="tag">&lt;/li&gt;</span>
+        <span class="jtag">{% endfor %}</span>
+      <span class="tag">&lt;/ul&gt;</span>
+    <span class="jtag">{% else %}</span>
+      <span class="tag">&lt;p&gt;</span>😢 Nada encontrado.<span class="tag">&lt;/p&gt;</span>
+    <span class="jtag">{% endif %}</span>
+  <span class="jtag">{% endif %}</span>
+<span class="jtag">{% endblock %}</span></pre>
+        </div>
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/app.py (a rota nova)</span>
+            <span class="lang-badge python">Python</span>
+          </div>
+<pre><span class="dec">@app.route</span>(<span class="st">"/buscar"</span>)
+<span class="kw">def</span> <span class="fn">buscar</span>():
+    q = request.args.get(<span class="st">"q"</span>, <span class="st">""</span>)
+    encontrados = [p <span class="kw">for</span> p <span class="kw">in</span> produtos <span class="kw">if</span> q.lower() <span class="kw">in</span> p[<span class="st">"nome"</span>].lower()]
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"buscar.html"</span>, produtos=encontrados, q=q)</pre>
+        </div>
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/templates/base.html (o menu ganha um link)</span>
+            <span class="lang-badge jinja">Jinja</span>
+          </div>
+<pre><span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/"</span><span class="tag">&gt;</span>Início<span class="tag">&lt;/a&gt;</span> ·
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/sobre"</span><span class="tag">&gt;</span>Sobre<span class="tag">&lt;/a&gt;</span> ·
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/contato"</span><span class="tag">&gt;</span>Contato<span class="tag">&lt;/a&gt;</span> ·
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/buscar"</span><span class="tag">&gt;</span>Buscar<span class="tag">&lt;/a&gt;</span></pre>
+        </div>
+          </div>
+        </div>
+        <div class="concept">
+          <div class="concept-title">💡 Três detalhes que valem ouro aqui</div>
+          <p>
+            <strong>1.</strong> A rota <code>/buscar</code> NÃO precisa de
+            <code>methods=["GET", "POST"]</code> — GET já é o padrão do Flask.<br>
+            <strong>2.</strong> <code>request.args.get("q", "")</code> usa
+            <code>.get()</code> com um valor padrão: se ninguém buscou nada ainda, <code>q</code>
+            vira <code>""</code> em vez de dar <code>KeyError</code>. Por isso o
+            <code class="jtag">{% if q %}</code> no template.<br>
+            <strong>3.</strong> O <code>value="{{ q }}"</code> no input faz o termo
+            <strong>continuar escrito</strong> no campo depois da busca — detalhe pequeno,
+            cara de site profissional.
+          </p>
+        </div>
       </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       CÓDIGO COMPLETO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="codigo-completo">
+    <div class="step-header">
+      <div class="step-number sn-main">📦</div>
+      <div>
+        <div class="step-title">Código completo do Dia 2</div>
+        <div class="step-sub">Todos os arquivos, inteiros, do jeito que devem estar no fim</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Ao longo do capítulo você viu <strong style="color:var(--text)">trechos</strong> — um
+        pedaço do <code>app.py</code> aqui, um bloco do template ali. Isso é de propósito: assim
+        você entende cada parte. Mas na hora de conferir se está tudo no lugar, trecho não
+        resolve. Então aqui está <strong style="color:var(--text)">tudo</strong>.
+      </p>
+
+      <div class="warning">
+        <span class="tip-icon">✋</span>
+        <div class="tip-content">
+          <strong>Conferir não é copiar.</strong> Se você ainda não digitou, volte e digite —
+          é digitando que a mão aprende. Use esta seção depois: pra achar a vírgula que faltou,
+          a indentação torta, o <code>name=</code> escrito diferente dos dois lados.
+        </div>
+      </div>
+
+      <div class="swp-file-tree">📁 <span class="dir">loja/</span>
+├── 📁 <span class="dir">venv/</span>                <span class="note">← não mexe</span>
+├── 🐍 <span class="file">app.py</span>              <span class="note">← rotas + a lista de produtos</span>
+└── 📁 <span class="dir">templates/</span>
+    ├── 🧱 <span class="new">base.html</span>       <span class="note">← NOVO hoje: o papel timbrado</span>
+    ├── 🧱 <span class="file">index.html</span>      <span class="note">← form + tabela</span>
+    ├── 🧱 <span class="file">sobre.html</span>
+    └── 🧱 <span class="file">contato.html</span></div>
+
+      <div class="concept" style="margin-top:18px">
+        <div class="concept-title">🎯 Versão 1: o que sai da aula de hoje</div>
+        <p>
+          Loja com <strong>menu herdado do base.html</strong>, tabela vinda do Python
+          (com a coluna Estoque do exercício) e cadastro por formulário POST.
+          Sem as missões da arena ainda.
+        </p>
+      </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/app.py</span>
+            <span class="lang-badge python">Python</span>
+          </div>
+<pre><span class="kw">from</span> flask <span class="kw">import</span> <span class="tp">Flask</span>, <span class="fn">render_template</span>, request, <span class="fn">redirect</span>
+
+app = <span class="tp">Flask</span>(__name__)
+
+<span class="cm"># os dados moram aqui — na MEMÓRIA (por enquanto!)</span>
+produtos = [
+    {<span class="st">"nome"</span>: <span class="st">"Fone Bluetooth"</span>,   <span class="st">"preco"</span>: <span class="num">149.90</span>, <span class="st">"qtd"</span>: <span class="num">12</span>},
+    {<span class="st">"nome"</span>: <span class="st">"Teclado Mecânico"</span>, <span class="st">"preco"</span>: <span class="num">299.00</span>, <span class="st">"qtd"</span>: <span class="num">5</span>},
+    {<span class="st">"nome"</span>: <span class="st">"Mouse Gamer"</span>,      <span class="st">"preco"</span>: <span class="num">89.90</span>,  <span class="st">"qtd"</span>: <span class="num">23</span>},
+]
+
+
+<span class="dec">@app.route</span>(<span class="st">"/"</span>, methods=[<span class="st">"GET"</span>, <span class="st">"POST"</span>])
+<span class="kw">def</span> <span class="fn">home</span>():
+    <span class="kw">if</span> request.method == <span class="st">"POST"</span>:
+        nome = request.form[<span class="st">"nome"</span>]
+        preco = <span class="bi">float</span>(request.form[<span class="st">"preco"</span>])
+        qtd = <span class="bi">int</span>(request.form[<span class="st">"qtd"</span>])
+        produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"</span>: preco, <span class="st">"qtd"</span>: qtd})
+        <span class="kw">return</span> <span class="fn">redirect</span>(<span class="st">"/"</span>)
+
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"index.html"</span>, produtos=produtos)
+
+
+<span class="dec">@app.route</span>(<span class="st">"/sobre"</span>)
+<span class="kw">def</span> <span class="fn">sobre</span>():
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"sobre.html"</span>)
+
+
+<span class="dec">@app.route</span>(<span class="st">"/contato"</span>)
+<span class="kw">def</span> <span class="fn">contato</span>():
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"contato.html"</span>)
+
+
+app.run(debug=<span class="bool">True</span>)</pre>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/templates/base.html</span>
+            <span class="lang-badge jinja">Jinja</span>
+          </div>
+<pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="atr">lang</span>=<span class="st">"pt-BR"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="atr">charset</span>=<span class="st">"UTF-8"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;title&gt;</span>Minha Loja<span class="tag">&lt;/title&gt;</span>
+    <span class="tag">&lt;link</span> <span class="atr">rel</span>=<span class="st">"stylesheet"</span> <span class="atr">href</span>=<span class="st">"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;/head&gt;</span>
+  <span class="tag">&lt;body&gt;</span>
+    <span class="tag">&lt;p&gt;</span>
+      <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/"</span><span class="tag">&gt;</span>Início<span class="tag">&lt;/a&gt;</span> ·
+      <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/sobre"</span><span class="tag">&gt;</span>Sobre<span class="tag">&lt;/a&gt;</span> ·
+      <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/contato"</span><span class="tag">&gt;</span>Contato<span class="tag">&lt;/a&gt;</span>
+    <span class="tag">&lt;/p&gt;</span>
+
+    <span class="jtag">{% block conteudo %}</span><span class="jtag">{% endblock %}</span>
+  <span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/templates/index.html</span>
+            <span class="lang-badge jinja">Jinja</span>
+          </div>
+<pre><span class="jtag">{% extends "base.html" %}</span>
+
+<span class="jtag">{% block conteudo %}</span>
+  <span class="tag">&lt;h1&gt;</span>🛍️ Minha Loja<span class="tag">&lt;/h1&gt;</span>
+
+  <span class="tag">&lt;h2&gt;</span>Cadastrar produto<span class="tag">&lt;/h2&gt;</span>
+  <span class="tag">&lt;form</span> <span class="atr">action</span>=<span class="st">"/"</span> <span class="atr">method</span>=<span class="st">"POST"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"nome"</span> <span class="atr">placeholder</span>=<span class="st">"Nome do produto"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"preco"</span> <span class="atr">placeholder</span>=<span class="st">"Preço"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"qtd"</span> <span class="atr">placeholder</span>=<span class="st">"Quantidade"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;button&gt;</span>Cadastrar<span class="tag">&lt;/button&gt;</span>
+  <span class="tag">&lt;/form&gt;</span>
+
+  <span class="tag">&lt;h2&gt;</span>Produtos de hoje<span class="tag">&lt;/h2&gt;</span>
+  <span class="jtag">{% if produtos %}</span>
+    <span class="tag">&lt;table&gt;</span>
+      <span class="tag">&lt;tr&gt;</span><span class="tag">&lt;th&gt;</span>Produto<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Preço<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Estoque<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;/tr&gt;</span>
+      <span class="jtag">{% for p in produtos %}</span>
+        <span class="tag">&lt;tr&gt;</span>
+          <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["nome"] }}</span><span class="tag">&lt;/td&gt;</span>
+          <span class="tag">&lt;td&gt;</span>R$ <span class="jvar">{{ p["preco"] }}</span><span class="tag">&lt;/td&gt;</span>
+          <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["qtd"] }}</span> un.<span class="tag">&lt;/td&gt;</span>
+        <span class="tag">&lt;/tr&gt;</span>
+      <span class="jtag">{% endfor %}</span>
+    <span class="tag">&lt;/table&gt;</span>
+  <span class="jtag">{% else %}</span>
+    <span class="tag">&lt;p&gt;</span>😢 Estoque vazio! Cadastre o primeiro produto.<span class="tag">&lt;/p&gt;</span>
+  <span class="jtag">{% endif %}</span>
+<span class="jtag">{% endblock %}</span></pre>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/templates/sobre.html</span>
+            <span class="lang-badge jinja">Jinja</span>
+          </div>
+<pre><span class="jtag">{% extends "base.html" %}</span>
+
+<span class="jtag">{% block conteudo %}</span>
+  <span class="tag">&lt;h1&gt;</span>ℹ️ Sobre a loja<span class="tag">&lt;/h1&gt;</span>
+  <span class="tag">&lt;p&gt;</span>Loja criada por MIM, com Python. 😄<span class="tag">&lt;/p&gt;</span>
+<span class="jtag">{% endblock %}</span></pre>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/templates/contato.html</span>
+            <span class="lang-badge jinja">Jinja</span>
+          </div>
+<pre><span class="jtag">{% extends "base.html" %}</span>
+
+<span class="jtag">{% block conteudo %}</span>
+  <span class="tag">&lt;h1&gt;</span>📞 Fale com a gente<span class="tag">&lt;/h1&gt;</span>
+  <span class="tag">&lt;p&gt;</span>E-mail: contato@minhaloja.com<span class="tag">&lt;/p&gt;</span>
+<span class="jtag">{% endblock %}</span></pre>
+        </div>
+
+      <div class="tip" style="margin-top:18px">
+        <span class="tip-icon">🔁</span>
+        <div class="tip-content">
+          <strong>Rodou e funcionou?</strong> Faça o teste do apagão de novo: pare o servidor
+          (⏹), rode outra vez e olhe a tabela. Os produtos que VOCÊ cadastrou sumiram; os três
+          da lista voltaram. É o Dia 3 batendo na porta. 🗄️
+        </div>
+      </div>
+
+      <div class="concept" style="margin-top:18px">
+        <div class="concept-title">🏆 Versão 2: com TODAS as missões da arena resolvidas</div>
+        <p>
+          Aqui a loja tem badge de produto barato, contador de produtos, categoria,
+          página de promoções e busca por GET. Se você parou na aula, seu arquivo é menor —
+          e está certo do mesmo jeito. Abra só depois de tentar cada missão.
+        </p>
+      </div>
+
+      <div class="toggler">
+        <div class="toggler-header" onclick="toggleSection(this)">
+          <span>👀 Ver a loja completa (arena inteira resolvida)</span>
+          <span class="toggler-arrow">▼</span>
+        </div>
+        <div class="toggler-body">
+          <div class="swp-file-tree">📁 <span class="dir">loja/</span>
+├── 🐍 <span class="file">app.py</span>
+└── 📁 <span class="dir">templates/</span>
+    ├── 🧱 <span class="file">base.html</span>       <span class="note">← menu com 5 links</span>
+    ├── 🧱 <span class="file">index.html</span>
+    ├── 🧱 <span class="file">sobre.html</span>      <span class="note">← igual à versão 1</span>
+    ├── 🧱 <span class="file">contato.html</span>    <span class="note">← igual à versão 1</span>
+    ├── 🧱 <span class="new">promocoes.html</span>   <span class="note">← missão 2</span>
+    └── 🧱 <span class="new">buscar.html</span>      <span class="note">← missão final</span></div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/app.py</span>
+            <span class="lang-badge python">Python</span>
+          </div>
+<pre><span class="kw">from</span> flask <span class="kw">import</span> <span class="tp">Flask</span>, <span class="fn">render_template</span>, request, <span class="fn">redirect</span>
+
+app = <span class="tp">Flask</span>(__name__)
+
+produtos = [
+    {<span class="st">"nome"</span>: <span class="st">"Fone Bluetooth"</span>,   <span class="st">"preco"</span>: <span class="num">149.90</span>, <span class="st">"qtd"</span>: <span class="num">12</span>, <span class="st">"categoria"</span>: <span class="st">"áudio"</span>},
+    {<span class="st">"nome"</span>: <span class="st">"Teclado Mecânico"</span>, <span class="st">"preco"</span>: <span class="num">299.00</span>, <span class="st">"qtd"</span>: <span class="num">5</span>,  <span class="st">"categoria"</span>: <span class="st">"periféricos"</span>},
+    {<span class="st">"nome"</span>: <span class="st">"Mouse Gamer"</span>,      <span class="st">"preco"</span>: <span class="num">89.90</span>,  <span class="st">"qtd"</span>: <span class="num">23</span>, <span class="st">"categoria"</span>: <span class="st">"periféricos"</span>},
+]
+
+promocoes = [
+    <span class="st">"Fone + Teclado: 20% off"</span>,
+    <span class="st">"Frete grátis acima de R$ 99"</span>,
+    <span class="st">"Mouse em dobro (é sério)"</span>,
+]
+
+
+<span class="dec">@app.route</span>(<span class="st">"/"</span>, methods=[<span class="st">"GET"</span>, <span class="st">"POST"</span>])
+<span class="kw">def</span> <span class="fn">home</span>():
+    <span class="kw">if</span> request.method == <span class="st">"POST"</span>:
+        nome = request.form[<span class="st">"nome"</span>]
+        preco = <span class="bi">float</span>(request.form[<span class="st">"preco"</span>])
+        qtd = <span class="bi">int</span>(request.form[<span class="st">"qtd"</span>])
+        categoria = request.form[<span class="st">"categoria"</span>]
+        produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"</span>: preco,
+                         <span class="st">"qtd"</span>: qtd, <span class="st">"categoria"</span>: categoria})
+        <span class="kw">return</span> <span class="fn">redirect</span>(<span class="st">"/"</span>)
+
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"index.html"</span>,
+                           produtos=produtos,
+                           total=<span class="bi">len</span>(produtos))
+
+
+<span class="dec">@app.route</span>(<span class="st">"/sobre"</span>)
+<span class="kw">def</span> <span class="fn">sobre</span>():
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"sobre.html"</span>)
+
+
+<span class="dec">@app.route</span>(<span class="st">"/contato"</span>)
+<span class="kw">def</span> <span class="fn">contato</span>():
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"contato.html"</span>)
+
+
+<span class="dec">@app.route</span>(<span class="st">"/promocoes"</span>)
+<span class="kw">def</span> <span class="fn">ver_promocoes</span>():
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"promocoes.html"</span>, promocoes=promocoes)
+
+
+<span class="dec">@app.route</span>(<span class="st">"/buscar"</span>)
+<span class="kw">def</span> <span class="fn">buscar</span>():
+    q = request.args.get(<span class="st">"q"</span>, <span class="st">""</span>)
+    encontrados = [p <span class="kw">for</span> p <span class="kw">in</span> produtos <span class="kw">if</span> q.lower() <span class="kw">in</span> p[<span class="st">"nome"</span>].lower()]
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"buscar.html"</span>, produtos=encontrados, q=q)
+
+
+app.run(debug=<span class="bool">True</span>)</pre>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/templates/base.html</span>
+            <span class="lang-badge jinja">Jinja</span>
+          </div>
+<pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="atr">lang</span>=<span class="st">"pt-BR"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="atr">charset</span>=<span class="st">"UTF-8"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;title&gt;</span>Minha Loja<span class="tag">&lt;/title&gt;</span>
+    <span class="tag">&lt;link</span> <span class="atr">rel</span>=<span class="st">"stylesheet"</span> <span class="atr">href</span>=<span class="st">"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;/head&gt;</span>
+  <span class="tag">&lt;body&gt;</span>
+    <span class="tag">&lt;p&gt;</span>
+      <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/"</span><span class="tag">&gt;</span>Início<span class="tag">&lt;/a&gt;</span> ·
+      <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/sobre"</span><span class="tag">&gt;</span>Sobre<span class="tag">&lt;/a&gt;</span> ·
+      <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/contato"</span><span class="tag">&gt;</span>Contato<span class="tag">&lt;/a&gt;</span> ·
+      <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/promocoes"</span><span class="tag">&gt;</span>Promoções<span class="tag">&lt;/a&gt;</span> ·
+      <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/buscar"</span><span class="tag">&gt;</span>Buscar<span class="tag">&lt;/a&gt;</span>
+    <span class="tag">&lt;/p&gt;</span>
+
+    <span class="jtag">{% block conteudo %}</span><span class="jtag">{% endblock %}</span>
+  <span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/templates/index.html</span>
+            <span class="lang-badge jinja">Jinja</span>
+          </div>
+<pre><span class="jtag">{% extends "base.html" %}</span>
+
+<span class="jtag">{% block conteudo %}</span>
+  <span class="tag">&lt;h1&gt;</span>🛍️ Minha Loja<span class="tag">&lt;/h1&gt;</span>
+  <span class="tag">&lt;p&gt;</span>Temos <span class="jvar">{{ total }}</span> produtos no estoque.<span class="tag">&lt;/p&gt;</span>
+
+  <span class="tag">&lt;h2&gt;</span>Cadastrar produto<span class="tag">&lt;/h2&gt;</span>
+  <span class="tag">&lt;form</span> <span class="atr">action</span>=<span class="st">"/"</span> <span class="atr">method</span>=<span class="st">"POST"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"nome"</span> <span class="atr">placeholder</span>=<span class="st">"Nome do produto"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"preco"</span> <span class="atr">placeholder</span>=<span class="st">"Preço"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"qtd"</span> <span class="atr">placeholder</span>=<span class="st">"Quantidade"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"categoria"</span> <span class="atr">placeholder</span>=<span class="st">"Categoria (ex: áudio)"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;button&gt;</span>Cadastrar<span class="tag">&lt;/button&gt;</span>
+  <span class="tag">&lt;/form&gt;</span>
+
+  <span class="tag">&lt;h2&gt;</span>Produtos de hoje<span class="tag">&lt;/h2&gt;</span>
+  <span class="jtag">{% if produtos %}</span>
+    <span class="tag">&lt;table&gt;</span>
+      <span class="tag">&lt;tr&gt;</span><span class="tag">&lt;th&gt;</span>Produto<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Preço<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Estoque<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Categoria<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;/tr&gt;</span>
+      <span class="jtag">{% for p in produtos %}</span>
+        <span class="tag">&lt;tr&gt;</span>
+          <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["nome"] }}</span><span class="tag">&lt;/td&gt;</span>
+          <span class="tag">&lt;td&gt;</span>
+            R$ <span class="jvar">{{ p["preco"] }}</span>
+            <span class="jtag">{% if p["preco"] &lt; 100 %}</span> 🔥 BARATO! <span class="jtag">{% endif %}</span>
+          <span class="tag">&lt;/td&gt;</span>
+          <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["qtd"] }}</span> un.<span class="tag">&lt;/td&gt;</span>
+          <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["categoria"] }}</span><span class="tag">&lt;/td&gt;</span>
+        <span class="tag">&lt;/tr&gt;</span>
+      <span class="jtag">{% endfor %}</span>
+    <span class="tag">&lt;/table&gt;</span>
+  <span class="jtag">{% else %}</span>
+    <span class="tag">&lt;p&gt;</span>😢 Estoque vazio! Cadastre o primeiro produto.<span class="tag">&lt;/p&gt;</span>
+  <span class="jtag">{% endif %}</span>
+<span class="jtag">{% endblock %}</span></pre>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/templates/promocoes.html</span>
+            <span class="lang-badge jinja">Jinja</span>
+          </div>
+<pre><span class="jtag">{% extends "base.html" %}</span>
+
+<span class="jtag">{% block conteudo %}</span>
+  <span class="tag">&lt;h1&gt;</span>🔥 Promoções da semana<span class="tag">&lt;/h1&gt;</span>
+  <span class="tag">&lt;ul&gt;</span>
+    <span class="jtag">{% for promo in promocoes %}</span>
+      <span class="tag">&lt;li&gt;</span><span class="jvar">{{ promo }}</span><span class="tag">&lt;/li&gt;</span>
+    <span class="jtag">{% endfor %}</span>
+  <span class="tag">&lt;/ul&gt;</span>
+<span class="jtag">{% endblock %}</span></pre>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/templates/buscar.html</span>
+            <span class="lang-badge jinja">Jinja</span>
+          </div>
+<pre><span class="jtag">{% extends "base.html" %}</span>
+
+<span class="jtag">{% block conteudo %}</span>
+  <span class="tag">&lt;h1&gt;</span>🔎 Buscar produto<span class="tag">&lt;/h1&gt;</span>
+
+  <span class="tag">&lt;form</span> <span class="atr">action</span>=<span class="st">"/buscar"</span> <span class="atr">method</span>=<span class="st">"GET"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"q"</span> <span class="atr">placeholder</span>=<span class="st">"Nome do produto"</span> <span class="atr">value</span>=<span class="st">"<span class="jvar">{{ q }}</span>"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;button&gt;</span>Buscar<span class="tag">&lt;/button&gt;</span>
+  <span class="tag">&lt;/form&gt;</span>
+
+  <span class="jtag">{% if q %}</span>
+    <span class="tag">&lt;p&gt;</span>Resultados para "<span class="jvar">{{ q }}</span>":<span class="tag">&lt;/p&gt;</span>
+    <span class="jtag">{% if produtos %}</span>
+      <span class="tag">&lt;ul&gt;</span>
+        <span class="jtag">{% for p in produtos %}</span>
+          <span class="tag">&lt;li&gt;</span><span class="jvar">{{ p["nome"] }}</span> — R$ <span class="jvar">{{ p["preco"] }}</span><span class="tag">&lt;/li&gt;</span>
+        <span class="jtag">{% endfor %}</span>
+      <span class="tag">&lt;/ul&gt;</span>
+    <span class="jtag">{% else %}</span>
+      <span class="tag">&lt;p&gt;</span>😢 Nada encontrado.<span class="tag">&lt;/p&gt;</span>
+    <span class="jtag">{% endif %}</span>
+  <span class="jtag">{% endif %}</span>
+<span class="jtag">{% endblock %}</span></pre>
+        </div>
+
+        <div class="tip">
+          <span class="tip-icon">📄</span>
+          <div class="tip-content">
+            <strong>E o <code>sobre.html</code> e o <code>contato.html</code>?</strong>
+            Não mudaram nada da versão 1 — por isso não estão repetidos aqui.
+          </div>
+        </div>
+      </div>
+    </div>
     </div>
   </section>
 
