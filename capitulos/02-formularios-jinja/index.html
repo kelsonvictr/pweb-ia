@@ -300,7 +300,7 @@
     Ontem sua loja era uma vitrine parada. Hoje o
     <strong style="color:var(--accent3)">Python passa a escrever dentro do HTML</strong> —
     e o visitante ganha um <strong style="color:var(--accent5)">formulário pra responder</strong>.
-    No fim da aula: uma tela que <strong style="color:var(--accent7)">cadastra e lista produtos</strong>. 📋
+    No fim da aula: uma página que <strong style="color:var(--accent7)">lista produtos</strong>, outra que <strong style="color:var(--accent7)">cadastra</strong> — e os dados atravessando as duas. 📋
   </p>
   <div class="hero-stack">
     <span class="stack-chip python">🐍 Python</span>
@@ -685,7 +685,7 @@
       <div class="step-number sn-green">⌨️</div>
       <div>
         <div class="step-title">Bora codar: a loja com dados vivos</div>
-        <div class="step-sub">Tirar os produtos do HTML e entregar pro Python</div>
+        <div class="step-sub">Uma página nova, /produtos, com a tabela nascendo do Python</div>
       </div>
     </div>
 
@@ -695,47 +695,95 @@
           <span class="exercise-icon">👨‍🏫</span>
           <div>
             <div class="exercise-title">Passo a passo com o professor</div>
-            <div class="exercise-sub">app.py ganha a lista; index.html ganha for + if</div>
+            <div class="exercise-sub">app.py ganha a lista e a rota /produtos; produtos.html ganha for + if</div>
           </div>
         </div>
 
         <p style="color:var(--text-dim)">
           <strong style="color:var(--text)">1.</strong> No <code>app.py</code>, crie a lista
-          <code>produtos</code> (de dicts, como acima) antes das rotas, e passe
-          <code>produtos=produtos</code> no <code>render_template</code> da home.<br>
-          <strong style="color:var(--text)">2.</strong> No <code>templates/index.html</code>,
-          apague o <code>&lt;ul&gt;</code> de produtos do Dia 1 e digite no lugar:
+          <code>lista_de_produtos</code> (de dicts, como acima) <strong style="color:var(--text)">no topo
+          do arquivo, antes das rotas</strong> — fora de qualquer função. Já já você entende por quê.<br>
+          <strong style="color:var(--text)">2.</strong> Crie a rota <code>/produtos</code>, que entrega a
+          lista pro template:
         </p>
 
         <div class="code-block with-lines">
           <div class="code-header">
             <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-            <span class="filename">loja/templates/index.html (trecho)</span>
-            <span class="lang-badge jinja">Jinja</span>
+            <span class="filename">loja/app.py (a lista + a rota nova)</span>
+            <span class="lang-badge python">Python</span>
           </div>
-          <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13</div>
-<pre><span class="tag">&lt;h2&gt;</span>Produtos de hoje<span class="tag">&lt;/h2&gt;</span>
-<span class="jtag">{% if produtos %}</span>
-  <span class="tag">&lt;table&gt;</span>
-    <span class="tag">&lt;tr&gt;</span><span class="tag">&lt;th&gt;</span>Produto<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Preço<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;/tr&gt;</span>
-    <span class="jtag">{% for p in produtos %}</span>
-      <span class="tag">&lt;tr&gt;</span>
-        <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["nome"] }}</span><span class="tag">&lt;/td&gt;</span>
-        <span class="tag">&lt;td&gt;</span>R$ <span class="jvar">{{ p["preco"] }}</span><span class="tag">&lt;/td&gt;</span>
-      <span class="tag">&lt;/tr&gt;</span>
-    <span class="jtag">{% endfor %}</span>
-  <span class="tag">&lt;/table&gt;</span>
-<span class="jtag">{% else %}</span>
-  <span class="tag">&lt;p&gt;</span>😢 Estoque vazio! Cadastre o primeiro produto.<span class="tag">&lt;/p&gt;</span>
-<span class="jtag">{% endif %}</span></pre>
+          <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11</div>
+<pre><span class="cm"># no topo, logo depois de app = Flask(__name__)</span>
+lista_de_produtos = [
+    {<span class="st">"nome"</span>: <span class="st">"Fone Bluetooth"</span>,   <span class="st">"preco"</span>: <span class="num">149.90</span>, <span class="st">"qtd"</span>: <span class="num">12</span>},
+    {<span class="st">"nome"</span>: <span class="st">"Teclado Mecânico"</span>, <span class="st">"preco"</span>: <span class="num">299.00</span>, <span class="st">"qtd"</span>: <span class="num">5</span>},
+    {<span class="st">"nome"</span>: <span class="st">"Mouse Gamer"</span>,      <span class="st">"preco"</span>: <span class="num">89.90</span>,  <span class="st">"qtd"</span>: <span class="num">23</span>},
+]
+
+
+<span class="dec">@app.route</span>(<span class="st">"/produtos"</span>)
+<span class="kw">def</span> <span class="fn">produtos</span>():
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"produtos.html"</span>, produtos=lista_de_produtos)</pre>
+        </div>
+
+        <div class="tip">
+          <span class="tip-icon">🏷️</span>
+          <div class="tip-content">
+            <strong>Dois nomes, de propósito.</strong> A <em>variável</em> chama
+            <code>lista_de_produtos</code>; a <em>função</em> da rota (e a lacuna do template) chama
+            <code>produtos</code>. Não dá pra chamar a lista de <code>produtos</code> também: quando o
+            Python lê o <code>def produtos():</code>, ele <strong>substitui</strong> o que tinha esse nome
+            antes — e a sua lista some. Nome de variável e nome de função não podem ser iguais.
+          </div>
         </div>
 
         <p style="color:var(--text-dim)">
-          <strong style="color:var(--text)">3.</strong> Salve tudo, F5 em <code>localhost:5000</code>
-          — a tabela nasce dos dados! <br>
-          <strong style="color:var(--text)">4.</strong> Prova dos nove: mude um preço NO PYTHON,
-          salve, F5 → a tela mudou sem tocar no HTML. 🤯 Depois teste
-          <code>produtos = []</code> e veja o plano B aparecer.
+          <strong style="color:var(--text)">3.</strong> Crie o <code>templates/produtos.html</code>.
+          Sim, esqueleto de novo (é a última vez — a seção seguinte cura isso). O miolo é a tabela:
+        </p>
+
+        <div class="code-block with-lines">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/templates/produtos.html (NOVO)</span>
+            <span class="lang-badge jinja">Jinja</span>
+          </div>
+          <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24</div>
+<pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="atr">lang</span>=<span class="st">"pt-BR"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="atr">charset</span>=<span class="st">"UTF-8"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;title&gt;</span>Minha Loja<span class="tag">&lt;/title&gt;</span>
+    <span class="tag">&lt;link</span> <span class="atr">rel</span>=<span class="st">"stylesheet"</span> <span class="atr">href</span>=<span class="st">"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;/head&gt;</span>
+  <span class="tag">&lt;body&gt;</span>
+    <span class="tag">&lt;p&gt;</span><span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/"</span><span class="tag">&gt;</span>Início<span class="tag">&lt;/a&gt;</span> · <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/sobre"</span><span class="tag">&gt;</span>Sobre<span class="tag">&lt;/a&gt;</span> · <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/contato"</span><span class="tag">&gt;</span>Contato<span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/p&gt;</span>
+
+    <span class="tag">&lt;h2&gt;</span>Lista de Produtos<span class="tag">&lt;/h2&gt;</span>
+    <span class="tag">&lt;table&gt;</span>
+      <span class="tag">&lt;tr&gt;</span><span class="tag">&lt;th&gt;</span>Produto<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Preço<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Estoque<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;/tr&gt;</span>
+      <span class="jtag">{% for p in produtos %}</span>
+        <span class="tag">&lt;tr&gt;</span>
+          <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["nome"] }}</span><span class="tag">&lt;/td&gt;</span>
+          <span class="tag">&lt;td&gt;</span>R$ <span class="jvar">{{ p["preco"] }}</span><span class="tag">&lt;/td&gt;</span>
+          <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["qtd"] }}</span> un.<span class="tag">&lt;/td&gt;</span>
+        <span class="tag">&lt;/tr&gt;</span>
+      <span class="jtag">{% endfor %}</span>
+    <span class="tag">&lt;/table&gt;</span>
+  <span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+        </div>
+
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">4.</strong> Salve tudo, abra
+          <code>localhost:5000/produtos</code> — a tabela nasce dos dados! <br>
+          <strong style="color:var(--text)">5.</strong> Prova dos nove: mude um preço NO PYTHON,
+          salve, F5 → a tela mudou sem tocar no HTML. 🤯<br>
+          <strong style="color:var(--text)">6.</strong> Na home (<code>index.html</code>), apague o
+          <code>&lt;ul&gt;</code> de produtos fixos do Dia 1 — a vitrine agora é a
+          <code>/produtos</code>. Deixe só um link: <code>&lt;a href="/produtos"&gt;Ver os produtos →&lt;/a&gt;</code>.
+          Duas listas de produtos no site (uma fixa, uma viva) é confusão na certa.
         </p>
 
         <div class="tip">
@@ -746,42 +794,55 @@
             sem você escrever uma linha de CSS. 😎
           </div>
         </div>
+
+        <div class="warning">
+          <span class="tip-icon">🔍</span>
+          <div class="tip-content">
+            <strong>Tabela torta? Cabeçalho sumiu?</strong> Confere se cada <code>&lt;th&gt;</code> e
+            <code>&lt;td&gt;</code> abre E fecha com o <code>&gt;</code> no lugar:
+            <code>&lt;/th&gt;&lt;th&gt;</code>, não <code>&lt;/th&lt;th&gt;</code>. O navegador não avisa —
+            ele engole a tag quebrada e some com a coluna.
+          </div>
+        </div>
       </div>
 
       <div class="exercise solo">
         <div class="exercise-header">
           <span class="exercise-icon">🧑‍💻</span>
           <div>
-            <div class="exercise-title">Sozinho/a: a coluna de quantidade</div>
-            <div class="exercise-sub">Dado novo no dict → coluna nova na tabela</div>
+            <div class="exercise-title">Sozinho/a: o plano B da tabela</div>
+            <div class="exercise-sub">E se a lista estiver vazia?</div>
           </div>
         </div>
 
         <div class="drill-tags">
           <span class="drill-level lv1"><span class="stars">★</span> fácil</span>
-          <span class="drill-tag">dict</span>
-          <span class="drill-tag">{{ }}</span>
+          <span class="drill-tag">{% if %}</span>
+          <span class="drill-tag">{% else %}</span>
         </div>
 
         <p style="color:var(--text-dim)">
-          Missão: adicione a chave <code>"qtd"</code> em cada produto da lista
-          (ex.: <code>"qtd": 12</code>) e mostre uma coluna
-          <strong style="color:var(--text)">Estoque</strong> na tabela.
+          Missão: embrulhe a tabela num <code class="jtag">{% if produtos %}</code> e, no
+          <code class="jtag">{% else %}</code>, mostre
+          <strong style="color:var(--text)">"😢 Estoque vazio! Cadastre o primeiro produto."</strong>
+          Teste com <code>lista_de_produtos = []</code> no Python (e desfaça depois).
         </p>
 
         <div class="concept">
           <div class="concept-title">💡 Dica</div>
           <p>
-            São 3 mudanças: a chave nova nos dicts, um <code>&lt;th&gt;</code> novo no cabeçalho
-            e um <code>&lt;td&gt;</code> novo dentro do for. Mesmo padrão dos outros.
+            É a seção do <code class="jtag">{% if %}</code> aplicada: lista cheia é "verdadeira",
+            lista vazia é "falsa" — igual no Python. A tabela inteira (com o for dentro) fica
+            no ramo do if; o parágrafo triste fica no else.
           </p>
         </div>
 
         <div class="try-first">
           <div class="try-first-icon">🚨</div>
           <div class="try-first-content">
-            <strong>Tenta primeiro!</strong> Se aparecer a tabela torta (células a mais numa
-            linha), conte seus td e th — cabeçalho e corpo precisam ter o mesmo número de colunas.
+            <strong>Tenta primeiro!</strong> O erro clássico aqui é esquecer o
+            <code class="jtag">{% endif %}</code> — o Jinja reclama com
+            <em>TemplateSyntaxError: Unexpected end of template</em>.
           </div>
         </div>
 
@@ -794,24 +855,24 @@
             <div class="code-block">
               <div class="code-header">
                 <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-                <span class="filename">app.py (a lista) + index.html (a tabela)</span>
+                <span class="filename">produtos.html (o miolo)</span>
                 <span class="lang-badge jinja">Jinja</span>
               </div>
-<pre><span class="cm"># app.py</span>
-produtos = [
-    {<span class="st">"nome"</span>: <span class="st">"Fone Bluetooth"</span>, <span class="st">"preco"</span>: <span class="num">149.90</span>, <span class="st">"qtd"</span>: <span class="num">12</span>},
-    …
-]
-
-<span class="cm">&lt;!-- index.html --&gt;</span>
-<span class="tag">&lt;tr&gt;</span><span class="tag">&lt;th&gt;</span>Produto<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Preço<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Estoque<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;/tr&gt;</span>
-<span class="jtag">{% for p in produtos %}</span>
-  <span class="tag">&lt;tr&gt;</span>
-    <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["nome"] }}</span><span class="tag">&lt;/td&gt;</span>
-    <span class="tag">&lt;td&gt;</span>R$ <span class="jvar">{{ p["preco"] }}</span><span class="tag">&lt;/td&gt;</span>
-    <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["qtd"] }}</span> un.<span class="tag">&lt;/td&gt;</span>
-  <span class="tag">&lt;/tr&gt;</span>
-<span class="jtag">{% endfor %}</span></pre>
+<pre><span class="tag">&lt;h2&gt;</span>Lista de Produtos<span class="tag">&lt;/h2&gt;</span>
+<span class="jtag">{% if produtos %}</span>
+  <span class="tag">&lt;table&gt;</span>
+    <span class="tag">&lt;tr&gt;</span><span class="tag">&lt;th&gt;</span>Produto<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Preço<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Estoque<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;/tr&gt;</span>
+    <span class="jtag">{% for p in produtos %}</span>
+      <span class="tag">&lt;tr&gt;</span>
+        <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["nome"] }}</span><span class="tag">&lt;/td&gt;</span>
+        <span class="tag">&lt;td&gt;</span>R$ <span class="jvar">{{ p["preco"] }}</span><span class="tag">&lt;/td&gt;</span>
+        <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["qtd"] }}</span> un.<span class="tag">&lt;/td&gt;</span>
+      <span class="tag">&lt;/tr&gt;</span>
+    <span class="jtag">{% endfor %}</span>
+  <span class="tag">&lt;/table&gt;</span>
+<span class="jtag">{% else %}</span>
+  <span class="tag">&lt;p&gt;</span>😢 Estoque vazio! Cadastre o primeiro produto.<span class="tag">&lt;/p&gt;</span>
+<span class="jtag">{% endif %}</span></pre>
             </div>
           </div>
         </div>
@@ -840,10 +901,10 @@ produtos = [
 
     <div class="card">
       <p style="color:var(--text-dim)">
-        Na arena do Dia 1 você copiou o menu em TODAS as páginas — e sentiu o incômodo:
-        mudou um link? Edita 4 arquivos. O Jinja resolve com um
-        <strong style="color:var(--text)">template pai</strong>: o <code>base.html</code>
-        guarda tudo que se repete, e cada página só preenche o miolo.
+        Na arena do Dia 1 você copiou o menu em TODAS as páginas — e acabou de copiar de novo
+        no <code>produtos.html</code>. Sentiu o incômodo: mudou um link? Edita 5 arquivos.
+        O Jinja resolve com um <strong style="color:var(--text)">template pai</strong>: o
+        <code>base.html</code> guarda tudo que se repete, e cada página só preenche o miolo.
       </p>
 
       <div class="analogy">
@@ -861,7 +922,7 @@ produtos = [
           <span class="filename">loja/templates/base.html (NOVO)</span>
           <span class="lang-badge jinja">Jinja</span>
         </div>
-        <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16</div>
+        <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17</div>
 <pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
 <span class="tag">&lt;html</span> <span class="atr">lang</span>=<span class="st">"pt-BR"</span><span class="tag">&gt;</span>
   <span class="tag">&lt;head&gt;</span>
@@ -873,6 +934,7 @@ produtos = [
     <span class="tag">&lt;p&gt;</span>
       <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/"</span><span class="tag">&gt;</span>Início<span class="tag">&lt;/a&gt;</span> ·
       <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/sobre"</span><span class="tag">&gt;</span>Sobre<span class="tag">&lt;/a&gt;</span> ·
+      <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/produtos"</span><span class="tag">&gt;</span>Produtos<span class="tag">&lt;/a&gt;</span> ·
       <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/contato"</span><span class="tag">&gt;</span>Contato<span class="tag">&lt;/a&gt;</span>
     <span class="tag">&lt;/p&gt;</span>
     <span class="jtag">{% block conteudo %}{% endblock %}</span>
@@ -912,14 +974,15 @@ produtos = [
           <span class="exercise-icon">👨‍🏫</span>
           <div>
             <div class="exercise-title">Bora migrar a loja</div>
-            <div class="exercise-sub">4 páginas entrando na moldura</div>
+            <div class="exercise-sub">Todas as páginas entrando na moldura</div>
           </div>
         </div>
         <p style="color:var(--text-dim)">
           <strong style="color:var(--text)">1.</strong> Crie o <code>templates/base.html</code> acima
           (mova pra ele o menu e a linha do Pico).<br>
           <strong style="color:var(--text)">2.</strong> Em cada página
-          (<code>index</code>, <code>sobre</code>, <code>contato</code>, <code>promocoes</code>):
+          (<code>index</code>, <code>sobre</code>, <code>contato</code>, <code>produtos</code> — e
+          <code>promocoes</code>, se você fez a missão do Dia 1):
           apague esqueleto + menu, deixe só o miolo, e embrulhe com
           <code class="jtag">{% extends %}</code> + <code class="jtag">{% block conteudo %}</code>.
         </p>
@@ -934,15 +997,29 @@ produtos = [
 
 <span class="jtag">{% block conteudo %}</span>
   <span class="tag">&lt;h1&gt;</span>🛍️ Minha Loja<span class="tag">&lt;/h1&gt;</span>
+  <span class="tag">&lt;p&gt;</span>As melhores ofertas da cidade, direto do meu Python.<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;p&gt;</span><span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/produtos"</span><span class="tag">&gt;</span>Ver os produtos →<span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/p&gt;</span>
+<span class="jtag">{% endblock %}</span></pre>
+        </div>
 
-  <span class="tag">&lt;h2&gt;</span>Produtos de hoje<span class="tag">&lt;/h2&gt;</span>
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/templates/produtos.html (INTEIRO, depois da migração)</span>
+            <span class="lang-badge jinja">Jinja</span>
+          </div>
+<pre><span class="jtag">{% extends "base.html" %}</span>
+
+<span class="jtag">{% block conteudo %}</span>
+  <span class="tag">&lt;h2&gt;</span>Lista de Produtos<span class="tag">&lt;/h2&gt;</span>
   <span class="jtag">{% if produtos %}</span>
     <span class="tag">&lt;table&gt;</span>
-      <span class="tag">&lt;tr&gt;</span><span class="tag">&lt;th&gt;</span>Produto<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Preço<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;/tr&gt;</span>
+      <span class="tag">&lt;tr&gt;</span><span class="tag">&lt;th&gt;</span>Produto<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Preço<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Estoque<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;/tr&gt;</span>
       <span class="jtag">{% for p in produtos %}</span>
         <span class="tag">&lt;tr&gt;</span>
           <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["nome"] }}</span><span class="tag">&lt;/td&gt;</span>
           <span class="tag">&lt;td&gt;</span>R$ <span class="jvar">{{ p["preco"] }}</span><span class="tag">&lt;/td&gt;</span>
+          <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["qtd"] }}</span> un.<span class="tag">&lt;/td&gt;</span>
         <span class="tag">&lt;/tr&gt;</span>
       <span class="jtag">{% endfor %}</span>
     <span class="tag">&lt;/table&gt;</span>
@@ -1010,7 +1087,9 @@ produtos = [
       <p style="color:var(--text-dim)">
         Todo cadastro, login e busca da internet começa igual: um
         <strong style="color:var(--text)">formulário</strong>. Ele é HTML puro —
-        três tags novas e nenhum mistério:
+        três tags novas e nenhum mistério. O nosso vai morar numa página própria
+        (<code>/cadastro_produto</code>) e, quando o botão for apertado, vai
+        <strong style="color:var(--text)">enviar</strong> os dados pra outra rota, a <code>/cadastro</code>:
       </p>
 
       <div class="code-block with-lines">
@@ -1020,7 +1099,7 @@ produtos = [
           <span class="lang-badge html">HTML</span>
         </div>
         <div class="line-numbers">1<br>2<br>3<br>4<br>5</div>
-<pre><span class="tag">&lt;form</span> <span class="atr">action</span>=<span class="st">"/"</span> <span class="atr">method</span>=<span class="st">"POST"</span><span class="tag">&gt;</span>
+<pre><span class="tag">&lt;form</span> <span class="atr">action</span>=<span class="st">"/cadastro"</span> <span class="atr">method</span>=<span class="st">"POST"</span><span class="tag">&gt;</span>
   <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"nome"</span> <span class="atr">placeholder</span>=<span class="st">"Nome do produto"</span><span class="tag">&gt;</span>
   <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"preco"</span> <span class="atr">placeholder</span>=<span class="st">"Preço"</span><span class="tag">&gt;</span>
   <span class="tag">&lt;button&gt;</span>Cadastrar<span class="tag">&lt;/button&gt;</span>
@@ -1031,7 +1110,7 @@ produtos = [
         <div class="keyword-chip">
           <span class="emoji">📮</span>
           <span class="kw-name">action</span>
-          <span class="kw-desc">PRA ONDE o request vai quando apertar o botão (qual URL/rota)</span>
+          <span class="kw-desc">PRA ONDE o request vai quando apertar o botão (qual URL/rota) — aqui, /cadastro</span>
         </div>
         <div class="keyword-chip">
           <span class="emoji">🚚</span>
@@ -1064,6 +1143,16 @@ produtos = [
         <div class="tip-content">
           <strong>placeholder</strong> é só a dica cinza dentro do campo — não viaja com o form.
           Quem viaja é o par <code>name="nome"</code> + o que a pessoa digitou.
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🗺️</span>
+        <div class="tip-content">
+          <strong>Repara: a página do form e a rota que recebe são endereços diferentes.</strong>
+          <code>/cadastro_produto</code> é onde a pessoa <em>vê</em> o formulário;
+          <code>/cadastro</code> é pra onde o botão <em>manda</em> os dados. Duas rotas, dois papéis.
+          (No Dia 4 você vai ver como juntar as duas numa só — hoje, separadas é mais fácil de ler.)
         </div>
       </div>
     </div>
@@ -1163,9 +1252,11 @@ produtos = [
 
     <div class="card">
       <p style="color:var(--text-dim)">
-        Duas novidades no <code>app.py</code>. Primeira: a rota precisa
-        <strong style="color:var(--text)">aceitar POST</strong> (por padrão, rota Flask só aceita
-        GET — segurança). Segunda: o Flask entrega os dados do form num objeto chamado
+        Duas rotas novas no <code>app.py</code>. A primeira só
+        <strong style="color:var(--text)">mostra</strong> o formulário — GET comum, igual às outras
+        páginas. A segunda <strong style="color:var(--text)">recebe</strong> o envelope, e aí tem duas
+        novidades: a rota precisa <strong style="color:var(--text)">aceitar POST</strong> (por padrão,
+        rota Flask só aceita GET — segurança), e o Flask entrega os dados do form num objeto chamado
         <code>request.form</code>, que funciona <strong style="color:var(--text)">como um
         dicionário</strong>:
       </p>
@@ -1176,18 +1267,20 @@ produtos = [
           <span class="filename">loja/app.py</span>
           <span class="lang-badge python">Python</span>
         </div>
-        <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11</div>
+        <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13</div>
 <pre><span class="kw">from</span> flask <span class="kw">import</span> <span class="tp">Flask</span>, <span class="fn">render_template</span>, request, <span class="fn">redirect</span>
 
-<span class="dec">@app.route</span>(<span class="st">"/"</span>, methods=[<span class="st">"GET"</span>, <span class="st">"POST"</span>])
-<span class="kw">def</span> <span class="fn">home</span>():
-    <span class="kw">if</span> request.method == <span class="st">"POST"</span>:
-        nome  = request.form[<span class="st">"nome"</span>]
-        preco = <span class="bi">float</span>(request.form[<span class="st">"preco"</span>])
-        produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"</span>: preco})
-        <span class="kw">return</span> <span class="fn">redirect</span>(<span class="st">"/"</span>)
+<span class="dec">@app.route</span>(<span class="st">"/cadastro_produto"</span>)
+<span class="kw">def</span> <span class="fn">cadastro_produto</span>():
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"cadastro_produto.html"</span>)
 
-    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"index.html"</span>, produtos=produtos)</pre>
+
+<span class="dec">@app.route</span>(<span class="st">"/cadastro"</span>, methods=[<span class="st">"POST"</span>])
+<span class="kw">def</span> <span class="fn">cadastro</span>():
+    nome  = request.form[<span class="st">"nome"</span>]
+    preco = <span class="bi">float</span>(request.form[<span class="st">"preco"</span>])
+    lista_de_produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"</span>: preco})
+    <span class="kw">return</span> <span class="fn">redirect</span>(<span class="st">"/produtos"</span>)</pre>
       </div>
 
       <div class="concept">
@@ -1209,12 +1302,45 @@ produtos = [
       </div>
 
       <div class="tip">
+        <span class="tip-icon">🧠</span>
+        <div class="tip-content">
+          <strong>É por isso que a lista ficou lá em cima.</strong> O <code>append</code> acontece
+          dentro de <code>cadastro()</code>, mas quem mostra a tabela é <code>produtos()</code> — outra
+          função. Se a lista fosse criada dentro de uma delas, a outra não a enxergaria (e uma lista
+          criada dentro da função nasce de novo, vazia, a cada request). Variável no topo do arquivo é
+          compartilhada por todas as rotas.
+        </div>
+      </div>
+
+      <div class="tip">
         <span class="tip-icon">↩️</span>
         <div class="tip-content">
-          <strong>E o <code>redirect("/")</code>?</strong> Depois de cadastrar, mandamos o navegador
-          "vai pra home de novo" — que recarrega a tabela já com o produto novo.
+          <strong>E o <code>redirect("/produtos")</code>?</strong> Depois de cadastrar, mandamos o navegador
+          "vai pra lista" — que recarrega a tabela já com o produto novo.
           O PORQUÊ profundo desse redirect (e o bug que ele evita) é assunto nobre do Dia 4.
           Por ora: <em>cadastrou → redirect</em>.
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 Viu <code>url_for</code> na aula?</div>
+        <p>
+          <code>redirect(url_for("produtos"))</code> chega no mesmo lugar: o
+          <code>url_for("produtos")</code> pergunta ao Flask <em>"qual é a URL da FUNÇÃO
+          <code>produtos</code>?"</em> e recebe <code>"/produtos"</code>. Os dois jeitos funcionam.
+          O material escreve o endereço direto porque é o que você vê na barra do navegador —
+          menos mágica pra hoje. Se preferir o <code>url_for</code>, lembre de importar:
+          <code>from flask import ..., url_for</code>.
+        </p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🔭</span>
+        <div class="tip-content">
+          <strong>Spoiler do Dia 4:</strong> dá pra juntar as duas rotas numa só, com
+          <code>methods=["GET", "POST"]</code> e um <code>if request.method == "POST":</code>
+          separando "mostrar o form" de "processar o form". É o padrão dos sistemas grandes — e você
+          vai migrar pra ele quando o cadastro ganhar banco de dados. Hoje: duas rotas, dois papéis.
         </div>
       </div>
     </div>
@@ -1238,8 +1364,9 @@ produtos = [
       <p style="color:var(--text-dim)">
         Esta máquina é o dia inteiro em 6 segundos.
         <strong style="color:var(--text)">Preencha o form e clique Cadastrar</strong> —
-        e acompanhe o envelope: POST → <code>request.form</code> → <code>append</code> →
-        redirect → tabela nova.
+        e acompanhe o envelope: POST /cadastro → <code>request.form</code> → <code>append</code> →
+        redirect → /produtos → tabela nova. (Aqui o form e a tabela dividem a mesma tela pra caber;
+        no seu projeto são duas páginas.)
       </p>
 
       <div class="swp-volta" id="swpVolta">
@@ -1249,7 +1376,7 @@ produtos = [
             <div class="swp-volta-browser">
               <div class="mb-chrome">
                 <span class="mb-dots"><i></i><i></i><i></i></span>
-                <span class="mb-url"><span class="lock">🔒</span><span class="addr">localhost:5000/</span></span>
+                <span class="mb-url"><span class="lock">🔒</span><span class="addr" id="voltaAddr">localhost:5000/cadastro_produto</span></span>
               </div>
               <div class="swp-volta-view">
                 <h2>🛍️ Minha Loja</h2>
@@ -1270,8 +1397,8 @@ produtos = [
           </div>
           <div class="swp-volta-pane">
             <div class="fp-head">🐍 loja/app.py</div>
-            <div class="swp-volta-code"><span class="vc-line" data-v="0"><span class="dec">@app.route</span>(<span class="st">"/"</span>, methods=[<span class="st">"GET"</span>,<span class="st">"POST"</span>])</span><span class="vc-line" data-v="1"><span class="kw">def</span> <span class="fn">home</span>():</span><span class="vc-line" data-v="2">  <span class="kw">if</span> request.method == <span class="st">"POST"</span>:</span><span class="vc-line" data-v="3">    nome  = request.form[<span class="st">"nome"</span>]</span><span class="vc-line" data-v="4">    preco = <span class="bi">float</span>(request.form[<span class="st">"preco"</span>])</span><span class="vc-line" data-v="5">    produtos.append({...})</span><span class="vc-line" data-v="6">    <span class="kw">return</span> <span class="fn">redirect</span>(<span class="st">"/"</span>)</span><span class="vc-line" data-v="7">  <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"index.html"</span>, ...)</span></div>
-            <div class="swp-py-list" id="voltaList"><span class="plabel">produtos (na memória)</span>[{"nome": "Fone Bluetooth", ...},
+            <div class="swp-volta-code"><span class="vc-line" data-v="0"><span class="dec">@app.route</span>(<span class="st">"/cadastro"</span>, methods=[<span class="st">"POST"</span>])</span><span class="vc-line" data-v="1"><span class="kw">def</span> <span class="fn">cadastro</span>():</span><span class="vc-line" data-v="2">  nome  = request.form[<span class="st">"nome"</span>]</span><span class="vc-line" data-v="3">  preco = <span class="bi">float</span>(request.form[<span class="st">"preco"</span>])</span><span class="vc-line" data-v="4">  lista_de_produtos.append({...})</span><span class="vc-line" data-v="5">  <span class="kw">return</span> <span class="fn">redirect</span>(<span class="st">"/produtos"</span>)</span><span class="vc-line" data-v="6"> </span><span class="vc-line" data-v="7"><span class="dec">@app.route</span>(<span class="st">"/produtos"</span>)</span><span class="vc-line" data-v="8"><span class="kw">def</span> <span class="fn">produtos</span>():</span><span class="vc-line" data-v="9">  <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"produtos.html"</span>, ...)</span></div>
+            <div class="swp-py-list" id="voltaList"><span class="plabel">lista_de_produtos (na memória)</span>[{"nome": "Fone Bluetooth", ...},
  {"nome": "Teclado Mecânico", ...}]</div>
           </div>
           <span class="swp-volta-env" id="voltaEnv">✉️</span>
@@ -1284,8 +1411,8 @@ produtos = [
       <div class="concept">
         <div class="concept-title">💡 A dança completa do dia 2</div>
         <p>
-          <strong>form (POST) → rota aceita → request.form pesca os dados →
-          Python guarda na lista → redirect → GET → Jinja re-renderiza → tabela nova.</strong>
+          <strong>form (POST /cadastro) → rota aceita → request.form pesca os dados →
+          Python guarda na lista → redirect → GET /produtos → Jinja re-renderiza → tabela nova.</strong>
           Essa dança é 80% de qualquer sistema web — inclusive os gigantes.
         </p>
       </div>
@@ -1312,34 +1439,80 @@ produtos = [
           <span class="exercise-icon">👨‍🏫</span>
           <div>
             <div class="exercise-title">Passo a passo com o professor</div>
-            <div class="exercise-sub">Form no template + POST na rota</div>
+            <div class="exercise-sub">Página do form + rota que recebe + append na lista</div>
           </div>
         </div>
 
         <p style="color:var(--text-dim)">
-          <strong style="color:var(--text)">1.</strong> No <code>index.html</code>, digite o
-          formulário logo acima da tabela (dentro do seu <code class="jtag">{% block conteudo %}</code>):
+          <strong style="color:var(--text)">1.</strong> Crie o <code>templates/cadastro_produto.html</code>
+          — já na moldura do base:
         </p>
 
         <div class="code-block">
           <div class="code-header">
             <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-            <span class="filename">loja/templates/index.html (acima da tabela)</span>
-            <span class="lang-badge html">HTML</span>
+            <span class="filename">loja/templates/cadastro_produto.html (NOVO, INTEIRO)</span>
+            <span class="lang-badge jinja">Jinja</span>
           </div>
-<pre><span class="tag">&lt;h2&gt;</span>Cadastrar produto<span class="tag">&lt;/h2&gt;</span>
-<span class="tag">&lt;form</span> <span class="atr">action</span>=<span class="st">"/"</span> <span class="atr">method</span>=<span class="st">"POST"</span><span class="tag">&gt;</span>
-  <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"nome"</span> <span class="atr">placeholder</span>=<span class="st">"Nome do produto"</span><span class="tag">&gt;</span>
-  <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"preco"</span> <span class="atr">placeholder</span>=<span class="st">"Preço"</span><span class="tag">&gt;</span>
-  <span class="tag">&lt;button&gt;</span>Cadastrar<span class="tag">&lt;/button&gt;</span>
-<span class="tag">&lt;/form&gt;</span></pre>
+<pre><span class="jtag">{% extends "base.html" %}</span>
+
+<span class="jtag">{% block conteudo %}</span>
+  <span class="tag">&lt;h2&gt;</span>Cadastrar produto<span class="tag">&lt;/h2&gt;</span>
+  <span class="tag">&lt;form</span> <span class="atr">action</span>=<span class="st">"/cadastro"</span> <span class="atr">method</span>=<span class="st">"POST"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"nome"</span> <span class="atr">placeholder</span>=<span class="st">"Nome do produto"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"preco"</span> <span class="atr">placeholder</span>=<span class="st">"Preço"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;button&gt;</span>Cadastrar<span class="tag">&lt;/button&gt;</span>
+  <span class="tag">&lt;/form&gt;</span>
+<span class="jtag">{% endblock %}</span></pre>
         </div>
 
         <p style="color:var(--text-dim)">
-          <strong style="color:var(--text)">2.</strong> No <code>app.py</code>: importe
-          <code>request</code> e <code>redirect</code>, adicione
-          <code>methods=["GET", "POST"]</code> na rota da home e o bloco do
-          <code>if request.method == "POST":</code>. Este é o
+          <strong style="color:var(--text)">2.</strong> No menu do <code>base.html</code>, uma linha
+          nova — e ela aparece em todas as páginas (o poder de 10 minutos atrás):
+        </p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/templates/base.html (o menu)</span>
+            <span class="lang-badge jinja">Jinja</span>
+          </div>
+<pre><span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/produtos"</span><span class="tag">&gt;</span>Produtos<span class="tag">&lt;/a&gt;</span> ·
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/cadastro_produto"</span><span class="tag">&gt;</span>Cadastrar Produto<span class="tag">&lt;/a&gt;</span> ·
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/contato"</span><span class="tag">&gt;</span>Contato<span class="tag">&lt;/a&gt;</span></pre>
+        </div>
+
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">3.</strong> No <code>app.py</code>: importe
+          <code>request</code> e <code>redirect</code> e crie as duas rotas. Na <code>/cadastro</code>,
+          <strong style="color:var(--text)">antes de guardar, prove que o dado chegou</strong> — um
+          <code>print</code> basta:
+        </p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/app.py (primeira versão da rota /cadastro)</span>
+            <span class="lang-badge python">Python</span>
+          </div>
+<pre><span class="dec">@app.route</span>(<span class="st">"/cadastro"</span>, methods=[<span class="st">"POST"</span>])
+<span class="kw">def</span> <span class="fn">cadastro</span>():
+    nome = request.form[<span class="st">"nome"</span>]
+    preco = <span class="bi">float</span>(request.form[<span class="st">"preco"</span>])
+    <span class="bi">print</span>(<span class="st">f"Chegou no Python: {nome} - {preco}"</span>)
+    <span class="kw">return</span> <span class="fn">redirect</span>(<span class="st">"/produtos"</span>)</pre>
+        </div>
+
+        <p style="color:var(--text-dim)">
+          Salve, abra <code>localhost:5000/cadastro_produto</code>, cadastre alguma coisa e
+          <strong style="color:var(--text)">olhe o terminal do PyCharm</strong>: o texto que você digitou
+          no navegador está lá, impresso pelo Python. O dado atravessou. A tabela ainda não mudou — de
+          propósito: primeiro provar que chegou, depois guardar.
+        </p>
+
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">4.</strong> Agora troque o <code>print</code> pelo
+          <code>append</code> (ou deixe os dois). Este é o
           <strong style="color:var(--text)">arquivo inteiro</strong> como ele fica agora —
           digite olhando pra ele, entendendo linha a linha:
         </p>
@@ -1355,22 +1528,16 @@ produtos = [
 app = <span class="tp">Flask</span>(__name__)
 
 <span class="cm"># os dados moram aqui — na MEMÓRIA (por enquanto!)</span>
-produtos = [
-    {<span class="st">"nome"</span>: <span class="st">"Fone Bluetooth"</span>,   <span class="st">"preco"</span>: <span class="num">149.90</span>},
-    {<span class="st">"nome"</span>: <span class="st">"Teclado Mecânico"</span>, <span class="st">"preco"</span>: <span class="num">299.00</span>},
-    {<span class="st">"nome"</span>: <span class="st">"Mouse Gamer"</span>,      <span class="st">"preco"</span>: <span class="num">89.90</span>},
+lista_de_produtos = [
+    {<span class="st">"nome"</span>: <span class="st">"Fone Bluetooth"</span>,   <span class="st">"preco"</span>: <span class="num">149.90</span>, <span class="st">"qtd"</span>: <span class="num">12</span>},
+    {<span class="st">"nome"</span>: <span class="st">"Teclado Mecânico"</span>, <span class="st">"preco"</span>: <span class="num">299.00</span>, <span class="st">"qtd"</span>: <span class="num">5</span>},
+    {<span class="st">"nome"</span>: <span class="st">"Mouse Gamer"</span>,      <span class="st">"preco"</span>: <span class="num">89.90</span>,  <span class="st">"qtd"</span>: <span class="num">23</span>},
 ]
 
 
-<span class="dec">@app.route</span>(<span class="st">"/"</span>, methods=[<span class="st">"GET"</span>, <span class="st">"POST"</span>])
+<span class="dec">@app.route</span>(<span class="st">"/"</span>)
 <span class="kw">def</span> <span class="fn">home</span>():
-    <span class="kw">if</span> request.method == <span class="st">"POST"</span>:
-        nome = request.form[<span class="st">"nome"</span>]
-        preco = <span class="bi">float</span>(request.form[<span class="st">"preco"</span>])
-        produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"</span>: preco})
-        <span class="kw">return</span> <span class="fn">redirect</span>(<span class="st">"/"</span>)
-
-    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"index.html"</span>, produtos=produtos)
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"index.html"</span>)
 
 
 <span class="dec">@app.route</span>(<span class="st">"/sobre"</span>)
@@ -1383,12 +1550,31 @@ produtos = [
     <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"contato.html"</span>)
 
 
+<span class="dec">@app.route</span>(<span class="st">"/produtos"</span>)
+<span class="kw">def</span> <span class="fn">produtos</span>():
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"produtos.html"</span>, produtos=lista_de_produtos)
+
+
+<span class="dec">@app.route</span>(<span class="st">"/cadastro_produto"</span>)
+<span class="kw">def</span> <span class="fn">cadastro_produto</span>():
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"cadastro_produto.html"</span>)
+
+
+<span class="dec">@app.route</span>(<span class="st">"/cadastro"</span>, methods=[<span class="st">"POST"</span>])
+<span class="kw">def</span> <span class="fn">cadastro</span>():
+    nome = request.form[<span class="st">"nome"</span>]
+    preco = <span class="bi">float</span>(request.form[<span class="st">"preco"</span>])
+    lista_de_produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"</span>: preco})
+    <span class="kw">return</span> <span class="fn">redirect</span>(<span class="st">"/produtos"</span>)
+
+
 app.run(debug=<span class="bool">True</span>)</pre>
         </div>
 
         <p style="color:var(--text-dim)">
-          <strong style="color:var(--text)">3.</strong> Salve → F5 → cadastre um produto de teste.
-          A tabela cresceu! Cadastre mais dois. 🎉
+          <strong style="color:var(--text)">5.</strong> Salve → cadastre um produto de teste.
+          O navegador pulou pra <code>/produtos</code> e a tabela cresceu! Cadastre mais dois. 🎉
+          (A coluna Estoque do produto novo fica vazia — o exercício logo abaixo resolve.)
         </p>
 
         <div class="tip">
@@ -1419,7 +1605,7 @@ app.run(debug=<span class="bool">True</span>)</pre>
         <p style="color:var(--text-dim)">
           Missão: o form ganha um input de <strong style="color:var(--text)">quantidade</strong>,
           o Python pesca com <code>request.form</code>, converte pra inteiro, guarda no dict —
-          e a coluna Estoque (do exercício de Jinja) mostra o valor de verdade.
+          e a coluna Estoque da tabela mostra o valor de verdade também pros produtos novos.
         </p>
 
         <div class="concept">
@@ -1427,7 +1613,7 @@ app.run(debug=<span class="bool">True</span>)</pre>
           <p>
             O caminho do dado tem 4 paradas: input com <code>name="qtd"</code> →
             <code>request.form["qtd"]</code> → <code>int(...)</code> →
-            <code>"qtd":</code> no dict do append. Se a tabela mostrar vazio,
+            <code>"qtd":</code> no dict do append. Se a coluna continuar vazia,
             uma das 4 paradas tem nome errado.
           </p>
         </div>
@@ -1449,15 +1635,15 @@ app.run(debug=<span class="bool">True</span>)</pre>
             <div class="code-block">
               <div class="code-header">
                 <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-                <span class="filename">index.html + app.py (trechos)</span>
+                <span class="filename">cadastro_produto.html + app.py (trechos)</span>
                 <span class="lang-badge python">Python</span>
               </div>
-<pre><span class="cm">&lt;!-- index.html: input novo no form --&gt;</span>
+<pre><span class="cm">&lt;!-- cadastro_produto.html: input novo no form --&gt;</span>
 <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"qtd"</span> <span class="atr">placeholder</span>=<span class="st">"Quantidade"</span><span class="tag">&gt;</span>
 
-<span class="cm"># app.py: dentro do if request.method == "POST":</span>
+<span class="cm"># app.py: dentro de cadastro()</span>
 qtd = <span class="bi">int</span>(request.form[<span class="st">"qtd"</span>])
-produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"</span>: preco, <span class="st">"qtd"</span>: qtd})</pre>
+lista_de_produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"</span>: preco, <span class="st">"qtd"</span>: qtd})</pre>
             </div>
           </div>
         </div>
@@ -1486,10 +1672,11 @@ produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"<
 
     <div class="card">
       <p style="color:var(--text-dim)">
-        Sua lista <code>produtos</code> mora <strong style="color:var(--text)">na memória RAM</strong>
+        Sua <code>lista_de_produtos</code> mora <strong style="color:var(--text)">na memória RAM</strong>
         do processo Python. Quando o servidor desliga (⏹ Stop, queda de luz, deploy…),
         a memória é devolvida — <strong style="color:var(--text)">com seus dados dentro</strong>.
-        Teste aqui, sem dó:
+        Quando ele liga de novo, o <code>app.py</code> roda do zero: a lista renasce só com os
+        três produtos escritos no código. Teste aqui, sem dó:
       </p>
 
       <div class="swp-blackout" id="swpBlackout">
@@ -1498,10 +1685,10 @@ produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"<
           <div class="swp-volta-browser">
             <div class="mb-chrome">
               <span class="mb-dots"><i></i><i></i><i></i></span>
-              <span class="mb-url"><span class="lock">🔒</span><span class="addr">localhost:5000/</span></span>
+              <span class="mb-url"><span class="lock">🔒</span><span class="addr">localhost:5000/produtos</span></span>
             </div>
             <div class="swp-volta-view">
-              <h2>🛍️ Minha Loja</h2>
+              <h2>📋 Lista de Produtos</h2>
               <div id="blackoutAlive">
                 <table class="swp-data-table">
                   <thead><tr><th>Produto</th><th>Preço</th></tr></thead>
@@ -1510,18 +1697,28 @@ produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"<
                     <tr><td>Teclado Mecânico</td><td class="n">R$ 299.00</td></tr>
                     <tr><td>Mouse Gamer</td><td class="n">R$ 89.90</td></tr>
                     <tr><td>Webcam Full HD</td><td class="n">R$ 199.00</td></tr>
+                    <tr><td>Caixa de Som</td><td class="n">R$ 120.00</td></tr>
+                    <tr><td>Cabo HDMI</td><td class="n">R$ 35.00</td></tr>
+                    <tr><td>Hub USB</td><td class="n">R$ 59.90</td></tr>
                   </tbody>
                 </table>
               </div>
               <div id="blackoutDead" style="display:none">
-                <p style="color:#5f6368;margin:8px 0">😢 Estoque vazio! Cadastre o primeiro produto.</p>
+                <table class="swp-data-table">
+                  <thead><tr><th>Produto</th><th>Preço</th></tr></thead>
+                  <tbody>
+                    <tr><td>Fone Bluetooth</td><td class="n">R$ 149.90</td></tr>
+                    <tr><td>Teclado Mecânico</td><td class="n">R$ 299.00</td></tr>
+                    <tr><td>Mouse Gamer</td><td class="n">R$ 89.90</td></tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
         </div>
         <div class="swp-machine-hud">
           <button class="swp-machine-btn ghost" id="blackoutBtn">🔌 Reiniciar o servidor (⏹ e ▶)</button>
-          <span class="swp-machine-note" id="blackoutNote">4 produtos cadastrados com carinho… por enquanto</span>
+          <span class="swp-machine-note" id="blackoutNote">3 produtos do código + 4 cadastrados com carinho… por enquanto</span>
         </div>
       </div>
 
@@ -1572,12 +1769,19 @@ The method is not allowed for the requested URL.</pre>
           </div>
           <p>
             Tradução: o form mandou um <strong>POST</strong>, mas a rota só aceita GET —
-            porque faltou o <code>methods=["GET", "POST"]</code> no
-            <code>@app.route</code>. O Flask nem deixou o request entrar.
+            porque faltou o <code>methods=["POST"]</code> no
+            <code>@app.route("/cadastro")</code>. O Flask nem deixou o request entrar.
           </p>
           <p>
-            💊 <strong>Remédio:</strong> <code>@app.route("/", methods=["GET", "POST"])</code>
-            — e confere se o <code>action</code> do form aponta pra essa rota mesmo.
+            💊 <strong>Remédio:</strong> <code>@app.route("/cadastro", methods=["POST"])</code>
+            — e confere se o <code>action</code> do form aponta pra essa rota mesmo
+            (<code>action="/cadastro"</code>, não <code>/cadastro_produto</code>).
+          </p>
+          <p>
+            🔁 <strong>O mesmo 405, ao contrário:</strong> digitou <code>localhost:5000/cadastro</code>
+            na barra e apertou Enter? O navegador faz um <strong>GET</strong> — e essa rota só aceita
+            POST. Não é bug: <code>/cadastro</code> existe só pra receber o form. Pra <em>ver</em> o
+            formulário, o endereço é <code>/cadastro_produto</code>.
           </p>
         </div>
       </div>
@@ -1597,7 +1801,7 @@ The method is not allowed for the requested URL.</pre>
               <span class="filename">navegador — tela de erro do Flask</span>
               <span class="lang-badge terminal">erro</span>
             </div>
-<pre>File "app.py", line 12, in home
+<pre>File "app.py", line 37, in cadastro
     nome = request.form["nome"]
 <span style="color:var(--bug)">KeyError: 'nome'</span></pre>
           </div>
@@ -1783,7 +1987,8 @@ The method is not allowed for the requested URL.</pre>
           <span class="drill-tag">{% if %}</span>
         </div>
         <p style="color:var(--text-dim)">
-          Na coluna do preço, mostre <strong style="color:var(--text)">🔥 BARATO!</strong> ao lado
+          Na coluna do preço do <code>produtos.html</code>, mostre
+          <strong style="color:var(--text)">🔥 BARATO!</strong> ao lado
           do valor quando o preço for menor que 100. (Sim: dá pra pôr um
           <code class="jtag">{% if %}</code> dentro do <code class="jtag">{% for %}</code> —
           igual no Python.)
@@ -1797,7 +2002,7 @@ The method is not allowed for the requested URL.</pre>
             <div class="code-block">
               <div class="code-header">
                 <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-                <span class="filename">dentro do for, na célula do preço</span>
+                <span class="filename">produtos.html — dentro do for, na célula do preço</span>
                 <span class="lang-badge jinja">Jinja</span>
               </div>
 <pre><span class="tag">&lt;td&gt;</span>
@@ -1823,7 +2028,8 @@ The method is not allowed for the requested URL.</pre>
         </div>
         <p style="color:var(--text-dim)">
           Se ainda não fez na migração guiada: converta a <code>/promocoes</code> (da arena do
-          Dia 1) pro <code>base.html</code>. Bônus: passe a lista de promoções pelo
+          Dia 1) pro <code>base.html</code> — e se você nem chegou a criar a página, crie agora, já
+          na moldura. Bônus: passe a lista de promoções pelo
           <code>render_template</code> e liste com <code class="jtag">{% for %}</code>
           em vez de <code>&lt;li&gt;</code> fixos.
         </p>
@@ -1856,7 +2062,7 @@ The method is not allowed for the requested URL.</pre>
             <span class="filename">loja/app.py (a lista + a rota)</span>
             <span class="lang-badge python">Python</span>
           </div>
-<pre><span class="cm"># a lista fica lá em cima, junto de produtos</span>
+<pre><span class="cm"># a lista fica lá em cima, junto de lista_de_produtos</span>
 promocoes = [
     <span class="st">"Fone + Teclado: 20% off"</span>,
     <span class="st">"Frete grátis acima de R$ 99"</span>,
@@ -1876,8 +2082,8 @@ promocoes = [
             <strong>Por que a função virou <code>ver_promocoes</code>?</strong> Porque o nome
             <code>promocoes</code> já está ocupado pela lista. Se você chamar a função de
             <code>promocoes</code> também, o Python <em>substitui</em> a lista pela função e
-            você toma um erro estranho na hora de renderizar. Nome de lista e nome de função
-            não podem ser iguais — vale pra qualquer código Python.
+            você toma um erro estranho na hora de renderizar. É o mesmo motivo de a lista de produtos
+            se chamar <code>lista_de_produtos</code> e a função, <code>produtos</code>.
           </div>
         </div>
       </div>
@@ -1897,7 +2103,7 @@ promocoes = [
         </div>
         <p style="color:var(--text-dim)">
           Mostre "<em>Temos N produtos no estoque</em>" acima da tabela. A conta é do Python:
-          passe <code>total=len(produtos)</code> no <code>render_template</code> e use
+          passe <code>total=len(lista_de_produtos)</code> no <code>render_template</code> e use
           <code class="jvar">{{ total }}</code> no template. Regra de ouro de hoje:
           <strong style="color:var(--text)">quem calcula é o Python; o template só exibe</strong>.
         </p>
@@ -1910,25 +2116,22 @@ promocoes = [
         <div class="code-block">
           <div class="code-header">
             <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-            <span class="filename">loja/app.py (o render_template da home)</span>
+            <span class="filename">loja/app.py (a rota /produtos)</span>
             <span class="lang-badge python">Python</span>
           </div>
-<pre><span class="dec">@app.route</span>(<span class="st">"/"</span>, methods=[<span class="st">"GET"</span>, <span class="st">"POST"</span>])
-<span class="kw">def</span> <span class="fn">home</span>():
-    <span class="kw">if</span> request.method == <span class="st">"POST"</span>:
-        ...
-
-    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"index.html"</span>,
-                           produtos=produtos,
-                           total=<span class="bi">len</span>(produtos))</pre>
+<pre><span class="dec">@app.route</span>(<span class="st">"/produtos"</span>)
+<span class="kw">def</span> <span class="fn">produtos</span>():
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"produtos.html"</span>,
+                           produtos=lista_de_produtos,
+                           total=<span class="bi">len</span>(lista_de_produtos))</pre>
         </div>
         <div class="code-block">
           <div class="code-header">
             <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-            <span class="filename">loja/templates/index.html (acima da tabela)</span>
+            <span class="filename">loja/templates/produtos.html (acima da tabela)</span>
             <span class="lang-badge jinja">Jinja</span>
           </div>
-<pre><span class="tag">&lt;h1&gt;</span>🛍️ Minha Loja<span class="tag">&lt;/h1&gt;</span>
+<pre><span class="tag">&lt;h2&gt;</span>Lista de Produtos<span class="tag">&lt;/h2&gt;</span>
 <span class="tag">&lt;p&gt;</span>Temos <span class="jvar">{{ total }}</span> produtos no estoque.<span class="tag">&lt;/p&gt;</span></pre>
         </div>
           </div>
@@ -1971,16 +2174,16 @@ promocoes = [
         <div class="code-block">
           <div class="code-header">
             <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-            <span class="filename">loja/templates/index.html (três trechos)</span>
+            <span class="filename">cadastro_produto.html + produtos.html (três trechos)</span>
             <span class="lang-badge jinja">Jinja</span>
           </div>
-<pre><span class="cm">&lt;!-- 1) no form, mais um input --&gt;</span>
+<pre><span class="cm">&lt;!-- 1) cadastro_produto.html: no form, mais um input --&gt;</span>
 <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"categoria"</span> <span class="atr">placeholder</span>=<span class="st">"Categoria (ex: áudio)"</span><span class="tag">&gt;</span>
 
-<span class="cm">&lt;!-- 2) no cabeçalho da tabela, mais um th --&gt;</span>
+<span class="cm">&lt;!-- 2) produtos.html: no cabeçalho da tabela, mais um th --&gt;</span>
 <span class="tag">&lt;tr&gt;</span><span class="tag">&lt;th&gt;</span>Produto<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Preço<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Estoque<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Categoria<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;/tr&gt;</span>
 
-<span class="cm">&lt;!-- 3) dentro do </span><span class="jtag">{% for %}</span><span class="cm">, mais um td --&gt;</span>
+<span class="cm">&lt;!-- 3) produtos.html: dentro do </span><span class="jtag">{% for %}</span><span class="cm">, mais um td --&gt;</span>
 <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["categoria"] }}</span><span class="tag">&lt;/td&gt;</span></pre>
         </div>
         <div class="code-block">
@@ -1990,15 +2193,15 @@ promocoes = [
             <span class="lang-badge python">Python</span>
           </div>
 <pre><span class="cm"># 4) na lista lá de cima, a chave nova nos produtos que JÁ existem</span>
-produtos = [
+lista_de_produtos = [
     {<span class="st">"nome"</span>: <span class="st">"Fone Bluetooth"</span>, <span class="st">"preco"</span>: <span class="num">149.90</span>, <span class="st">"qtd"</span>: <span class="num">12</span>, <span class="st">"categoria"</span>: <span class="st">"áudio"</span>},
     ...
 ]
 
-<span class="cm"># 5) dentro do if request.method == "POST":</span>
+<span class="cm"># 5) dentro de cadastro()</span>
 categoria = request.form[<span class="st">"categoria"</span>]
-produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"</span>: preco,
-                 <span class="st">"qtd"</span>: qtd, <span class="st">"categoria"</span>: categoria})</pre>
+lista_de_produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"</span>: preco,
+                          <span class="st">"qtd"</span>: qtd, <span class="st">"categoria"</span>: categoria})</pre>
         </div>
           </div>
         </div>
@@ -2006,9 +2209,9 @@ produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"<
           <span class="tip-icon">🐛</span>
           <div class="tip-content">
             <strong>O passo 4 é o que todo mundo esquece.</strong> Se você só mexer no form, os
-            produtos antigos da lista continuam SEM a chave <code>"categoria"</code> — e o
-            <code class="jvar">{{ p["categoria"] }}</code> vai explodir na tela com
-            <code>UndefinedError</code> na primeira linha da tabela. Dado novo no dict:
+            produtos antigos da lista continuam SEM a chave <code>"categoria"</code> — e a coluna nova
+            aparece <strong>vazia</strong> nas linhas deles, sem nenhum erro pra te avisar (o Jinja
+            mostra nada quando a chave não existe). Dado novo no dict:
             põe em TODOS os produtos, inclusive os que já estavam lá.
           </div>
         </div>
@@ -2039,7 +2242,7 @@ produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"<
         <div class="concept">
           <div class="concept-title">💡 Dica do filtro</div>
           <p>
-            No Python do bootcamp: <code>encontrados = [p for p in produtos if q.lower() in
+            No Python do bootcamp: <code>encontrados = [p for p in lista_de_produtos if q.lower() in
             p["nome"].lower()]</code> — ou um for com if, do jeito clássico. Os dois valem.
           </p>
         </div>
@@ -2088,7 +2291,7 @@ produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"<
 <pre><span class="dec">@app.route</span>(<span class="st">"/buscar"</span>)
 <span class="kw">def</span> <span class="fn">buscar</span>():
     q = request.args.get(<span class="st">"q"</span>, <span class="st">""</span>)
-    encontrados = [p <span class="kw">for</span> p <span class="kw">in</span> produtos <span class="kw">if</span> q.lower() <span class="kw">in</span> p[<span class="st">"nome"</span>].lower()]
+    encontrados = [p <span class="kw">for</span> p <span class="kw">in</span> lista_de_produtos <span class="kw">if</span> q.lower() <span class="kw">in</span> p[<span class="st">"nome"</span>].lower()]
     <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"buscar.html"</span>, produtos=encontrados, q=q)</pre>
         </div>
         <div class="code-block">
@@ -2099,8 +2302,10 @@ produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"<
           </div>
 <pre><span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/"</span><span class="tag">&gt;</span>Início<span class="tag">&lt;/a&gt;</span> ·
 <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/sobre"</span><span class="tag">&gt;</span>Sobre<span class="tag">&lt;/a&gt;</span> ·
-<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/contato"</span><span class="tag">&gt;</span>Contato<span class="tag">&lt;/a&gt;</span> ·
-<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/buscar"</span><span class="tag">&gt;</span>Buscar<span class="tag">&lt;/a&gt;</span></pre>
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/produtos"</span><span class="tag">&gt;</span>Produtos<span class="tag">&lt;/a&gt;</span> ·
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/cadastro_produto"</span><span class="tag">&gt;</span>Cadastrar Produto<span class="tag">&lt;/a&gt;</span> ·
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/buscar"</span><span class="tag">&gt;</span>Buscar<span class="tag">&lt;/a&gt;</span> ·
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/contato"</span><span class="tag">&gt;</span>Contato<span class="tag">&lt;/a&gt;</span></pre>
         </div>
           </div>
         </div>
@@ -2108,7 +2313,8 @@ produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"<
           <div class="concept-title">💡 Três detalhes que valem ouro aqui</div>
           <p>
             <strong>1.</strong> A rota <code>/buscar</code> NÃO precisa de
-            <code>methods=["GET", "POST"]</code> — GET já é o padrão do Flask.<br>
+            <code>methods=[...]</code> — GET já é o padrão do Flask. Só a <code>/cadastro</code>
+            precisou, porque ela recebe POST.<br>
             <strong>2.</strong> <code>request.args.get("q", "")</code> usa
             <code>.get()</code> com um valor padrão: se ninguém buscou nada ainda, <code>q</code>
             vira <code>""</code> em vez de dar <code>KeyError</code>. Por isso o
@@ -2153,21 +2359,34 @@ produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"<
         </div>
       </div>
 
+      <div class="tip">
+        <span class="tip-icon">🧾</span>
+        <div class="tip-content">
+          <strong>Seus produtos podem ser outros.</strong> Na aula a lista tinha teclado, mouse e
+          webcam de outra marca, com outros preços — tanto faz. O que tem que bater é a
+          <strong>estrutura</strong>: uma lista de dicts com as chaves <code>"nome"</code>,
+          <code>"preco"</code> e <code>"qtd"</code>. (Se você digitou um <code>"id"</code> em cada
+          produto na aula, pode deixar ou apagar: no Dia 3 o banco de dados vai gerar o id sozinho.)
+        </div>
+      </div>
+
       <div class="swp-file-tree">📁 <span class="dir">loja/</span>
-├── 📁 <span class="dir">venv/</span>                <span class="note">← não mexe</span>
-├── 🐍 <span class="file">app.py</span>              <span class="note">← rotas + a lista de produtos</span>
+├── 📁 <span class="dir">venv/</span>                     <span class="note">← não mexe</span>
+├── 🐍 <span class="file">app.py</span>                   <span class="note">← rotas + a lista de produtos</span>
 └── 📁 <span class="dir">templates/</span>
-    ├── 🧱 <span class="new">base.html</span>       <span class="note">← NOVO hoje: o papel timbrado</span>
-    ├── 🧱 <span class="file">index.html</span>      <span class="note">← form + tabela</span>
+    ├── 🧱 <span class="new">base.html</span>            <span class="note">← NOVO hoje: o papel timbrado</span>
+    ├── 🧱 <span class="file">index.html</span>           <span class="note">← a home, agora só um cartão de visita</span>
+    ├── 🧱 <span class="new">produtos.html</span>        <span class="note">← NOVO hoje: a tabela</span>
+    ├── 🧱 <span class="new">cadastro_produto.html</span> <span class="note">← NOVO hoje: o formulário</span>
     ├── 🧱 <span class="file">sobre.html</span>
     └── 🧱 <span class="file">contato.html</span></div>
 
       <div class="concept" style="margin-top:18px">
         <div class="concept-title">🎯 Versão 1: o que sai da aula de hoje</div>
         <p>
-          Loja com <strong>menu herdado do base.html</strong>, tabela vinda do Python
-          (com a coluna Estoque do exercício) e cadastro por formulário POST.
-          Sem as missões da arena ainda.
+          Loja com menu herdado do <code>base.html</code>, página <code>/produtos</code> com a tabela
+          vinda do Python (com a coluna Estoque do exercício) e cadastro por formulário POST em
+          página própria. Sem as missões da arena ainda.
         </p>
       </div>
 
@@ -2182,23 +2401,16 @@ produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"<
 app = <span class="tp">Flask</span>(__name__)
 
 <span class="cm"># os dados moram aqui — na MEMÓRIA (por enquanto!)</span>
-produtos = [
+lista_de_produtos = [
     {<span class="st">"nome"</span>: <span class="st">"Fone Bluetooth"</span>,   <span class="st">"preco"</span>: <span class="num">149.90</span>, <span class="st">"qtd"</span>: <span class="num">12</span>},
     {<span class="st">"nome"</span>: <span class="st">"Teclado Mecânico"</span>, <span class="st">"preco"</span>: <span class="num">299.00</span>, <span class="st">"qtd"</span>: <span class="num">5</span>},
     {<span class="st">"nome"</span>: <span class="st">"Mouse Gamer"</span>,      <span class="st">"preco"</span>: <span class="num">89.90</span>,  <span class="st">"qtd"</span>: <span class="num">23</span>},
 ]
 
 
-<span class="dec">@app.route</span>(<span class="st">"/"</span>, methods=[<span class="st">"GET"</span>, <span class="st">"POST"</span>])
+<span class="dec">@app.route</span>(<span class="st">"/"</span>)
 <span class="kw">def</span> <span class="fn">home</span>():
-    <span class="kw">if</span> request.method == <span class="st">"POST"</span>:
-        nome = request.form[<span class="st">"nome"</span>]
-        preco = <span class="bi">float</span>(request.form[<span class="st">"preco"</span>])
-        qtd = <span class="bi">int</span>(request.form[<span class="st">"qtd"</span>])
-        produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"</span>: preco, <span class="st">"qtd"</span>: qtd})
-        <span class="kw">return</span> <span class="fn">redirect</span>(<span class="st">"/"</span>)
-
-    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"index.html"</span>, produtos=produtos)
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"index.html"</span>)
 
 
 <span class="dec">@app.route</span>(<span class="st">"/sobre"</span>)
@@ -2211,9 +2423,27 @@ produtos = [
     <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"contato.html"</span>)
 
 
+<span class="dec">@app.route</span>(<span class="st">"/produtos"</span>)
+<span class="kw">def</span> <span class="fn">produtos</span>():
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"produtos.html"</span>, produtos=lista_de_produtos)
+
+
+<span class="dec">@app.route</span>(<span class="st">"/cadastro_produto"</span>)
+<span class="kw">def</span> <span class="fn">cadastro_produto</span>():
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"cadastro_produto.html"</span>)
+
+
+<span class="dec">@app.route</span>(<span class="st">"/cadastro"</span>, methods=[<span class="st">"POST"</span>])
+<span class="kw">def</span> <span class="fn">cadastro</span>():
+    nome = request.form[<span class="st">"nome"</span>]
+    preco = <span class="bi">float</span>(request.form[<span class="st">"preco"</span>])
+    qtd = <span class="bi">int</span>(request.form[<span class="st">"qtd"</span>])
+    lista_de_produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"</span>: preco, <span class="st">"qtd"</span>: qtd})
+    <span class="kw">return</span> <span class="fn">redirect</span>(<span class="st">"/produtos"</span>)
+
+
 app.run(debug=<span class="bool">True</span>)</pre>
         </div>
-
         <div class="code-block">
           <div class="code-header">
             <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
@@ -2231,14 +2461,14 @@ app.run(debug=<span class="bool">True</span>)</pre>
     <span class="tag">&lt;p&gt;</span>
       <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/"</span><span class="tag">&gt;</span>Início<span class="tag">&lt;/a&gt;</span> ·
       <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/sobre"</span><span class="tag">&gt;</span>Sobre<span class="tag">&lt;/a&gt;</span> ·
+      <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/produtos"</span><span class="tag">&gt;</span>Produtos<span class="tag">&lt;/a&gt;</span> ·
+      <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/cadastro_produto"</span><span class="tag">&gt;</span>Cadastrar Produto<span class="tag">&lt;/a&gt;</span> ·
       <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/contato"</span><span class="tag">&gt;</span>Contato<span class="tag">&lt;/a&gt;</span>
     <span class="tag">&lt;/p&gt;</span>
-
-    <span class="jtag">{% block conteudo %}</span><span class="jtag">{% endblock %}</span>
+    <span class="jtag">{% block conteudo %}{% endblock %}</span>
   <span class="tag">&lt;/body&gt;</span>
 <span class="tag">&lt;/html&gt;</span></pre>
         </div>
-
         <div class="code-block">
           <div class="code-header">
             <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
@@ -2249,16 +2479,20 @@ app.run(debug=<span class="bool">True</span>)</pre>
 
 <span class="jtag">{% block conteudo %}</span>
   <span class="tag">&lt;h1&gt;</span>🛍️ Minha Loja<span class="tag">&lt;/h1&gt;</span>
+  <span class="tag">&lt;p&gt;</span>As melhores ofertas da cidade, direto do meu Python.<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;p&gt;</span><span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/produtos"</span><span class="tag">&gt;</span>Ver os produtos →<span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/p&gt;</span>
+<span class="jtag">{% endblock %}</span></pre>
+        </div>
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/templates/produtos.html</span>
+            <span class="lang-badge jinja">Jinja</span>
+          </div>
+<pre><span class="jtag">{% extends "base.html" %}</span>
 
-  <span class="tag">&lt;h2&gt;</span>Cadastrar produto<span class="tag">&lt;/h2&gt;</span>
-  <span class="tag">&lt;form</span> <span class="atr">action</span>=<span class="st">"/"</span> <span class="atr">method</span>=<span class="st">"POST"</span><span class="tag">&gt;</span>
-    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"nome"</span> <span class="atr">placeholder</span>=<span class="st">"Nome do produto"</span><span class="tag">&gt;</span>
-    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"preco"</span> <span class="atr">placeholder</span>=<span class="st">"Preço"</span><span class="tag">&gt;</span>
-    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"qtd"</span> <span class="atr">placeholder</span>=<span class="st">"Quantidade"</span><span class="tag">&gt;</span>
-    <span class="tag">&lt;button&gt;</span>Cadastrar<span class="tag">&lt;/button&gt;</span>
-  <span class="tag">&lt;/form&gt;</span>
-
-  <span class="tag">&lt;h2&gt;</span>Produtos de hoje<span class="tag">&lt;/h2&gt;</span>
+<span class="jtag">{% block conteudo %}</span>
+  <span class="tag">&lt;h2&gt;</span>Lista de Produtos<span class="tag">&lt;/h2&gt;</span>
   <span class="jtag">{% if produtos %}</span>
     <span class="tag">&lt;table&gt;</span>
       <span class="tag">&lt;tr&gt;</span><span class="tag">&lt;th&gt;</span>Produto<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Preço<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Estoque<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;/tr&gt;</span>
@@ -2275,7 +2509,24 @@ app.run(debug=<span class="bool">True</span>)</pre>
   <span class="jtag">{% endif %}</span>
 <span class="jtag">{% endblock %}</span></pre>
         </div>
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/templates/cadastro_produto.html</span>
+            <span class="lang-badge jinja">Jinja</span>
+          </div>
+<pre><span class="jtag">{% extends "base.html" %}</span>
 
+<span class="jtag">{% block conteudo %}</span>
+  <span class="tag">&lt;h2&gt;</span>Cadastrar produto<span class="tag">&lt;/h2&gt;</span>
+  <span class="tag">&lt;form</span> <span class="atr">action</span>=<span class="st">"/cadastro"</span> <span class="atr">method</span>=<span class="st">"POST"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"nome"</span> <span class="atr">placeholder</span>=<span class="st">"Nome do produto"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"preco"</span> <span class="atr">placeholder</span>=<span class="st">"Preço"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"qtd"</span> <span class="atr">placeholder</span>=<span class="st">"Quantidade"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;button&gt;</span>Cadastrar<span class="tag">&lt;/button&gt;</span>
+  <span class="tag">&lt;/form&gt;</span>
+<span class="jtag">{% endblock %}</span></pre>
+        </div>
         <div class="code-block">
           <div class="code-header">
             <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
@@ -2289,7 +2540,6 @@ app.run(debug=<span class="bool">True</span>)</pre>
   <span class="tag">&lt;p&gt;</span>Loja criada por MIM, com Python. 😄<span class="tag">&lt;/p&gt;</span>
 <span class="jtag">{% endblock %}</span></pre>
         </div>
-
         <div class="code-block">
           <div class="code-header">
             <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
@@ -2304,16 +2554,16 @@ app.run(debug=<span class="bool">True</span>)</pre>
 <span class="jtag">{% endblock %}</span></pre>
         </div>
 
-      <div class="tip" style="margin-top:18px">
+      <div class="tip">
         <span class="tip-icon">🔁</span>
         <div class="tip-content">
           <strong>Rodou e funcionou?</strong> Faça o teste do apagão de novo: pare o servidor
-          (⏹), rode outra vez e olhe a tabela. Os produtos que VOCÊ cadastrou sumiram; os três
+          (⏹), rode outra vez e abra <code>/produtos</code>. Os produtos que VOCÊ cadastrou sumiram; os três
           da lista voltaram. É o Dia 3 batendo na porta. 🗄️
         </div>
       </div>
 
-      <div class="concept" style="margin-top:18px">
+      <div class="concept" style="margin-top:22px">
         <div class="concept-title">🏆 Versão 2: com TODAS as missões da arena resolvidas</div>
         <p>
           Aqui a loja tem badge de produto barato, contador de produtos, categoria,
@@ -2331,24 +2581,26 @@ app.run(debug=<span class="bool">True</span>)</pre>
           <div class="swp-file-tree">📁 <span class="dir">loja/</span>
 ├── 🐍 <span class="file">app.py</span>
 └── 📁 <span class="dir">templates/</span>
-    ├── 🧱 <span class="file">base.html</span>       <span class="note">← menu com 5 links</span>
-    ├── 🧱 <span class="file">index.html</span>
-    ├── 🧱 <span class="file">sobre.html</span>      <span class="note">← igual à versão 1</span>
-    ├── 🧱 <span class="file">contato.html</span>    <span class="note">← igual à versão 1</span>
-    ├── 🧱 <span class="new">promocoes.html</span>   <span class="note">← missão 2</span>
-    └── 🧱 <span class="new">buscar.html</span>      <span class="note">← missão final</span></div>
+    ├── 🧱 <span class="file">base.html</span>            <span class="note">← menu com 7 links</span>
+    ├── 🧱 <span class="file">index.html</span>           <span class="note">← igual à versão 1</span>
+    ├── 🧱 <span class="file">produtos.html</span>        <span class="note">← total + badge + categoria</span>
+    ├── 🧱 <span class="file">cadastro_produto.html</span> <span class="note">← campo categoria</span>
+    ├── 🧱 <span class="file">sobre.html</span>           <span class="note">← igual à versão 1</span>
+    ├── 🧱 <span class="file">contato.html</span>         <span class="note">← igual à versão 1</span>
+    ├── 🧱 <span class="new">promocoes.html</span>       <span class="note">← missão 2</span>
+    └── 🧱 <span class="new">buscar.html</span>          <span class="note">← missão final</span></div>
 
-        <div class="code-block">
-          <div class="code-header">
-            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-            <span class="filename">loja/app.py</span>
-            <span class="lang-badge python">Python</span>
-          </div>
+          <div class="code-block">
+            <div class="code-header">
+              <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+              <span class="filename">loja/app.py</span>
+              <span class="lang-badge python">Python</span>
+            </div>
 <pre><span class="kw">from</span> flask <span class="kw">import</span> <span class="tp">Flask</span>, <span class="fn">render_template</span>, request, <span class="fn">redirect</span>
 
 app = <span class="tp">Flask</span>(__name__)
 
-produtos = [
+lista_de_produtos = [
     {<span class="st">"nome"</span>: <span class="st">"Fone Bluetooth"</span>,   <span class="st">"preco"</span>: <span class="num">149.90</span>, <span class="st">"qtd"</span>: <span class="num">12</span>, <span class="st">"categoria"</span>: <span class="st">"áudio"</span>},
     {<span class="st">"nome"</span>: <span class="st">"Teclado Mecânico"</span>, <span class="st">"preco"</span>: <span class="num">299.00</span>, <span class="st">"qtd"</span>: <span class="num">5</span>,  <span class="st">"categoria"</span>: <span class="st">"periféricos"</span>},
     {<span class="st">"nome"</span>: <span class="st">"Mouse Gamer"</span>,      <span class="st">"preco"</span>: <span class="num">89.90</span>,  <span class="st">"qtd"</span>: <span class="num">23</span>, <span class="st">"categoria"</span>: <span class="st">"periféricos"</span>},
@@ -2361,20 +2613,9 @@ promocoes = [
 ]
 
 
-<span class="dec">@app.route</span>(<span class="st">"/"</span>, methods=[<span class="st">"GET"</span>, <span class="st">"POST"</span>])
+<span class="dec">@app.route</span>(<span class="st">"/"</span>)
 <span class="kw">def</span> <span class="fn">home</span>():
-    <span class="kw">if</span> request.method == <span class="st">"POST"</span>:
-        nome = request.form[<span class="st">"nome"</span>]
-        preco = <span class="bi">float</span>(request.form[<span class="st">"preco"</span>])
-        qtd = <span class="bi">int</span>(request.form[<span class="st">"qtd"</span>])
-        categoria = request.form[<span class="st">"categoria"</span>]
-        produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"</span>: preco,
-                         <span class="st">"qtd"</span>: qtd, <span class="st">"categoria"</span>: categoria})
-        <span class="kw">return</span> <span class="fn">redirect</span>(<span class="st">"/"</span>)
-
-    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"index.html"</span>,
-                           produtos=produtos,
-                           total=<span class="bi">len</span>(produtos))
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"index.html"</span>)
 
 
 <span class="dec">@app.route</span>(<span class="st">"/sobre"</span>)
@@ -2387,6 +2628,29 @@ promocoes = [
     <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"contato.html"</span>)
 
 
+<span class="dec">@app.route</span>(<span class="st">"/produtos"</span>)
+<span class="kw">def</span> <span class="fn">produtos</span>():
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"produtos.html"</span>,
+                           produtos=lista_de_produtos,
+                           total=<span class="bi">len</span>(lista_de_produtos))
+
+
+<span class="dec">@app.route</span>(<span class="st">"/cadastro_produto"</span>)
+<span class="kw">def</span> <span class="fn">cadastro_produto</span>():
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"cadastro_produto.html"</span>)
+
+
+<span class="dec">@app.route</span>(<span class="st">"/cadastro"</span>, methods=[<span class="st">"POST"</span>])
+<span class="kw">def</span> <span class="fn">cadastro</span>():
+    nome = request.form[<span class="st">"nome"</span>]
+    preco = <span class="bi">float</span>(request.form[<span class="st">"preco"</span>])
+    qtd = <span class="bi">int</span>(request.form[<span class="st">"qtd"</span>])
+    categoria = request.form[<span class="st">"categoria"</span>]
+    lista_de_produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"</span>: preco,
+                              <span class="st">"qtd"</span>: qtd, <span class="st">"categoria"</span>: categoria})
+    <span class="kw">return</span> <span class="fn">redirect</span>(<span class="st">"/produtos"</span>)
+
+
 <span class="dec">@app.route</span>(<span class="st">"/promocoes"</span>)
 <span class="kw">def</span> <span class="fn">ver_promocoes</span>():
     <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"promocoes.html"</span>, promocoes=promocoes)
@@ -2395,19 +2659,18 @@ promocoes = [
 <span class="dec">@app.route</span>(<span class="st">"/buscar"</span>)
 <span class="kw">def</span> <span class="fn">buscar</span>():
     q = request.args.get(<span class="st">"q"</span>, <span class="st">""</span>)
-    encontrados = [p <span class="kw">for</span> p <span class="kw">in</span> produtos <span class="kw">if</span> q.lower() <span class="kw">in</span> p[<span class="st">"nome"</span>].lower()]
+    encontrados = [p <span class="kw">for</span> p <span class="kw">in</span> lista_de_produtos <span class="kw">if</span> q.lower() <span class="kw">in</span> p[<span class="st">"nome"</span>].lower()]
     <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"buscar.html"</span>, produtos=encontrados, q=q)
 
 
 app.run(debug=<span class="bool">True</span>)</pre>
-        </div>
-
-        <div class="code-block">
-          <div class="code-header">
-            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-            <span class="filename">loja/templates/base.html</span>
-            <span class="lang-badge jinja">Jinja</span>
           </div>
+          <div class="code-block">
+            <div class="code-header">
+              <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+              <span class="filename">loja/templates/base.html</span>
+              <span class="lang-badge jinja">Jinja</span>
+            </div>
 <pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
 <span class="tag">&lt;html</span> <span class="atr">lang</span>=<span class="st">"pt-BR"</span><span class="tag">&gt;</span>
   <span class="tag">&lt;head&gt;</span>
@@ -2419,38 +2682,27 @@ app.run(debug=<span class="bool">True</span>)</pre>
     <span class="tag">&lt;p&gt;</span>
       <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/"</span><span class="tag">&gt;</span>Início<span class="tag">&lt;/a&gt;</span> ·
       <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/sobre"</span><span class="tag">&gt;</span>Sobre<span class="tag">&lt;/a&gt;</span> ·
-      <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/contato"</span><span class="tag">&gt;</span>Contato<span class="tag">&lt;/a&gt;</span> ·
+      <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/produtos"</span><span class="tag">&gt;</span>Produtos<span class="tag">&lt;/a&gt;</span> ·
+      <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/cadastro_produto"</span><span class="tag">&gt;</span>Cadastrar Produto<span class="tag">&lt;/a&gt;</span> ·
       <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/promocoes"</span><span class="tag">&gt;</span>Promoções<span class="tag">&lt;/a&gt;</span> ·
-      <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/buscar"</span><span class="tag">&gt;</span>Buscar<span class="tag">&lt;/a&gt;</span>
+      <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/buscar"</span><span class="tag">&gt;</span>Buscar<span class="tag">&lt;/a&gt;</span> ·
+      <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/contato"</span><span class="tag">&gt;</span>Contato<span class="tag">&lt;/a&gt;</span>
     <span class="tag">&lt;/p&gt;</span>
-
-    <span class="jtag">{% block conteudo %}</span><span class="jtag">{% endblock %}</span>
+    <span class="jtag">{% block conteudo %}{% endblock %}</span>
   <span class="tag">&lt;/body&gt;</span>
 <span class="tag">&lt;/html&gt;</span></pre>
-        </div>
-
-        <div class="code-block">
-          <div class="code-header">
-            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-            <span class="filename">loja/templates/index.html</span>
-            <span class="lang-badge jinja">Jinja</span>
           </div>
+          <div class="code-block">
+            <div class="code-header">
+              <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+              <span class="filename">loja/templates/produtos.html</span>
+              <span class="lang-badge jinja">Jinja</span>
+            </div>
 <pre><span class="jtag">{% extends "base.html" %}</span>
 
 <span class="jtag">{% block conteudo %}</span>
-  <span class="tag">&lt;h1&gt;</span>🛍️ Minha Loja<span class="tag">&lt;/h1&gt;</span>
+  <span class="tag">&lt;h2&gt;</span>Lista de Produtos<span class="tag">&lt;/h2&gt;</span>
   <span class="tag">&lt;p&gt;</span>Temos <span class="jvar">{{ total }}</span> produtos no estoque.<span class="tag">&lt;/p&gt;</span>
-
-  <span class="tag">&lt;h2&gt;</span>Cadastrar produto<span class="tag">&lt;/h2&gt;</span>
-  <span class="tag">&lt;form</span> <span class="atr">action</span>=<span class="st">"/"</span> <span class="atr">method</span>=<span class="st">"POST"</span><span class="tag">&gt;</span>
-    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"nome"</span> <span class="atr">placeholder</span>=<span class="st">"Nome do produto"</span><span class="tag">&gt;</span>
-    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"preco"</span> <span class="atr">placeholder</span>=<span class="st">"Preço"</span><span class="tag">&gt;</span>
-    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"qtd"</span> <span class="atr">placeholder</span>=<span class="st">"Quantidade"</span><span class="tag">&gt;</span>
-    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"categoria"</span> <span class="atr">placeholder</span>=<span class="st">"Categoria (ex: áudio)"</span><span class="tag">&gt;</span>
-    <span class="tag">&lt;button&gt;</span>Cadastrar<span class="tag">&lt;/button&gt;</span>
-  <span class="tag">&lt;/form&gt;</span>
-
-  <span class="tag">&lt;h2&gt;</span>Produtos de hoje<span class="tag">&lt;/h2&gt;</span>
   <span class="jtag">{% if produtos %}</span>
     <span class="tag">&lt;table&gt;</span>
       <span class="tag">&lt;tr&gt;</span><span class="tag">&lt;th&gt;</span>Produto<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Preço<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Estoque<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Categoria<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;/tr&gt;</span>
@@ -2470,14 +2722,32 @@ app.run(debug=<span class="bool">True</span>)</pre>
     <span class="tag">&lt;p&gt;</span>😢 Estoque vazio! Cadastre o primeiro produto.<span class="tag">&lt;/p&gt;</span>
   <span class="jtag">{% endif %}</span>
 <span class="jtag">{% endblock %}</span></pre>
-        </div>
-
-        <div class="code-block">
-          <div class="code-header">
-            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-            <span class="filename">loja/templates/promocoes.html</span>
-            <span class="lang-badge jinja">Jinja</span>
           </div>
+          <div class="code-block">
+            <div class="code-header">
+              <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+              <span class="filename">loja/templates/cadastro_produto.html</span>
+              <span class="lang-badge jinja">Jinja</span>
+            </div>
+<pre><span class="jtag">{% extends "base.html" %}</span>
+
+<span class="jtag">{% block conteudo %}</span>
+  <span class="tag">&lt;h2&gt;</span>Cadastrar produto<span class="tag">&lt;/h2&gt;</span>
+  <span class="tag">&lt;form</span> <span class="atr">action</span>=<span class="st">"/cadastro"</span> <span class="atr">method</span>=<span class="st">"POST"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"nome"</span> <span class="atr">placeholder</span>=<span class="st">"Nome do produto"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"preco"</span> <span class="atr">placeholder</span>=<span class="st">"Preço"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"qtd"</span> <span class="atr">placeholder</span>=<span class="st">"Quantidade"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"categoria"</span> <span class="atr">placeholder</span>=<span class="st">"Categoria (ex: áudio)"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;button&gt;</span>Cadastrar<span class="tag">&lt;/button&gt;</span>
+  <span class="tag">&lt;/form&gt;</span>
+<span class="jtag">{% endblock %}</span></pre>
+          </div>
+          <div class="code-block">
+            <div class="code-header">
+              <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+              <span class="filename">loja/templates/promocoes.html</span>
+              <span class="lang-badge jinja">Jinja</span>
+            </div>
 <pre><span class="jtag">{% extends "base.html" %}</span>
 
 <span class="jtag">{% block conteudo %}</span>
@@ -2488,21 +2758,20 @@ app.run(debug=<span class="bool">True</span>)</pre>
     <span class="jtag">{% endfor %}</span>
   <span class="tag">&lt;/ul&gt;</span>
 <span class="jtag">{% endblock %}</span></pre>
-        </div>
-
-        <div class="code-block">
-          <div class="code-header">
-            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-            <span class="filename">loja/templates/buscar.html</span>
-            <span class="lang-badge jinja">Jinja</span>
           </div>
+          <div class="code-block">
+            <div class="code-header">
+              <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+              <span class="filename">loja/templates/buscar.html</span>
+              <span class="lang-badge jinja">Jinja</span>
+            </div>
 <pre><span class="jtag">{% extends "base.html" %}</span>
 
 <span class="jtag">{% block conteudo %}</span>
   <span class="tag">&lt;h1&gt;</span>🔎 Buscar produto<span class="tag">&lt;/h1&gt;</span>
 
   <span class="tag">&lt;form</span> <span class="atr">action</span>=<span class="st">"/buscar"</span> <span class="atr">method</span>=<span class="st">"GET"</span><span class="tag">&gt;</span>
-    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"q"</span> <span class="atr">placeholder</span>=<span class="st">"Nome do produto"</span> <span class="atr">value</span>=<span class="st">"<span class="jvar">{{ q }}</span>"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"q"</span> <span class="atr">placeholder</span>=<span class="st">"Nome do produto"</span> <span class="atr">value</span>=<span class="st">"</span><span class="jvar">{{ q }}</span><span class="st">"</span><span class="tag">&gt;</span>
     <span class="tag">&lt;button&gt;</span>Buscar<span class="tag">&lt;/button&gt;</span>
   <span class="tag">&lt;/form&gt;</span>
 
@@ -2519,17 +2788,17 @@ app.run(debug=<span class="bool">True</span>)</pre>
     <span class="jtag">{% endif %}</span>
   <span class="jtag">{% endif %}</span>
 <span class="jtag">{% endblock %}</span></pre>
-        </div>
+          </div>
 
-        <div class="tip">
-          <span class="tip-icon">📄</span>
-          <div class="tip-content">
-            <strong>E o <code>sobre.html</code> e o <code>contato.html</code>?</strong>
-            Não mudaram nada da versão 1 — por isso não estão repetidos aqui.
+          <div class="tip">
+            <span class="tip-icon">📄</span>
+            <div class="tip-content">
+              <strong>E o index.html, o sobre.html e o contato.html?</strong>
+              Não mudaram nada da versão 1 — por isso não estão repetidos aqui.
+            </div>
           </div>
         </div>
       </div>
-    </div>
     </div>
   </section>
 
@@ -2554,7 +2823,8 @@ app.run(debug=<span class="bool">True</span>)</pre>
         <div>🏗️ <strong>base.html:</strong> menu e esqueleto escritos UMA vez ({% extends %} + {% block %})</div>
         <div>📬 <strong>&lt;form&gt;:</strong> action (pra onde), method (como), name (a etiqueta de cada dado)</div>
         <div>🔀 <strong>GET vs POST:</strong> cardápio aberto vs envelope lacrado — e senha NUNCA em GET</div>
-        <div>🐍 <strong>request.form:</strong> o dict que chega pelo correio + redirect fechando o ciclo</div>
+        <div>🐍 <strong>request.form:</strong> o dict que chega pelo correio + redirect fechando o ciclo (/cadastro_produto → /cadastro → /produtos)</div>
+        <div>🗺️ <strong>Rotas com papéis:</strong> /produtos mostra, /cadastro_produto pergunta, /cadastro recebe (só POST) — e a lista, lá no topo, é compartilhada por todas</div>
       </div>
 
       <div class="concept" style="margin-top:18px">
@@ -2564,6 +2834,17 @@ app.run(debug=<span class="bool">True</span>)</pre>
           E agora eles fazem o caminho de ida E de volta: Python → tela (Jinja),
           tela → Python (form).
         </p>
+      </div>
+
+      <div class="warning">
+        <span class="tip-icon">📥</span>
+        <div class="tip-content">
+          <strong>Lição de casa obrigatória antes do Dia 3:</strong> o capítulo
+          <strong>Dia 02½ · IA &amp; Agentes</strong>. É leitura (~40 min) + instalação do seu
+          agente de IA (Claude Code, Codex ou Antigravity, conforme o plano que você já paga)
+          no Terminal do PyCharm. No Dia 3 o agente estreia como tutor do seu SQL e escreve o
+          CSS da Loja a partir de uma espec sua. Chegue com ele instalado. 🤖
+        </div>
       </div>
 
       <div class="tip">
@@ -2577,9 +2858,9 @@ app.run(debug=<span class="bool">True</span>)</pre>
       </div>
 
       <div class="next-chapter">
-        <h3>🗄️ Dia 03 · Banco de dados de verdade</h3>
-        <p style="color:var(--text-dim)">SQL + SQLite: o cofre dos seus dados</p>
-        <a href="../03-sql-sqlite/" class="btn-next">🗄️ Ir para o Dia 03 →</a>
+        <h3>🤖 Dia 02½ · IA &amp; Agentes: seu par de programação</h3>
+        <p style="color:var(--text-dim)">Leitura + instalação em casa — obrigatório antes do Dia 03</p>
+        <a href="../02b-ia-agentes/" class="btn-next">🤖 Ir para o Dia 02½ →</a>
       </div>
     </div>
   </section>
@@ -2758,15 +3039,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const MODES = {
       get: {
         ico: '📄',
-        url: 'localhost:5000/?<span class="qs">nome=Fone&amp;preco=149.90</span>',
-        data: 'GET /?nome=Fone&preco=149.90\n(corpo do request: vazio)',
+        url: 'localhost:5000/cadastro?<span class="qs">nome=Fone&amp;preco=149.90</span>',
+        data: 'GET /cadastro?nome=Fone&preco=149.90\n(corpo do request: vazio)',
         sealed: false,
         label: '<strong>Cartão-postal:</strong> os dados viajam NA URL, à vista de todos — barra de endereço, histórico, print da tela. Bom pra busca e filtros (dá até pra compartilhar o link!).',
       },
       post: {
         ico: '✉️',
-        url: 'localhost:5000/',
-        data: 'POST /\n\nnome=Fone&preco=149.90',
+        url: 'localhost:5000/cadastro',
+        data: 'POST /cadastro\n\nnome=Fone&preco=149.90',
         sealed: true,
         label: '<strong>Envelope lacrado:</strong> a URL fica limpa; os dados vão no CORPO do request. É o método de quem cria/muda coisas — cadastro, login, compra.',
       },
@@ -2795,6 +3076,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const note = document.getElementById('voltaNote');
     const body = document.getElementById('voltaBody');
     const listBox = document.getElementById('voltaList');
+    const addr = document.getElementById('voltaAddr');
     const inNome = document.getElementById('voltaNome');
     const inPreco = document.getElementById('voltaPreco');
     const btn = document.getElementById('voltaGo');
@@ -2805,7 +3087,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const lit = (i) => lines.forEach(l => l.classList.toggle('lit', +l.dataset.v === i));
 
     function renderList(){
-      listBox.innerHTML = '<span class="plabel">produtos (na memória)</span>' +
+      listBox.innerHTML = '<span class="plabel">lista_de_produtos (na memória)</span>' +
         '[' + itens.map(([n]) => '{"nome": "' + n + '", ...}').join(',\n ') + ']';
     }
 
@@ -2841,37 +3123,39 @@ document.addEventListener('DOMContentLoaded', () => {
       running = true;
       btn.disabled = true;
       const precoFmt = parseFloat(preco).toFixed(2);
+      addr.textContent = 'localhost:5000/cadastro_produto';
 
-      note.innerHTML = 'o botão submeteu: <strong>POST /</strong> com nome=' + '"' + nome + '" e preco="' + precoFmt + '" no envelope';
+      note.innerHTML = 'o botão submeteu: <strong>POST /cadastro</strong> com nome=' + '"' + nome + '" e preco="' + precoFmt + '" no envelope';
       lit(0);
-      if (!reduceMotion) await flyEnv(btn, lines[2]);
+      if (!reduceMotion) await flyEnv(btn, lines[1]);
       else await sleep(600);
 
-      lit(2);
-      note.innerHTML = 'a rota aceita POST → caiu no <strong>if request.method == "POST"</strong>';
+      lit(1);
+      note.innerHTML = 'a rota aceita POST (<strong>methods=["POST"]</strong>) → o Flask chama <strong>cadastro()</strong>';
       await sleep(750);
-      lit(3);
+      lit(2);
       note.innerHTML = '<strong>request.form["nome"]</strong> → "' + nome + '"';
       await sleep(750);
-      lit(4);
+      lit(3);
       note.innerHTML = '<strong>float(request.form["preco"])</strong> → ' + precoFmt;
       await sleep(750);
-      lit(5);
+      lit(4);
       itens.push([nome, precoFmt]);
       renderList();
       note.innerHTML = '<strong>append</strong> — a lista cresceu na memória';
       await sleep(750);
-      lit(6);
-      note.innerHTML = '<strong>redirect("/")</strong> → o navegador faz um GET novinho…';
+      lit(5);
+      note.innerHTML = '<strong>redirect("/produtos")</strong> → o navegador faz um GET novinho em /produtos…';
       await sleep(800);
-      lit(7);
+      addr.textContent = 'localhost:5000/produtos';
+      lit(9);
       const tr = document.createElement('tr');
       tr.className = 'row-new';
       const td1 = document.createElement('td'); td1.textContent = nome;
       const td2 = document.createElement('td'); td2.className = 'n'; td2.textContent = 'R$ ' + precoFmt;
       tr.append(td1, td2);
       body.appendChild(tr);
-      note.innerHTML = '…e o Jinja re-renderizou a tabela — <strong>com o seu produto lá</strong> 🎉 Cadastra outro!';
+      note.innerHTML = '…e o Jinja re-renderizou o <strong>produtos.html</strong> — com o seu produto lá 🎉 Cadastra outro!';
       inNome.value = ''; inPreco.value = '';
       await sleep(700);
       lit(-1);
@@ -2907,13 +3191,13 @@ document.addEventListener('DOMContentLoaded', () => {
         box.classList.remove('dead');
         killed = true;
         btn.textContent = '🔄 Cadastrar tudo de novo…';
-        note.innerHTML = 'servidor de volta… <strong>e os 4 produtos? Evaporaram.</strong> A lista renasceu vazia. 😱';
+        note.innerHTML = 'servidor de volta… <strong>e os 4 que você cadastrou? Evaporaram.</strong> O app.py rodou do zero: só os 3 do código voltaram. 😱';
       } else {
         alive.style.display = 'block';
         dead.style.display = 'none';
         killed = false;
         btn.textContent = '🔌 Reiniciar o servidor (⏹ e ▶)';
-        note.textContent = 'redigitou tudo na mão… até o PRÓXIMO restart. Cansativo, né? Pois é. Dia 3 resolve.';
+        note.textContent = 'redigitou os 4 na mão… até o PRÓXIMO restart. Cansativo, né? Pois é. Dia 3 resolve.';
       }
     });
   })();

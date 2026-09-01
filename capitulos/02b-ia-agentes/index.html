@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dia 02½ · IA &amp; Agentes: seu par de programação — Sistemas Web com Python | programa AI</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../shared/styles.css">
+<link rel="stylesheet" href="../../shared/components.css">
+<link rel="stylesheet" href="../../shared/animations.css">
+<style>
+/* ══════════ CSS local do capítulo 02½ (prefixo swp-) ══════════ */
+
+/* Ligatures OFF em toda classe mono local (-> não vira →, != não vira ≠) */
+.mono,.pw-sent,.pw-cand,.mc-block,.lp-console,.lp-step,.ps-code,.ci-line,.tool-cmd,
+.swp-spec-text,.swp-diff{
+  font-family:'JetBrains Mono',monospace;
+  font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+}
+
+.step-section.visible .reveal-stagger > *:nth-child(7){transition-delay:0.65s}
+.step-section.visible .reveal-stagger > *:nth-child(8){transition-delay:0.75s}
+
+.ia{color:var(--accent6)}
+.lang-badge.prompt{background:linear-gradient(135deg,var(--accent6),#8b91ff);color:#0a0a12}
+
+/* ---------- box do pré-encontro (mesmo do cap 06) ---------- */
+.swp-preflight{
+  border:2px dashed rgba(247,183,49,0.5);border-radius:18px;
+  background:rgba(247,183,49,0.05);padding:22px 24px;margin:18px 0;
+}
+.swp-preflight .pf-title{
+  font-weight:900;font-size:1.05rem;margin-bottom:6px;color:var(--accent5);
+  display:flex;align-items:center;gap:8px;
+}
+.swp-preflight ol{margin:10px 0 0;padding-left:22px;color:var(--text-dim);font-size:0.92rem;line-height:1.8}
+.swp-preflight li strong{color:var(--text)}
+.swp-preflight code{background:rgba(255,255,255,0.07);padding:1px 7px;border-radius:5px;font-size:0.84rem}
+
+/* ═══ 🔮 Máquina da Próxima Palavra ═══ */
+.pwm{background:linear-gradient(180deg,#0b1020,#0d0d1a);border:1px solid rgba(167,139,250,0.35);
+  border-radius:16px;padding:18px;margin:14px 0}
+.pw-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.pw-lab{font-size:0.74rem;color:var(--text-dim);font-weight:700}
+.pw-chip{border:1px solid rgba(167,139,250,0.45);background:var(--surface2);color:#c9b8ff;
+  font-weight:700;font-size:0.76rem;padding:8px 12px;border-radius:10px;cursor:pointer;
+  transition:all .2s;font-family:'Nunito',sans-serif}
+.pw-chip:hover{transform:translateY(-2px)}
+.pw-chip.active{border-color:#fff;color:#fff;background:rgba(255,255,255,0.08)}
+.pw-stage{background:#06060c;border:1px solid rgba(255,255,255,0.12);border-radius:12px;
+  padding:16px;min-height:64px}
+.pw-sent{font-size:0.95rem;color:#cdd6f4;line-height:1.7;word-break:break-word;white-space:pre-wrap}
+.pw-sent .pw-new{color:#a78bfa;font-weight:700}
+.pw-cands{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;min-height:44px}
+.pw-cand{border:1px solid rgba(255,255,255,0.14);background:#0b0b14;border-radius:10px;
+  padding:7px 10px;font-size:0.72rem;color:#cdd6f4;position:relative;overflow:hidden;
+  display:flex;align-items:center;gap:8px;transition:all .25s}
+.pw-cand .bar{position:absolute;left:0;top:0;bottom:0;background:rgba(167,139,250,0.16);width:0;transition:width .5s}
+.pw-cand b{position:relative;font-weight:700}
+.pw-cand small{position:relative;color:var(--text-dim)}
+.pw-cand.win{border-color:rgba(6,214,160,0.7);box-shadow:0 0 12px rgba(6,214,160,0.2)}
+.pw-cand.win small{color:var(--accent7)}
+.pw-note{margin-top:12px;background:#0b0b14;border:1px solid rgba(255,255,255,0.1);border-radius:10px;
+  padding:10px 12px;font-size:0.82rem;color:#cdd6f4;text-align:center;min-height:40px}
+
+/* ═══ 📦 Mesa de Contexto ═══ */
+.mcm{background:linear-gradient(180deg,#0b1020,#0d0d1a);border:1px solid rgba(247,183,49,0.3);
+  border-radius:16px;padding:18px;margin:14px 0}
+.mc-meter{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.mc-meter .lab{font-size:0.74rem;color:var(--text-dim);font-weight:700;white-space:nowrap}
+.mc-track{flex:1;height:12px;background:#06060c;border:1px solid rgba(255,255,255,0.12);border-radius:999px;overflow:hidden}
+.mc-fill{height:100%;width:0;background:linear-gradient(90deg,var(--accent7),var(--accent5));transition:width .4s}
+.mc-fill.full{background:linear-gradient(90deg,var(--accent5),var(--bug))}
+.mc-table{background:#06060c;border:1px solid rgba(255,255,255,0.12);border-radius:12px;
+  padding:12px;min-height:96px;display:flex;gap:8px;flex-wrap:wrap;align-content:flex-start}
+.mc-block{border:1px solid rgba(255,255,255,0.16);background:#0b0b14;border-radius:10px;
+  padding:7px 10px;font-size:0.7rem;color:#cdd6f4;transition:all .35s}
+.mc-block.rule{border-color:rgba(167,139,250,0.6);color:#c9b8ff;font-weight:700}
+.mc-block.big{border-color:rgba(247,183,49,0.5);color:var(--accent5)}
+.mc-lost{margin-top:10px;font-size:0.72rem;color:var(--text-dim);min-height:20px}
+.mc-lost .gone{color:#ff8b8b;text-decoration:line-through;margin-right:8px}
+.mc-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.mc-controls button{border:1px solid rgba(247,183,49,0.45);background:var(--surface2);color:var(--accent5);
+  font-weight:700;font-size:0.76rem;padding:8px 14px;border-radius:10px;cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif}
+.mc-controls button:hover{transform:translateY(-2px)}
+.mc-note{margin-top:10px;background:#0b0b14;border:1px solid rgba(255,255,255,0.1);border-radius:10px;
+  padding:10px 12px;font-size:0.82rem;color:#cdd6f4;text-align:center;min-height:40px}
+
+/* ═══ 🔁 Loop do Agente ═══ */
+.lpm{background:linear-gradient(180deg,#0b1020,#0d0d1a);border:1px solid rgba(167,139,250,0.4);
+  border-radius:16px;padding:18px;margin:14px 0}
+.lp-steps{display:flex;gap:6px;flex-wrap:wrap;align-items:center;justify-content:center;margin:12px 0}
+.lp-step{border:1px solid rgba(255,255,255,0.14);background:#0b0b14;border-radius:10px;
+  padding:8px 11px;font-size:0.7rem;color:var(--text-dim);transition:all .25s;white-space:nowrap}
+.lp-step.on{border-color:rgba(167,139,250,0.8);color:#fff;background:rgba(167,139,250,0.12);
+  box-shadow:0 0 12px rgba(167,139,250,0.25)}
+.lp-step.err.on{border-color:rgba(255,71,87,0.8);background:rgba(255,71,87,0.12);box-shadow:0 0 12px rgba(255,71,87,0.25)}
+.lp-step.ok.on{border-color:rgba(6,214,160,0.8);background:rgba(6,214,160,0.12);box-shadow:0 0 12px rgba(6,214,160,0.25)}
+.lp-arrow{color:var(--text-dim);font-size:0.7rem}
+.lp-console{background:#06060c;border:1px solid rgba(255,255,255,0.1);border-radius:10px;
+  padding:10px 12px;font-size:0.68rem;color:#7ef0c4;min-height:110px;max-height:160px;overflow:auto;white-space:pre-wrap}
+.lp-console .t{color:#c9b8ff}
+.lp-result{margin-top:10px;background:#0b0b14;border:1px solid rgba(255,255,255,0.12);border-radius:10px;
+  padding:10px 12px;font-size:0.8rem;color:#cdd6f4;min-height:44px}
+.lp-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
+.lp-controls button{border:1px solid rgba(167,139,250,0.5);background:var(--surface2);color:#c9b8ff;
+  font-weight:700;font-size:0.76rem;padding:8px 14px;border-radius:10px;cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif}
+.lp-controls button:hover{transform:translateY(-2px)}
+.lp-controls button.vago{border-color:rgba(255,71,87,0.5);color:#ff8b8b}
+.lp-note{margin-top:10px;background:#0b0b14;border:1px solid rgba(255,255,255,0.1);border-radius:10px;
+  padding:10px 12px;font-size:0.82rem;color:#cdd6f4;text-align:center;min-height:40px}
+
+/* ═══ 🗺️ cards do mercado ═══ */
+.agents-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.agent-card{background:#0b0b14;border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:16px;transition:all .2s}
+.agent-card:hover{transform:translateY(-3px);border-color:rgba(167,139,250,0.5)}
+.agent-card.star{border-color:rgba(167,139,250,0.55);background:linear-gradient(180deg,rgba(167,139,250,0.08),#0b0b14)}
+.agent-card h4{margin:0 0 4px;font-size:1rem}
+.agent-card .who{font-size:0.7rem;color:var(--text-dim);font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.agent-card p{margin:8px 0 0;font-size:0.8rem;color:var(--text-dim);line-height:1.55}
+.agent-card .plan{display:inline-block;margin-top:10px;font-size:0.68rem;font-weight:800;
+  background:rgba(255,255,255,0.07);color:var(--text);border-radius:999px;padding:3px 10px;border:1px solid rgba(255,255,255,0.12)}
+.agent-card .badge-prof{display:inline-block;margin:10px 6px 0 0;font-size:0.66rem;font-weight:800;
+  background:linear-gradient(135deg,var(--accent6),#8b91ff);color:#0a0a12;border-radius:999px;padding:3px 10px}
+
+/* setup das ferramentas */
+.tool-cmd{background:#06060c;border:1px solid rgba(255,255,255,0.12);border-radius:10px;
+  padding:10px 14px;font-size:0.74rem;color:#7ef0c4;margin:8px 0;overflow-x:auto;white-space:pre;line-height:1.7}
+.tool-cmd .c{color:#6b7394}
+
+/* ═══ ⚖️ Prompt Vago × Spec ═══ */
+.psm{background:linear-gradient(180deg,#0b1020,#0d0d1a);border:1px solid rgba(78,205,196,0.3);
+  border-radius:16px;padding:18px;margin:14px 0}
+.ps-toggle{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.ps-toggle button{border:1px solid rgba(255,255,255,0.16);background:var(--surface2);color:var(--text-dim);
+  font-weight:700;font-size:0.76rem;padding:8px 14px;border-radius:10px;cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif}
+.ps-toggle button.active.vago{border-color:rgba(255,71,87,0.6);color:#ff8b8b;background:rgba(255,71,87,0.08)}
+.ps-toggle button.active.spec{border-color:rgba(6,214,160,0.6);color:var(--accent7);background:rgba(6,214,160,0.08)}
+.ps-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+@media (max-width:680px){.ps-grid{grid-template-columns:1fr}}
+.ps-code{background:#06060c;border:1px solid rgba(255,255,255,0.12);border-radius:10px;
+  padding:12px;font-size:0.7rem;color:#cdd6f4;white-space:pre-wrap;line-height:1.7;min-height:150px}
+.ps-out{background:#0b0b14;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:12px;min-height:150px}
+.ps-out ul{margin:6px 0 0;padding-left:18px}
+.ps-out li{font-size:0.78rem;color:var(--text-dim);margin-bottom:6px;line-height:1.5}
+.ps-out li b{color:var(--text)}
+.ps-out .tag-ok{color:var(--accent7);font-weight:800}
+.ps-out .tag-bad{color:#ff8b8b;font-weight:800}
+.ps-note{margin-top:10px;background:#0b0b14;border:1px solid rgba(255,255,255,0.1);border-radius:10px;
+  padding:10px 12px;font-size:0.82rem;color:#cdd6f4;text-align:center;min-height:40px}
+
+/* ═══ 🕵️ Caça ao Intruso ═══ */
+.cim{background:linear-gradient(180deg,#0b1020,#0d0d1a);border:1px solid rgba(255,71,87,0.3);
+  border-radius:16px;padding:18px;margin:14px 0}
+.ci-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.ci-score{font-size:0.78rem;color:var(--text-dim);font-weight:700}
+.ci-score b{color:var(--accent7)}
+.ci-diff{background:#06060c;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:8px 0;overflow-x:auto}
+.ci-line{display:block;width:100%;text-align:left;border:0;background:transparent;color:#8b93b0;
+  font-size:0.7rem;padding:3px 14px;cursor:pointer;white-space:pre;transition:background .15s;line-height:1.65}
+.ci-line:hover{background:rgba(255,255,255,0.05)}
+.ci-line.add{color:#7ef0c4}
+.ci-line.del{color:#ff8b8b}
+.ci-line.file{color:#c9b8ff;font-weight:700;cursor:default}
+.ci-line.found{background:rgba(255,71,87,0.14);color:#ff8b8b;font-weight:700}
+.ci-line.shake{animation:cishake .3s}
+@keyframes cishake{25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+.ci-note{margin-top:10px;background:#0b0b14;border:1px solid rgba(255,255,255,0.1);border-radius:10px;
+  padding:10px 12px;font-size:0.82rem;color:#cdd6f4;text-align:center;min-height:40px}
+
+/* ═══ 🪜 a escada do curso ═══ */
+.swp-escada{display:grid;gap:10px;margin:16px 0}
+.swp-degrau{
+  display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;
+  background:var(--surface);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px 16px;
+}
+.swp-degrau .dg-n{
+  font-family:'JetBrains Mono',monospace;font-weight:700;font-size:0.72rem;color:#0a0a12;
+  background:linear-gradient(135deg,var(--accent6),#8b91ff);border-radius:8px;padding:6px 9px;white-space:nowrap;
+}
+.swp-degrau .dg-t{font-weight:800;color:var(--text);font-size:0.92rem}
+.swp-degrau .dg-d{font-size:0.82rem;color:var(--text-dim);line-height:1.55;margin-top:3px}
+.swp-degrau.now{border-color:rgba(167,139,250,0.5);background:linear-gradient(180deg,rgba(167,139,250,0.07),var(--surface))}
+
+/* bug-box local (igual ao do fullstack) */
+.bug-box{display:flex;gap:14px;align-items:flex-start;background:rgba(255,71,87,0.06);
+  border:1px solid rgba(255,71,87,0.25);border-radius:14px;padding:14px 16px;margin:0}
+.bug-box .bug-icon{font-size:1.4rem;flex-shrink:0}
+.bug-box .bug-content{font-size:0.9rem;color:var(--text-dim);line-height:1.6}
+.bug-box .bug-content strong{color:var(--text)}
+.bug-box .bug-content code{background:rgba(255,255,255,0.07);padding:1px 6px;border-radius:5px;font-size:0.82rem}
+
+@media (prefers-reduced-motion: reduce){
+  .pw-chip,.pw-cand,.mc-block,.lp-step,.agent-card,.ps-toggle button,.ci-line{transition:none;animation:none}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-orbs">
+  <div class="orb"></div>
+  <div class="orb"></div>
+  <div class="orb"></div>
+</div>
+
+<div class="progress-track"><div class="progress-bar"></div></div>
+
+<button class="menu-toggle" onclick="openSidebar()" aria-label="Abrir menu">☰</button>
+<aside class="sidebar-nav" id="sidebar">
+  <button class="sidebar-close" onclick="closeSidebar()" aria-label="Fechar menu">✕</button>
+  <div class="sidebar-header">
+    <h3>🤖 Dia 02½ · IA &amp; Agentes</h3>
+    <a href="../../index.html" class="sidebar-back">← Voltar ao hub</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">⚙️ Preparação</div>
+    <a class="sidebar-link" onclick="goTo('pre-encontro')"><span class="dot" style="background:var(--accent5)"></span>Antes do Dia 3</a>
+    <a class="sidebar-link" onclick="goTo('aquecimento')"><span class="dot" style="background:var(--accent5)"></span>Aquecimento</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🧠 Abrindo o capô</div>
+    <a class="sidebar-link" onclick="goTo('llm')"><span class="dot" style="background:var(--accent6)"></span>⭐ O que é um LLM</a>
+    <a class="sidebar-link" onclick="goTo('contexto')"><span class="dot" style="background:var(--accent5)"></span>⭐ Contexto &amp; alucinação</a>
+    <a class="sidebar-link" onclick="goTo('agente')"><span class="dot" style="background:var(--accent6)"></span>⭐ Do chat ao agente</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🛠️ A ferramenta</div>
+    <a class="sidebar-link" onclick="goTo('mercado')"><span class="dot" style="background:var(--accent3)"></span>Quem é quem</a>
+    <a class="sidebar-link" onclick="goTo('instalar')"><span class="dot" style="background:var(--python-y)"></span>Bora instalar o seu</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🧑‍✈️ O ofício</div>
+    <a class="sidebar-link" onclick="goTo('prompt')"><span class="dot" style="background:var(--accent7)"></span>⭐ Prompt = mini-espec</a>
+    <a class="sidebar-link" onclick="goTo('revisao')"><span class="dot" style="background:var(--accent2)"></span>⭐ Revisão: a regra de ouro</a>
+    <a class="sidebar-link" onclick="goTo('escada')"><span class="dot" style="background:var(--accent6)"></span>A escada do curso</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🏁 Fechamento</div>
+    <a class="sidebar-link" onclick="goTo('bugzilla')"><span class="dot" style="background:var(--bug)"></span>BugZilla da era da IA 🐛</a>
+    <a class="sidebar-link" onclick="goTo('quiz')"><span class="dot" style="background:var(--accent5)"></span>Quiz de fixação</a>
+    <a class="sidebar-link" onclick="goTo('resumo')"><span class="dot" style="background:var(--accent7)"></span>Resumo</a>
+  </div>
+</aside>
+<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-icons">🤖 🧠 ⌨️</div>
+  <span class="hero-badge python">Dia 02½ · entre o Dia 2 e o Dia 3 · leitura + instalação em casa</span>
+  <h1><span style="background:linear-gradient(135deg,var(--accent6),var(--accent3));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">IA &amp; Agentes:<br>seu par de programação</span></h1>
+  <p class="subtitle">
+    Você passou dois encontros digitando tudo na mão. A partir do Dia 3 você ganha um
+    <strong class="ia">estagiário genial</strong> que leu a internet inteira e digita a mil por
+    hora — e descobre por que só quem fez o caminho na mão consegue ser o
+    <strong style="color:var(--accent5)">CHEFE</strong> dele. Como um LLM funciona, o que é um
+    agente, e as duas habilidades que o mercado paga:
+    <strong style="color:var(--accent7)">especificar</strong> e
+    <strong style="color:var(--accent2)">revisar</strong>.
+  </p>
+  <div class="hero-stack">
+    <span class="stack-chip" style="border-color:rgba(167,139,250,0.5);color:#c9b8ff">🧠 LLM</span>
+    <span class="stack-chip" style="border-color:rgba(167,139,250,0.5);color:#c9b8ff">🔁 loop do agente</span>
+    <span class="stack-chip python">✍️ prompt = espec</span>
+    <span class="stack-chip">👀 revisão de código</span>
+    <span class="stack-chip">🛠️ Claude Code · Codex · Antigravity</span>
+  </div>
+</section>
+
+<div class="container">
+
+  <!-- ═══════════════════════════════════════════════════════
+       PRÉ-ENCONTRO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="pre-encontro">
+    <div class="step-header">
+      <div class="step-number sn-yellow">📥</div>
+      <div>
+        <div class="step-title">Antes do Dia 3: leia este capítulo e instale o seu agente</div>
+        <div class="step-sub">~40 minutos de leitura + ~15 de instalação. No Dia 3 a gente USA.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="swp-preflight">
+        <div class="pf-title">⚠️ Este capítulo não tem encontro próprio — ele é a lição de casa entre o Dia 2 e o Dia 3</div>
+        <ol>
+          <li><strong>Leia até o fim</strong>, brincando com as máquinas. Elas explicam o que a ferramenta
+            faz por dentro — e por que você vai revisar tudo o que ela produzir.</li>
+          <li><strong>Escolha o seu agente</strong> na seção <em>Bora instalar o seu</em>. Precisa de um dos
+            planos pagos: <strong>Claude Pro</strong> (Claude Code), <strong>ChatGPT Plus</strong> (Codex) ou
+            <strong>Google AI Pro</strong> (Antigravity). Não existe opção gratuita neste curso —
+            use o plano que você já paga.</li>
+          <li><strong>Instale e faça o primeiro "oi"</strong> dentro do Terminal do PyCharm, na pasta da
+            sua <code>loja</code>. Deu certo? Conte no grupo. ✅</li>
+          <li>No Dia 3, o agente estreia como <strong>tutor</strong> (explica o seu SQL) e faz a primeira tarefa
+            de verdade: <strong>dar uma cara moderna à Loja</strong>, com você revisando o CSS. 🎨</li>
+        </ol>
+      </div>
+
+      <div class="warning">
+        <span class="tip-icon">🆘</span>
+        <div class="tip-content">
+          <strong>Não conseguiu instalar?</strong> Venha mesmo assim: no Dia 3 você faz dupla com um
+          colega (dirigir o agente A DOIS é até melhor pra aprender) e resolvemos a instalação no intervalo.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       AQUECIMENTO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="aquecimento">
+    <div class="step-header">
+      <div class="step-number sn-yellow">🔥</div>
+      <div>
+        <div class="step-title">Aquecimento: por que você digitou tudo na mão?</div>
+        <div class="step-sub">Se existe IA que escreve código sozinha…</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">🔥</span> Se existe IA que escreve código sozinha… por que você passou dois dias digitando Flask e Jinja na mão?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Porque o professor gosta de ver aluno sofrer</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Porque a IA erra sempre e não serve pra nada</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Porque só quem sabe LER e REVISAR código consegue comandar a IA — em vez de ser refém dela</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Não precisava — foi tempo perdido</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Exatamente. E a partir do Dia 3 você vira o chefe." data-wrong="Pensa: quem confere se o código da IA está certo?"
+             data-explain="A IA escreve código MUITO bem — e erra com a maior confiança do mundo. O mercado não paga mais quem digita mais rápido: paga quem sabe ESPECIFICAR o que quer e REVISAR o que recebeu. As duas coisas exigem exatamente o que você construiu nos Dias 1 e 2: saber ler rota, template e formulário. Sem isso, você não comanda a IA — obedece a ela."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">2️⃣</span> No Dia 2, o que acontecia com a lista de produtos quando o servidor reiniciava?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Nada, ficava tudo lá</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Os cadastrados sumiam; só os do código voltavam</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">O Flask salvava num arquivo sozinho</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Dava erro 500</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Isso — e é por isso que o Dia 3 é banco de dados." data-wrong="Lembra do apagão!"
+             data-explain="Guarda esse detalhe: no Dia 3, uma das primeiras coisas que você vai pedir ao agente é EXPLICAR o código que resolve o apagão. Você precisa saber a resposta pra julgar a explicação."></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="chapter-divider">
+    <div class="chapter-icon">🧠</div>
+    <div class="chapter-number">Parte 1</div>
+    <h2 style="background:linear-gradient(135deg,var(--accent6),var(--accent3));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Abrindo o capô</h2>
+    <p class="chapter-subtitle">O motor, os dois limites e o loop</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ LLM
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="llm">
+    <div class="step-header">
+      <div class="step-number sn-purple">🔮</div>
+      <div>
+        <div class="step-title">O que é um LLM (o motor da coisa toda)</div>
+        <div class="step-sub">Um completador de frases que leu a internet inteira</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Antes de usar a ferramenta, vamos abrir o capô. ChatGPT, Claude, Gemini… todos têm o mesmo
+        motor: um <strong style="color:var(--text)">LLM</strong> (<em>Large Language Model</em> —
+        modelo grande de linguagem). E o que esse motor faz é uma coisa só, repetida milhões de vezes:
+      </p>
+
+      <div class="analogy">
+        <div class="analogy-title">📱 O autocompletar do teclado — turbinado</div>
+        <p>
+          Sabe quando você digita "bom" no WhatsApp e o teclado sugere "dia"? O LLM é ISSO, levado
+          ao extremo: ele leu <strong>um pedaço gigante da internet</strong> (sites, livros, e
+          montanhas de código!) e aprendeu a responder uma única pergunta: "<em>dado tudo que veio
+          até aqui, qual é a <strong>próxima palavra</strong> mais provável?</em>". Ele prevê uma,
+          cola no texto, e pergunta de novo. E de novo. Uma resposta inteira é isso: previsão
+          atrás de previsão.
+        </p>
+      </div>
+
+      <p style="color:var(--text-dim);margin:14px 0 4px">Veja a máquina prevendo — escolha um
+      começo 👇</p>
+
+      <div class="pwm" id="pwm">
+        <div class="pw-chips">
+          <span class="pw-lab">Começo:</span>
+          <button class="pw-chip active" data-i="0">O gato subiu no…</button>
+          <button class="pw-chip" data-i="1">código Flask</button>
+          <button class="pw-chip" data-i="2">a pegadinha 😏</button>
+        </div>
+        <div class="pw-stage"><div class="pw-sent" id="pw-sent"></div></div>
+        <div class="pw-cands" id="pw-cands"></div>
+        <div class="pw-note" id="pw-note">…</div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">🧩 "Mas ele PENSA?"</div>
+        <p>
+          Ele <strong>prevê</strong>. Não tem uma listinha de fatos nem "sabe" o que é verdade —
+          tem bilhões de padrões estatísticos aprendidos na leitura. A parte surpreendente: prever
+          MUITO bem exige capturar padrões profundos (gramática, lógica, estilo…), então o resultado
+          muitas vezes <em>parece</em> — e funciona como — raciocínio. Pro nosso uso, o que importa
+          é o efeito prático: ele produz texto <strong>plausível</strong>. Quase sempre plausível e
+          correto. Às vezes, só plausível. 😬
+        </p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🌶️</span>
+        <div class="tip-content">
+          <strong>Por que ele é TÃO bom em código?</strong> Porque código é o texto mais previsível
+          que existe! Você mesmo já sente isso: toda rota começa com <code>@app.route</code>, todo
+          <code>def</code> termina com <code>return render_template(...)</code>, todo form tem
+          <code>action</code> e <code>method</code>. Padrão forte = previsão fácil. Por isso a IA brilha
+          em programação — e por isso ela escreve Flask "do jeito que todo mundo escreve"… que nem
+          sempre é o jeito que <strong>nós</strong> combinamos. Guarda essa.
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">🔤 Bônus de vocabulário: tokens</div>
+        <p>
+          O modelo não lê letra por letra nem palavra por palavra — ele pica o texto em
+          <strong>tokens</strong> (pedaços: "programação" pode virar <code>program</code> +
+          <code>ação</code>). É só o "centímetro" com que a IA mede texto. Quando alguém falar
+          "esse modelo aceita 200 mil tokens", está falando do tamanho da <strong>mesa de
+          trabalho</strong> dele — assunto da próxima seção.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ CONTEXTO & ALUCINAÇÃO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="contexto">
+    <div class="step-header">
+      <div class="step-number sn-yellow">📦</div>
+      <div>
+        <div class="step-title">Os dois limites: a mesa e a invenção</div>
+        <div class="step-sub">Janela de contexto &amp; alucinação — o que todo usuário de IA precisa saber</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        <strong style="color:var(--text)">Limite 1: a mesa de trabalho.</strong> Tudo que o modelo
+        "enxerga" na hora de prever — sua pergunta, a conversa até aqui, os arquivos que ele leu —
+        precisa caber num espaço chamado <strong style="color:var(--text)">janela de contexto</strong>.
+        É grande (dá pra colocar livros inteiros!), mas é <strong style="color:var(--text)">finita</strong>.
+        E o que não está na mesa, não existe pra ele:
+      </p>
+
+      <div class="analogy">
+        <div class="analogy-title">🪵 A mesa de trabalho</div>
+        <p>
+          Imagina o estagiário numa mesa: cabe muita coisa — o seu pedido, uns arquivos abertos,
+          as anotações da conversa. Mas quando a mesa enche, <strong>alguma coisa cai da borda</strong>
+          pra abrir espaço… e geralmente é o papel mais antigo. Se o que caiu era aquela regra
+          importante que você falou lá no começo? Ele segue trabalhando, feliz, <strong>sem ela</strong>.
+        </p>
+      </div>
+
+      <p style="color:var(--text-dim);margin:14px 0 4px">Encha a mesa e veja o que acontece com a
+      regra combinada no começo da conversa 👇</p>
+
+      <div class="mcm" id="mcm">
+        <div class="mc-meter">
+          <span class="lab">📦 mesa (contexto):</span>
+          <div class="mc-track"><div class="mc-fill" id="mc-fill"></div></div>
+          <span class="lab" id="mc-pct">0%</span>
+        </div>
+        <div class="mc-table" id="mc-table"></div>
+        <div class="mc-lost" id="mc-lost"></div>
+        <div class="mc-controls">
+          <button id="mc-add-talk">💬 + mais conversa</button>
+          <button id="mc-add-file">📄 + um arquivo</button>
+          <button id="mc-add-big">🐘 + arquivo GIGANTE</button>
+          <button id="mc-reset">↺ recomeçar</button>
+        </div>
+        <div class="mc-note" id="mc-note">…</div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">📜</span>
+        <div class="tip-content">
+          <strong>Spoiler de profissional:</strong> por causa da mesa, regra importante de projeto
+          não se fala na conversa — se <strong>escreve num arquivo</strong> que o agente relê
+          sempre. Esse arquivo tem até nome de mercado (<code>CLAUDE.md</code> no Claude Code,
+          <code>AGENTS.md</code> nos outros) e você vai escrever o seu no Dia 7, pro projeto final.
+        </div>
+      </div>
+
+      <p style="color:var(--text-dim);margin-top:18px">
+        <strong style="color:var(--text)">Limite 2: a invenção com confiança.</strong> Lembra que o
+        modelo só prevê o texto mais <em>plausível</em>? Quando ele não tem o padrão certo, ele
+        <strong style="color:var(--text)">não fala "não sei"</strong> — ele completa com o que mais
+        parece verdade. Isso tem nome: <strong style="color:var(--accent2)">alucinação</strong>. Em
+        código, ela aparece assim: uma biblioteca que não existe, uma função com nome convincente que
+        nunca existiu, um <code>@login_required</code> que ele jura que "já vem no Flask" (você viu na
+        máquina 🔮!).
+      </p>
+
+      <div class="quiz" style="margin-top:16px">
+        <div class="quiz-q"><span class="q-emoji">🤯</span> Verdade ou invenção? A IA respondeu: "Para pegar os dados do formulário no Flask, use <code>request.body["nome"]</code>". O que você faz?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Uso — se a IA falou com essa confiança toda, deve existir</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Desconfio: eu SEI (Dia 2!) que é request.form["nome"] — e vou conferir rodando</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Pergunto pra outra IA, e a que responder mais bonito ganha</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Desisto do Flask</button>
+        </div>
+        <div class="quiz-feedback" data-correct="É o Dia 2 te salvando da alucinação. 🥋" data-wrong="Confiança não é prova — a IA inventa COM confiança."
+             data-explain="request.body soa plausível (outros frameworks usam algo parecido), mas no Flask os dados do form chegam em request.form — você digitou isso na mão no Dia 2. Quem nunca estudou engole. Regra de ouro com IA: confiar, mas CONFERIR — rodando o código e usando o que você sabe."></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ DO CHAT AO AGENTE
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="agente">
+    <div class="step-header">
+      <div class="step-number sn-purple">🦾</div>
+      <div>
+        <div class="step-title">Do chat ao agente: a IA ganha mãos</div>
+        <div class="step-sub">Ferramentas + um loop de tentativa até dar certo</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        O ChatGPT no navegador é um <strong style="color:var(--text)">chat</strong>: você pergunta,
+        ele responde texto, e quem copia, cola, salva e roda… é você. Um
+        <strong style="color:var(--text)">agente de codificação</strong> é o mesmo motor LLM com uma
+        diferença que muda tudo: ele tem <strong class="ia">mãos</strong> — chamadas de
+        <strong style="color:var(--text)">ferramentas</strong>:
+      </p>
+
+      <div class="keyword-grid">
+        <div class="keyword-chip">
+          <span class="emoji">📖</span>
+          <span class="kw-name">Lê arquivos</span>
+          <span class="kw-desc">abre seu app.py e seus templates sozinho, antes de mexer</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">✏️</span>
+          <span class="kw-name">Cria e edita</span>
+          <span class="kw-desc">escreve o código no arquivo certo — e mostra o diff do que mudou</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">🖥️</span>
+          <span class="kw-name">Roda comandos</span>
+          <span class="kw-desc">python app.py, pip install… no SEU terminal</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">👁️</span>
+          <span class="kw-name">Lê o resultado</span>
+          <span class="kw-desc">inclusive as mensagens de erro — e tenta de novo</span>
+        </div>
+      </div>
+
+      <p style="color:var(--text-dim)">
+        E com mãos, nasce o comportamento que dá nome à coisa — o
+        <strong class="ia">loop do agente</strong>: ele entende o pedido, faz um plano, age,
+        <strong style="color:var(--text)">olha o que aconteceu</strong>… e repete até considerar o
+        trabalho pronto. Se der erro no meio, ele lê o erro e tenta corrigir — sozinho.
+      </p>
+
+      <p style="color:var(--text-dim);margin:14px 0 4px">Veja o loop rodando — primeiro com um
+      pedido claro, depois com um vago 👇</p>
+
+      <div class="lpm" id="lpm">
+        <div class="lp-result" id="lp-pedido" style="margin-top:0">📨 …</div>
+        <div class="lp-steps" id="lp-steps">
+          <span class="lp-step" data-s="0">🧠 planejar</span><span class="lp-arrow">→</span>
+          <span class="lp-step" data-s="1">📖 ler</span><span class="lp-arrow">→</span>
+          <span class="lp-step" data-s="2">✏️ editar</span><span class="lp-arrow">→</span>
+          <span class="lp-step" data-s="3">🖥️ rodar</span><span class="lp-arrow">→</span>
+          <span class="lp-step err" data-s="4">❌ erro</span><span class="lp-arrow">→</span>
+          <span class="lp-step" data-s="5">🔁 corrigir</span><span class="lp-arrow">→</span>
+          <span class="lp-step ok" data-s="6">✅ pronto</span>
+        </div>
+        <div class="lp-console" id="lp-console">// escolha um pedido pra ver o agente trabalhar 👇</div>
+        <div class="lp-result" id="lp-result">…</div>
+        <div class="lp-controls">
+          <button id="lp-claro">✅ pedido claro: "link Cancelar no cadastro"</button>
+          <button class="vago" id="lp-vago">🌀 pedido vago: "deixa o site profissional aí"</button>
+        </div>
+        <div class="lp-note" id="lp-note">…</div>
+      </div>
+
+      <div class="analogy">
+        <div class="analogy-title">🧑‍💼 A analogia que vale o capítulo: o estagiário genial</div>
+        <p>
+          Pensa num estagiário que <strong>leu a internet inteira</strong>, digita a mil por hora,
+          nunca cansa e topa qualquer tarefa. Incrível, né? Agora os poréns: ele <strong>não conhece
+          o SEU projeto</strong> (a não ser que leia), <strong>não adivinha</strong> o que você quer
+          (a não ser que você diga), completa com confiança mesmo quando não sabe, e — o mais
+          importante — <strong>não é o responsável</strong> pelo que entrega. Quem assina o código é
+          o engenheiro. Todo estagiário genial precisa de um <strong>chefe</strong>… e neste
+          curso, o chefe é <strong>VOCÊ</strong>.
+        </p>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">🚦 O agente PEDE licença — e isso é seu primeiro superpoder</div>
+        <p>
+          Antes de editar um arquivo ou rodar um comando, o agente <strong>pede permissão</strong>
+          ("posso editar o app.py?", "posso rodar pip install?"). Esses avisos são o seu
+          <strong>primeiro posto de revisão</strong>: leia o que ele quer fazer ANTES de apertar o sim.
+          Aceitar tudo no automático é dirigir de olho fechado.
+        </p>
+      </div>
+
+      <div class="quiz" style="margin-top:16px">
+        <div class="quiz-q"><span class="q-emoji">🦾</span> Qual é A diferença entre um chat de IA e um agente de codificação?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">O agente usa um modelo mais inteligente</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">O agente tem FERRAMENTAS (ler, editar, rodar) e repete o loop até terminar — o chat só devolve texto</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">O agente não alucina</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">O chat é grátis e o agente é pago</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Isso: mesmas 'cabeças', mas o agente tem mãos." data-wrong="Olha a máquina do loop de novo: o que o agente fez que um chat não faz?"
+             data-explain="O motor LLM pode até ser o mesmo. A diferença é o loop com ferramentas: o agente lê SEUS arquivos, edita, roda, vê o erro e tenta de novo. Por isso ele acerta mais que um chat (ele testa o que faz!) — e por isso também ele pode fazer estrago mais rápido: as mãos dele mexem no SEU projeto. Alucinar, ele continua podendo."></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="chapter-divider">
+    <div class="chapter-icon">🛠️</div>
+    <div class="chapter-number">Parte 2</div>
+    <h2 style="background:linear-gradient(135deg,var(--python-y),var(--accent3));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">A ferramenta</h2>
+    <p class="chapter-subtitle">Quem é quem no mercado — e o seu, instalado</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       MERCADO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="mercado">
+    <div class="step-header">
+      <div class="step-number sn-blue">🗺️</div>
+      <div>
+        <div class="step-title">O mercado de agentes (quem é quem)</div>
+        <div class="step-sub">Nomes diferentes, MESMO loop — aprenda o fluxo e você domina todos</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Essa é a área mais quente da tecnologia agora, e cada gigante tem o seu agente. Neste curso
+        você usa um destes três — o que vier com o plano que você já paga:
+      </p>
+
+      <div class="agents-grid">
+        <div class="agent-card star">
+          <span class="who">Anthropic</span>
+          <h4>Claude Code</h4>
+          <p>Agente que roda no terminal (e dentro do PyCharm, pelo Terminal). Forte em seguir regras
+          de projeto — o arquivo dele é o <code>CLAUDE.md</code>.</p>
+          <span class="badge-prof">⭐ o que o professor usa em aula</span>
+          <span class="plan">plano: Claude Pro</span>
+        </div>
+        <div class="agent-card">
+          <span class="who">OpenAI</span>
+          <h4>Codex</h4>
+          <p>O agente da casa do ChatGPT: roda no terminal e lê o <code>AGENTS.md</code>. Se você já
+          paga o ChatGPT, já tem.</p>
+          <span class="plan">plano: ChatGPT Plus</span>
+        </div>
+        <div class="agent-card">
+          <span class="who">Google</span>
+          <h4>Antigravity</h4>
+          <p>O do Google, em duas formas: um editor com agente dentro e o <strong>Antigravity
+          CLI</strong> (comando <code>agy</code>) no terminal. Também lê o <code>AGENTS.md</code>.</p>
+          <span class="plan">plano: Google AI Pro</span>
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">🎓 A boa notícia: você não precisa "aprender 3 ferramentas"</div>
+        <p>
+          Todas rodam o <strong>mesmo loop</strong> que você acabou de ver, e o trabalho do
+          engenheiro é o mesmo em todas: <strong>escrever um bom pedido → deixar o agente rodar o
+          loop → revisar o resultado</strong>. Muda o comando de instalar e o nome do arquivo de
+          regras. Aprendeu o fluxo numa, sabe em todas — igual aprender a dirigir: o carro muda, a
+          direção não.
+        </p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">👀</span>
+        <div class="tip-content">
+          <strong>Outros nomes que você vai ouvir:</strong> <em>Copilot</em> (GitHub/Microsoft, mora
+          dentro do VS Code) e <em>Cursor</em> (um editor inteiro construído em volta do agente).
+          Mesmo loop, mesmas regras. O material serve pra todos.
+        </div>
+      </div>
+
+      <div class="warning">
+        <span class="tip-icon">💸</span>
+        <div class="tip-content">
+          <strong>Sobre preços:</strong> os três exigem assinatura (na casa de US$ 20/mês cada). Os
+          limites de uso mudam rápido, então na aula o professor mostra o cenário do dia. O que não
+          muda: <strong>o que você aprende aqui vale pra qualquer um deles</strong>.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       INSTALAR
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="instalar">
+    <div class="step-header">
+      <div class="step-number sn-py">🛠️</div>
+      <div>
+        <div class="step-title">Bora instalar o seu</div>
+        <div class="step-sub">Escolha UMA ferramenta e ative — o ritual é parecido em todas</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        O ritual é o mesmo em todas: <strong style="color:var(--text)">instalar → entrar na conta →
+        abrir na pasta do projeto</strong>. Tudo pelo <strong style="color:var(--text)">Terminal do
+        PyCharm</strong> (<code>Alt+F12</code> no Windows, <code>⌥F12</code> no Mac), que já abre
+        dentro da pasta da sua <code>loja</code>. Escolha a sua (👀 abre o passo a passo):
+      </p>
+
+      <div class="warning">
+        <span class="tip-icon">🟩</span>
+        <div class="tip-content">
+          <strong>Claude Code e Codex precisam do Node.js.</strong> Eles são feitos em JavaScript, e
+          o Node é quem roda eles — só isso, não vamos programar em JS. Baixe a versão
+          <strong>LTS</strong> em <code>nodejs.org</code>, instale com next-next-finish e
+          <strong>feche e reabra o PyCharm</strong> (pro terminal enxergar o Node novo). Confira com
+          <code>node -v</code>: precisa ser 22 ou maior.
+        </div>
+      </div>
+
+      <div class="toggler">
+        <div class="toggler-header" onclick="toggleSection(this)">
+          <span>⭐ Claude Code (Claude Pro) — o do professor</span><span class="toggler-arrow">▼</span>
+        </div>
+        <div class="toggler-body">
+          <div class="tool-cmd"><span class="c"># instalar (uma vez só), no Terminal do PyCharm:</span>
+npm install -g @anthropic-ai/claude-code
+
+<span class="c"># abrir NA PASTA do projeto (o Terminal do PyCharm já está nela):</span>
+claude</div>
+          <p style="font-size:0.88rem;color:var(--text-dim)">
+            Na primeira vez ele abre o navegador pra você entrar na sua conta Claude (a do plano Pro).
+            Apareceu o prompt do Claude no terminal? Pronto. Pra sair, digite <code>/exit</code>.
+            Pelo npm ele não se atualiza sozinho — de vez em quando rode
+            <code>npm install -g @anthropic-ai/claude-code@latest</code>.
+          </p>
+        </div>
+      </div>
+
+      <div class="toggler" style="margin-top:10px">
+        <div class="toggler-header" onclick="toggleSection(this)">
+          <span>🟢 Codex (ChatGPT Plus)</span><span class="toggler-arrow">▼</span>
+        </div>
+        <div class="toggler-body">
+          <div class="tool-cmd"><span class="c"># instalar (repare no @openai/ — "codex" sem sobrenome é OUTRO pacote!):</span>
+npm install -g @openai/codex
+
+<span class="c"># abrir na pasta do projeto:</span>
+codex</div>
+          <p style="font-size:0.88rem;color:var(--text-dim)">
+            Entra com a conta do ChatGPT. O resto é igual: prompt no terminal, pedido, diff, sua
+            aprovação.
+          </p>
+        </div>
+      </div>
+
+      <div class="toggler" style="margin-top:10px">
+        <div class="toggler-header" onclick="toggleSection(this)">
+          <span>🔵 Antigravity (Google AI Pro)</span><span class="toggler-arrow">▼</span>
+        </div>
+        <div class="toggler-body">
+          <p style="font-size:0.88rem;color:var(--text-dim)">
+            Duas portas de entrada, com a sua conta Google: o <strong>editor Antigravity</strong>
+            (baixa em <code>antigravity.google</code>; o agente fica num painel) e o
+            <strong>Antigravity CLI</strong>, o irmão de terminal — comando <code>agy</code>. Esse é o
+            único da lista que <strong>não mora no npm</strong> (não precisa do Node):
+          </p>
+          <div class="tool-cmd"><span class="c"># macOS / Linux:</span>
+curl -fsSL https://antigravity.google/cli/install.sh | bash
+
+<span class="c"># Windows (no PowerShell):</span>
+irm https://antigravity.google/cli/install.ps1 | iex
+
+<span class="c"># abrir na pasta do projeto:</span>
+agy</div>
+          <p style="font-size:0.88rem;color:var(--text-dim)">
+            Se você achar tutoriais mandando instalar o <code>gemini-cli</code>: era a ferramenta
+            anterior do Google — o Antigravity CLI é o substituto oficial dela.
+          </p>
+        </div>
+      </div>
+
+      <div class="warning" style="margin-top:14px">
+        <span class="tip-icon">📋</span>
+        <div class="tip-content">
+          <strong>Comandos mudam de versão!</strong> Se algum comando acima reclamar, vale a regra
+          de sempre: <strong>leia o erro</strong> — e confira o site oficial da ferramenta (ou
+          pergunte no grupo). Instalar ferramenta nova faz parte da vida de dev.
+        </div>
+      </div>
+
+      <div class="exercise guided">
+        <div class="exercise-header">
+          <span class="exercise-icon">👋</span>
+          <div>
+            <div class="exercise-title">Primeiro "oi" (sem medo)</div>
+            <div class="exercise-sub">Perguntar não mexe em nada — e você vê o loop acontecer</div>
+          </div>
+        </div>
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">1.</strong> Com o projeto <code>loja</code> aberto no
+          PyCharm, abra o Terminal e rode o comando da sua ferramenta (<code>claude</code>,
+          <code>codex</code> ou <code>agy</code>).<br>
+          <strong style="color:var(--text)">2.</strong> Digite exatamente isto e dê Enter:
+        </p>
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">seu primeiro pedido</span>
+            <span class="lang-badge prompt">prompt</span>
+          </div>
+<pre>O que é este projeto? Explique pra um iniciante, arquivo por arquivo, sem mudar nada.</pre>
+        </div>
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">3.</strong> Repare: antes de responder, ele
+          <strong>LÊ</strong> o seu <code>app.py</code> e os templates (o loop em ação). Leia a
+          explicação com olho crítico — você digitou esse projeto, você sabe se ele acertou.<br>
+          <strong style="color:var(--text)">4.</strong> Funcionou? Conte no grupo da turma. ✅
+          É só isso por hoje: no Dia 3 vem a primeira tarefa de verdade.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="chapter-divider">
+    <div class="chapter-icon">🧑‍✈️</div>
+    <div class="chapter-number">Parte 3</div>
+    <h2 style="background:linear-gradient(135deg,var(--accent7),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">O ofício</h2>
+    <p class="chapter-subtitle">Pedir bem e revisar bem — as duas habilidades que o mercado paga</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ PROMPT = ESPEC
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="prompt">
+    <div class="step-header">
+      <div class="step-number sn-mint">✍️</div>
+      <div>
+        <div class="step-title">Prompt = mini-espec (a arte do pedido)</div>
+        <div class="step-sub">Pedido vago sai caro. Os 4 ingredientes do pedido de engenheiro</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Você viu na máquina do loop: pedido vago, o agente <strong style="color:var(--text)">decide
+        por você</strong> — e decide "do jeito da internet", não do jeito do nosso curso. A ferramenta
+        é a mesma; o que separa o amador do engenheiro é o <strong style="color:var(--text)">pedido</strong>.
+        Compare 👇
+      </p>
+
+      <div class="psm" id="psm">
+        <div class="ps-toggle">
+          <button class="vago active" data-m="vago">🌀 pedido vago</button>
+          <button class="spec" data-m="spec">📋 pedido-espec</button>
+        </div>
+        <div class="ps-grid">
+          <div class="ps-code" id="ps-code"></div>
+          <div class="ps-out" id="ps-out"></div>
+        </div>
+        <div class="ps-note" id="ps-note">…</div>
+      </div>
+
+      <p style="color:var(--text-dim)">
+        O pedido da direita não é "texto bonito" — é uma <strong style="color:var(--text)">mini-especificação</strong>,
+        o mesmo documento que um líder técnico escreve pra qualquer dev do time. A receita tem
+        <strong style="color:var(--text)">4 ingredientes</strong>:
+      </p>
+
+      <div class="about-bullets">
+        <div><strong>1. CONTEXTO</strong> — onde estamos: "projeto Flask; templates em <code>templates/</code>; todas as páginas herdam do <code>base.html</code>". <em>(O agente não adivinha seu projeto — ou lê, ou você conta.)</em></div>
+        <div><strong>2. TAREFA</strong> — o que fazer, específico: "adicione um rodapé no <code>base.html</code> com o texto X". <em>(Uma tarefa por pedido: um conceito por vez vale pra ele também.)</em></div>
+        <div><strong>3. RESTRIÇÕES</strong> — como fazer e como NÃO fazer: "só HTML e Jinja; NÃO instale nada; NÃO use JavaScript; mexa só no base.html". <em>(É a cerca que mantém o código do NOSSO jeito.)</em></div>
+        <div><strong>4. CRITÉRIO DE ACEITE</strong> — como saber que ficou pronto: "pronto quando o rodapé aparecer em todas as páginas e o app rodar sem erro". <em>(Sem isso, "pronto" é opinião do estagiário.)</em></div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">💼</span>
+        <div class="tip-content">
+          <strong>Isso tem nome no mercado.</strong> Saber escrever esse pedido é hoje uma
+          habilidade de contratação (chamam de <em>prompt engineering</em>, e o time mais chique
+          fala <em>context engineering</em>). Repara na ironia deliciosa: pra escrever as
+          RESTRIÇÕES, você precisa… <strong>saber Flask</strong>. Quem nunca ouviu falar de
+          <code>base.html</code> ou de <code>{% block %}</code> não consegue nem PEDIR direito.
+          Os Dias 1 e 2 eram isso.
+        </div>
+      </div>
+
+      <div class="quiz" style="margin-top:16px">
+        <div class="quiz-q"><span class="q-emoji">✍️</span> Qual destes pedidos é um pedido-espec?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">"faz uma tela de login bem legal"</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">"arruma os bugs"</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">"No projeto Flask (templates herdam do base.html), crie a página /sobre-nos com um texto X. Só HTML e Jinja, sem instalar nada, sem JavaScript. Pronto quando aparecer no menu e abrir sem erro."</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">"você é um programador sênior muito bom, capriche"</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Contexto ✓ tarefa ✓ restrições ✓ aceite ✓ — espec completa!" data-wrong="Procura os 4 ingredientes em cada opção…"
+             data-explain="Só a terceira tem os 4 ingredientes: contexto (Flask, base.html), tarefa específica (página /sobre-nos), restrições (só HTML/Jinja, sem libs, sem JS) e critério de aceite (no menu, abre sem erro). Elogiar o agente ('você é sênior') não substitui NENHUM ingrediente — no máximo deixa ele animado. 😄"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ REVISÃO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="revisao">
+    <div class="step-header">
+      <div class="step-number sn-red">👀</div>
+      <div>
+        <div class="step-title">Revisão: a regra de ouro</div>
+        <div class="step-sub">Nunca aceite um código que você não consegue explicar em voz alta</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        O agente terminou e disse "pronto! ✨". Agora começa o <strong style="color:var(--text)">SEU</strong>
+        trabalho. Quando um agente edita seu projeto, ele mostra um <strong style="color:var(--text)">diff</strong>
+        — a lista do que mudou: linha verde com <code>+</code> entrou, linha vermelha com
+        <code>-</code> saiu. O diff é a sua mesa de cirurgia. O ritual, <strong style="color:var(--text)">sempre
+        na ordem</strong>:
+      </p>
+
+      <div class="about-bullets">
+        <div><strong>① Rodou?</strong> — sobe o app, abre no navegador e testa o critério de aceite que VOCÊ escreveu.</div>
+        <div><strong>② Li o diff?</strong> — linha por linha. Verde por verde.</div>
+        <div><strong>③ Segue o nosso padrão?</strong> — herda do base.html? Sem JavaScript? Do jeito que a gente escreve rota? Ou veio "jeito da internet"?</div>
+        <div><strong>④ Tem algo que eu NÃO pedi?</strong> — arquivo extra, <code>pip install</code> de biblioteca nova, "melhorias" por conta própria…</div>
+        <div><strong>⑤ Consigo explicar em voz alta?</strong> — se não consegue, não aceita: peça "explique o que você fez e por quê" (o agente adora explicar — use-o de tutor!).</div>
+      </div>
+
+      <p style="color:var(--text-dim);margin:14px 0 4px">Treina o olho: você pediu SÓ um rodapé
+      no <code>base.html</code> (sem instalar nada, sem JavaScript). No diff abaixo o agente
+      entregou… com <strong style="color:var(--text)">3 intrusos</strong>. Clica nas linhas suspeitas 👇</p>
+
+      <div class="cim" id="cim">
+        <div class="ci-head">
+          <span style="font-size:0.8rem;color:var(--text-dim)">📨 pedido: "rodapé no base.html — só HTML/Jinja, <b>não instale nada, sem JavaScript</b>, mexa só no base.html"</span>
+          <span class="ci-score">intrusos: <b id="ci-score">0</b>/3</span>
+        </div>
+        <div class="ci-diff" id="ci-diff"></div>
+        <div class="ci-note" id="ci-note">…</div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💼 Por que isso é inegociável no mercado</div>
+        <p>
+          Nas empresas, todo código passa por <strong>code review</strong>: outro dev lê e aprova
+          antes de entrar no produto. Código de IA não pula a fila — pelo contrário: "gerado por IA
+          e ninguém revisou" é <strong>reprovação na certa</strong> (e motivo de incidente famoso).
+          O dev que o mercado quer em 2026 não é o que digita mais rápido: é o que consegue dizer
+          <em>"pode subir, EU revisei"</em> — e sustentar. É literalmente o emprego.
+        </p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🎤</span>
+        <div class="tip-content">
+          <strong>O combinado do curso:</strong> no Demo Day (Dia 8), cada trecho gerado por agente
+          no seu projeto terá que ser <strong>explicado por você</strong>. Não é pegadinha — é o
+          item ⑤ virando nota.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       A ESCADA DO CURSO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="escada">
+    <div class="step-header">
+      <div class="step-number sn-purple">🪜</div>
+      <div>
+        <div class="step-title">A escada do curso: o agente entra um degrau por dia</div>
+        <div class="step-sub">Primeiro tutor, depois revisor, depois par — e só então você comanda</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Você não vai "ligar a IA" e parar de digitar. O agente entra aos poucos, sempre
+        <strong style="color:var(--text)">depois</strong> de você ter feito a versão na mão da coisa que
+        ele vai tocar — porque só assim você tem o gabarito mental pra revisar:
+      </p>
+
+      <div class="swp-escada">
+        <div class="swp-degrau now">
+          <span class="dg-n">DIA 2½</span>
+          <div><div class="dg-t">Instalar e entender</div><div class="dg-d">Este capítulo. O primeiro "oi" no seu projeto, sem mudar nada.</div></div>
+        </div>
+        <div class="swp-degrau">
+          <span class="dg-n">DIA 3</span>
+          <div><div class="dg-t">Tutor + primeira tarefa: a Loja fica moderna 🎨</div><div class="dg-d">Você escreve o SQL na mão e pede pro agente EXPLICAR cada linha. Depois, com uma espec sua, ele escreve o CSS da Loja — visual moderno, sem cara de IA — e você revisa o diff.</div></div>
+        </div>
+        <div class="swp-degrau">
+          <span class="dg-n">DIA 4</span>
+          <div><div class="dg-t">Revisor do SEU código</div><div class="dg-d">Você constrói listar e cadastrar com banco. No fim, pede: "revise meu app.py, aponte problemas, não mude nada" — e julga cada apontamento.</div></div>
+        </div>
+        <div class="swp-degrau">
+          <span class="dg-n">DIA 5</span>
+          <div><div class="dg-t">Par: ele gera, você aprova</div><div class="dg-d">Editar na mão (é a aula). Excluir com espec sua + agente + checklist de aceitação. Vender na mão de novo, porque tem regra de negócio.</div></div>
+        </div>
+        <div class="swp-degrau">
+          <span class="dg-n">DIA 6</span>
+          <div><div class="dg-t">Você comanda: o login inteiro</div><div class="dg-d">Uma feature completa (tabela, telas, sessão, hash) gerada a partir de uma espec de 6 itens — com caça ao bug plantado no diff.</div></div>
+        </div>
+        <div class="swp-degrau">
+          <span class="dg-n">DIAS 7–8</span>
+          <div><div class="dg-t">Seu sistema, seu CLAUDE.md</div><div class="dg-d">Projeto final com o agente de par, regras do projeto escritas em arquivo, e o Demo Day em que você explica tudo.</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="chapter-divider">
+    <div class="chapter-icon">🏁</div>
+    <div class="chapter-number">Fechamento</div>
+    <h2 style="background:linear-gradient(135deg,var(--accent5),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Os bugs de uma era nova</h2>
+    <p class="chapter-subtitle">BugZilla, quiz e o que levar pro Dia 3</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       BUGZILLA
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="bugzilla">
+    <div class="step-header">
+      <div class="step-number sn-red">🐛</div>
+      <div>
+        <div class="step-title">BugZilla apresenta: os 5 clássicos da era dos agentes</div>
+        <div class="step-sub">Bugs novos pra uma era nova — e um deles não é nem de código</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="bug-box">
+        <span class="bug-icon">🐛</span>
+        <div class="bug-content">
+          <strong>Bug 1 — a função fantasma (alucinação):</strong>
+          <code>from flask import login_required</code> — convincente, confiante… e inexistente no Flask
+          (existe numa biblioteca à parte). <strong>Antídoto:</strong> rodar SEMPRE (o Python acusa
+          <code>ImportError</code> na hora) + desconfiar de qualquer nome que você nunca viu no curso. Se
+          não estudamos, investigue antes de aceitar.
+        </div>
+      </div>
+
+      <div class="bug-box" style="margin-top:14px">
+        <span class="bug-icon">🐛</span>
+        <div class="bug-content">
+          <strong>Bug 2 — o pedido vago que virou reforma:</strong> "deixa profissional aí" → diff com
+          seis templates reescritos, projeto irreconhecível. <strong>Antídoto:</strong> pedido-espec
+          (tarefa UMA, restrições claras). Já aconteceu? <em>"Desfaça tudo. Agora mude SÓ o base.html:
+          …"</em> — agentes sabem desfazer o que acabaram de fazer, é só pedir.
+        </div>
+      </div>
+
+      <div class="bug-box" style="margin-top:14px">
+        <span class="bug-icon">🐛</span>
+        <div class="bug-content">
+          <strong>Bug 3 — a dependência clandestina:</strong> você pediu um formulário, ganhou um
+          <code>pip install flask-wtf</code> no meio do caminho. Funciona? Sim. É o combinado? Não — e
+          agora seu projeto carrega uma peça que você não sabe operar (e que precisa existir no
+          servidor do Dia 8!). <strong>Antídoto:</strong> todo <code>pip install</code> que o agente
+          pedir pra rodar se lê SEMPRE, e "não instale nada" entra nas restrições do pedido.
+        </div>
+      </div>
+
+      <div class="bug-box" style="margin-top:14px">
+        <span class="bug-icon">🐛</span>
+        <div class="bug-content">
+          <strong>Bug 4 — a dívida de compreensão:</strong> o único bug que não mora no código —
+          mora em você. Aceitou 3 diffs sem ler; agora não sabe onde nada está, não consegue nem
+          DESCREVER o próximo pedido, e o Demo Day ("me explica essa rota aqui?") vira pesadelo.
+          <strong>Antídoto:</strong> a regra de ouro, sem exceção — e usar o agente de tutor:
+          "explique o que você fez" é de graça.
+        </div>
+      </div>
+
+      <div class="bug-box" style="margin-top:14px">
+        <span class="bug-icon">🐛</span>
+        <div class="bug-content">
+          <strong>Bug 5 — a regra esquecida:</strong> na 5ª mensagem você disse "sem JavaScript"; na
+          25ª ele colocou um <code>&lt;script&gt;</code>. Não é teimosia — é a <strong>mesa de contexto
+          cheia</strong> (a regra caiu da borda). <strong>Antídoto:</strong> regra importante mora em
+          ARQUIVO relido sempre, não na conversa. É o <code>CLAUDE.md</code> / <code>AGENTS.md</code> —
+          você escreve o seu no Dia 7.
+        </div>
+      </div>
+
+      <div class="toggler" style="margin-top:14px">
+        <div class="toggler-header" onclick="toggleSection(this)">
+          <span>👀 Macete de ouro do BugZilla</span><span class="toggler-arrow">▼</span>
+        </div>
+        <div class="toggler-body">
+          <div class="tip" style="margin:0">
+            <span class="tip-icon">🔦</span>
+            <div class="tip-content">
+              Recebeu um diff e bateu a preguiça de revisar? Pergunta-detector: <em>"eu conseguiria
+              reescrever isso na mão, mais devagar?"</em> Se sim, revise rapidinho e aceite. Se
+              NÃO… você está prestes a colocar no SEU projeto um código que você não domina — e aí a
+              revisão não é burocracia, é sobrevivência. Peça explicação ao agente até a resposta
+              virar "sim".
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       LEMA
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section">
+    <div class="card" style="text-align:center;background:linear-gradient(135deg,rgba(167,139,250,0.10),rgba(108,99,255,0.06));border-color:rgba(167,139,250,0.22)">
+      <div style="font-family:'Caveat',cursive;font-size:clamp(1.7rem,5.4vw,2.7rem);color:var(--accent6);font-weight:700;line-height:1.15">
+        VOCÊ É O ENGENHEIRO.<br>O AGENTE É A FERRAMENTA. 🧑‍✈️
+      </div>
+      <p class="text-dim" style="max-width:560px;margin:10px auto 0">
+        E ferramenta boa na mão de quem sabe o que está fazendo… constrói coisa grande.
+        No Dia 3, a estreia: <strong style="color:var(--text)">a sua Loja com cara de produto</strong>.
+      </p>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       QUIZ
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="quiz">
+    <div class="step-header">
+      <div class="step-number sn-yellow">🧠</div>
+      <div>
+        <div class="step-title">Quiz de fixação</div>
+        <div class="step-sub">4 perguntas pra carimbar o Dia 2½</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">1️⃣</span> Um LLM, no fundo, faz o quê?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Procura a resposta num banco de dados de fatos</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Prevê a próxima palavra mais provável, repetidamente</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Executa o código pra ver se está certo</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Copia trechos da internet</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Isso!" data-wrong="Volta na máquina 🔮!"
+             data-explain="previsão atrás de previsão. Por isso ele é ótimo em código (padrão forte) e por isso pode inventar com confiança (plausível ≠ verdadeiro)."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">2️⃣</span> O agente disse "pronto! ✨". Seu próximo passo é…</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Aceitar — ele testou, tá testado</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Pedir "revisa aí pra mim" pro próprio agente e aceitar o que ele disser</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Rodar o ritual ①–⑤ e só aceitar se eu souber explicar</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Mandar mais 3 tarefas — tempo é dinheiro</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Ritual completo. Você já pensa como chefe." data-wrong="'Pronto', pra quem? Quem assina esse código?"
+             data-explain="o 'pronto' do agente significa 'o MEU loop terminou' — não 'está do jeito do SEU projeto'. Pedir revisão ao próprio agente até ajuda, mas não substitui a sua: quem assina o código, sustenta o código."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">3️⃣</span> Você combinou "sem JavaScript" no começo da conversa. Trinta mensagens depois, o agente coloca um &lt;script&gt;. Provavelmente…</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Ele está te desobedecendo de propósito</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">A regra caiu da mesa de contexto — precisa morar num arquivo</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">O modelo ficou mais burro</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">JavaScript é obrigatório em Flask</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Exato — é a mesa cheia." data-wrong="Lembra da máquina 📦!"
+             data-explain="conversa longa empurra o que é antigo pra fora do contexto. Regra importante mora num arquivo que o agente relê sempre (CLAUDE.md / AGENTS.md) — assunto do Dia 7."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">4️⃣</span> No Dia 3, qual é o papel do agente?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Escrever o SQL por você</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Explicar o SQL que VOCÊ escreveu, e gerar o CSS da Loja a partir de uma espec sua</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Nenhum, ele só entra no Dia 6</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Fazer o projeto final inteiro</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Tutor + CSS. Um degrau por dia." data-wrong="Olha a escada de novo!"
+             data-explain="o SQL é seu — a habilidade do dia. O agente explica (tutor) e faz a tarefa visual (CSS), que é fácil de revisar: você VÊ o resultado na tela."></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       RESUMO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="resumo">
+    <div class="step-header">
+      <div class="step-number sn-green">🎒</div>
+      <div>
+        <div class="step-title">O que você leva do Dia 2½</div>
+        <div class="step-sub">O motor, o loop, o pedido e o ritual</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="about-bullets">
+        <div>🔮 <strong>LLM</strong> = completador de próxima palavra treinado na internet. Não "sabe" — <strong>prevê o plausível</strong>. Em código (texto cheio de padrão), isso rende MUITO.</div>
+        <div>📦 <strong>Dois limites:</strong> a <strong>mesa de contexto</strong> (o que sai dela é esquecido — regra importante mora em arquivo!) e a <strong>alucinação</strong> (inventa com confiança: confie, mas confira RODANDO).</div>
+        <div>🦾 <strong>Agente</strong> = LLM + mãos (ler, editar, rodar) + o <strong>loop</strong> (planejar → agir → observar → repetir). Claude Code, Codex, Antigravity: nomes diferentes, mesmo loop.</div>
+        <div>✍️ <strong>Pedido = mini-espec</strong>, com 4 ingredientes: CONTEXTO + TAREFA + RESTRIÇÕES + CRITÉRIO DE ACEITE. Buraco no pedido = decisão delegada ao estagiário.</div>
+        <div>👀 <strong>O ritual de revisão:</strong> ① rodou? ② li o diff? ③ segue nosso padrão? ④ algo que não pedi? ⑤ <strong>explico em voz alta?</strong> Sem o ⑤, não aceita.</div>
+        <div>🪜 <strong>A escada:</strong> tutor (Dia 3) → revisor (Dia 4) → par (Dia 5) → você comanda (Dia 6) → seu sistema (Dias 7–8). Sempre depois da versão na mão.</div>
+      </div>
+
+      <div class="concept" style="margin-top:18px">
+        <div class="concept-title">🎯 A frase pra levar pra casa</div>
+        <p>
+          <strong>"Nunca aceite um código que você não consegue explicar."</strong>
+          Você é o engenheiro; o agente é a ferramenta.
+        </p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">👀</span>
+        <div class="tip-content">
+          <strong>No próximo encontro (Dia 3):</strong> banco de dados de verdade — SQL e SQLite
+          na mão, com o agente de tutor explicando cada linha. E, de sobremesa, a primeira tarefa
+          gerada: <strong>a Loja com visual moderno</strong>, CSS escrito pelo agente a partir da
+          SUA espec, revisado por você. Chegue com a ferramenta instalada. 🎨
+        </div>
+      </div>
+
+      <div class="next-chapter">
+        <h3>🗄️ Dia 03 · Banco de dados de verdade</h3>
+        <p style="color:var(--text-dim)">SQL + SQLite: o cofre dos seus dados — e a estreia do agente</p>
+        <a href="../03-sql-sqlite/" class="btn-next">🗄️ Ir para o Dia 03 →</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="footer">
+  <p>Feito com 🌶️ pelo prof. Kelson Almeida — programa AI</p>
+</footer>
+
+<script src="../../shared/scripts.js" defer></script>
+<script type="module" src="../../shared/motion-fx.js"></script>
+<script>
+/* ══════════ Máquinas didáticas do capítulo 02½ (vanilla, offline-first) ══════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  const onView = (el, fn) => {
+    if (!el) return;
+    if (reduceMotion){ fn(); return; }
+    const io = new IntersectionObserver((es) => {
+      es.forEach(e => { if (e.isIntersecting){ fn(); io.disconnect(); } });
+    }, {threshold: .3});
+    io.observe(el);
+  };
+  const esc = (s) => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+  /* ════ 🔮 Máquina da Próxima Palavra ════ */
+  (() => {
+    const root = document.getElementById('pwm'); if (!root) return;
+    const chips = [...root.querySelectorAll('.pw-chip')];
+    const sent = root.querySelector('#pw-sent');
+    const cands = root.querySelector('#pw-cands');
+    const note = root.querySelector('#pw-note');
+    let timer = [];
+    const RUNS = [
+      { start: 'O gato subiu no',
+        steps: [
+          {cands: [['telhado',62],['muro',23],['sofá',9]], add: ' telhado'},
+          {cands: [['e',44],['.',31],['para',12]], add: ' e'},
+          {cands: [['não',38],['miou',27],['ficou',18]], add: ' não'},
+          {cands: [['desceu',71],['quis',14],['voltou',8]], add: ' desceu'}
+        ],
+        note: 'Palavra por palavra, sempre a mais PROVÁVEL — dado tudo que veio antes. Uma resposta do ChatGPT inteira é esse processo repetido milhares de vezes.'},
+      { start: '@app.route("/produtos")\ndef',
+        steps: [
+          {cands: [['produtos():',88],['listar():',8],['home():',3]], add: ' produtos():'},
+          {cands: [['return',93],['produtos =',5],['print(',1]], add: '\n    return'},
+          {cands: [['render_template(',90],['redirect(',6],['"ok"',2]], add: ' render_template('},
+          {cands: [['"produtos.html"',86],['"index.html"',9],['"lista.html"',3]], add: '"produtos.html"'}
+        ],
+        note: 'Viu as porcentagens? Código é MUITO previsível — você mesmo previu junto, aposto. Por isso a IA programa tão bem: ela leu milhões de rotas Flask iguaizinhas às suas.'},
+      { start: 'Para proteger uma rota no Flask, use o decorator',
+        steps: [
+          {cands: [['@login_required',47],['@app.before_request',31],['@protegida',12]], add: ' @login_required'}
+        ],
+        note: '😱 Olha a confiança: @login_required ganhou fácil… e ele NÃO EXISTE no Flask puro (vem de uma biblioteca à parte, que você não instalou). O agente vai "jurar" que já vem instalado. Isso é a alucinação, assunto da próxima seção.'}
+    ];
+    const clear = () => { timer.forEach(t => clearTimeout(t)); timer = []; };
+    const run = (i) => {
+      clear();
+      chips.forEach((c, ci) => c.classList.toggle('active', ci === i));
+      const R = RUNS[i];
+      sent.innerHTML = esc(R.start);
+      cands.innerHTML = ''; note.textContent = 'prevendo…';
+      let acc = R.start, delay = 300;
+      R.steps.forEach((st) => {
+        timer.push(setTimeout(() => {
+          cands.innerHTML = st.cands.map(([t, p]) =>
+            '<span class="pw-cand"><span class="bar"></span><b>' + esc(t) + '</b><small>' + p + '%</small></span>').join('');
+          requestAnimationFrame(() => requestAnimationFrame(() => {
+            [...cands.querySelectorAll('.pw-cand')].forEach((el, ei) => {
+              el.querySelector('.bar').style.width = st.cands[ei][1] + '%';
+            });
+          }));
+        }, delay));
+        delay += 750;
+        timer.push(setTimeout(() => {
+          const first = cands.querySelector('.pw-cand');
+          if (first) first.classList.add('win');
+        }, delay));
+        delay += 450;
+        timer.push(setTimeout(() => {
+          acc += st.add;
+          sent.innerHTML = esc(acc.slice(0, acc.length - st.add.length)) + '<span class="pw-new">' + esc(st.add) + '</span>';
+        }, delay));
+        delay += 350;
+      });
+      timer.push(setTimeout(() => { note.textContent = R.note; cands.innerHTML = ''; }, delay + 200));
+    };
+    chips.forEach((c) => c.addEventListener('click', () => run(Number(c.dataset.i))));
+    onView(root, () => run(0));
+  })();
+
+  /* ════ 📦 Mesa de Contexto ════ */
+  (() => {
+    const root = document.getElementById('mcm'); if (!root) return;
+    const table = root.querySelector('#mc-table');
+    const fill = root.querySelector('#mc-fill');
+    const pct = root.querySelector('#mc-pct');
+    const lost = root.querySelector('#mc-lost');
+    const note = root.querySelector('#mc-note');
+    const CAP = 12;
+    let blocks = [], ruleLost = false, fileN = 0, talkN = 0;
+    const FILES = ['app.py', 'base.html', 'produtos.html', 'cadastro_produto.html', 'banco.py'];
+    const draw = () => {
+      const total = blocks.reduce((s, b) => s + b.size, 0);
+      const p = Math.min(100, Math.round(total / CAP * 100));
+      fill.style.width = p + '%'; fill.classList.toggle('full', p >= 85);
+      pct.textContent = p + '%';
+      table.innerHTML = blocks.map((b, i) => '<span class="mc-block ' + (b.cls || '') + '" data-i="' + i + '">' + b.txt + '</span>').join('');
+    };
+    const push = (b) => {
+      blocks.push(b);
+      let total = blocks.reduce((s, x) => s + x.size, 0);
+      const fell = [];
+      while (total > CAP && blocks.length > 1){
+        const old = blocks.shift(); fell.push(old);
+        total = blocks.reduce((s, x) => s + x.size, 0);
+      }
+      draw();
+      if (fell.length){
+        lost.innerHTML = 'caiu da mesa: ' + fell.map(f => '<span class="gone">' + f.txt + '</span>').join('');
+        const ruleFell = fell.some(f => f.cls === 'rule');
+        if (ruleFell && !ruleLost){
+          ruleLost = true;
+          note.innerHTML = '🚨 <b>A REGRA caiu da mesa!</b> A partir de agora o agente responde SEM saber que era "sem JavaScript" — e nem avisa. Não é teimosia: pra ele, a regra nunca existiu.';
+        } else {
+          note.textContent = 'a mesa encheu → o mais ANTIGO cai pra abrir espaço. O que caiu, ele esquece.';
+        }
+      } else {
+        note.textContent = 'coube na mesa — tudo isso entra na conta da próxima previsão.';
+      }
+    };
+    const reset = () => {
+      blocks = []; ruleLost = false; fileN = 0; talkN = 0; lost.innerHTML = '';
+      push({txt: '📜 regra: "sem JavaScript, só HTML + Jinja"', size: 1, cls: 'rule'});
+      push({txt: '💬 seu pedido', size: 1});
+      note.textContent = 'a mesa começa com a sua regra e o pedido. Agora vá enchendo… 👇';
+    };
+    root.querySelector('#mc-add-talk').addEventListener('click', () => { talkN++; push({txt: '💬 conversa #' + talkN, size: 2}); });
+    root.querySelector('#mc-add-file').addEventListener('click', () => { const f = FILES[fileN % FILES.length]; fileN++; push({txt: '📄 ' + f, size: 2}); });
+    root.querySelector('#mc-add-big').addEventListener('click', () => { push({txt: '🐘 apostila-inteira.pdf', size: 6, cls: 'big'}); });
+    root.querySelector('#mc-reset').addEventListener('click', reset);
+    onView(root, reset);
+  })();
+
+  /* ════ 🔁 Loop do Agente ════ */
+  (() => {
+    const root = document.getElementById('lpm'); if (!root) return;
+    const pedido = root.querySelector('#lp-pedido');
+    const steps = [...root.querySelectorAll('.lp-step')];
+    const consoleEl = root.querySelector('#lp-console');
+    const result = root.querySelector('#lp-result');
+    const note = root.querySelector('#lp-note');
+    let timers = [];
+    const clear = () => { timers.forEach(t => clearTimeout(t)); timers = []; };
+    const log = (txt) => {
+      consoleEl.innerHTML += txt + '\n';
+      consoleEl.scrollTop = consoleEl.scrollHeight;
+    };
+    const CLARO = {
+      pedido: '📨 "Adicione um link \'Cancelar\' na página de cadastro de produto, voltando pra /produtos. Só HTML, mexa só nesse template."',
+      script: [
+        [0, '<span class="t">🧠 plano:</span> um &lt;a&gt; abaixo do form. Vou editar templates/cadastro.html.'],
+        [2, '<span class="t">→ editar_arquivo(</span>"templates/cadastro.html"<span class="t">)</span>'],
+        [4, '<span class="t">✗ erro:</span> arquivo não existe. Vou descobrir o nome certo no app.py.'],
+        [1, '<span class="t">→ ler_arquivo(</span>"app.py"<span class="t">)</span> … render_template("cadastro_produto.html")'],
+        [5, '<span class="t">→ editar_arquivo(</span>"templates/cadastro_produto.html"<span class="t">)</span> + &lt;p&gt;&lt;a href="/produtos"&gt;Cancelar&lt;/a&gt;&lt;/p&gt;'],
+        [3, '<span class="t">→ rodar(</span>"python -c \'import app\'"<span class="t">)</span> ok, sem erro de sintaxe'],
+        [6, '<span class="t">✓ pronto.</span> 1 arquivo tocado, 1 linha adicionada.']
+      ],
+      result: '✅ resultado: link Cancelar em cadastro_produto.html, uma linha, nada mais tocado.',
+      note: 'Repara no MEIO do loop: ele chutou o nome do arquivo, deu erro… e LEU o app.py pra se corrigir sozinho. É isso que um chat não faz. Mas repara também: quem confere se ficou do jeito combinado é você.'
+    };
+    const VAGO = {
+      pedido: '📨 "deixa o site mais profissional aí"',
+      script: [
+        [0, '<span class="t">🧠 plano:</span> "profissional"… vou modernizar o visual, adicionar validação com JavaScript e usar bibliotecas de formulário!'],
+        [1, '<span class="t">→ ler_arquivo(</span>×6 templates + app.py<span class="t">)</span>'],
+        [3, '<span class="t">→ rodar(</span>"pip install flask-wtf flask-bootstrap"<span class="t">)</span>'],
+        [2, '<span class="t">→ editar_arquivo(</span>×7<span class="t">)</span> + &lt;script&gt; de validação + rotas renomeadas'],
+        [5, '<span class="t">→ ajustes finais…</span>'],
+        [6, '<span class="t">✓ rodou.</span> "Deixei o site profissional! ✨"']
+      ],
+      result: '😱 resultado: 7 arquivos reescritos, 2 bibliotecas que você não conhece, JavaScript que o curso não usa, rota /cadastro virou /products/new. Ele está FELIZ.',
+      note: 'O loop terminou "com sucesso"… fazendo o que ELE decidiu. Pedido vago não trava o agente — entrega o volante pra ele. A cerca é o seu pedido: próxima parte. ✍️'
+    };
+    const play = (mode) => {
+      clear();
+      steps.forEach(s => s.classList.remove('on'));
+      consoleEl.textContent = '';
+      result.textContent = '…'; note.textContent = 'o loop está rodando…';
+      const S = (mode === 'claro') ? CLARO : VAGO;
+      pedido.textContent = S.pedido;
+      const visited = new Set();
+      let d = 300;
+      S.script.forEach(([si, txt]) => {
+        timers.push(setTimeout(() => {
+          visited.add(si);
+          steps.forEach(s => s.classList.toggle('on', visited.has(Number(s.dataset.s))));
+          log(txt);
+        }, d));
+        d += reduceMotion ? 250 : 900;
+      });
+      timers.push(setTimeout(() => { result.textContent = S.result; note.textContent = S.note; }, d + 100));
+    };
+    root.querySelector('#lp-claro').addEventListener('click', () => play('claro'));
+    root.querySelector('#lp-vago').addEventListener('click', () => play('vago'));
+    onView(root, () => play('claro'));
+  })();
+
+  /* ════ ⚖️ Pedido Vago × Espec ════ */
+  (() => {
+    const root = document.getElementById('psm'); if (!root) return;
+    const btns = [...root.querySelectorAll('.ps-toggle button')];
+    const code = root.querySelector('#ps-code');
+    const out = root.querySelector('#ps-out');
+    const note = root.querySelector('#ps-note');
+    const M = {
+      vago: {
+        code: '"bota um rodapé aí no site"',
+        out: '<b style="font-size:0.8rem">o que veio:</b><ul>' +
+          '<li><span class="tag-bad">✗</span> rodapé colado em <b>cada template</b> — não no base.html (adeus, papel timbrado)</li>' +
+          '<li><span class="tag-bad">✗</span> um <b>&lt;script&gt;</b> pra mostrar o ano atual — JavaScript, que o curso não usa</li>' +
+          '<li><span class="tag-bad">✗</span> rodou <b>pip install</b> de uma biblioteca de datas sem avisar</li>' +
+          '<li><span class="tag-bad">✗</span> texto em inglês: "All rights reserved"</li></ul>',
+        note: 'Nada disso é "errado" pra internet — é o padrão MÉDIO do que o modelo leu. Mas não é o padrão do NOSSO projeto. Buraco no pedido = decisão delegada.'
+      },
+      spec: {
+        code: '[CONTEXTO] Projeto Flask; templates em\ntemplates/; todas as páginas herdam\ndo base.html ({% block conteudo %}).\n\n[TAREFA] Adicione um rodapé no\nbase.html com o texto\n"Minha Loja · feita no curso\nSistemas Web com Python".\n\n[RESTRIÇÕES] Só HTML e Jinja.\nNÃO use JavaScript. NÃO instale\nnada. Mexa SÓ no base.html.\n\n[ACEITE] Rodapé aparece em todas\nas páginas; app roda sem erro.',
+        out: '<b style="font-size:0.8rem">o que veio:</b><ul>' +
+          '<li><span class="tag-ok">✓</span> <b>&lt;footer&gt;</b> no base.html, abaixo do {% block conteudo %}</li>' +
+          '<li><span class="tag-ok">✓</span> nenhum &lt;script&gt;, nenhum pip install</li>' +
+          '<li><span class="tag-ok">✓</span> texto exatamente o pedido, em português</li>' +
+          '<li><span class="tag-ok">✓</span> diff pequeno: 1 arquivo, 3 linhas — fácil de revisar</li></ul>',
+        note: 'MESMA ferramenta, MESMO modelo — o que mudou foi o pedido. E olha o bônus: diff pequeno e previsível é diff fácil de revisar. Espec boa facilita a SUA parte do trabalho também.'
+      }
+    };
+    const set = (m) => {
+      btns.forEach(b => b.classList.toggle('active', b.dataset.m === m));
+      code.textContent = M[m].code;
+      out.innerHTML = M[m].out;
+      note.textContent = M[m].note;
+    };
+    btns.forEach(b => b.addEventListener('click', () => set(b.dataset.m)));
+    onView(root, () => set('vago'));
+  })();
+
+  /* ════ 🕵️ Caça ao Intruso ════ */
+  (() => {
+    const root = document.getElementById('cim'); if (!root) return;
+    const diff = root.querySelector('#ci-diff');
+    const score = root.querySelector('#ci-score');
+    const note = root.querySelector('#ci-note');
+    const LINES = [
+      {t: 'file', txt: '📄 requirements.txt'},
+      {t: 'ctx',  txt: '    Flask==3.0.3'},
+      {t: 'add',  txt: '+   Flask-Moment==1.0.5', intr: true,
+        reason: '🚨 Intruso 1: dependência NOVA que ninguém pediu — o pedido dizia "não instale nada". E no Dia 8 essa biblioteca precisaria existir no servidor também. Todo pip install se lê SEMPRE.'},
+      {t: 'file', txt: '📄 templates/base.html'},
+      {t: 'ctx',  txt: '    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">'},
+      {t: 'add',  txt: '+   <script src="https://cdn.jsdelivr.net/npm/moment@2/moment.min.js"><\/script>', intr: true,
+        reason: '🚨 Intruso 2: JavaScript! O pedido dizia "sem JavaScript" — e o curso inteiro é HTML + Jinja + Python. Ele trouxe o "jeito da internet".'},
+      {t: 'ctx',  txt: '  </head>'},
+      {t: 'ctx',  txt: '  <body>'},
+      {t: 'del',  txt: '-   {% block conteudo %}{% endblock %}', intr: true,
+        reason: '🚨 Intruso 3 (o pior): ele RENOMEOU o bloco pra "content". Nenhum erro aparece… mas todas as suas páginas ficam VAZIAS, porque elas preenchem {% block conteudo %}. É o bug que só a leitura pega.'},
+      {t: 'add',  txt: '+   {% block content %}{% endblock %}'},
+      {t: 'add',  txt: '+   <footer>'},
+      {t: 'add',  txt: '+     <p>Minha Loja · feita no curso Sistemas Web com Python</p>'},
+      {t: 'add',  txt: '+   </footer>'},
+      {t: 'ctx',  txt: '  </body>'}
+    ];
+    let found = 0;
+    diff.innerHTML = LINES.map((l, i) => {
+      if (l.t === 'file') return '<span class="ci-line file">' + esc(l.txt) + '</span>';
+      return '<button type="button" class="ci-line ' + l.t + '" data-i="' + i + '">' + esc(l.txt) + '</button>';
+    }).join('');
+    diff.addEventListener('click', (ev) => {
+      const el = ev.target.closest('button.ci-line'); if (!el) return;
+      const L = LINES[Number(el.dataset.i)];
+      if (L.intr){
+        if (!el.classList.contains('found')){
+          el.classList.add('found'); found++;
+          score.textContent = String(found);
+          note.innerHTML = L.reason + (found === 3 ? '<br><b style="color:var(--accent7)">🏆 3/3! Diff reprovado com louvor — agora é pedir: "desfaça e refaça seguindo as restrições do pedido".</b>' : '');
+        } else {
+          note.innerHTML = L.reason;
+        }
+      } else {
+        el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake');
+        note.textContent = 'essa linha está ok — o rodapé em si foi bem feito. Continua caçando: o problema é o que veio JUNTO.';
+      }
+    });
+    onView(root, () => { note.textContent = 'clique nas linhas que violam o pedido (dica: são 3 — uma delas quebra o site inteiro sem dar erro).'; });
+  })();
+});
+</script>
+</body>
+</html>

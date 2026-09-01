@@ -193,6 +193,27 @@
 .swp-prg-dialog .dlg-btns .cancel{background:#eceef2;color:#26282e}
 .swp-prg-dialog .dlg-btns .confirm{background:#3b3bd1;color:#fff}
 .swp-prg-stagewrap{position:relative}
+/* ---------- agente (escada do curso) ---------- */
+.lang-badge.prompt{background:linear-gradient(135deg,var(--accent6),#8b91ff);color:#0a0a12}
+.swp-accept{margin:12px 0}
+.swp-accept label{
+  display:flex;gap:10px;align-items:flex-start;padding:9px 12px;margin:6px 0;
+  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);
+  border-radius:10px;font-size:0.88rem;color:var(--text-dim);cursor:pointer;line-height:1.5;
+}
+.swp-accept input{accent-color:var(--accent7);width:17px;height:17px;flex-shrink:0;margin-top:2px}
+.swp-accept label:has(input:checked){border-color:rgba(6,214,160,0.4);color:var(--text)}
+.swp-spec-text{
+  font-family:'JetBrains Mono',monospace;font-size:0.76rem;line-height:1.75;
+  font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+  color:#c9d1d9;padding:14px 16px;white-space:pre-wrap;background:var(--code-bg);
+  border:1px solid rgba(167,139,250,0.3);border-radius:12px;margin:10px 0;
+}
+.swp-spec-text .sp-k{color:var(--accent6);font-weight:700}
+.swp-triage{width:100%;border-collapse:collapse;margin:12px 0;font-size:0.85rem;background:var(--code-bg);border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;display:table}
+.swp-triage th{background:var(--surface2);color:var(--text-dim);font-size:0.68rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:10px 14px;text-align:left}
+.swp-triage td{padding:10px 14px;color:var(--text-dim);border-top:1px solid rgba(255,255,255,0.05);line-height:1.5;vertical-align:top}
+.swp-triage td:first-child{color:var(--text);font-weight:700;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -231,6 +252,10 @@
     <a class="sidebar-link" onclick="goTo('validacao')"><span class="dot" style="background:var(--accent2)"></span>Validação básica</a>
   </div>
   <div class="sidebar-group">
+    <div class="sidebar-group-title">🤖 Degrau 2 do agente</div>
+    <a class="sidebar-link" onclick="goTo('agente-revisor')"><span class="dot" style="background:var(--accent6)"></span>O agente revisa o SEU código</a>
+  </div>
+  <div class="sidebar-group">
     <div class="sidebar-group-title">🏁 Fechamento</div>
     <a class="sidebar-link" onclick="goTo('bugzilla')"><span class="dot" style="background:var(--bug)"></span>BugZilla do dia 🐛</a>
     <a class="sidebar-link" onclick="goTo('quiz')"><span class="dot" style="background:var(--accent5)"></span>Quiz de fixação</a>
@@ -258,6 +283,7 @@
     <span class="stack-chip">📋 SELECT → tabela</span>
     <span class="stack-chip">➕ form → INSERT</span>
     <span class="stack-chip">↩️ POST-redirect-GET</span>
+    <span class="stack-chip" style="border-color:rgba(167,139,250,0.5);color:#c9b8ff">🤖 degrau 2: revisor</span>
   </div>
 </section>
 
@@ -665,9 +691,12 @@ app = <span class="tp">Flask</span>(__name__)
 
     <div class="card">
       <p style="color:var(--text-dim)">
-        O cadastro ganha <strong style="color:var(--text)">página própria</strong>
-        (padrão dos sistemas de verdade): <code>/produtos/novo</code> mostra o form no GET
-        e processa no POST. Template primeiro:
+        No Dia 2 o cadastro já tinha página própria — mas eram
+        <strong style="color:var(--text)">duas rotas</strong>: <code>/cadastro_produto</code> mostrava o
+        form e <code>/cadastro</code> recebia. Hoje elas viram <strong style="color:var(--text)">uma
+        só</strong>: <code>/produtos/novo</code> mostra o form no GET <em>e</em> processa no POST.
+        É o padrão dos sistemas de verdade (uma URL por tela), e quem separa os dois momentos é o
+        <code>request.method</code>. Template primeiro:
       </p>
 
       <div class="code-block with-lines">
@@ -716,10 +745,12 @@ app = <span class="tp">Flask</span>(__name__)
       <div class="concept">
         <div class="concept-title">💡 Compare com o Dia 2</div>
         <p>
-          A ÚNICA mudança de verdade: <code>produtos.append({...})</code> virou
-          <code>banco.cadastrar_produto(nome, preco, qtd)</code> — e o redirect agora
-          aponta pro <code>/produtos</code>. O resto do fluxo você já sabia.
-          É assim que conhecimento empilha. 🧱
+          Duas mudanças de verdade. <strong>1)</strong> As duas rotas viraram uma:
+          <code>methods=["GET", "POST"]</code> deixa a rota aceitar os dois métodos, e o
+          <code>if request.method == "POST":</code> decide — chegou form? processa; foi só um
+          clique no link? mostra o form. <strong>2)</strong> <code>lista_de_produtos.append({...})</code>
+          virou <code>banco.cadastrar_produto(nome, preco, qtd)</code>. O <code>redirect("/produtos")</code>
+          você já fazia. É assim que conhecimento empilha. 🧱
         </p>
       </div>
 
@@ -944,8 +975,127 @@ app = <span class="tp">Flask</span>(__name__)
   </section>
 
   <div class="chapter-divider">
-    <div class="chapter-icon">🏁</div>
+    <div class="chapter-icon">🤖</div>
     <div class="chapter-number">Parte 3</div>
+    <h2 style="background:linear-gradient(135deg,var(--accent6),var(--accent3));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Degrau 2: o agente revisa você</h2>
+    <p class="chapter-subtitle">Ele aponta; você julga. Nada muda sem a sua decisão.</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       AGENTE COMO REVISOR
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="agente-revisor">
+    <div class="step-header">
+      <div class="step-number sn-purple">🤖</div>
+      <div>
+        <div class="step-title">O agente como revisor: "aponte problemas, não mude nada"</div>
+        <div class="step-sub">Ele lê o SEU app.py e banco.py como um dev sênior faria — e você decide o que vale</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        No Dia 3 o agente explicou o seu código (tutor). Hoje ele sobe um degrau:
+        <strong style="color:var(--text)">critica</strong>. Nas empresas isso se chama <em>code
+        review</em>, e é o que um colega experiente faria com o seu pull request. A diferença: você
+        acabou de construir listar e cadastrar com as próprias mãos, então tem o gabarito mental pra
+        dizer, apontamento por apontamento, <strong style="color:var(--text)">"concordo"</strong> ou
+        <strong style="color:var(--text)">"isso é o jeito da internet, não o nosso"</strong>.
+      </p>
+
+      <div class="exercise guided">
+        <div class="exercise-header">
+          <span class="exercise-icon">👨‍🏫</span>
+          <div>
+            <div class="exercise-title">Mão na massa: a revisão</div>
+            <div class="exercise-sub">Projeto loja → Terminal → seu agente</div>
+          </div>
+        </div>
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">1.</strong> Com listar e cadastrar funcionando (e o
+          apagão vencido 🏆), cole:
+        </p>
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">pedido de revisão (não muda nada)</span>
+            <span class="lang-badge prompt">prompt</span>
+          </div>
+<pre>Leia app.py, banco.py e os templates. Faça uma revisão de código como um dev sênior
+faria com um iniciante: liste problemas, riscos e melhorias em ordem de importância,
+explicando cada um em uma frase simples. Contexto: é um curso; o padrão aqui é Flask
+com Jinja, sqlite3 direto (sem ORM), sem JavaScript e sem bibliotecas extras.
+NÃO mude nenhum arquivo.</pre>
+        </div>
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">2.</strong> Ele vai devolver uma lista. Agora o seu
+          trabalho: <strong style="color:var(--text)">triagem</strong>. Cada apontamento cai numa de
+          três gavetas:
+        </p>
+
+        <table class="swp-triage">
+          <thead><tr><th>Gaveta</th><th>Exemplo do que ele costuma apontar</th><th>O que você faz</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>✅ Concordo, faço agora</td>
+              <td>"preço negativo passa" — se você ainda não fez a validação da seção anterior, ele vai achar</td>
+              <td>Você mesmo corrige (é o assunto de hoje). Depois peça pra ele conferir.</td>
+            </tr>
+            <tr>
+              <td>🗓️ Concordo, mas é de outro dia</td>
+              <td>"debug=True não pode ir pra produção" · "não tem tratamento de erro no banco" · "não tem login"</td>
+              <td>Anota. Deploy é Dia 8, login é Dia 6. Responda: "verdade, fica pra depois".</td>
+            </tr>
+            <tr>
+              <td>🚫 Discordo, é o jeito do curso</td>
+              <td>"use SQLAlchemy" · "use with sqlite3.connect(...)" · "valide com JavaScript no form" · "separe em blueprints"</td>
+              <td>Recusa com motivo: "aqui o SQL é explícito de propósito / sem JS / sem libs". Você é o dono do padrão.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">3.</strong> Faça uma pergunta de tutor sobre o assunto
+          nobre de hoje e compare com a máquina do F5 duplicador:
+        </p>
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">pergunta de tutor</span>
+            <span class="lang-badge prompt">prompt</span>
+          </div>
+<pre>No app.py, por que a rota de cadastro faz redirect("/produtos") depois do INSERT,
+em vez de render_template? O que aconteceria se eu apertasse F5 sem o redirect?</pre>
+        </div>
+        <p style="color:var(--text-dim)">
+          Ele explicou o POST-redirect-GET igual ao material? Melhor? Se falou algo diferente,
+          quem está certo? Teste: tire o redirect, aperte F5, conte os produtos. 😈
+        </p>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 Por que a triagem é a habilidade, e não a lista</div>
+        <p>
+          Qualquer um consegue pedir uma revisão. O que separa o profissional é saber
+          <strong>qual apontamento aceitar</strong>: o agente não conhece o combinado do curso, os
+          prazos, nem o que é assunto de amanhã. Ele lista o que a internet costuma listar. A gaveta
+          certa é decisão sua — e você só consegue decidir porque construiu na mão.
+        </p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🪜</span>
+        <div class="tip-content">
+          <strong>Próximo degrau (Dia 5):</strong> ele deixa de só falar. Você faz o editar na mão,
+          e o excluir sai de uma espec sua, gerada por ele, aprovada por você com checklist.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="chapter-divider">
+    <div class="chapter-icon">🏁</div>
+    <div class="chapter-number">Parte 4</div>
     <h2 style="background:linear-gradient(135deg,var(--accent5),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Fechamento do dia</h2>
     <p class="chapter-subtitle">Bugs, quiz e a arena que deixa a Loja completa</p>
   </div>
@@ -1251,6 +1401,7 @@ app = <span class="tp">Flask</span>(__name__)
         <div>↩️ <strong>POST-redirect-GET:</strong> recarregou, não duplica — o F5 duplicador nunca mais</div>
         <div>🛂 <strong>Validação:</strong> erro → re-renderiza com mensagem; sucesso → grava e redirect</div>
         <div>🏆 <strong>E o principal:</strong> reiniciou o servidor… OS DADOS FICARAM. O apagão morreu.</div>
+        <div>🤖 <strong>Agente, degrau 2:</strong> revisão do SEU código + triagem em 3 gavetas (faço agora / outro dia / jeito do curso)</div>
       </div>
 
       <div class="concept" style="margin-top:18px">

@@ -225,6 +225,30 @@
   border-radius:50px;padding:8px 16px;font-size:0.82rem;font-weight:700;color:var(--text-dim);
 }
 .swp-pocket .pk .e{font-size:1.1rem}
+/* ---------- estreia do agente (cap 02½ → cap 03) ---------- */
+.lang-badge.prompt{background:linear-gradient(135deg,var(--accent6),#8b91ff);color:#0a0a12}
+.swp-accept{margin:12px 0}
+.swp-accept label{
+  display:flex;gap:10px;align-items:flex-start;padding:9px 12px;margin:6px 0;
+  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);
+  border-radius:10px;font-size:0.88rem;color:var(--text-dim);cursor:pointer;line-height:1.5;
+}
+.swp-accept input{accent-color:var(--accent7);width:17px;height:17px;flex-shrink:0;margin-top:2px}
+.swp-accept label:has(input:checked){border-color:rgba(6,214,160,0.4);color:var(--text)}
+.swp-spec-text{
+  font-family:'JetBrains Mono',monospace;font-size:0.76rem;line-height:1.75;
+  font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+  color:#c9d1d9;padding:14px 16px;white-space:pre-wrap;background:var(--code-bg);
+  border:1px solid rgba(167,139,250,0.3);border-radius:12px;margin:10px 0;
+}
+.swp-spec-text .sp-k{color:var(--accent6);font-weight:700}
+.swp-spec-text .sp-you{color:var(--accent5);font-weight:700}
+.swp-ailook{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+@media(max-width:700px){.swp-ailook{grid-template-columns:1fr}}
+.swp-ailook > div{border-radius:14px;padding:14px 16px;border:1px solid rgba(255,255,255,0.08);background:var(--surface);font-size:0.86rem;color:var(--text-dim);line-height:1.6}
+.swp-ailook > div strong{display:block;margin-bottom:6px;color:var(--text)}
+.swp-ailook .bad{border-color:rgba(255,71,87,0.3)}
+.swp-ailook .good{border-color:rgba(6,214,160,0.3)}
 </style>
 </head>
 <body>
@@ -269,6 +293,11 @@
     <a class="sidebar-link" onclick="goTo('bora-sql')"><span class="dot" style="background:var(--accent7)"></span>Bora: seus scripts</a>
   </div>
   <div class="sidebar-group">
+    <div class="sidebar-group-title">🤖 Estreia do agente</div>
+    <a class="sidebar-link" onclick="goTo('agente-tutor')"><span class="dot" style="background:var(--accent6)"></span>Tutor: explique o MEU SQL</a>
+    <a class="sidebar-link" onclick="goTo('agente-css')"><span class="dot" style="background:var(--accent6)"></span>⭐ A Loja fica moderna 🎨</a>
+  </div>
+  <div class="sidebar-group">
     <div class="sidebar-group-title">🏁 Fechamento</div>
     <a class="sidebar-link" onclick="goTo('bugzilla')"><span class="dot" style="background:var(--bug)"></span>BugZilla do dia 🐛</a>
     <a class="sidebar-link" onclick="goTo('quiz')"><span class="dot" style="background:var(--accent5)"></span>Quiz de fixação</a>
@@ -290,12 +319,15 @@
     <strong style="color:var(--accent7)">arquivo de aço com fichário indexado</strong> —
     o mesmo tipo de banco que roda em app de banco e e-commerce.
     E aprende a língua oficial dele: <strong style="color:var(--accent5)">SQL</strong>. 🗝️
+    De sobremesa, a estreia do seu <strong style="color:var(--accent6)">agente de IA</strong>:
+    tutor do seu SQL e autor do CSS que deixa a Loja com cara de produto.
   </p>
   <div class="hero-stack">
     <span class="stack-chip python">🐍 Python</span>
     <span class="stack-chip">🗄️ SQLite</span>
     <span class="stack-chip">⚡ SQL</span>
     <span class="stack-chip">🛡️ placeholders ?</span>
+    <span class="stack-chip" style="border-color:rgba(167,139,250,0.5);color:#c9b8ff">🤖 estreia do agente</span>
   </div>
 </section>
 
@@ -320,6 +352,16 @@
         hoje você aprende a <strong style="color:var(--text)">guardar dados num banco de
         verdade</strong> (sem Flask, foco total!), e no Dia 4 pluga esse banco na Loja.
       </p>
+
+      <div class="warning">
+        <span class="tip-icon">🤖</span>
+        <div class="tip-content">
+          <strong>Chegou com o agente instalado?</strong> (Claude Code, Codex ou Antigravity — a
+          lição de casa do <a href="../02b-ia-agentes/" style="color:var(--accent6)">Dia 02½</a>.)
+          Hoje ele estreia no fim da aula, primeiro como tutor do seu SQL, depois escrevendo o CSS da
+          Loja. Se não instalou, faça dupla com alguém que instalou — dirigir a dois é ótimo treino.
+        </div>
+      </div>
 
       <div class="quiz">
         <div class="quiz-q"><span class="q-emoji">1️⃣</span> Por que os produtos sumiram quando o servidor reiniciou?</div>
@@ -1080,8 +1122,250 @@ conexao.<span class="fn">commit</span>()   <span class="cm"># ← escreveu? CARI
   </section>
 
   <div class="chapter-divider">
-    <div class="chapter-icon">🏁</div>
+    <div class="chapter-icon">🤖</div>
     <div class="chapter-number">Parte 5</div>
+    <h2 style="background:linear-gradient(135deg,var(--accent6),var(--accent3));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">A estreia do agente</h2>
+    <p class="chapter-subtitle">Primeiro ele explica o SEU código. Depois, a primeira tarefa gerada — e revisada.</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       AGENTE COMO TUTOR
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="agente-tutor">
+    <div class="step-header">
+      <div class="step-number sn-purple">🤖</div>
+      <div>
+        <div class="step-title">O agente como tutor: "explique o MEU código"</div>
+        <div class="step-sub">Degrau 1 da escada: ele só fala — quem escreveu o SQL foi você</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Você acabou de digitar três scripts na mão. É a hora perfeita pra estrear o agente do jeito
+        mais seguro que existe: <strong style="color:var(--text)">perguntando</strong>. Perguntar não
+        mexe em nada — e, como você acabou de aprender o assunto, você consegue
+        <strong style="color:var(--text)">julgar a resposta</strong>. É o treino do olho crítico antes
+        de deixar ele escrever qualquer coisa.
+      </p>
+
+      <div class="exercise guided">
+        <div class="exercise-header">
+          <span class="exercise-icon">👨‍🏫</span>
+          <div>
+            <div class="exercise-title">Passo a passo com o professor</div>
+            <div class="exercise-sub">Terminal do PyCharm, na pasta treino-sql</div>
+          </div>
+        </div>
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">1.</strong> Com o projeto <code>treino-sql</code> aberto,
+          Terminal (<code>Alt+F12</code> / <code>⌥F12</code>) → rode o seu agente
+          (<code>claude</code>, <code>codex</code> ou <code>agy</code>).<br>
+          <strong style="color:var(--text)">2.</strong> Cole este pedido:
+        </p>
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">pedido de tutor (não muda nada)</span>
+            <span class="lang-badge prompt">prompt</span>
+          </div>
+<pre>Leia criar_banco.py, inserir.py e consultar.py. Explique, linha por linha, o que cada
+um faz, pra um iniciante. Depois responda: (1) o que acontece se eu esquecer o commit?
+(2) por que o ? é mais seguro que montar o SQL com f-string? NÃO mude nenhum arquivo.</pre>
+        </div>
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">3.</strong> Leia a resposta <strong>conferindo com o que
+          você aprendeu hoje</strong>: o commit é o carimbo (Rascunho e Carimbo), o <code>?</code>
+          é o que barra a injection. Ele acertou? Explicou melhor ou pior que o material?<br>
+          <strong style="color:var(--text)">4.</strong> Pergunte mais uma, sua: qualquer linha que
+          ainda esteja nebulosa. Tutor que responde na hora, 24h por dia, sobre o SEU código —
+          esse é o primeiro superpoder.
+        </p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🧐</span>
+        <div class="tip-content">
+          <strong>Ele vai sugerir "melhorias" sem você pedir</strong> — tipo trocar o ritual por
+          <code>with sqlite3.connect(...) as conexao:</code>. É válido, é o "jeito da internet"…
+          e não é o jeito do curso ainda. Responda: <em>"obrigado, hoje não mude nada"</em>.
+          Você decide o que entra. Sempre.
+        </div>
+      </div>
+
+      <div class="warning">
+        <span class="tip-icon">🎲</span>
+        <div class="tip-content">
+          <strong>E se ele explicar errado?</strong> Acontece (alucinação, Dia 2½). Você tem duas
+          armas: o material, que você acabou de ler, e o <code>▶</code>: rode o script sem o commit
+          e veja com os próprios olhos. Regra de ouro: <strong>confie, mas confira</strong>.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ A LOJA FICA MODERNA (CSS VIA AGENTE)
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="agente-css">
+    <div class="step-header">
+      <div class="step-number sn-purple">⭐</div>
+      <div>
+        <div class="step-title">Sobremesa: a Loja fica moderna 🎨</div>
+        <div class="step-sub">A primeira tarefa gerada — uma espec SUA, um CSS dele, e você revisando na tela</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Por que a primeira tarefa gerada é <strong style="color:var(--text)">visual</strong>? Porque
+        é a mais fácil de revisar: o resultado está na tela, você VÊ se ficou bom. Sem risco pros
+        dados, sem lógica escondida. E porque a Loja merece: o Pico.css foi ótimo pra começar, mas
+        todo site com Pico tem a mesma cara. Hoje ela ganha a <strong style="color:var(--text)">sua</strong>.
+      </p>
+
+      <div class="concept">
+        <div class="concept-title">🧱 Conceito novo de Flask (pequeno, mas você precisa dele pra revisar): a pasta <code>static/</code></div>
+        <p>
+          O Flask serve automaticamente qualquer arquivo que esteja na pasta <code>static/</code>
+          do projeto, no endereço <code>/static/...</code>. Então um arquivo
+          <code>loja/static/style.css</code> fica disponível em <code>localhost:5000/static/style.css</code>,
+          e o <code>base.html</code> puxa ele com
+          <code>&lt;link rel="stylesheet" href="/static/style.css"&gt;</code> — no lugar da linha do Pico.
+          É só isso. Mas se o agente inventar outro caminho, agora você sabe que está errado.
+        </p>
+      </div>
+
+      <p style="color:var(--text-dim)">
+        E o tal do "sem cara de IA"? Todo mundo já reconhece o site que a IA fez sozinha. A espec
+        precisa dizer o que <strong style="color:var(--text)">não</strong> queremos:
+      </p>
+
+      <div class="swp-ailook">
+        <div class="bad">
+          <strong>🤖 A "cara de IA" (evite na espec)</strong>
+          gradiente roxo-azul em tudo · card com sombra gigante em cada bloco · borda super
+          arredondada · emoji no título de cada seção · fundo escuro com brilho neon ·
+          "Bem-vindo à nossa plataforma inovadora"
+        </div>
+        <div class="good">
+          <strong>✅ O que pedir no lugar</strong>
+          uma paleta SUA (2 cores + 1 destaque) · uma fonte só · espaçamento generoso ·
+          tabela e formulário limpos e legíveis · menu simples e fixo · funciona no celular ·
+          sóbrio: parece um sistema de verdade, não um cartaz
+        </div>
+      </div>
+
+      <div class="exercise guided">
+        <div class="exercise-header">
+          <span class="exercise-icon">👨‍🏫</span>
+          <div>
+            <div class="exercise-title">Mão na massa com o agente</div>
+            <div class="exercise-sub">Espec → gerar → LER o diff → testar → ajustar</div>
+          </div>
+        </div>
+
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">1.</strong> Abra o projeto <code>loja</code> (não o
+          treino-sql!) no PyCharm → Terminal → seu agente.<br>
+          <strong style="color:var(--text)">2.</strong> Preencha o que está em
+          <strong style="color:var(--accent5)">amarelo</strong> com as SUAS escolhas e cole a espec
+          inteira (são os 4 ingredientes do Dia 2½):
+        </p>
+
+<div class="swp-spec-text"><span class="sp-k">[CONTEXTO]</span> Projeto Flask em Python. Templates em templates/, todos herdam
+de base.html ({% block conteudo %}). O visual atual vem do Pico.css, linkado
+no &lt;head&gt; do base.html. Páginas: / (home), /produtos (tabela),
+/cadastro_produto (formulário), /sobre e /contato.
+
+<span class="sp-k">[TAREFA]</span> Crie static/style.css com um visual moderno e próprio para a loja,
+e troque a linha do Pico no base.html por &lt;link rel="stylesheet"
+href="/static/style.css"&gt;. Estilize: menu de navegação, títulos, tabela de
+produtos, formulário (inputs e botão) e links.
+
+<span class="sp-k">[RESTRIÇÕES]</span>
+- Só CSS puro. NÃO use JavaScript. NÃO instale nada. NÃO use framework de CSS.
+- NÃO mude a estrutura HTML dos templates nem os nomes dos blocos Jinja.
+- Mexa SÓ em static/style.css (novo) e na linha do &lt;link&gt; do base.html.
+- Uma fonte do Google Fonts, no máximo: <span class="sp-you">[ex.: Inter]</span>.
+- Paleta: <span class="sp-you">[ex.: fundo branco-gelo, texto grafite, destaque verde-escuro]</span>.
+- Sem "cara de IA": nada de gradiente roxo, nada de sombra gigante em tudo,
+  nada de borda muito arredondada, nada de emoji. Sóbrio, legível, espaçado.
+- Responsivo: tabela e formulário precisam funcionar no celular.
+
+<span class="sp-k">[ACEITE]</span> As 5 páginas abrem sem erro com o visual novo; o formulário continua
+cadastrando; nenhum arquivo além dos dois foi tocado.</div>
+
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">3.</strong> Ele vai pedir permissão pra criar o
+          <code>static/style.css</code> e editar o <code>base.html</code>.
+          <strong>Leia o diff antes de cada "sim"</strong>: são só esses dois arquivos? A linha do
+          Pico saiu e a do <code>/static/style.css</code> entrou? Nada de <code>&lt;script&gt;</code>?<br>
+          <strong style="color:var(--text)">4.</strong> ▶ no <code>app.py</code>, e passeie pelas 5
+          páginas. Cadastre um produto. Diminua a janela do navegador até ficar do tamanho de um
+          celular.<br>
+          <strong style="color:var(--text)">5.</strong> Marque o checklist de aceitação — a espec
+          virou teste:
+        </p>
+
+        <div class="swp-accept">
+          <label><input type="checkbox"> Só <code>static/style.css</code> (novo) e UMA linha do <code>base.html</code> mudaram?</label>
+          <label><input type="checkbox"> Nenhum <code>&lt;script&gt;</code>, nenhum <code>pip install</code>, nenhuma biblioteca de CSS?</label>
+          <label><input type="checkbox"> As 5 páginas abrem sem erro e com o visual novo (o menu aparece em todas — o base.html continua mandando)?</label>
+          <label><input type="checkbox"> O formulário continua cadastrando e a tabela continua listando?</label>
+          <label><input type="checkbox"> No tamanho de celular, a tabela e o form ainda são usáveis?</label>
+          <label><input type="checkbox"> Ficou com a SUA cara — paleta e fonte que você escolheu, sem "cara de IA"?</label>
+        </div>
+
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">6. Ajustar</strong> — algum item falhou ou você não
+          gostou? Peça mudanças <strong>pequenas e específicas</strong>: <em>"o botão Cadastrar está
+          pequeno: aumente o padding e deixe a fonte 16px"</em>, <em>"a tabela está apertada no
+          celular: deixe as células empilharem"</em>. Um pedido por vez, olhando o diff a cada um.<br>
+          <strong style="color:var(--text)">7. Tutor de novo</strong> — abra o
+          <code>style.css</code>, escolha três regras que você não entende e peça:
+          <em>"explique estas três regras do style.css e por que você as usou"</em>. Você viu CSS no
+          Dia 1; agora tem um arquivo inteiro pra aprender com ele.
+        </p>
+      </div>
+
+      <div class="warning">
+        <span class="tip-icon">🚫</span>
+        <div class="tip-content">
+          <strong>Ele mexeu em outro template? Renomeou um bloco? Colocou JavaScript?</strong>
+          Não aceite "porque ficou bonito". Responda: <em>"desfaça e refaça mexendo SÓ nos dois
+          arquivos da espec"</em>. É o item ④ do ritual (algo que eu NÃO pedi) na prática — e a
+          Caça ao Intruso do Dia 2½ era exatamente sobre isso.
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🎨</span>
+        <div class="tip-content">
+          <strong>Ficou feio?</strong> A culpa é da espec, não da ferramenta: paleta e fonte foram
+          escolhas suas, e "moderno" é vago. Refine as restrições ("mais contraste", "menu com fundo
+          escuro", "linhas da tabela zebradas") e peça de novo. Especificar também se aprende
+          iterando.
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 O que você acabou de fazer, em termos de mercado</div>
+        <p>
+          Você escreveu uma especificação com contexto, tarefa, restrições e critério de aceite;
+          revisou um diff; testou contra o critério; pediu ajustes; e usou o gerador como tutor.
+          Isso é <strong>o fluxo inteiro</strong> — o mesmo que vai construir o login no Dia 6 e o
+          seu projeto no Dia 7. Hoje foi CSS de propósito: assunto de baixo risco, ritual completo.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="chapter-divider">
+    <div class="chapter-icon">🏁</div>
+    <div class="chapter-number">Parte 6</div>
     <h2 style="background:linear-gradient(135deg,var(--accent5),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Fechamento do dia</h2>
     <p class="chapter-subtitle">Bugs silenciosos, quiz e treino pesado</p>
   </div>
@@ -1298,6 +1582,77 @@ conexao.<span class="fn">commit</span>()   <span class="cm"># ← escreveu? CARI
 
       <div class="exercise solo">
         <div class="exercise-header">
+          <span class="exercise-icon">🤖</span>
+          <div>
+            <div class="exercise-title">Missão bônus — Estoque de mentira, gerado e revisado</div>
+            <div class="exercise-sub">O agente escreve dados de teste; você confere o SQL dele</div>
+          </div>
+        </div>
+        <div class="drill-tags">
+          <span class="drill-level lv1"><span class="stars">★</span> fácil</span>
+          <span class="drill-tag">agente</span>
+          <span class="drill-tag">INSERT</span>
+          <span class="drill-tag">?</span>
+        </div>
+        <p style="color:var(--text-dim)">
+          Dados de teste são a tarefa ideal pra delegar: chatos de digitar, fáceis de conferir.
+          Peça ao agente, na pasta <code>treino-sql</code>:
+        </p>
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">pedido</span>
+            <span class="lang-badge prompt">prompt</span>
+          </div>
+<pre>Crie popular.py que insere 10 produtos de teste realistas (nome, preco, quantidade)
+na tabela produtos do loja.db, usando sqlite3 com placeholders ? e commit no final.
+Siga o mesmo estilo do inserir.py. NÃO mude os outros arquivos.</pre>
+        </div>
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">Revise antes de rodar</strong> (é o ritual): usa
+          <code>?</code> e não f-string? Tem <code>commit()</code>? Fecha a conexão? Os nomes fazem
+          sentido pra uma loja? Rodou → <code>consultar.py</code> mostra os 10 novos com ids
+          seguindo a sequência?
+        </p>
+        <div class="toggler">
+          <div class="toggler-header" onclick="toggleSection(this)">
+            <span>👀 Como deve ficar (seu gabarito mental pra revisar)</span>
+            <span class="toggler-arrow">▼</span>
+          </div>
+          <div class="toggler-body">
+            <div class="code-block">
+              <div class="code-header">
+                <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+                <span class="filename">treino-sql/popular.py (uma versão correta)</span>
+                <span class="lang-badge python">Python</span>
+              </div>
+<pre><span class="kw">import</span> sqlite3
+
+produtos = [
+    (<span class="st">"Cabo HDMI 2m"</span>,      <span class="num">35.00</span>,  <span class="num">40</span>),
+    (<span class="st">"Hub USB 4 portas"</span>,  <span class="num">59.90</span>,  <span class="num">15</span>),
+    (<span class="st">"Caixa de Som BT"</span>,   <span class="num">120.00</span>, <span class="num">8</span>),
+    <span class="cm"># ... mais 7 ...</span>
+]
+
+conexao = sqlite3.connect(<span class="st">"loja.db"</span>)
+cursor = conexao.cursor()
+<span class="kw">for</span> p <span class="kw">in</span> produtos:
+    cursor.execute(<span class="st">"INSERT INTO produtos (nome, preco, quantidade) VALUES (?, ?, ?)"</span>, p)
+conexao.commit()
+conexao.close()
+<span class="bi">print</span>(<span class="st">"10 produtos inseridos!"</span>)</pre>
+            </div>
+            <p style="color:var(--text-dim);font-size:0.88rem">
+              Se o agente usar <code>executemany</code> no lugar do <code>for</code>: também está
+              certo — é um atalho do sqlite3 pra listas. Peça pra ele explicar a diferença. 😉
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="exercise solo">
+        <div class="exercise-header">
           <span class="exercise-icon">🧑‍💻</span>
           <div>
             <div class="exercise-title">Missão 2 — Baixou tudo</div>
@@ -1403,6 +1758,7 @@ conexao.<span class="fn">commit</span>()   <span class="cm"># ← escreveu? CARI
         <div>⚡ <strong>Os 4 verbos:</strong> INSERT, SELECT (+WHERE), UPDATE e DELETE — os dois últimos SEMPRE com WHERE</div>
         <div>🐍 <strong>O ritual:</strong> connect → cursor → execute → commit (escreveu? carimba!) → close, e fetchall devolvendo tuplas</div>
         <div>🛡️ <strong>Placeholders ?:</strong> input do usuário NUNCA colado no SQL — agora você conhece o golpe da injection</div>
+        <div>🤖 <strong>Agente, degrau 1:</strong> tutor do SEU SQL + primeira tarefa gerada (o CSS da Loja em <code>static/style.css</code>) — espec sua, diff lido, checklist marcado</div>
       </div>
 
       <div class="concept" style="margin-top:18px">

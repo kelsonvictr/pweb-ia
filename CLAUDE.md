@@ -6,7 +6,7 @@
 
 ## 🎯 O que é este projeto
 
-Material didático do curso rápido **Sistemas Web com Python** (programa AI, prof. Kelson Almeida): **8 encontros de 2h (16h)** que pegam o aluno formado no bootcamp **Programação para Iniciantes** (`../programacao-iniciantes-v2/`) e o levam do Streamlit para um **sistema web de verdade**: Flask + Jinja + SQLite (SQL na mão) + agentes de codificação (Claude Code/Codex) + deploy público.
+Material didático do curso rápido **Sistemas Web com Python** (programa AI, prof. Kelson Almeida): **8 encontros de 2h (16h)** que pegam o aluno formado no bootcamp **Programação para Iniciantes** (`../programacao-iniciantes-v2/`) e o levam do Streamlit para um **sistema web de verdade**: Flask + Jinja + SQLite (SQL na mão) + agentes de codificação (Claude Code/Codex/Antigravity, em escada desde o Dia 3 — D15) + deploy público.
 
 **Fio condutor**: o aluno reconstrói o **Sistema de Loja/Vendas** que fez como desafio final do bootcamp (`app_loja.py`, Streamlit + TinyDB, 4 abas: Estoque/Cadastrar/Vender/Vendas) — agora com URL própria, telas em HTML/Jinja e banco relacional. A narrativa é "o mesmo sistema, agora profissional".
 
@@ -21,7 +21,7 @@ Este curso é a **ponte** entre o bootcamp e o curso **Fullstack** (React + Java
 - ❌ **NUNCA ensinar**: JavaScript, React, API REST separada, JSON como resposta de API, arquitetura em camadas formal, JWT. Isso é território do fullstack.
 - ✅ **Território deste curso**: server-rendered (Flask + Jinja), SQL explícito na mão (`sqlite3`, SEM ORM), sessões simples, deploy free-tier, agentes de IA.
 - ✅ O **capítulo 08 termina com ponte explícita** para o fullstack: limites do monólito ("e se precisar de app mobile? e se o front for de outra equipe?") → "o que o mercado usa" → convite.
-- ✅ HTML/CSS das telas vem **pronto no starter kit** (Pico.css) — aluno só escreve Python e Jinja. Frontend caprichado é argumento de matrícula no fullstack, não conteúdo daqui.
+- ✅ HTML/CSS das telas: o aluno digita o HTML (D10) com Pico.css de ponto de partida; no Dia 3 o **agente gera o CSS** a partir de uma espec do aluno (D15). Frontend não é *ensinado* aqui — é argumento de matrícula no fullstack.
 
 Detalhes em `context/03-decisoes.md`.
 
@@ -44,10 +44,11 @@ sistemas-web-python/
 │   ├── 00-apresentacao/             ← ✅ pitch/venda do curso (mostrado à turma do bootcamp; contém preço e oferta)
 │   ├── 01-ola-web-ola-flask/        ← Dia 1 · como a web funciona + primeira rota
 │   ├── 02-formularios-jinja/        ← Dia 2 · Jinja + GET/POST
+│   ├── 02b-ia-agentes/              ← Dia 2½ · teoria de IA/agentes + instalação (leitura em casa)
 │   ├── 03-sql-sqlite/               ← Dia 3 · SQL na mão, adeus TinyDB
 │   ├── 04-crud-parte-1/             ← Dia 4 · listar + cadastrar produtos
 │   ├── 05-crud-parte-2/             ← Dia 5 · editar + excluir + flash
-│   ├── 06-agentes-de-ia/            ← Dia 6 · Claude Code/Codex geram o login
+│   ├── 06-agentes-de-ia/            ← Dia 6 · degrau 4: o agente gera o login inteiro
 │   ├── 07-projeto-final/            ← Dia 7 · CRUD próprio do aluno, com agente
 │   └── 08-deploy-demo-day/          ← Dia 8 · deploy + apresentação + ponte fullstack
 ├── sobre/                           ← página do professor (copiada da v2)

@@ -7,7 +7,7 @@
 - **Formato**: 8 encontros presenciais/ao vivo de 2h = **16h**
 - **Público**: egressos do bootcamp **Programação para Iniciantes** (`../../programacao-iniciantes-v2/`)
 - **Promessa**: "o mesmo sistema de loja que você fez no bootcamp — agora de verdade: com endereço na web, telas próprias e banco de dados profissional. E você ainda aprende a programar com agentes de IA."
-- **Stack**: Python 3 · Flask · Jinja2 · SQLite (`sqlite3`, sem ORM) · Pico.css (pronto no starter kit) · Claude Code / Codex / Gemini CLI · deploy free-tier (PythonAnywhere ou Render)
+- **Stack**: Python 3 · Flask · Jinja2 · SQLite (`sqlite3`, sem ORM) · Pico.css de partida + CSS gerado pelo agente (D15) · Claude Code / Codex / Antigravity (planos pagos) · deploy free-tier (PythonAnywhere ou Render)
 
 ## O que o aluno já sabe (e o que não sabe)
 

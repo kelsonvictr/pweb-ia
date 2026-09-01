@@ -194,6 +194,27 @@
 .swp-trace-msgs > div.on{opacity:1}
 .swp-trace-msgs strong{color:var(--text)}
 .swp-trace-msgs .tm-emoji{font-size:1.4rem;flex-shrink:0}
+/* ---------- agente (escada do curso) ---------- */
+.lang-badge.prompt{background:linear-gradient(135deg,var(--accent6),#8b91ff);color:#0a0a12}
+.swp-accept{margin:12px 0}
+.swp-accept label{
+  display:flex;gap:10px;align-items:flex-start;padding:9px 12px;margin:6px 0;
+  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);
+  border-radius:10px;font-size:0.88rem;color:var(--text-dim);cursor:pointer;line-height:1.5;
+}
+.swp-accept input{accent-color:var(--accent7);width:17px;height:17px;flex-shrink:0;margin-top:2px}
+.swp-accept label:has(input:checked){border-color:rgba(6,214,160,0.4);color:var(--text)}
+.swp-spec-text{
+  font-family:'JetBrains Mono',monospace;font-size:0.76rem;line-height:1.75;
+  font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+  color:#c9d1d9;padding:14px 16px;white-space:pre-wrap;background:var(--code-bg);
+  border:1px solid rgba(167,139,250,0.3);border-radius:12px;margin:10px 0;
+}
+.swp-spec-text .sp-k{color:var(--accent6);font-weight:700}
+.swp-triage{width:100%;border-collapse:collapse;margin:12px 0;font-size:0.85rem;background:var(--code-bg);border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;display:table}
+.swp-triage th{background:var(--surface2);color:var(--text-dim);font-size:0.68rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:10px 14px;text-align:left}
+.swp-triage td{padding:10px 14px;color:var(--text-dim);border-top:1px solid rgba(255,255,255,0.05);line-height:1.5;vertical-align:top}
+.swp-triage td:first-child{color:var(--text);font-weight:700;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -223,7 +244,7 @@
   </div>
   <div class="sidebar-group">
     <div class="sidebar-group-title">🗑️ Excluir + avisos</div>
-    <a class="sidebar-link" onclick="goTo('excluir')"><span class="dot" style="background:var(--bug)"></span>Excluir com respeito</a>
+    <a class="sidebar-link" onclick="goTo('excluir')"><span class="dot" style="background:var(--bug)"></span>Excluir com respeito 🤖</a>
     <a class="sidebar-link" onclick="goTo('flash')"><span class="dot" style="background:var(--accent7)"></span>⭐ flash(): o bilhete</a>
   </div>
   <div class="sidebar-group">
@@ -263,6 +284,7 @@
     <span class="stack-chip">✏️ UPDATE</span>
     <span class="stack-chip">💬 flash()</span>
     <span class="stack-chip">🛒 Vender</span>
+    <span class="stack-chip" style="border-color:rgba(167,139,250,0.5);color:#c9b8ff">🤖 degrau 3: par</span>
   </div>
 </section>
 
@@ -625,8 +647,8 @@
     <div class="step-header">
       <div class="step-number sn-red">🗑️</div>
       <div>
-        <div class="step-title">Excluir com respeito</div>
-        <div class="step-sub">Por que apagar NUNCA pode ser um simples link</div>
+        <div class="step-title">Excluir com respeito — junto com o agente</div>
+        <div class="step-sub">Por que apagar NUNCA pode ser um simples link. E o degrau 3: ele gera, você aprova.</div>
       </div>
     </div>
 
@@ -691,22 +713,82 @@
 
       <div class="exercise guided">
         <div class="exercise-header">
-          <span class="exercise-icon">👨‍🏫</span>
+          <span class="exercise-icon">🤖</span>
           <div>
-            <div class="exercise-title">Bora montar a exclusão</div>
-            <div class="exercise-sub">Com a página do "tem certeza?"</div>
+            <div class="exercise-title">Bora montar a exclusão — JUNTO com o agente</div>
+            <div class="exercise-sub">Degrau 3: você especifica e aprova; ele digita</div>
           </div>
         </div>
         <p style="color:var(--text-dim)">
-          <strong style="color:var(--text)">1.</strong> Função + rota acima.
-          <strong style="color:var(--text)">2.</strong> O template de confirmação:
+          Editar você fez na mão — era a aula. Excluir é o <strong style="color:var(--text)">mesmo
+          padrão</strong> (você acabou de ver), então é a tarefa perfeita pra delegar: você sabe
+          exatamente como deve ficar, e vai conferir linha por linha. A espec carrega as regras da
+          história do robô:
         </p>
-        <div class="code-block">
-          <div class="code-header">
-            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-            <span class="filename">loja/templates/excluir.html</span>
-            <span class="lang-badge jinja">Jinja</span>
+
+<div class="swp-spec-text"><span class="sp-k">[CONTEXTO]</span> Projeto Flask em Python. app.py tem as rotas, banco.py tem as funções
+de acesso ao loja.db com sqlite3 (sem ORM, SQL com placeholders ?). Templates
+herdam de base.html ({% block conteudo %}). Já existem /produtos (lista),
+/produtos/novo e /produtos/&lt;int:id&gt;/editar (que usa banco.buscar_produto(id)
+e devolve 404 se não existir).
+
+<span class="sp-k">[TAREFA]</span> Implemente EXCLUIR produto seguindo o mesmo padrão do editar:
+1. banco.py: função excluir_produto(id) com DELETE ... WHERE id = ? e commit.
+2. app.py: rota /produtos/&lt;int:id&gt;/excluir com methods GET e POST.
+   GET mostra uma página de confirmação com o nome do produto;
+   POST executa a exclusão e faz redirect("/produtos"). Se o id não
+   existir, devolve "Produto não encontrado!", 404.
+3. templates/excluir.html: herda do base.html, mostra "Tem certeza que quer
+   excluir NOME?", um form method="POST" com o botão "Sim, excluir" e um
+   link "deixa pra lá" voltando pra /produtos.
+4. produtos.html: link 🗑️ em cada linha da tabela, ao lado do ✏️.
+
+<span class="sp-k">[RESTRIÇÕES]</span> A exclusão só pode acontecer via POST — nunca por link GET.
+Sem JavaScript (nada de confirm()). NÃO instale nada. Mexa SÓ nesses 4 arquivos.
+Siga o estilo do código existente (ritual connect → cursor → execute → commit → close).
+
+<span class="sp-k">[ACEITE]</span> Link 🗑️ leva à página de confirmação com o nome certo; o botão
+exclui e volta pra lista; abrir /produtos/999/excluir dá 404; os produtos que
+sobraram continuam intactos.</div>
+
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">1.</strong> Terminal → seu agente → cole a espec.<br>
+          <strong style="color:var(--text)">2.</strong> <strong>Leia cada diff antes do "sim"</strong>
+          — são 4 arquivos, e você conhece os 4. Ele usou <code>?</code>? Tem <code>commit</code>? O
+          form é POST? Tem o 404?<br>
+          <strong style="color:var(--text)">3.</strong> Cadastre um "Produto Teste" e passe o
+          checklist — a espec virou teste:
+        </p>
+
+        <div class="swp-accept">
+          <label><input type="checkbox"> O 🗑️ aparece em cada linha da tabela e leva a <code>/produtos/ID/excluir</code>?</label>
+          <label><input type="checkbox"> A página de confirmação mostra o NOME do produto certo?</label>
+          <label><input type="checkbox"> "Sim, excluir" apaga e volta pra <code>/produtos</code> — e o resto continua lá?</label>
+          <label><input type="checkbox"> <code>/produtos/999/excluir</code> responde 404?</label>
+          <label><input type="checkbox"> A exclusão acontece SÓ no POST? (abrir a URL de confirmação não apaga nada)</label>
+          <label><input type="checkbox"> Nenhum <code>&lt;script&gt;</code>, nenhum <code>pip install</code>, só os 4 arquivos tocados?</label>
+          <label><input type="checkbox"> Você consegue explicar em voz alta cada linha da rota nova?</label>
+        </div>
+
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">4.</strong> Falhou algo? Peça o ajuste específico
+          (<em>"o form da confirmação está com method GET — troque pra POST"</em>). Passou tudo?
+          Você acabou de entregar uma operação de CRUD sem digitar — e sabendo exatamente o que tem
+          dentro. 🏆
+        </p>
+
+        <div class="toggler">
+          <div class="toggler-header" onclick="toggleSection(this)">
+            <span>👀 Seu gabarito mental: o excluir.html como deve ficar</span>
+            <span class="toggler-arrow">▼</span>
           </div>
+          <div class="toggler-body">
+            <div class="code-block">
+              <div class="code-header">
+                <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+                <span class="filename">loja/templates/excluir.html</span>
+                <span class="lang-badge jinja">Jinja</span>
+              </div>
 <pre><span class="jtag">{% extends "base.html" %}</span>
 
 <span class="jtag">{% block conteudo %}</span>
@@ -720,12 +802,24 @@
   <span class="tag">&lt;/form&gt;</span>
   <span class="tag">&lt;p&gt;</span><span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/produtos"</span><span class="tag">&gt;</span>← deixa pra lá<span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/p&gt;</span>
 <span class="jtag">{% endblock %}</span></pre>
+            </div>
+            <p style="color:var(--text-dim);font-size:0.88rem">
+              Se o agente nomeou a variável diferente (<code>produto</code> em vez de <code>p</code>)
+              ou escreveu o texto de outro jeito: tudo bem, desde que o form seja POST e o 404 exista.
+              Estilo é negociável; a regra do robô, não.
+            </p>
+          </div>
         </div>
-        <p style="color:var(--text-dim)">
-          <strong style="color:var(--text)">3.</strong> Link 🗑️ na tabela (mesmo padrão do ✏️).
-          <strong style="color:var(--text)">4.</strong> Cadastre um "Produto Teste" só pra ter o
-          prazer de excluir com segurança. 😄
-        </p>
+
+        <div class="warning">
+          <span class="tip-icon">🤖</span>
+          <div class="tip-content">
+            <strong>Ele quis colocar um <code>onclick="return confirm('Tem certeza?')"</code> no
+            link?</strong> É o jeito da internet — e viola duas regras da espec (JavaScript e
+            exclusão por GET). Recuse: <em>"sem JavaScript; a confirmação é uma página, e a exclusão
+            é POST"</em>. A história do robô é exatamente sobre isso.
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -1568,7 +1662,7 @@ banco.<span class="fn">atualizar_produto</span>(id, nome, preco, qtd)
       <div class="about-bullets">
         <div>🎯 <strong>&lt;int:id&gt;:</strong> o número da ficha viaja na URL e cai como parâmetro na função</div>
         <div>✏️ <strong>Editar:</strong> fetchone → form com value= preenchido → UPDATE → redirect (e 404 pra ficha fantasma)</div>
-        <div>🗑️ <strong>Excluir:</strong> NUNCA por link — página de confirmação + POST (a história do robô)</div>
+        <div>🗑️ <strong>Excluir:</strong> NUNCA por link — página de confirmação + POST (a história do robô). Gerado pelo agente a partir da SUA espec, aprovado com checklist (degrau 3)</div>
         <div>💬 <strong>flash():</strong> o bilhete de uma vez só, com secret_key assinando a sessão</div>
         <div>🛒 <strong>Vender:</strong> duas tabelas relacionadas por produto_id, INSERT + UPDATE no MESMO commit, servidor calculando o total</div>
         <div>🧾 <strong>Vendas:</strong> o JOIN essencial juntando as fichas + SUM somando o caixa</div>
@@ -1586,10 +1680,10 @@ banco.<span class="fn">atualizar_produto</span>(id, nome, preco, qtd)
       <div class="warning">
         <span class="tip-icon">📥</span>
         <div class="tip-content">
-          <strong>DEVER DE CASA OBRIGATÓRIO pro Dia 6:</strong> instale o
-          <strong>Gemini CLI</strong> antes do encontro (leva ~10min). O passo a passo está no
-          comecinho do próximo capítulo, seção "Antes do encontro". Quem chegar com ele
-          instalado sai na frente — o encontro inteiro é mão na massa com o agente. 🤖
+          <strong>Antes do Dia 6:</strong> confira que o seu agente (Claude Code, Codex ou
+          Antigravity) abre na pasta da loja e que a Loja roda com /produtos, /vender e /vendas.
+          O encontro inteiro é mão na massa com o agente — e, pela primeira vez, ele constrói uma
+          feature INTEIRA. Releia o ritual de revisão do Dia 2½. 🤖
         </div>
       </div>
 
@@ -1604,7 +1698,7 @@ banco.<span class="fn">atualizar_produto</span>(id, nome, preco, qtd)
 
       <div class="next-chapter">
         <h3>🤖 Dia 06 · Programando com agentes de IA</h3>
-        <p style="color:var(--text-dim)">Claude Code, Gemini CLI — e o hábito de revisar</p>
+        <p style="color:var(--text-dim)">Degrau 4 da escada: o agente constrói o login — e você revisa tudo</p>
         <a href="../06-agentes-de-ia/" class="btn-next">🤖 Ir para o Dia 06 →</a>
       </div>
     </div>

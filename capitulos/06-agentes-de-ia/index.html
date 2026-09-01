@@ -192,7 +192,7 @@
   </div>
   <div class="sidebar-group">
     <div class="sidebar-group-title">⚙️ Preparação</div>
-    <a class="sidebar-link" onclick="goTo('pre-encontro')"><span class="dot" style="background:var(--accent5)"></span>Antes do encontro</a>
+    <a class="sidebar-link" onclick="goTo('pre-encontro')"><span class="dot" style="background:var(--accent5)"></span>Antes do encontro (checagem)</a>
   </div>
   <div class="sidebar-group">
     <div class="sidebar-group-title">🤖 O que é um agente</div>
@@ -232,12 +232,12 @@
   <p class="subtitle">
     Hoje a Loja ganha <strong style="color:var(--python-y)">login</strong> — mas você não vai
     digitá-lo. Vai <strong style="color:var(--accent6)">especificar, dirigir e revisar</strong>
-    um agente de IA escrevendo por você. É assim que se programa em 2026 —
-    e existe um <strong style="color:var(--accent7)">jeito profissional</strong> de fazer.
+    um agente de IA escrevendo por você — uma feature <strong style="color:var(--accent7)">inteira</strong>,
+    pela primeira vez. É o degrau 4 da escada que começou no Dia 3.
   </p>
   <div class="hero-stack">
-    <span class="stack-chip">🤖 Gemini CLI</span>
-    <span class="stack-chip">🟠 Claude Code</span>
+    <span class="stack-chip">🤖 Claude Code · Codex · Antigravity</span>
+    <span class="stack-chip" style="border-color:rgba(167,139,250,0.5);color:#c9b8ff">🪜 degrau 4: você comanda</span>
     <span class="stack-chip">📋 especificar → revisar</span>
     <span class="stack-chip">🔐 login</span>
   </div>
@@ -252,41 +252,32 @@
     <div class="step-header">
       <div class="step-number sn-yellow">📥</div>
       <div>
-        <div class="step-title">Antes do encontro: instale o Gemini CLI</div>
-        <div class="step-sub">~10 minutos em casa que valem o encontro inteiro</div>
+        <div class="step-title">Antes do encontro: checagem rápida</div>
+        <div class="step-sub">Seu agente já trabalha com você desde o Dia 3 — confira que está tudo em pé</div>
       </div>
     </div>
 
     <div class="card">
       <div class="swp-preflight">
-        <div class="pf-title">⚠️ Faça ANTES do dia 6 — o encontro é 100% mão na massa</div>
+        <div class="pf-title">⚠️ Confira ANTES do dia 6 — o encontro é 100% mão na massa</div>
         <ol>
-          <li><strong>Instale o Node.js LTS</strong> — em <code>nodejs.org</code>, baixe a versão
-            <strong>LTS</strong> e instale com next-next-finish. (O Gemini CLI é feito em
-            JavaScript, e o Node é quem roda ele — só isso, não vamos programar em JS.)</li>
-          <li><strong>Feche e reabra o PyCharm</strong> (pro terminal enxergar o Node novo).</li>
-          <li>No <strong>Terminal do PyCharm</strong>: <code>npm install -g @google/gemini-cli</code></li>
-          <li>Ainda no terminal: <code>gemini</code> → ele abre e pede login —
-            <strong>entre com sua conta Google</strong> (o plano gratuito é generoso).</li>
-          <li>Apareceu o prompt do Gemini? <strong>Pronto.</strong> Digite <code>/quit</code> pra sair
-            e me conte no grupo que deu certo. ✅</li>
+          <li><strong>O agente abre na pasta da loja?</strong> Terminal do PyCharm → <code>claude</code>,
+            <code>codex</code> ou <code>agy</code> → aparece o prompt. (Instalação: capítulo
+            <a href="../02b-ia-agentes/" style="color:var(--accent6)">Dia 02½</a>.)</li>
+          <li><strong>Os três degraus anteriores estão feitos?</strong> Dia 3 (tutor + CSS da Loja),
+            Dia 4 (revisão do seu código) e Dia 5 (excluir gerado e aprovado). Hoje ele constrói uma
+            feature inteira — e você só consegue julgar porque fez as menores.</li>
+          <li><strong>A Loja roda</strong> com /produtos, /vender e /vendas funcionando, e o
+            <code>criar_banco.py</code> à mão (a tabela usuarios vai nascer nele).</li>
+          <li><strong>Releia o ritual de revisão</strong> (①–⑤ do Dia 2½). Hoje o diff é grande, e o
+            professor plantou um bug no dele de propósito. 🕵️</li>
         </ol>
-      </div>
-
-      <div class="tip">
-        <span class="tip-icon">🟠</span>
-        <div class="tip-content">
-          <strong>Tem assinatura do Claude (Pro) ou do ChatGPT (Plus)?</strong> Pode usar o
-          <strong>Claude Code</strong> (<code>npm install -g @anthropic-ai/claude-code</code>) ou o
-          <strong>Codex</strong> — o professor demonstra com Claude Code em aula.
-          O fluxo de trabalho que você vai aprender é <strong>o mesmo nos três</strong>.
-        </div>
       </div>
 
       <div class="warning">
         <span class="tip-icon">🆘</span>
         <div class="tip-content">
-          <strong>Não conseguiu instalar?</strong> Venha mesmo assim: no encontro você faz dupla
+          <strong>Ferramenta não abre?</strong> Venha mesmo assim: no encontro você faz dupla
           com um colega (dirigir o agente A DOIS é até melhor pra aprender) e resolvemos sua
           instalação no intervalo.
         </div>
@@ -303,17 +294,19 @@
     <div class="step-header">
       <div class="step-number sn-yellow">🔥</div>
       <div>
-        <div class="step-title">Aquecimento: por que SÓ AGORA?</div>
-        <div class="step-sub">O motivo de a IA entrar no dia 6, e não no dia 1</div>
+        <div class="step-title">Aquecimento: por que uma feature INTEIRA só agora?</div>
+        <div class="step-sub">Tutor, revisor, par… e hoje você comanda</div>
       </div>
     </div>
 
     <div class="card">
       <p style="color:var(--text-dim)">
-        Podíamos ter usado IA desde o primeiro dia. Não usamos <strong style="color:var(--text)">de
-        propósito</strong>: você construiu rota, template, SQL e CRUD <strong style="color:var(--text)">na
-        mão</strong> — e é exatamente por isso que hoje funciona. Um agente escreve código
-        RÁPIDO; só revisa bem quem <strong style="color:var(--text)">sabe o que está lendo</strong>.
+        O agente entrou aos poucos <strong style="color:var(--text)">de propósito</strong>: no Dia 3
+        ele explicou o seu SQL e escreveu um CSS; no Dia 4 revisou o seu código; no Dia 5 gerou uma
+        operação pequena, do padrão que você já tinha feito. Sempre <strong style="color:var(--text)">depois</strong>
+        da sua versão na mão. Hoje ele constrói uma feature inteira que você nunca fez — o login —
+        e é exatamente por isso que os degraus anteriores importam: um agente escreve código RÁPIDO;
+        só revisa bem quem <strong style="color:var(--text)">sabe o que está lendo</strong>.
       </p>
 
       <div class="quiz">
@@ -358,10 +351,11 @@
 
     <div class="card">
       <p style="color:var(--text-dim)">
-        Você já colou código do ChatGPT. Um <strong style="color:var(--text)">agente de
-        codificação</strong> é outro bicho: roda <strong style="color:var(--text)">no terminal,
-        dentro do seu projeto</strong> — ele LÊ seus arquivos (app.py, banco.py, templates…),
-        PROPÕE mudanças neles e até RODA comandos. Você conversa; ele trabalha; você aprova.
+        Recap do Dia 2½, em um parágrafo: um <strong style="color:var(--text)">agente de
+        codificação</strong> roda <strong style="color:var(--text)">no terminal, dentro do seu
+        projeto</strong> — ele LÊ seus arquivos (app.py, banco.py, templates…), PROPÕE mudanças
+        neles e até RODA comandos, num loop até dar certo. Você conversa; ele trabalha; você aprova.
+        Hoje esse loop vai rodar em cima de uma feature de verdade.
       </p>
 
       <div class="analogy">
@@ -419,7 +413,7 @@
         <div class="swp-agent-term">
           <div class="swp-agent-head">
             <span class="dots"><i></i><i></i><i></i></span>
-            <span>Terminal do PyCharm — gemini · projeto loja</span>
+            <span>Terminal do PyCharm — claude · projeto loja</span>
           </div>
           <div class="swp-agent-body" id="agentBody"></div>
         </div>
@@ -573,8 +567,8 @@
         <p>
           Releia os 6 itens: tabela com colunas e tipos (Dia 3), rotas GET/POST (Dias 2 e 4),
           proteger/redirect (Dia 1), sessão (Dia 5)… <strong>Especificar bem EXIGE saber o que
-          se está pedindo.</strong> É por isso que a IA entrou no dia 6 — e é por isso que
-          você, que fez tudo na mão, especifica melhor que muito dev por aí.
+          se está pedindo.</strong> É por isso que a feature inteira só chega no dia 6 — e é por isso
+          que você, que fez tudo na mão, especifica melhor que muito dev por aí.
         </p>
       </div>
     </div>
@@ -656,7 +650,8 @@
         </div>
         <p style="color:var(--text-dim)">
           <strong style="color:var(--text)">1.</strong> Projeto <code>loja</code> aberto no
-          PyCharm → Terminal (<code>Alt+F12</code>) → <code>gemini</code>.<br>
+          PyCharm → Terminal (<code>Alt+F12</code> / <code>⌥F12</code>) → <code>claude</code>
+          (ou <code>codex</code> / <code>agy</code>).<br>
           <strong style="color:var(--text)">2.</strong> Cole a <strong>espec boa</strong>
           (da seção anterior — digite ou copie do material com atenção, lendo cada item).<br>
           <strong style="color:var(--text)">3.</strong> O agente vai propor mudanças arquivo por
@@ -760,22 +755,22 @@
 
     <div class="card">
       <table class="swp-cost">
-        <thead><tr><th>Agente</th><th>Como acessa</th><th>Custo</th></tr></thead>
+        <thead><tr><th>Agente</th><th>Plano</th><th>Como abre</th></tr></thead>
         <tbody>
           <tr class="hl">
-            <td>🔷 Gemini CLI</td>
-            <td>conta Google (npm install)</td>
-            <td><strong style="color:var(--accent7)">grátis</strong>, com limite diário generoso — o padrão da turma</td>
-          </tr>
-          <tr>
             <td>🟠 Claude Code</td>
-            <td>assinatura Claude Pro/Max</td>
-            <td>a partir de ~US$ 20/mês — o que o professor usa em aula</td>
+            <td>Claude Pro — <strong style="color:var(--accent7)">o que o professor usa em aula</strong></td>
+            <td><code>claude</code> no Terminal do PyCharm · regras do projeto em <code>CLAUDE.md</code></td>
           </tr>
           <tr>
             <td>⚪ Codex</td>
-            <td>assinatura ChatGPT Plus</td>
-            <td>~US$ 20/mês — se você já paga o ChatGPT, já tem</td>
+            <td>ChatGPT Plus — se você já paga o ChatGPT, já tem</td>
+            <td><code>codex</code> · regras em <code>AGENTS.md</code></td>
+          </tr>
+          <tr>
+            <td>🔵 Antigravity</td>
+            <td>Google AI Pro</td>
+            <td><code>agy</code> (CLI) ou o editor Antigravity · regras em <code>AGENTS.md</code></td>
           </tr>
         </tbody>
       </table>
@@ -783,9 +778,10 @@
       <div class="tip">
         <span class="tip-icon">🎓</span>
         <div class="tip-content">
-          <strong>O que você aprendeu hoje NÃO é "usar o Gemini CLI".</strong> É o fluxo
+          <strong>O que você aprendeu NÃO é "usar o Claude Code".</strong> É o fluxo
           especificar → gerar → ler → testar → ajustar — e ele é idêntico nos três (e nos
           próximos dez que lançarem até o fim do ano 😄). Ferramenta muda; critério fica.
+          Os preços e limites mudam rápido: na casa de US$ 20/mês cada, hoje.
         </div>
       </div>
     </div>
@@ -1098,7 +1094,7 @@
         <div>📋 <strong>Espec boa:</strong> itens numerados, decisões suas, limites explícitos — e ela vira o checklist de teste</div>
         <div>👀 <strong>Ler diff com desconfiança:</strong> verde entra, vermelho sai — e o bug mora no que "parece certo"</div>
         <div>🔐 <strong>O login por dentro:</strong> session (o bolso do flash!), hash de mão única, @login_required de crachá</div>
-        <div>💳 <strong>Ferramentas:</strong> Gemini CLI grátis, Claude Code/Codex por assinatura — critério não se assina, se aprende</div>
+        <div>💳 <strong>Ferramentas:</strong> Claude Code (Claude Pro), Codex (ChatGPT Plus) ou Antigravity (Google AI Pro) — critério não se assina, se aprende</div>
       </div>
 
       <div class="concept" style="margin-top:18px">

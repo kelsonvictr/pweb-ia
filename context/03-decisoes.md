@@ -182,3 +182,66 @@ demo day.
 - REST/JSON são NOMEADOS apenas na máquina "A evolução" (monólito → front/back), como
   território do fullstack (D3 cumprida até o fim).
 - Chat do cap 00 refeito com final feliz no "momento do celular".
+
+## D14 · Cap 02 realinhado ao código que a turma digitou em sala (2026-09-01)
+
+O professor deu o Dia 2 com um desenho de rotas diferente do material original (que fazia tudo
+na `/` com `methods=["GET","POST"]` + `if request.method`). O material foi reescrito para
+bater com o que a turma viu, porque o aluno não pode achar que digitou errado:
+
+- **Rotas com papéis separados**: `/produtos` (lista), `/cadastro_produto` (mostra o form) e
+  `/cadastro` (só `methods=["POST"]`, recebe e faz `redirect("/produtos")`). A home volta a
+  ser cartão de visita (o `<ul>` fixo do Dia 1 sai; entra link pra `/produtos`).
+- **`lista_de_produtos` global no topo do `app.py`**, com `append` na rota `/cadastro`. Em
+  sala a lista era local e o cadastro só fazia `print` — isso matava "A Volta Completa", o
+  "Apagão" e o gancho do cap 04 ("Apagão parte 2"). O `print` ficou como passo intermediário
+  didático ("prove que chegou, depois guarde"). Nome `lista_de_produtos` ≠ função
+  `produtos()` — o box explica o porquê (mesma lição do `ver_promocoes` da arena).
+- **`request.method` sai do cap 02** e passa a ser apresentado no cap 04, quando
+  `/cadastro_produto` + `/cadastro` viram `/produtos/novo` (GET+POST). Cap 02 deixa o
+  spoiler; cap 04 ("A página /produtos/novo" e "Compare com o Dia 2") explica a fusão.
+- **`url_for` não entra no código do material** (caps 02–05 usam `redirect("/produtos")`);
+  há um box no cap 02 dizendo que `redirect(url_for("produtos"))` é equivalente, para quem
+  viu na aula.
+- BugZilla ganhou o 405 "ao contrário" (abrir `/cadastro` na barra = GET numa rota só-POST),
+  que é o erro mais provável nesse desenho. Corrigida também a afirmação de que chave
+  ausente no dict dá `UndefinedError` — no Flask padrão a célula fica vazia, sem erro.
+- Guia do professor (dia 2) e gabarito `guia-professor/codigo/dia-02` sincronizados
+  (gabarito = versão 2, arena inteira). Produtos de exemplo continuam Fone/Teclado/Mouse
+  (em sala eram Logitech) — box "seus produtos podem ser outros; o que bate é a estrutura".
+
+## D15 · Agentes de IA desde o Dia 3, em escada — e capítulo 02½ de teoria (2026-09-01)
+
+Revisão da D4 a pedido do professor, com a turma em andamento: os agentes deixam de ser
+"só no Dia 6" e entram **um degrau por dia**, sempre DEPOIS da versão na mão do que o agente
+vai tocar (o aluno precisa do gabarito mental pra revisar — o argumento da D4 continua valendo,
+só muda a dose):
+
+| Dia | Papel do agente | Onde |
+|---|---|---|
+| 02½ | instalar + entender (leitura em casa) | `capitulos/02b-ia-agentes/` (NOVO) |
+| 3 | **tutor** do SQL que o aluno escreveu + **1ª tarefa gerada: CSS moderno da Loja** (`static/style.css`) | cap 03, Parte 5 (`#agente-tutor`, `#agente-css`) + missão bônus na arena (popular.py) |
+| 4 | **revisor** do app.py/banco.py, com triagem em 3 gavetas | cap 04, Parte 3 (`#agente-revisor`) |
+| 5 | **par**: editar na mão, **excluir gerado** a partir de espec + checklist | cap 05, seção `#excluir` reescrita |
+| 6 | **você comanda**: login inteiro (como já era) | cap 06 (pré-encontro vira checagem; aquecimento reescrito) |
+| 7–8 | projeto + CLAUDE.md/AGENTS.md + Demo Day explicando o gerado | inalterados |
+
+Decisões travadas:
+- **Cap 02½ (`02b-ia-agentes`)** é a "super aula" teórica do fullstack (cap 09) adaptada a Flask:
+  5 máquinas portadas (🔮 Próxima Palavra com `@login_required` como pegadinha, 📦 Mesa de
+  Contexto com a regra "sem JavaScript", 🔁 Loop do Agente com o link Cancelar em
+  `cadastro_produto.html`, ⚖️ Vago×Espec com o rodapé no base.html, 🕵️ Caça ao Intruso com
+  `pip` clandestino + `<script>` + bloco renomeado `conteudo→content`), mercado, instalação,
+  prompt = mini-espec (4 ingredientes), ritual ①–⑤, escada do curso, BugZilla dos 5 clássicos.
+  **Não ganha encontro próprio**: é leitura + instalação em casa entre o Dia 2 e o Dia 3
+  (o curso continua 8×2h). Hub: card "DIA · 02½ · leitura em casa" (classe `c09`).
+- **Ferramentas: só planos pagos** — Claude Code (Claude Pro, o do professor, no Terminal do
+  PyCharm), Codex (ChatGPT Plus) e Antigravity CLI `agy` (Google AI Pro). Gemini CLI saiu
+  (substituído pelo Antigravity, conforme o material fullstack). Sem opção gratuita.
+- **CSS via agente no Dia 3** é a primeira tarefa gerada por ser visual (fácil de revisar, sem
+  risco pros dados). A espec do material traz o conceito `static/` do Flask e a lista explícita
+  de "cara de IA" a evitar (gradiente roxo, sombra gigante, emoji, borda exagerada). Isso
+  atualiza a premissa "HTML/CSS vem pronto no Pico" do CLAUDE.md: o Pico é o ponto de partida;
+  o visual final é gerado pelo agente a partir da espec do aluno — continua sem JS/React (D3).
+- Cap 06 mantém as máquinas e a missão do login; muda só o enquadramento (degrau 4), o
+  pré-encontro (checagem) e a tabela de ferramentas.

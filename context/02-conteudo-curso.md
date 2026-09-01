@@ -82,17 +82,29 @@
 
 ---
 
-## Dia 6 · `06-agentes-de-ia` — Programando com agentes (Claude Code / Codex)
+## Dia 2½ · `02b-ia-agentes` — IA & Agentes: seu par de programação (leitura em casa, sem encontro)
 
-**Pré-requisito pedagógico**: o aluno JÁ construiu o CRUD na mão (dias 1–5). O agente entra como acelerador, não como substituto.
+Capítulo teórico entre o Dia 2 e o Dia 3 (D15), adaptado do cap 09 do fullstack: LLM = próxima palavra · janela de contexto & alucinação · do chat ao agente (loop com ferramentas) · mercado (Claude Code ⭐ / Codex / Antigravity — planos pagos) · instalação no Terminal do PyCharm + primeiro "oi" · prompt = mini-espec (CONTEXTO/TAREFA/RESTRIÇÕES/ACEITE) · ritual de revisão ①–⑤ · escada do curso · BugZilla dos 5 clássicos.
 
-1. O que é um agente de codificação (Claude Code, Codex, Gemini CLI) — terminal + IA que lê e edita seu projeto
+**A escada (D15)** — o agente entra um degrau por dia, sempre depois da versão na mão:
+- Dia 3: **tutor** do SQL do aluno + **1ª tarefa gerada: CSS moderno da Loja** (`static/style.css`, espec com "sem cara de IA") + missão bônus `popular.py`
+- Dia 4: **revisor** do app.py/banco.py (triagem em 3 gavetas)
+- Dia 5: **par** — editar na mão, **excluir gerado** a partir de espec + checklist
+- Dia 6: **você comanda** — login inteiro (abaixo)
+
+---
+
+## Dia 6 · `06-agentes-de-ia` — Programando com agentes: degrau 4, você comanda
+
+**Pré-requisito pedagógico**: o aluno JÁ construiu o CRUD na mão (dias 1–5) e já usou o agente como tutor, revisor e par (D15). Hoje ele gera uma feature inteira pela primeira vez.
+
+1. Recap do Dia 2½: o que é um agente de codificação — terminal + IA que lê e edita seu projeto
 2. Demonstração do professor: pedir uma feature pequena e ver o agente trabalhar
 3. **O fluxo profissional**: especificar → gerar → LER o diff → testar → ajustar (nunca aceitar às cegas)
 4. **Missão do dia: login no sistema** — o aluno escreve a especificação ("tela de login, senha com hash, proteger as rotas de produto, logout"), o agente implementa, o aluno revisa e testa
 5. Entender o que o agente fez: sessão, hash de senha, decorator de proteção (explicação guiada do código gerado)
 6. Agente errando de propósito: professor mostra uma geração com bug e a turma caça
-7. Custos e opções: Claude Code (assinatura), Codex (ChatGPT), Gemini CLI (free tier generoso — opção padrão do aluno)
+7. Ferramentas: Claude Code (Claude Pro — o do professor), Codex (ChatGPT Plus), Antigravity (Google AI Pro); sem opção gratuita
 
 **Sai com**: Loja com login funcionando + o hábito de revisar código gerado.
 **BugZilla do dia**: aceitar código sem ler · pedir "faz um sistema completo" (especificação vaga = resultado ruim).

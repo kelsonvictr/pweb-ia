@@ -5,7 +5,7 @@
 > [Programação para Iniciantes](../programacao-iniciantes-v2/) e o mundo dos sistemas profissionais.
 
 **8 encontros de 2h**: o aluno reconstrói o sistema de Loja do bootcamp como app web de verdade —
-Flask, Jinja, SQLite com SQL na mão, agentes de codificação (Claude Code/Codex/Gemini CLI)
+Flask, Jinja, SQLite com SQL na mão, agentes de codificação (Claude Code/Codex/Antigravity, em escada desde o Dia 3)
 e deploy com link público.
 
 | Dia | Encontro | O aluno sai com... |
