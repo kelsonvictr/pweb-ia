@@ -54,28 +54,38 @@
 
 ---
 
-## Dia 4 · `04-crud-parte-1` — A Loja ganha banco: listar + cadastrar
+## Dia 4 · `04-crud-parte-1` — A Loja ganha banco: você comanda o agente
 
-1. Conectar o Dia 2 com o Dia 3: trocar a lista em memória pelo SQLite
-2. `banco.py` com funções: `listar_produtos()`, `cadastrar_produto(nome, preco, qtd)` (reforça funções do bootcamp)
-3. Rota `/produtos` → SELECT → tabela Jinja
-4. Rota `/produtos/novo` → formulário → INSERT → redirect (padrão POST-redirect-GET, explicado como "recarregou, não duplica")
-5. Validação básica: nome vazio → mensagem de erro na tela
+**Virada do curso**: a partir daqui, todo código novo da aplicação é produzido pelo agente a partir
+de prompts-spec. O aluno não copia o código completo do material: primeiro define o resultado,
+depois envia o prompt, lê o diff e testa cada critério de aceite.
+
+1. **Ponto de sincronização**: preservar o projeto antigo, criar um novo projeto `loja` vazio e
+   usar um prompt único para reconstruir o checkpoint dos Dias 1–3 (Flask + templates + CSS +
+   cadastro em memória + `criar_banco.py`, ainda sem integração Flask/SQLite)
+2. Criar `AGENTS.md`/`CLAUDE.md`: regras permanentes da Loja (Flask + Jinja + `sqlite3`, sem ORM,
+   sem JavaScript, sem bibliotecas extras, placeholders `?`, uma operação por vez)
+3. Prompt 0 — pedir ao agente que leia o projeto e explique o plano, **sem editar**
+4. Prompt 1 — criar `banco.py` com `listar_produtos()` e conectar a Loja ao `loja.db`
+5. Prompt 2 — rota `/produtos` → SELECT → tabela Jinja
+6. Prompt 3 — rota `/produtos/novo` → formulário → INSERT → redirect
+7. Prompt 4 — validação de nome e preço, com mensagem na tela
+8. Em cada prompt: especificar → revisar diff → testar no navegador → corrigir → registrar aceite
 
 **Sai com**: Estoque e Cadastrar da Loja funcionando com banco de verdade — reinicia o servidor e os dados CONTINUAM lá (momento WOW).
 **BugZilla do dia**: duplicar cadastro no F5 (sem redirect) · esquecer `?` placeholder.
 
 ---
 
-## Dia 5 · `05-crud-parte-2` — Editar, excluir e vender
+## Dia 5 · `05-crud-parte-2` — Editar, excluir e vender com o agente
 
-1. URL com parâmetro: `/produtos/<int:id>/editar` (analogia: número da ficha)
-2. Formulário pré-preenchido (SELECT WHERE id + `value=` no template)
-3. UPDATE no submit
-4. Excluir com POST + confirmação simples
-5. Flash messages (`flash()` + `get_flashed_messages`) — "Produto salvo! ✅"
-6. **A tela Vender**: selecionar produto, informar quantidade → INSERT em `vendas` + UPDATE no estoque — a operação mais "de sistema" do curso
-7. Tela Vendas: histórico + faturamento (`SELECT SUM(...)`)
+1. Antes de cada prompt, entender visualmente a regra e prever quais arquivos devem mudar
+2. Prompt 1 — editar produto: parâmetro de URL, `SELECT WHERE id`, formulário preenchido e UPDATE
+3. Prompt 2 — excluir com POST + página de confirmação
+4. Prompt 3 — flash messages (`flash()` + `get_flashed_messages`)
+5. Prompt 4 — **tela Vender**: INSERT em `vendas` + UPDATE no estoque como uma operação coerente
+6. Prompt 5 — histórico + faturamento (`SELECT SUM(...)`)
+7. Ritual obrigatório após cada geração: escopo do diff, regras SQL, teste feliz, teste de erro e explicação oral
 
 **Sai com**: a Loja completa — as 4 "abas" do desafio do bootcamp, agora como sistema web com banco. Comparação lado a lado: `app_loja.py` (Streamlit) vs agora.
 **BugZilla do dia**: vender mais do que tem no estoque (validação!) · editar o produto errado (id na URL).
@@ -86,17 +96,20 @@
 
 Capítulo teórico entre o Dia 2 e o Dia 3 (D15), adaptado do cap 09 do fullstack: LLM = próxima palavra · janela de contexto & alucinação · do chat ao agente (loop com ferramentas) · mercado (Claude Code ⭐ / Codex / Antigravity — planos pagos) · instalação no Terminal do PyCharm + primeiro "oi" · prompt = mini-espec (CONTEXTO/TAREFA/RESTRIÇÕES/ACEITE) · ritual de revisão ①–⑤ · escada do curso · BugZilla dos 5 clássicos.
 
-**A escada (D15)** — o agente entra um degrau por dia, sempre depois da versão na mão:
-- Dia 3: **tutor** do SQL do aluno + **1ª tarefa gerada: CSS moderno da Loja** (`static/style.css`, espec com "sem cara de IA") + missão bônus `popular.py`
-- Dia 4: **revisor** do app.py/banco.py (triagem em 3 gavetas)
-- Dia 5: **par** — editar na mão, **excluir gerado** a partir de espec + checklist
-- Dia 6: **você comanda** — login inteiro (abaixo)
+**A progressão revisada (D16)**:
+- Dia 3: **tutor** do SQL escrito pelo aluno + primeira tarefa visual (CSS)
+- Dia 4: **virada agent-first** — todo o CRUD integrado nasce de prompts-spec; o aluno comanda
+- Dia 5: **sequência de entregas** — um prompt por operação, nunca “faça o resto da Loja”
+- Dia 6: **feature maior** — login inteiro, ainda dividido em plano, implementação e testes
+- Dias 7–8: projeto e deploy no mesmo fluxo; todo código gerado precisa ser explicado
 
 ---
 
-## Dia 6 · `06-agentes-de-ia` — Programando com agentes: degrau 4, você comanda
+## Dia 6 · `06-agentes-de-ia` — Programando com agentes: uma feature maior
 
-**Pré-requisito pedagógico**: o aluno JÁ construiu o CRUD na mão (dias 1–5) e já usou o agente como tutor, revisor e par (D15). Hoje ele gera uma feature inteira pela primeira vez.
+**Pré-requisito pedagógico**: o aluno já aprendeu manualmente as peças fundamentais (Flask, Jinja,
+formulários e SQL) e construiu o CRUD da Loja por prompts nos Dias 4–5. Hoje ele sobe de várias
+operações pequenas para uma feature maior, sem abandonar o ritual de revisão.
 
 1. Recap do Dia 2½: o que é um agente de codificação — terminal + IA que lê e edita seu projeto
 2. Demonstração do professor: pedir uma feature pequena e ver o agente trabalhar
@@ -116,7 +129,7 @@ Capítulo teórico entre o Dia 2 e o Dia 3 (D15), adaptado do cap 09 do fullstac
 1. Aluno escolhe o próprio tema (barbearia, brechó, petshop, oficina…) — mesmo esqueleto: 2 entidades, CRUD + operação de "movimento" (agendamento, venda, empréstimo…)
 2. Checklist do projeto (mínimo: 1 CRUD completo + 1 tela de operação + login)
 3. Trabalho guiado em sala: professor circula, agente de IA liberado como par
-4. Regra do agente no projeto: **primeiro tenta na mão, agente destrava e acelera** (e todo código gerado tem que ser explicado pelo aluno no demo day)
+4. Regra do agente no projeto: **primeiro especifique; o agente implementa; você revisa, testa e explica**
 
 **Sai com**: projeto próprio ~80% pronto.
 
@@ -124,10 +137,11 @@ Capítulo teórico entre o Dia 2 e o Dia 3 (D15), adaptado do cap 09 do fullstac
 
 ## Dia 8 · `08-deploy-demo-day` — No ar + Demo Day + e agora?
 
-1. Deploy no PythonAnywhere (ou Render) — free tier, passo a passo visual
-2. Cada aluno publica o projeto e testa o link **no celular** (momento WOW final)
-3. **Demo Day**: 3–5min por aluno apresentando o sistema pra turma
-4. **A ponte**: limites do que construímos — e se precisar de app mobile? e se o front for de outro time? e se forem 10 devs? → separação front/back → API → **o que o mercado usa: React + Java/Spring** → convite para o curso Fullstack (com condição especial pra turma)
+1. Auditoria de deploy por prompt: limitar o escopo ao `app.py`, revisar o diff e testar localmente
+2. Deploy no PythonAnywhere (ou Render) — free tier, passo a passo visual
+3. Cada aluno publica o projeto e testa o link **no celular** (momento WOW final)
+4. **Demo Day**: 3–5min por aluno apresentando o sistema pra turma
+5. **A ponte**: limites do que construímos — e se precisar de app mobile? e se o front for de outro time? e se forem 10 devs? → separação front/back → API → **o que o mercado usa: React + Java/Spring** → convite para o curso Fullstack (com condição especial pra turma)
 
 **Sai com**: link público do próprio sistema + clareza do próximo passo.
 

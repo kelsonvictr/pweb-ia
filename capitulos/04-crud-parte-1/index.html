@@ -235,8 +235,13 @@
     <a href="../../index.html" class="sidebar-back">← Voltar ao hub</a>
   </div>
   <div class="sidebar-group">
-    <div class="sidebar-group-title">🧠 A arquitetura</div>
+    <div class="sidebar-group-title">🤖 A virada do curso</div>
+    <a class="sidebar-link" onclick="goTo('projeto-zero')"><span class="dot" style="background:var(--accent2)"></span>⭐ Projeto novo do zero</a>
     <a class="sidebar-link" onclick="goTo('aquecimento')"><span class="dot" style="background:var(--accent5)"></span>Aquecimento</a>
+    <a class="sidebar-link" onclick="goTo('contrato-agente')"><span class="dot" style="background:var(--accent6)"></span>⭐ Regras da Loja</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🧠 A arquitetura</div>
     <a class="sidebar-link" onclick="goTo('arquitetura')"><span class="dot" style="background:var(--accent)"></span>⭐ A Loja por dentro</a>
     <a class="sidebar-link" onclick="goTo('banco-py')"><span class="dot" style="background:var(--accent7)"></span>banco.py — a despensa</a>
   </div>
@@ -252,8 +257,8 @@
     <a class="sidebar-link" onclick="goTo('validacao')"><span class="dot" style="background:var(--accent2)"></span>Validação básica</a>
   </div>
   <div class="sidebar-group">
-    <div class="sidebar-group-title">🤖 Degrau 2 do agente</div>
-    <a class="sidebar-link" onclick="goTo('agente-revisor')"><span class="dot" style="background:var(--accent6)"></span>O agente revisa o SEU código</a>
+    <div class="sidebar-group-title">🔎 Ritual de entrega</div>
+    <a class="sidebar-link" onclick="goTo('agente-revisor')"><span class="dot" style="background:var(--accent6)"></span>Revisar cada geração</a>
   </div>
   <div class="sidebar-group">
     <div class="sidebar-group-title">🏁 Fechamento</div>
@@ -274,20 +279,149 @@
   <h1><span style="background:linear-gradient(135deg,var(--accent6),var(--accent7));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">A Loja<br>ganha banco</span></h1>
   <p class="subtitle">
     O casamento do ano: as <strong style="color:var(--accent6)">telas do Dia 2</strong> com o
-    <strong style="color:var(--accent7)">banco do Dia 3</strong>. Hoje o formulário passa a dar
+    <strong style="color:var(--accent7)">banco do Dia 3</strong>. Primeiro, um prompt recria a Loja
+    inteira em um projeto novo e coloca toda a turma no mesmo ponto. Depois, o formulário passa a dar
     INSERT, a tabela passa a dar SELECT — e reiniciar o servidor
-    <strong style="color:var(--python-y)">não apaga mais NADA</strong>. 💪
+    <strong style="color:var(--python-y)">não apaga mais NADA</strong>. A partir de hoje,
+    você não recebe o código pronto: <strong style="color:var(--accent6)">você especifica,
+    o agente implementa e você aprova</strong>. 💪
   </p>
   <div class="hero-stack">
     <span class="stack-chip python">🐍 banco.py</span>
     <span class="stack-chip">📋 SELECT → tabela</span>
     <span class="stack-chip">➕ form → INSERT</span>
     <span class="stack-chip">↩️ POST-redirect-GET</span>
-    <span class="stack-chip" style="border-color:rgba(167,139,250,0.5);color:#c9b8ff">🤖 degrau 2: revisor</span>
+    <span class="stack-chip" style="border-color:rgba(167,139,250,0.5);color:#c9b8ff">🤖 modo agent-first</span>
   </div>
 </section>
 
 <div class="container">
+
+  <!-- ═══════════════════════════════════════════════════════
+       PONTO DE SINCRONIZAÇÃO — PROJETO NOVO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="projeto-zero">
+    <div class="step-header">
+      <div class="step-number sn-orange">🧰</div>
+      <div>
+        <div class="step-title">Ponto de sincronização: uma Loja nova para todo mundo</div>
+        <div class="step-sub">Seu código antigo fica guardado; a turma recomeça junta em um projeto limpo</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="warning">
+        <span class="tip-icon">🛟</span>
+        <div class="tip-content">
+          <strong>Não apague nem sobrescreva o projeto antigo.</strong> Renomeie a pasta anterior para
+          <code>loja-antiga</code> ou guarde-a em outro lugar. No PyCharm, crie um
+          <strong>novo projeto vazio chamado <code>loja</code></strong>, com um ambiente virtual novo.
+          É nessa pasta vazia que o agente deve trabalhar daqui em diante.
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">🎯 Por que reconstruir?</div>
+        <p>
+          Alguns projetos podem estar incompletos, com nomes diferentes ou com um erro escondido.
+          O prompt abaixo funciona como um <strong>checkpoint da turma</strong>: ele recompõe apenas o
+          que já foi estudado nos Dias 1, 2 e 3 e para exatamente antes da integração Flask + SQLite.
+          Assim, ninguém perde a aula tentando descobrir qual versão do código possui.
+        </p>
+      </div>
+
+      <div class="exercise guided">
+        <div class="exercise-header">
+          <span class="exercise-icon">🤖</span>
+          <div>
+            <div class="exercise-title">Prompt de partida — recrie a Loja até o fim do Dia 3</div>
+            <div class="exercise-sub">Cole no agente com o terminal aberto dentro da pasta nova e vazia</div>
+          </div>
+        </div>
+
+        <div class="swp-spec-text"><span class="sp-k">[CONTEXTO]</span> Estamos começando o Dia 4 de um curso para iniciantes. Esta pasta é um
+projeto novo e vazio. Quero reconstruir o checkpoint da Loja dos Dias 1, 2 e 3 para que toda a
+turma comece do mesmo estado. A aplicação ainda deve usar uma lista em memória; o SQLite já deve
+existir no projeto, mas ainda NÃO pode estar conectado às rotas Flask.
+
+<span class="sp-k">[TAREFA]</span> Crie do zero uma aplicação didática chamada Loja com esta estrutura:
+- app.py
+- criar_banco.py
+- requirements.txt
+- templates/base.html
+- templates/index.html
+- templates/sobre.html
+- templates/contato.html
+- templates/produtos.html
+- templates/cadastro_produto.html
+- static/style.css
+
+<span class="sp-k">[COMPORTAMENTO OBRIGATÓRIO]</span>
+- Use Flask e render_template. O app.py deve iniciar o servidor com app.run(debug=True).
+- Crie as rotas GET /, /sobre, /contato, /produtos e /cadastro_produto.
+- Crie a rota POST /cadastro, que recebe nome, preco e qtd pelo request.form, converte preço
+  para float e quantidade para int, adiciona um dicionário à lista em memória e redireciona
+  para /produtos.
+- Comece com três produtos na lista: Fone Bluetooth, Teclado Mecânico e Mouse Gamer. Cada
+  dicionário possui nome, preco e qtd.
+- Todos os templates devem herdar de base.html pelo bloco Jinja chamado conteudo.
+- O menu deve ter links para Início, Sobre, Produtos, Cadastrar Produto e Contato.
+- produtos.html deve mostrar nome, preço e quantidade em uma tabela e exibir uma mensagem de
+  estoque vazio quando a lista não tiver produtos.
+- cadastro_produto.html deve ter um formulário com os campos nome, preco e qtd, usando POST
+  para /cadastro.
+- static/style.css deve dar um visual simples, legível e responsivo. O base.html deve carregar
+  somente /static/style.css, sem framework CSS externo.
+- criar_banco.py deve usar sqlite3 para criar loja.db e a tabela produtos com as colunas:
+  id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT, preco REAL e quantidade INTEGER.
+  Use CREATE TABLE IF NOT EXISTS, commit e close. Não insira produtos no banco.
+- requirements.txt deve conter somente Flask como dependência da aplicação.
+
+<span class="sp-k">[RESTRIÇÕES]</span>
+- Código curto, literal e apropriado para quem está começando.
+- Use somente Python, Flask, Jinja, HTML, CSS e sqlite3 da biblioteca padrão.
+- Não use JavaScript, ORM, SQLAlchemy, API, Bootstrap, banco.py, blueprints, classes ou
+  bibliotecas extras.
+- Não conecte o app.py ao loja.db ainda. Não importe sqlite3 no app.py.
+- Termine o app.py com app.run(debug=True), sem usar if __name__ == "__main__" ainda.
+- Não antecipe editar, excluir, vender, login ou qualquer conteúdo dos próximos dias.
+- Não altere nada fora desta pasta nova.
+
+<span class="sp-k">[VERIFICAÇÃO]</span>
+1. Instale o requirements.txt no ambiente virtual, se o Flask ainda não estiver instalado.
+2. Confira a sintaxe de app.py e criar_banco.py.
+3. Execute criar_banco.py e confirme que loja.db e a tabela produtos foram criados.
+4. Inicie o servidor, confira resposta 200 nas cinco rotas GET e simule um POST válido em
+   /cadastro, confirmando o redirecionamento para /produtos. Encerre o servidor ao final.
+5. Ao terminar, mostre a árvore de arquivos, resuma o que criou e liste os testes manuais
+   que eu devo repetir no navegador. Se algum teste falhar, corrija antes de encerrar.
+
+<span class="sp-k">[ACEITE]</span> O projeto abre as cinco páginas, cadastra e lista produtos usando apenas
+a lista em memória, perde o produto cadastrado quando o servidor reinicia, e criar_banco.py cria
+um loja.db vazio que ainda não é usado pelo Flask. Este é o ponto exato em que o Dia 4 começa.</div>
+
+        <div class="swp-accept">
+          <label><input type="checkbox"> Estou no projeto <strong>novo</strong>, e o antigo continua guardado?</label>
+          <label><input type="checkbox"> A árvore contém <code>app.py</code>, <code>criar_banco.py</code>, <code>templates/</code> e <code>static/</code>?</label>
+          <label><input type="checkbox"> As cinco páginas abrem e o formulário cadastra na lista em memória?</label>
+          <label><input type="checkbox"> Depois de reiniciar, o produto de teste some — exatamente como esperado neste checkpoint?</label>
+          <label><input type="checkbox"> <code>loja.db</code> existe, mas <code>app.py</code> ainda não usa SQLite?</label>
+        </div>
+
+        <div class="tip">
+          <span class="tip-icon">🛑</span>
+          <div class="tip-content">
+            <strong>Pare no checkpoint.</strong> Se o agente criar <code>banco.py</code>, importar
+            <code>sqlite3</code> no <code>app.py</code> ou fizer o cadastro persistir após reiniciar,
+            ele adiantou a aula. Peça para remover essa integração: nós vamos construí-la, com
+            prompts menores, nas próximas seções.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
 
   <!-- ═══════════════════════════════════════════════════════
        AQUECIMENTO
@@ -303,11 +437,11 @@
 
     <div class="card">
       <p style="color:var(--text-dim)">
-        Inventário do que você já domina:
+        O prompt de partida acabou de recompor o que você já domina:
         <strong style="color:var(--text)">telas que mostram e recebem dados</strong>
         (Jinja + form, Dia 2) e <strong style="color:var(--text)">dados que sobrevivem a
         qualquer restart</strong> (SQLite, Dia 3). O problema? Eles ainda não se conhecem:
-        a Loja usa a lista em memória, e o loja.db mora sozinho no projeto treino-sql.
+        a Loja usa a lista em memória, e o <code>loja.db</code> ainda não é usado pelo Flask.
         Hoje é o dia do 💍.
       </p>
 
@@ -333,6 +467,77 @@
         </div>
         <div class="quiz-feedback" data-correct="Boa memória!" data-wrong="Revisa o Dia 3!"
              data-explain="(1, 'Fone', 149.9, 12) — id, nome, preco, quantidade. No template, p[1] é o nome. Isso muda um detalhe do nosso Jinja hoje."></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       CONTRATO COM O AGENTE
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="contrato-agente">
+    <div class="step-header">
+      <div class="step-number sn-purple">🤖</div>
+      <div>
+        <div class="step-title">A virada: agora você programa por especificação</div>
+        <div class="step-sub">O agente digita. Você define, revisa, testa e responde pelo resultado.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="concept">
+        <div class="concept-title">🎯 Regra central do Dia 4 em diante</div>
+        <p>
+          <strong>Nenhuma operação nova começa copiando código.</strong> Primeiro você entende o
+          caminho na tela, escreve um prompt com critérios de aceite e deixa o agente editar.
+          O código completo deste material aparece depois, como <strong>mapa para revisar o diff</strong>.
+        </p>
+      </div>
+
+      <p style="color:var(--text-dim)">
+        Antes do primeiro pedido, crie na raiz da pasta <code>loja</code> o arquivo de regras que a
+        sua ferramenta usa (<code>AGENTS.md</code> para Codex/Antigravity ou
+        <code>CLAUDE.md</code> para Claude Code). Peça ao próprio agente para criar o arquivo com
+        este contrato — e revise o primeiro diff da nova fase:
+      </p>
+
+      <div class="swp-spec-text"><span class="sp-k">[CONTEXTO]</span> Estamos construindo uma Loja didática com Python, Flask,
+Jinja e SQLite. Eu já aprendi rotas, templates, formulários, GET/POST e SQL.
+
+<span class="sp-k">[TAREFA]</span> Crie o arquivo de instruções do projeto usado por você e registre
+as regras abaixo. Não altere nenhum outro arquivo.
+
+<span class="sp-k">[REGRAS]</span>
+- Use apenas Python, Flask, Jinja, HTML, CSS e sqlite3 direto.
+- Não use ORM, JavaScript, API separada, framework CSS novo ou biblioteca extra.
+- Todo SQL com dados do usuário usa placeholders ?.
+- Siga a estrutura atual: app.py, banco.py, templates/ e static/.
+- Implemente somente a operação pedida; não “aproveite” para refatorar o resto.
+- Preserve os nomes e o estilo que já existem no projeto.
+- Depois de editar, informe arquivos alterados e testes manuais para eu executar.
+- Nunca diga que terminou sem conferir sintaxe e explicar o diff em linguagem simples.
+
+<span class="sp-k">[ACEITE]</span> Apenas o arquivo de instruções foi criado e todas as regras acima
+estão registradas de forma clara.</div>
+
+      <div class="exercise guided">
+        <div class="exercise-header">
+          <span class="exercise-icon">🧭</span>
+          <div>
+            <div class="exercise-title">Prompt 0 — leia antes de tocar</div>
+            <div class="exercise-sub">Planejamento não é implementação</div>
+          </div>
+        </div>
+        <div class="swp-spec-text">Leia o projeto inteiro e o arquivo de instruções. Explique, sem
+editar nada, quais arquivos precisam mudar para substituir a lista em memória pelo SQLite nas
+operações de listar e cadastrar produtos. Para cada arquivo, diga a responsabilidade e o teste
+manual correspondente. Pare e espere minha aprovação do plano.</div>
+        <p style="color:var(--text-dim)">
+          Se o plano mencionar SQLAlchemy, JavaScript, API ou uma refatoração grande, a primeira
+          entrega já falhou: cite a regra violada e peça um plano novo. Esse é o mesmo poder que o
+          arquivo de regras deu ao GestorPRO — agora aplicado à Loja.
+        </p>
       </div>
     </div>
   </section>
@@ -439,11 +644,24 @@
 
     <div class="card">
       <p style="color:var(--text-dim)">
-        Primeiro passo do dia: <strong>reabra o projeto <code>loja</code></strong> no PyCharm
-        (<code>File → Open Recent</code>) e traga o <code>criar_banco.py</code> do treino-sql —
-        pode copiar e colar o arquivo direto na árvore, com <code>Ctrl+C</code>/<code>Ctrl+V</code>.
-        Rode UMA vez (▶) e o <code>loja.db</code> da Loja nasce ali.
-        Depois, crie o <code>banco.py</code> — acompanhe o destaque:
+        Primeiro passo técnico do dia: confirme que o terminal continua aberto no
+        <strong>projeto novo <code>loja</code></strong>. O prompt de partida já criou
+        <code>criar_banco.py</code>; rode UMA vez (▶) se o agente ainda não o executou e confirme
+        que <code>loja.db</code> aparece na árvore. Depois, entregue o primeiro prompt de implementação:
+      </p>
+
+      <div class="swp-spec-text"><span class="sp-k">[TAREFA]</span> Integre a leitura e o cadastro de produtos ao SQLite.
+Crie banco.py com listar_produtos() e cadastrar_produto(nome, preco, qtd), usando loja.db.
+
+<span class="sp-k">[RESTRIÇÕES]</span> sqlite3 direto, sem ORM; SELECT retorna fetchall; INSERT usa
+placeholders (?, ?, ?), commit e close. Não altere rotas nem templates ainda.
+
+<span class="sp-k">[ACEITE]</span> Um teste curto no terminal consegue importar banco, listar os
+produtos existentes e cadastrar um produto sem montar SQL com f-string.</div>
+
+      <p style="color:var(--text-dim)">
+        Agora leia o diff. O bloco abaixo é o seu <strong style="color:var(--text)">mapa de
+        inspeção</strong>: procure o ritual do Dia 3 e não copie antes de ver a proposta do agente.
       </p>
 
       <div class="swp-trace" data-seq="2600">
@@ -509,9 +727,24 @@
 
     <div class="card">
       <p style="color:var(--text-dim)">
-        No <code>app.py</code>, a rota nova — repara como ela fica
+        Antes de olhar o código, peça a operação completa em um recorte pequeno:
+      </p>
+
+      <div class="swp-spec-text"><span class="sp-k">[TAREFA]</span> Implemente a página de estoque em /produtos.
+A rota deve chamar banco.listar_produtos() e enviar o resultado ao template produtos.html.
+O template herda de base.html, mostra id, nome, preço e quantidade em tabela e exibe uma mensagem
+quando não houver produtos.
+
+<span class="sp-k">[RESTRIÇÕES]</span> Não implemente cadastro, edição ou exclusão ainda. Sem SQL no
+app.py. Sem JavaScript. Altere somente app.py e templates/produtos.html.
+
+<span class="sp-k">[ACEITE]</span> /produtos mostra os dados que já existem no loja.db; com a tabela
+vazia, mostra “Nenhum produto cadastrado”.</div>
+
+      <p style="color:var(--text-dim)">
+        No diff do <code>app.py</code>, a rota deve ficar
         <strong style="color:var(--text)">curta</strong>, porque o trabalho sujo mora
-        no banco.py:
+        no banco.py. Use os blocos a seguir para revisar a proposta:
       </p>
 
       <div class="code-block with-lines">
@@ -581,19 +814,18 @@ app = <span class="tp">Flask</span>(__name__)
         <div class="exercise-header">
           <span class="exercise-icon">👨‍🏫</span>
           <div>
-            <div class="exercise-title">Bora rodar a Operação 1</div>
-            <div class="exercise-sub">4 passos e o Estoque está no ar</div>
+            <div class="exercise-title">Bora homologar a Operação 1</div>
+            <div class="exercise-sub">O agente editou; agora 4 verificações colocam o Estoque no ar</div>
           </div>
         </div>
         <p style="color:var(--text-dim)">
           <strong style="color:var(--text)">1.</strong> <code>criar_banco.py</code> no projeto loja
           → ▶ Run UMA vez (o <code>loja.db</code> aparece na árvore).<br>
-          <strong style="color:var(--text)">2.</strong> Digitar o <code>banco.py</code>
-          (por enquanto só o <code>listar_produtos</code>).<br>
-          <strong style="color:var(--text)">3.</strong> Rota <code>/produtos</code> no app.py +
-          template <code>produtos.html</code>.<br>
-          <strong style="color:var(--text)">4.</strong> Adicionar <strong>Estoque</strong> no menu
-          do <code>base.html</code> (uma linha — e aparece em todas as páginas 😎).
+          <strong style="color:var(--text)">2.</strong> Confira no diff que o SQL ficou no
+          <code>banco.py</code> e a rota apenas chama a função.<br>
+          <strong style="color:var(--text)">3.</strong> Confira <code>produtos.html</code> e o link
+          <strong>Estoque</strong> no <code>base.html</code>.<br>
+          <strong style="color:var(--text)">4.</strong> Rode o servidor e abra a URL.
           Visite <code>localhost:5000/produtos</code>: como o banco novo está vazio,
           você deve ver o… "😢 Estoque vazio". <strong>Perfeito!</strong> O {% if %}
           está funcionando — os produtos chegam na Operação 2.
@@ -696,7 +928,23 @@ app = <span class="tp">Flask</span>(__name__)
         form e <code>/cadastro</code> recebia. Hoje elas viram <strong style="color:var(--text)">uma
         só</strong>: <code>/produtos/novo</code> mostra o form no GET <em>e</em> processa no POST.
         É o padrão dos sistemas de verdade (uma URL por tela), e quem separa os dois momentos é o
-        <code>request.method</code>. Template primeiro:
+        <code>request.method</code>. Transforme esse entendimento no próximo pedido:
+      </p>
+
+      <div class="swp-spec-text"><span class="sp-k">[TAREFA]</span> Implemente o cadastro em /produtos/novo.
+No GET, mostre novo.html. No POST, leia nome, preco e qtd do formulário, converta os números,
+chame banco.cadastrar_produto(...) e faça redirect("/produtos"). Inclua na lista um link para a
+nova tela e, no formulário, um link para voltar.
+
+<span class="sp-k">[RESTRIÇÕES]</span> Reutilize banco.py; não escreva SQL no app.py. Uma única rota
+GET/POST. Sem JavaScript e sem biblioteca nova.
+
+<span class="sp-k">[ACEITE]</span> Cadastrar cria uma linha no SQLite, volta ao estoque e apertar F5
+não cria uma segunda cópia.</div>
+
+      <p style="color:var(--text-dim)">
+        Só depois de revisar o diff, compare com o mapa de referência abaixo. A ordem superficial
+        pode variar; o comportamento e as restrições não.
       </p>
 
       <div class="code-block with-lines">
@@ -758,16 +1006,15 @@ app = <span class="tp">Flask</span>(__name__)
         <div class="exercise-header">
           <span class="exercise-icon">👨‍🏫</span>
           <div>
-            <div class="exercise-title">Bora rodar a Operação 2</div>
-            <div class="exercise-sub">Complete o ciclo — e faça o teste do ⏹</div>
+            <div class="exercise-title">Bora homologar a Operação 2</div>
+            <div class="exercise-sub">Diff aprovado — agora faça o teste do ⏹</div>
           </div>
         </div>
         <p style="color:var(--text-dim)">
-          <strong style="color:var(--text)">1.</strong> Complete o <code>banco.py</code> com o
-          <code>cadastrar_produto</code>.<br>
-          <strong style="color:var(--text)">2.</strong> Crie o <code>novo.html</code> e a rota acima;
-          ponha um link "➕ Cadastrar" na página do estoque
-          (<code>&lt;a href="/produtos/novo"&gt;</code>).<br>
+          <strong style="color:var(--text)">1.</strong> Confira no diff o
+          <code>cadastrar_produto</code>, os três placeholders e o commit.<br>
+          <strong style="color:var(--text)">2.</strong> Confira <code>novo.html</code>, a rota GET/POST
+          e o link “➕ Cadastrar” na página do estoque.<br>
           <strong style="color:var(--text)">3.</strong> Cadastre 3 produtos de verdade.
           Cada um deve te devolver pro estoque, com a tabela maior.<br>
           <strong style="color:var(--text)">4.</strong> <strong>O teste sagrado:</strong> aperte o
@@ -880,6 +1127,21 @@ app = <span class="tp">Flask</span>(__name__)
         e avisa o usuário na tela:
       </p>
 
+      <div class="swp-spec-text"><span class="sp-k">[TAREFA]</span> Adicione validação ao cadastro de produtos.
+Nome vazio e preço menor ou igual a zero não podem ser gravados. Em cada erro, renderize novamente
+novo.html com uma mensagem clara; no sucesso, preserve o redirect para /produtos.
+
+<span class="sp-k">[RESTRIÇÕES]</span> Validação no servidor, sem JavaScript. Não altere banco.py nem
+outras rotas. Preserve os valores válidos já aceitos pelo formulário.
+
+<span class="sp-k">[ACEITE]</span> Nome vazio, preço 0 e preço negativo não criam linha no banco e
+mostram o motivo; um produto válido continua sendo cadastrado.</div>
+
+      <p style="color:var(--text-dim)">
+        Gere, revise e execute os quatro testes. O trecho abaixo é a referência para localizar a
+        decisão no diff — não a primeira coisa a copiar.
+      </p>
+
       <div class="code-block with-lines">
         <div class="code-header">
           <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
@@ -946,8 +1208,8 @@ app = <span class="tp">Flask</span>(__name__)
         <div class="try-first">
           <div class="try-first-icon">🚨</div>
           <div class="try-first-content">
-            <strong>Tenta primeiro!</strong> Teste com preço -5 e com preço 0.
-            Os dois têm que bater no segurança.
+            <strong>Escreva o prompt primeiro!</strong> Peça a regra sem entregar a solução em
+            código; depois teste com preço -5 e com preço 0. Os dois têm que bater no segurança.
           </div>
         </div>
         <div class="toggler">
@@ -977,8 +1239,8 @@ app = <span class="tp">Flask</span>(__name__)
   <div class="chapter-divider">
     <div class="chapter-icon">🤖</div>
     <div class="chapter-number">Parte 3</div>
-    <h2 style="background:linear-gradient(135deg,var(--accent6),var(--accent3));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Degrau 2: o agente revisa você</h2>
-    <p class="chapter-subtitle">Ele aponta; você julga. Nada muda sem a sua decisão.</p>
+    <h2 style="background:linear-gradient(135deg,var(--accent6),var(--accent3));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">O ritual de cada entrega</h2>
+    <p class="chapter-subtitle">O agente implementa; você prova que funciona e que respeita o combinado.</p>
   </div>
 
   <!-- ═══════════════════════════════════════════════════════
@@ -988,19 +1250,17 @@ app = <span class="tp">Flask</span>(__name__)
     <div class="step-header">
       <div class="step-number sn-purple">🤖</div>
       <div>
-        <div class="step-title">O agente como revisor: "aponte problemas, não mude nada"</div>
-        <div class="step-sub">Ele lê o SEU app.py e banco.py como um dev sênior faria — e você decide o que vale</div>
+        <div class="step-title">Revisão final: "aponte problemas, não mude nada"</div>
+        <div class="step-sub">Depois de cada prompt, o diff e o navegador são sua mesa de inspeção</div>
       </div>
     </div>
 
     <div class="card">
       <p style="color:var(--text-dim)">
-        No Dia 3 o agente explicou o seu código (tutor). Hoje ele sobe um degrau:
-        <strong style="color:var(--text)">critica</strong>. Nas empresas isso se chama <em>code
-        review</em>, e é o que um colega experiente faria com o seu pull request. A diferença: você
-        acabou de construir listar e cadastrar com as próprias mãos, então tem o gabarito mental pra
-        dizer, apontamento por apontamento, <strong style="color:var(--text)">"concordo"</strong> ou
-        <strong style="color:var(--text)">"isso é o jeito da internet, não o nosso"</strong>.
+        Hoje o agente escreveu as operações, mas não ganhou o direito de aprová-las. Nas empresas,
+        isso é <em>code review</em>: conferir escopo, regras e comportamento antes de incorporar uma
+        mudança. Seu gabarito mental vem dos Dias 1–3 e dos critérios de aceite que você definiu
+        <strong style="color:var(--text)">antes</strong> da geração.
       </p>
 
       <div class="exercise guided">
@@ -1039,7 +1299,7 @@ NÃO mude nenhum arquivo.</pre>
             <tr>
               <td>✅ Concordo, faço agora</td>
               <td>"preço negativo passa" — se você ainda não fez a validação da seção anterior, ele vai achar</td>
-              <td>Você mesmo corrige (é o assunto de hoje). Depois peça pra ele conferir.</td>
+              <td>Peça uma correção específica, revise o novo diff e repita o teste.</td>
             </tr>
             <tr>
               <td>🗓️ Concordo, mas é de outro dia</td>
@@ -1069,7 +1329,8 @@ em vez de render_template? O que aconteceria se eu apertasse F5 sem o redirect?<
         </div>
         <p style="color:var(--text-dim)">
           Ele explicou o POST-redirect-GET igual ao material? Melhor? Se falou algo diferente,
-          quem está certo? Teste: tire o redirect, aperte F5, conte os produtos. 😈
+          quem está certo? Peça um experimento temporário sem redirect, aperte F5, conte os
+          produtos e mande o agente restaurar a versão aprovada. 😈
         </p>
       </div>
 
@@ -1079,15 +1340,16 @@ em vez de render_template? O que aconteceria se eu apertasse F5 sem o redirect?<
           Qualquer um consegue pedir uma revisão. O que separa o profissional é saber
           <strong>qual apontamento aceitar</strong>: o agente não conhece o combinado do curso, os
           prazos, nem o que é assunto de amanhã. Ele lista o que a internet costuma listar. A gaveta
-          certa é decisão sua — e você só consegue decidir porque construiu na mão.
+          certa é decisão sua — e você consegue decidir porque aprendeu as peças nos Dias 1–3,
+          escreveu critérios antes da geração e testou a consequência.
         </p>
       </div>
 
       <div class="tip">
         <span class="tip-icon">🪜</span>
         <div class="tip-content">
-          <strong>Próximo degrau (Dia 5):</strong> ele deixa de só falar. Você faz o editar na mão,
-          e o excluir sai de uma espec sua, gerada por ele, aprovada por você com checklist.
+          <strong>No Dia 5:</strong> o modo continua igual. Editar, excluir, vender e consultar vendas
+          começam por uma especificação; cada diff precisa passar pelo seu checklist.
         </div>
       </div>
     </div>
@@ -1187,7 +1449,7 @@ em vez de render_template? O que aconteceria se eu apertasse F5 sem o redirect?<
       <div class="step-number sn-yellow">🧠</div>
       <div>
         <div class="step-title">Quiz de fixação</div>
-        <div class="step-sub">4 perguntas pra carimbar o dia 4</div>
+        <div class="step-sub">5 decisões pra carimbar o dia 4</div>
       </div>
     </div>
 
@@ -1239,6 +1501,18 @@ em vez de render_template? O que aconteceria se eu apertasse F5 sem o redirect?<
         <div class="quiz-feedback" data-correct="Exato!" data-wrong="Pensa na assimetria!"
              data-explain="erro → mostra o form de novo com o aviso (nada foi gravado); sucesso → grava e redirect. Os dois caminhos de todo formulário."></div>
       </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">🤖</span> Chegou a missão “adicionar categoria aos produtos”. Qual é a primeira ação?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Pedir “faz aí” e aceitar tudo</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Copiar cinco arquivos do material</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Prever arquivos e escrever tarefa, restrições e testes de aceite</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Instalar uma biblioteca de CRUD</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Você está no comando." data-wrong="Volta ao contrato do Dia 4."
+             data-explain="agent-first não é apertar um botão: você define o recorte antes da geração. Depois, diff e testes provam se o pedido foi atendido."></div>
+      </div>
     </div>
   </section>
 
@@ -1262,8 +1536,17 @@ em vez de render_template? O que aconteceria se eu apertasse F5 sem o redirect?<
         <div>
           <div class="ab-tag">treino do dia 4</div>
           <div class="ab-title">CRUD de ponta a ponta</div>
-          <div class="ab-sub">Toda missão atravessa as camadas: banco.py → rota → template</div>
+          <div class="ab-sub">Em cada missão, VOCÊ escreve o prompt; o agente atravessa banco.py → rota → template</div>
         </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">📝 Regra da arena: desafio não significa voltar a copiar código</div>
+        <p>
+          Para cada missão, escreva um prompt com <strong>contexto, tarefa, restrições e aceite</strong>.
+          Não use “faça isso” sozinho e não coloque no prompt a solução linha por linha. Antes de
+          aceitar: preveja os arquivos, leia o diff e execute um teste que prova a mudança.
+        </p>
       </div>
 
       <div class="arena-track">
@@ -1401,7 +1684,7 @@ em vez de render_template? O que aconteceria se eu apertasse F5 sem o redirect?<
         <div>↩️ <strong>POST-redirect-GET:</strong> recarregou, não duplica — o F5 duplicador nunca mais</div>
         <div>🛂 <strong>Validação:</strong> erro → re-renderiza com mensagem; sucesso → grava e redirect</div>
         <div>🏆 <strong>E o principal:</strong> reiniciou o servidor… OS DADOS FICARAM. O apagão morreu.</div>
-        <div>🤖 <strong>Agente, degrau 2:</strong> revisão do SEU código + triagem em 3 gavetas (faço agora / outro dia / jeito do curso)</div>
+        <div>🤖 <strong>Virada agent-first:</strong> prompt-spec → diff → teste → correção → aceite; o código do material virou mapa de revisão</div>
       </div>
 
       <div class="concept" style="margin-top:18px">

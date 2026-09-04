@@ -284,7 +284,7 @@
     <span class="stack-chip">✏️ UPDATE</span>
     <span class="stack-chip">💬 flash()</span>
     <span class="stack-chip">🛒 Vender</span>
-    <span class="stack-chip" style="border-color:rgba(167,139,250,0.5);color:#c9b8ff">🤖 degrau 3: par</span>
+    <span class="stack-chip" style="border-color:rgba(167,139,250,0.5);color:#c9b8ff">🤖 um prompt por operação</span>
   </div>
 </section>
 
@@ -488,7 +488,24 @@
 
     <div class="card">
       <p style="color:var(--text-dim)">
-        Duas funções novas no <code>banco.py</code> — repara na
+        Você já previu o caminho: o id entra pela URL, uma ficha volta do banco, o formulário mostra
+        os valores e o POST grava o UPDATE. Agora transforme o desenho em contrato:
+      </p>
+
+      <div class="swp-spec-text"><span class="sp-k">[TAREFA]</span> Implemente a edição de produto.
+Crie banco.buscar_produto(id) com SELECT WHERE id = ? e fetchone; crie
+banco.atualizar_produto(id, nome, preco, qtd) com UPDATE e commit. Em app.py, a rota
+/produtos/&lt;int:id&gt;/editar usa GET e POST: GET mostra editar.html preenchido; POST atualiza e
+redireciona para /produtos. Inclua o link ✏️ em cada linha da lista.
+
+<span class="sp-k">[RESTRIÇÕES]</span> Siga o arquivo de instruções. SQL apenas no banco.py e sempre
+com placeholders. Sem JavaScript, biblioteca ou refatoração fora da operação.
+
+<span class="sp-k">[ACEITE]</span> Editar o id correto pré-preenche e salva; /produtos/999/editar
+responde “Produto não encontrado!”, 404; os demais produtos não mudam.</div>
+
+      <p style="color:var(--text-dim)">
+        Leia o diff e só então abra o mapa abaixo. Repare especialmente na
         <strong style="color:var(--text)">novidade do fetchone</strong>:
       </p>
 
@@ -605,15 +622,14 @@
         <div class="exercise-header">
           <span class="exercise-icon">👨‍🏫</span>
           <div>
-            <div class="exercise-title">Bora montar a edição</div>
-            <div class="exercise-sub">E o link ✏️ na tabela do estoque</div>
+            <div class="exercise-title">Bora homologar a edição</div>
+            <div class="exercise-sub">O agente implementou; você prova cada critério</div>
           </div>
         </div>
         <p style="color:var(--text-dim)">
-          <strong style="color:var(--text)">1.</strong> As duas funções no banco.py, a rota e o
-          <code>editar.html</code> acima.<br>
-          <strong style="color:var(--text)">2.</strong> Em <code>produtos.html</code>, uma coluna
-          nova na tabela com o link de cada linha:<br>
+          <strong style="color:var(--text)">1.</strong> Confira no diff as duas funções do banco,
+          a rota, o template e o link na lista.<br>
+          <strong style="color:var(--text)">2.</strong> O link de cada linha precisa carregar o id:
         </p>
         <div class="code-block">
           <div class="code-header">
@@ -648,7 +664,7 @@
       <div class="step-number sn-red">🗑️</div>
       <div>
         <div class="step-title">Excluir com respeito — junto com o agente</div>
-        <div class="step-sub">Por que apagar NUNCA pode ser um simples link. E o degrau 3: ele gera, você aprova.</div>
+        <div class="step-sub">Por que apagar NUNCA pode ser um simples link. Você especifica a regra; o agente implementa.</div>
       </div>
     </div>
 
@@ -668,6 +684,21 @@
         E tem o dedo humano também: apagar sem perguntar é crueldade. O padrão simples e
         sem JavaScript: uma <strong style="color:var(--text)">página de confirmação</strong> —
         GET mostra o "tem certeza?", o botão (POST) executa.
+      </p>
+
+      <div class="swp-spec-text"><span class="sp-k">[TAREFA]</span> Implemente excluir produto com uma página de confirmação.
+GET em /produtos/&lt;int:id&gt;/excluir mostra o produto e não apaga; o formulário POST na mesma URL
+executa DELETE com placeholder, faz commit e redireciona para /produtos. Inclua o link 🗑️ na lista.
+
+<span class="sp-k">[RESTRIÇÕES]</span> Sem exclusão por GET, sem JavaScript e sem biblioteca nova.
+Siga buscar_produto(id) e devolva 404 para id inexistente.
+
+<span class="sp-k">[ACEITE]</span> Abrir a confirmação não altera o banco; confirmar apaga somente a
+ficha escolhida; /produtos/999/excluir responde 404.</div>
+
+      <p style="color:var(--text-dim)">
+        Envie o pedido, leia o diff e use o bloco abaixo como mapa — principalmente o método POST e
+        o placeholder do DELETE.
       </p>
 
       <div class="code-block with-lines">
@@ -716,14 +747,14 @@
           <span class="exercise-icon">🤖</span>
           <div>
             <div class="exercise-title">Bora montar a exclusão — JUNTO com o agente</div>
-            <div class="exercise-sub">Degrau 3: você especifica e aprova; ele digita</div>
+            <div class="exercise-sub">Você especifica e aprova; ele digita</div>
           </div>
         </div>
         <p style="color:var(--text-dim)">
-          Editar você fez na mão — era a aula. Excluir é o <strong style="color:var(--text)">mesmo
-          padrão</strong> (você acabou de ver), então é a tarefa perfeita pra delegar: você sabe
-          exatamente como deve ficar, e vai conferir linha por linha. A espec carrega as regras da
-          história do robô:
+          Editar já passou pelo ciclo prompt → diff → teste. Excluir usa o
+          <strong style="color:var(--text)">mesmo padrão</strong>, mas com uma regra crítica:
+          confirmação por GET e exclusão apenas por POST. Compare o seu pedido com esta versão
+          detalhada antes da homologação:
         </p>
 
 <div class="swp-spec-text"><span class="sp-k">[CONTEXTO]</span> Projeto Flask em Python. app.py tem as rotas, banco.py tem as funções
@@ -874,7 +905,19 @@ sobraram continuam intactos.</div>
         </div>
       </div>
 
-      <p style="color:var(--text-dim)">No código, são três pecinhas:</p>
+      <div class="swp-spec-text"><span class="sp-k">[TAREFA]</span> Adicione mensagens flash às operações da Loja.
+Configure a secret_key do Flask, mostre get_flashed_messages() em base.html e crie mensagens claras
+de sucesso após cadastrar, editar, excluir e vender. Preserve todos os redirects atuais.
+
+<span class="sp-k">[RESTRIÇÕES]</span> Não mova rotas, não altere SQL e não instale nada. A mensagem
+deve aparecer uma vez e desaparecer após recarregar.
+
+<span class="sp-k">[ACEITE]</span> Cada operação mostra o aviso correto após o redirect; F5 não
+repete a mensagem e não repete a operação.</div>
+
+      <p style="color:var(--text-dim)">
+        No diff, procure três pecinhas. O bloco abaixo é o mapa da revisão:
+      </p>
 
       <div class="code-block with-lines">
         <div class="code-header">
@@ -927,14 +970,13 @@ banco.<span class="fn">atualizar_produto</span>(id, nome, preco, qtd)
         <div class="exercise-header">
           <span class="exercise-icon">👨‍🏫</span>
           <div>
-            <div class="exercise-title">Bora espalhar os avisos</div>
-            <div class="exercise-sub">Cadastro, edição e exclusão avisando</div>
+            <div class="exercise-title">Bora homologar os avisos</div>
+            <div class="exercise-sub">Cadastro, edição e exclusão precisam confirmar uma vez</div>
           </div>
         </div>
         <p style="color:var(--text-dim)">
-          Adicione o <code>secret_key</code> + o quadro no base.html, e um
-          <code>flash(...)</code> antes de CADA redirect: "Produto cadastrado! 🎉",
-          "Produto atualizado!", "Produto excluído.". Teste os três e repare:
+          Confira o <code>secret_key</code>, o quadro no base.html e um
+          <code>flash(...)</code> antes de cada redirect. Teste cadastro, edição e exclusão e repare:
           o aviso aparece <strong>uma vez</strong> — F5 e ele se foi.
         </p>
       </div>
@@ -1090,6 +1132,24 @@ banco.<span class="fn">atualizar_produto</span>(id, nome, preco, qtd)
 
     <div class="card">
       <p style="color:var(--text-dim)">
+        Antes da implementação, descreva a transação ao agente. Este é o prompt mais importante do
+        dia, porque duas mudanças no banco precisam acontecer juntas:
+      </p>
+
+      <div class="swp-spec-text"><span class="sp-k">[TAREFA]</span> Implemente a operação de venda da Loja.
+Atualize criar_banco.py com a tabela vendas (id, produto_id, qtd e total). Crie /vender com GET e
+POST e o template vender.html. O GET lista produtos em um select. O POST
+recebe produto_id e qtd, busca o produto, rejeita quantidade menor que 1 ou maior que o estoque,
+calcula total no servidor e chama banco.registrar_venda(...). Essa função faz o INSERT em vendas e
+o UPDATE do estoque na mesma conexão e com um único commit. No sucesso, redirecione para /vendas.
+
+<span class="sp-k">[RESTRIÇÕES]</span> Não confie em preço ou total vindos do formulário. SQL com ?.
+Sem JavaScript, ORM ou biblioteca nova. Não mude o CRUD de produtos.
+
+<span class="sp-k">[ACEITE]</span> Venda válida cria histórico e baixa estoque; quantidade 0,
+negativa ou maior que o estoque não altera nenhuma tabela; o total usa o preço do banco.</div>
+
+      <p style="color:var(--text-dim)">
         No form de venda o visitante <strong style="color:var(--text)">escolhe de uma
         lista</strong> — entra em cena a última tag HTML do curso, o
         <code>&lt;select&gt;</code>, com as opções carimbadas pelo Jinja:
@@ -1205,15 +1265,16 @@ banco.<span class="fn">atualizar_produto</span>(id, nome, preco, qtd)
         <div class="exercise-header">
           <span class="exercise-icon">👨‍🏫</span>
           <div>
-            <div class="exercise-title">Bora montar a tela Vender</div>
-            <div class="exercise-sub">A operação-coração do sistema</div>
+            <div class="exercise-title">Bora homologar a tela Vender</div>
+            <div class="exercise-sub">A operação-coração do sistema precisa sobreviver aos testes</div>
           </div>
         </div>
         <p style="color:var(--text-dim)">
-          <strong style="color:var(--text)">1.</strong> Tabela <code>vendas</code> no criar_banco →
-          ▶ de novo. <strong style="color:var(--text)">2.</strong> <code>registrar_venda</code> no
-          banco.py. <strong style="color:var(--text)">3.</strong> Rota + vender.html + "Vender" no
-          menu do base.html. <strong style="color:var(--text)">4.</strong> Venda 2 fones → flash →
+          <strong style="color:var(--text)">1.</strong> Confira a tabela <code>vendas</code> no diff e
+          rode o criar_banco. <strong style="color:var(--text)">2.</strong> Inspecione
+          <code>registrar_venda</code> no banco.py: uma conexão e um commit.
+          <strong style="color:var(--text)">3.</strong> Confira rota, template e menu.
+          <strong style="color:var(--text)">4.</strong> Venda 2 fones → flash →
           confere o estoque baixando na tabela. <strong style="color:var(--text)">5.</strong>
           Tente vender 500 — o segurança barra. 🛡️
         </p>
@@ -1243,6 +1304,17 @@ banco.<span class="fn">atualizar_produto</span>(id, nome, preco, qtd)
         "traga as vendas E, <strong style="color:var(--text)">junto</strong>, o nome que está na
         ficha apontada":
       </p>
+
+      <div class="swp-spec-text"><span class="sp-k">[TAREFA]</span> Implemente a página /vendas.
+Em banco.py, crie listar_vendas() usando JOIN para devolver id da venda, nome do produto,
+quantidade e total; crie faturamento() com SUM(total), retornando 0 quando não houver vendas.
+Em app.py, envie os dois resultados a vendas.html. O template mostra histórico e faturamento.
+
+<span class="sp-k">[RESTRIÇÕES]</span> Somente banco.py, app.py e templates/vendas.html. SQL no
+banco.py, sem ORM e sem dependências. Não altere a operação de venda já homologada.
+
+<span class="sp-k">[ACEITE]</span> O nome exibido corresponde ao produto vendido; o faturamento é a
+soma dos totais; com zero vendas, a página abre e mostra R$ 0,00.</div>
 
       <div class="code-block with-lines">
         <div class="code-header">
@@ -1296,13 +1368,14 @@ banco.<span class="fn">atualizar_produto</span>(id, nome, preco, qtd)
         <div class="exercise-header">
           <span class="exercise-icon">👨‍🏫</span>
           <div>
-            <div class="exercise-title">Bora fechar a última aba</div>
-            <div class="exercise-sub">/vendas com histórico e faturamento</div>
+            <div class="exercise-title">Bora homologar a última aba</div>
+            <div class="exercise-sub">/vendas com histórico e faturamento conferidos</div>
           </div>
         </div>
         <p style="color:var(--text-dim)">
-          Rota <code>/vendas</code> passando <code>vendas=banco.listar_vendas()</code> e
-          <code>total=banco.faturamento()</code>; template com a tabela do histórico
+          Confira no diff a rota <code>/vendas</code> passando
+          <code>vendas=banco.listar_vendas()</code> e <code>total=banco.faturamento()</code>,
+          além do template com a tabela do histórico
           (agora com NOME, graças ao JOIN) e um
           <code>&lt;h2&gt;💰 Faturamento: R$ {{ total }}&lt;/h2&gt;</code>.
           "Vendas" no menu. Venda mais umas coisas e veja o caixa crescer. 🤑
@@ -1452,7 +1525,7 @@ banco.<span class="fn">atualizar_produto</span>(id, nome, preco, qtd)
       <div class="step-number sn-yellow">🧠</div>
       <div>
         <div class="step-title">Quiz de fixação</div>
-        <div class="step-sub">4 perguntas pra carimbar o dia 5</div>
+        <div class="step-sub">5 decisões pra carimbar o dia 5</div>
       </div>
     </div>
 
@@ -1504,6 +1577,18 @@ banco.<span class="fn">atualizar_produto</span>(id, nome, preco, qtd)
         <div class="quiz-feedback" data-correct="Boa!" data-wrong="Revisa o bilhete!"
              data-explain="o bilhete sobrevive ao redirect no bolso da sessão, é entregue uma vez pelo get_flashed_messages… e é destruído. F5 de novo = sem mensagem."></div>
       </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">🤖</span> O prompt pediu somente histórico de vendas, mas o diff também refatorou o CRUD de produtos. Você…</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Aceita, porque ficou mais moderno</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Rejeita o excesso e pede a implementação limitada aos arquivos da tarefa</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Testa apenas /vendas e ignora o resto</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Pede para refatorar mais arquivos</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Escopo protegido." data-wrong="Diff extra também pode quebrar o que funcionava."
+             data-explain="uma mudança fora da especificação não ganhou critérios de aceite. Rejeitar o excesso mantém o diff pequeno, revisável e seguro."></div>
+      </div>
     </div>
   </section>
 
@@ -1527,8 +1612,17 @@ banco.<span class="fn">atualizar_produto</span>(id, nome, preco, qtd)
         <div>
           <div class="ab-tag">treino do dia 5</div>
           <div class="ab-title">Os detalhes que separam "funciona" de "é bom"</div>
-          <div class="ab-sub">Tudo em cima da Loja que você acabou de completar</div>
+          <div class="ab-sub">Cinco prompts autorais em cima da Loja que você acabou de completar</div>
         </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">📝 Agora o prompt é parte da resposta</div>
+        <p>
+          Não altere a Loja diretamente. Em cada missão, escreva o prompt-spec, envie ao agente,
+          revise o diff e teste a consequência. Um pedido grande demais deve ser quebrado antes da
+          execução; uma mudança fora do escopo deve ser rejeitada.
+        </p>
       </div>
 
       <div class="arena-track">
@@ -1661,8 +1755,8 @@ banco.<span class="fn">atualizar_produto</span>(id, nome, preco, qtd)
     <div class="card">
       <div class="about-bullets">
         <div>🎯 <strong>&lt;int:id&gt;:</strong> o número da ficha viaja na URL e cai como parâmetro na função</div>
-        <div>✏️ <strong>Editar:</strong> fetchone → form com value= preenchido → UPDATE → redirect (e 404 pra ficha fantasma)</div>
-        <div>🗑️ <strong>Excluir:</strong> NUNCA por link — página de confirmação + POST (a história do robô). Gerado pelo agente a partir da SUA espec, aprovado com checklist (degrau 3)</div>
+        <div>✏️ <strong>Editar:</strong> prompt-spec → fetchone → form preenchido → UPDATE → testes do id certo e da ficha fantasma</div>
+        <div>🗑️ <strong>Excluir:</strong> página de confirmação + POST, gerada pelo agente e homologada pelo seu checklist</div>
         <div>💬 <strong>flash():</strong> o bilhete de uma vez só, com secret_key assinando a sessão</div>
         <div>🛒 <strong>Vender:</strong> duas tabelas relacionadas por produto_id, INSERT + UPDATE no MESMO commit, servidor calculando o total</div>
         <div>🧾 <strong>Vendas:</strong> o JOIN essencial juntando as fichas + SUM somando o caixa</div>
@@ -1682,8 +1776,8 @@ banco.<span class="fn">atualizar_produto</span>(id, nome, preco, qtd)
         <div class="tip-content">
           <strong>Antes do Dia 6:</strong> confira que o seu agente (Claude Code, Codex ou
           Antigravity) abre na pasta da loja e que a Loja roda com /produtos, /vender e /vendas.
-          O encontro inteiro é mão na massa com o agente — e, pela primeira vez, ele constrói uma
-          feature INTEIRA. Releia o ritual de revisão do Dia 2½. 🤖
+          O próximo encontro continua com o agente, mas sobe de operações pequenas para uma
+          feature maior: login. Releia o ritual de revisão do Dia 2½. 🤖
         </div>
       </div>
 
@@ -1698,7 +1792,7 @@ banco.<span class="fn">atualizar_produto</span>(id, nome, preco, qtd)
 
       <div class="next-chapter">
         <h3>🤖 Dia 06 · Programando com agentes de IA</h3>
-        <p style="color:var(--text-dim)">Degrau 4 da escada: o agente constrói o login — e você revisa tudo</p>
+        <p style="color:var(--text-dim)">Uma feature maior: o agente constrói o login — e você revisa tudo</p>
         <a href="../06-agentes-de-ia/" class="btn-next">🤖 Ir para o Dia 06 →</a>
       </div>
     </div>

@@ -500,7 +500,8 @@
           <strong>Spoiler de profissional:</strong> por causa da mesa, regra importante de projeto
           não se fala na conversa — se <strong>escreve num arquivo</strong> que o agente relê
           sempre. Esse arquivo tem até nome de mercado (<code>CLAUDE.md</code> no Claude Code,
-          <code>AGENTS.md</code> nos outros) e você vai escrever o seu no Dia 7, pro projeto final.
+          <code>AGENTS.md</code> nos outros) e você vai escrever o primeiro no Dia 4, antes do CRUD
+          da Loja. No Dia 7, adapta o contrato ao projeto final.
         </div>
       </div>
 
@@ -1012,16 +1013,16 @@ agy</div>
     <div class="step-header">
       <div class="step-number sn-purple">🪜</div>
       <div>
-        <div class="step-title">A escada do curso: o agente entra um degrau por dia</div>
-        <div class="step-sub">Primeiro tutor, depois revisor, depois par — e só então você comanda</div>
+        <div class="step-title">A progressão do curso: aprender as peças, depois comandar</div>
+        <div class="step-sub">Até o SQL na mão; a partir da integração, desenvolvimento por prompts</div>
       </div>
     </div>
 
     <div class="card">
       <p style="color:var(--text-dim)">
-        Você não vai "ligar a IA" e parar de digitar. O agente entra aos poucos, sempre
-        <strong style="color:var(--text)">depois</strong> de você ter feito a versão na mão da coisa que
-        ele vai tocar — porque só assim você tem o gabarito mental pra revisar:
+        Você não vai pedir um sistema antes de entender suas peças. Nos Dias 1–3, aprende na mão
+        Flask, Jinja, formulários e SQL. A partir do Dia 4, usa esse repertório para especificar,
+        revisar e testar o código que o agente escreve:
       </p>
 
       <div class="swp-escada">
@@ -1035,15 +1036,15 @@ agy</div>
         </div>
         <div class="swp-degrau">
           <span class="dg-n">DIA 4</span>
-          <div><div class="dg-t">Revisor do SEU código</div><div class="dg-d">Você constrói listar e cadastrar com banco. No fim, pede: "revise meu app.py, aponte problemas, não mude nada" — e julga cada apontamento.</div></div>
+          <div><div class="dg-t">A virada: você comanda o CRUD</div><div class="dg-d">Cria as regras da Loja e pede listar + cadastrar em operações separadas. Cada prompt vira diff, testes e aceite — o código do material é mapa de revisão.</div></div>
         </div>
         <div class="swp-degrau">
           <span class="dg-n">DIA 5</span>
-          <div><div class="dg-t">Par: ele gera, você aprova</div><div class="dg-d">Editar na mão (é a aula). Excluir com espec sua + agente + checklist de aceitação. Vender na mão de novo, porque tem regra de negócio.</div></div>
+          <div><div class="dg-t">Um prompt por operação</div><div class="dg-d">Editar, excluir, flash, vender e histórico: teoria primeiro; agente implementa; você inspeciona SQL, testa caminho feliz e força o erro.</div></div>
         </div>
         <div class="swp-degrau">
           <span class="dg-n">DIA 6</span>
-          <div><div class="dg-t">Você comanda: o login inteiro</div><div class="dg-d">Uma feature completa (tabela, telas, sessão, hash) gerada a partir de uma espec de 6 itens — com caça ao bug plantado no diff.</div></div>
+          <div><div class="dg-t">Uma feature maior: login</div><div class="dg-d">Depois de vários prompts pequenos, uma especificação maior cobre tabela, telas, sessão e hash — ainda com plano, revisão e caça ao bug.</div></div>
         </div>
         <div class="swp-degrau">
           <span class="dg-n">DIAS 7–8</span>
@@ -1123,7 +1124,7 @@ agy</div>
           25ª ele colocou um <code>&lt;script&gt;</code>. Não é teimosia — é a <strong>mesa de contexto
           cheia</strong> (a regra caiu da borda). <strong>Antídoto:</strong> regra importante mora em
           ARQUIVO relido sempre, não na conversa. É o <code>CLAUDE.md</code> / <code>AGENTS.md</code> —
-          você escreve o seu no Dia 7.
+          você escreve o primeiro no Dia 4 e adapta outro no Dia 7.
         </div>
       </div>
 
@@ -1212,7 +1213,7 @@ agy</div>
           <button class="quiz-opt" onclick="checkQuiz(this,false)">JavaScript é obrigatório em Flask</button>
         </div>
         <div class="quiz-feedback" data-correct="Exato — é a mesa cheia." data-wrong="Lembra da máquina 📦!"
-             data-explain="conversa longa empurra o que é antigo pra fora do contexto. Regra importante mora num arquivo que o agente relê sempre (CLAUDE.md / AGENTS.md) — assunto do Dia 7."></div>
+             data-explain="conversa longa empurra o que é antigo pra fora do contexto. Regra importante mora num arquivo que o agente relê sempre (CLAUDE.md / AGENTS.md) — ele nasce na virada agent-first do Dia 4."></div>
       </div>
 
       <div class="quiz">
@@ -1223,7 +1224,7 @@ agy</div>
           <button class="quiz-opt" onclick="checkQuiz(this,false)">Nenhum, ele só entra no Dia 6</button>
           <button class="quiz-opt" onclick="checkQuiz(this,false)">Fazer o projeto final inteiro</button>
         </div>
-        <div class="quiz-feedback" data-correct="Tutor + CSS. Um degrau por dia." data-wrong="Olha a escada de novo!"
+        <div class="quiz-feedback" data-correct="Tutor + CSS. A preparação para comandar." data-wrong="Olha a progressão de novo!"
              data-explain="o SQL é seu — a habilidade do dia. O agente explica (tutor) e faz a tarefa visual (CSS), que é fácil de revisar: você VÊ o resultado na tela."></div>
       </div>
     </div>
@@ -1250,7 +1251,7 @@ agy</div>
         <div>🦾 <strong>Agente</strong> = LLM + mãos (ler, editar, rodar) + o <strong>loop</strong> (planejar → agir → observar → repetir). Claude Code, Codex, Antigravity: nomes diferentes, mesmo loop.</div>
         <div>✍️ <strong>Pedido = mini-espec</strong>, com 4 ingredientes: CONTEXTO + TAREFA + RESTRIÇÕES + CRITÉRIO DE ACEITE. Buraco no pedido = decisão delegada ao estagiário.</div>
         <div>👀 <strong>O ritual de revisão:</strong> ① rodou? ② li o diff? ③ segue nosso padrão? ④ algo que não pedi? ⑤ <strong>explico em voz alta?</strong> Sem o ⑤, não aceita.</div>
-        <div>🪜 <strong>A escada:</strong> tutor (Dia 3) → revisor (Dia 4) → par (Dia 5) → você comanda (Dia 6) → seu sistema (Dias 7–8). Sempre depois da versão na mão.</div>
+        <div>🪜 <strong>A progressão:</strong> fundamentos na mão (Dias 1–3) → CRUD por prompts (Dias 4–5) → feature maior (Dia 6) → seu sistema agent-first (Dias 7–8).</div>
       </div>
 
       <div class="concept" style="margin-top:18px">

@@ -6,7 +6,7 @@
 
 ## 🎯 O que é este projeto
 
-Material didático do curso rápido **Sistemas Web com Python** (programa AI, prof. Kelson Almeida): **8 encontros de 2h (16h)** que pegam o aluno formado no bootcamp **Programação para Iniciantes** (`../programacao-iniciantes-v2/`) e o levam do Streamlit para um **sistema web de verdade**: Flask + Jinja + SQLite (SQL na mão) + agentes de codificação (Claude Code/Codex/Antigravity, em escada desde o Dia 3 — D15) + deploy público.
+Material didático do curso rápido **Sistemas Web com Python** (programa AI, prof. Kelson Almeida): **8 encontros de 2h (16h)** que pegam o aluno formado no bootcamp **Programação para Iniciantes** (`../programacao-iniciantes-v2/`) e o levam do Streamlit para um **sistema web de verdade**: Flask + Jinja + SQLite (SQL aprendido na mão) + desenvolvimento orientado por agentes de codificação (Claude Code/Codex/Antigravity) a partir do Dia 4 + deploy público.
 
 **Fio condutor**: o aluno reconstrói o **Sistema de Loja/Vendas** que fez como desafio final do bootcamp (`app_loja.py`, Streamlit + TinyDB, 4 abas: Estoque/Cadastrar/Vender/Vendas) — agora com URL própria, telas em HTML/Jinja e banco relacional. A narrativa é "o mesmo sistema, agora profissional".
 
@@ -46,9 +46,9 @@ sistemas-web-python/
 │   ├── 02-formularios-jinja/        ← Dia 2 · Jinja + GET/POST
 │   ├── 02b-ia-agentes/              ← Dia 2½ · teoria de IA/agentes + instalação (leitura em casa)
 │   ├── 03-sql-sqlite/               ← Dia 3 · SQL na mão, adeus TinyDB
-│   ├── 04-crud-parte-1/             ← Dia 4 · listar + cadastrar produtos
-│   ├── 05-crud-parte-2/             ← Dia 5 · editar + excluir + flash
-│   ├── 06-agentes-de-ia/            ← Dia 6 · degrau 4: o agente gera o login inteiro
+│   ├── 04-crud-parte-1/             ← Dia 4 · virada agent-first: listar + cadastrar por prompts
+│   ├── 05-crud-parte-2/             ← Dia 5 · editar + excluir + vender por prompts
+│   ├── 06-agentes-de-ia/            ← Dia 6 · feature maior: login por especificação
 │   ├── 07-projeto-final/            ← Dia 7 · CRUD próprio do aluno, com agente
 │   └── 08-deploy-demo-day/          ← Dia 8 · deploy + apresentação + ponte fullstack
 ├── sobre/                           ← página do professor (copiada da v2)

@@ -21,7 +21,7 @@ O medo comercial: aluno faz este curso e desiste do Fullstack (React + Java/Spri
 3. **Dia 8 termina com ponte explícita**: limites do monólito server-rendered → o que aparece nas vagas → convite com condição especial pra turma.
 4. **Tese**: quem compraria só o curso rápido não compraria o fullstack de qualquer jeito; quem faz e gosta converte melhor. É funil, não concorrente.
 
-## D4 · Agentes de IA entram no Dia 6, não antes (2026-07-22)
+## D4 · Agentes de IA entram no Dia 6, não antes (2026-07-22 · superada por D15 e D16)
 
 O aluno precisa construir o CRUD na mão primeiro (dias 1–5) para conseguir **avaliar** o que o agente gera. O caso de uso do agente é o **login** (sessão + hash) — feature real, valiosa, e que deixou de ser aula manual (economiza um encontro inteiro). O que se ensina é o fluxo: especificar → gerar → ler o diff → testar. No projeto final, código gerado por agente tem que ser explicado pelo aluno no demo day.
 
@@ -210,7 +210,7 @@ bater com o que a turma viu, porque o aluno não pode achar que digitou errado:
   (gabarito = versão 2, arena inteira). Produtos de exemplo continuam Fone/Teclado/Mouse
   (em sala eram Logitech) — box "seus produtos podem ser outros; o que bate é a estrutura".
 
-## D15 · Agentes de IA desde o Dia 3, em escada — e capítulo 02½ de teoria (2026-09-01)
+## D15 · Agentes de IA desde o Dia 3, em escada — e capítulo 02½ de teoria (2026-09-01 · progressão superada por D16)
 
 Revisão da D4 a pedido do professor, com a turma em andamento: os agentes deixam de ser
 "só no Dia 6" e entram **um degrau por dia**, sempre DEPOIS da versão na mão do que o agente
@@ -245,3 +245,43 @@ Decisões travadas:
   o visual final é gerado pelo agente a partir da espec do aluno — continua sem JS/React (D3).
 - Cap 06 mantém as máquinas e a missão do login; muda só o enquadramento (degrau 4), o
   pré-encontro (checagem) e a tabela de ferramentas.
+
+## D16 · Do Dia 4 em diante, desenvolvimento agent-first (2026-09-04)
+
+Decisão do professor: a Loja continua sendo o fio condutor — **GestorPRO não entra neste curso**.
+O Cap. 10 de `novo-material-fullstack` é referência apenas para o modo de trabalho usado na fase
+“Produtos: você comanda”. A partir da integração Flask + SQLite do Dia 4, todo código novo da
+aplicação é solicitado ao agente por prompts-spec.
+
+### D17 · Dia 4 vira checkpoint comum com projeto novo (2026-09-04)
+
+Decisão do professor: o Dia 4 não depende mais da qualidade ou da versão do projeto que cada aluno
+traz dos encontros anteriores. A primeira atividade preserva o projeto antigo, cria uma pasta
+`loja` nova e vazia e entrega ao agente um prompt completo para reconstruir o estado final dos
+Dias 1–3. Esse estado inclui Flask, cinco páginas, cadastro/listagem em memória, herança Jinja,
+CSS local e `criar_banco.py`, mas **proíbe integrar o Flask ao SQLite**. A perda dos produtos após
+reiniciar continua intencional e comprova que o aluno parou no checkpoint correto. Só depois da
+homologação desse ponto comum começam os prompts pequenos de integração e CRUD do próprio Dia 4.
+
+Isso substitui a escada antiga “revisor no Dia 4 → par no Dia 5 → comanda no Dia 6”. O aluno já
+construiu manualmente, nos Dias 1–3, o repertório mínimo para especificar e revisar: rotas,
+templates, formulários, GET/POST, SQL, placeholders, `commit` e `fetchall`. O novo contrato é:
+
+1. entender a operação e prever entrada, mudança no banco e saída;
+2. escrever/enviar um prompt com contexto, tarefa, restrições e aceite;
+3. deixar o agente editar os arquivos;
+4. ler o diff antes de aceitar;
+5. testar caminho feliz e erro esperado;
+6. pedir uma correção específica quando necessário;
+7. explicar oralmente o que entrou.
+
+Regras de produção dos capítulos:
+
+- código completo continua visível, mas como **mapa de revisão/gabarito**, nunca como primeira ação;
+- cada operação recebe seu próprio prompt; proibir pedidos vagos como “faça o CRUD completo”;
+- `AGENTS.md` e/ou `CLAUDE.md` da Loja são escritos no começo do Dia 4;
+- a teoria vem antes do prompt, para o aluno saber o que exigir;
+- checklists de aceite são executáveis no navegador e incluem pelo menos um caso de erro;
+- o agente pode variar nomes e organização superficial; as regras técnicas e o comportamento são
+  inegociáveis;
+- Dias 7–8 mantêm a exigência do Demo Day: todo trecho gerado deve ser explicado pelo aluno.

@@ -381,6 +381,26 @@
     </div>
 
     <div class="card">
+      <div class="concept">
+        <div class="concept-title">🤖 O modo do curso continua valendo na nuvem</div>
+        <p>
+          Você não altera o arquivo por impulso na última hora. Primeiro pede uma auditoria de
+          deploy, limita o escopo, revisa o diff e testa a Loja localmente antes de compactar.
+        </p>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">prompt de preparação para o deploy</span>
+          <span class="lang-badge python">prompt</span>
+        </div>
+<pre>Leia o arquivo de instruções do projeto e audite app.py para o deploy no PythonAnywhere.
+Garanta que app.run(debug=True) só execute dentro de if __name__ == "__main__" e confirme
+que existe secret_key para flash e login. Altere somente app.py e apenas se necessário.
+Depois explique o diff e me passe testes locais. Não instale nada e não mude regras da Loja.</pre>
+      </div>
+
       <p style="color:var(--text-dim)">
         <strong style="color:var(--text)">Ajuste 1:</strong> na nuvem, quem LIGA o seu app é a
         plataforma — o <code>app.run()</code> é só pra sua máquina. O jeito profissional de
@@ -390,7 +410,7 @@
       <div class="code-block">
         <div class="code-header">
           <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-          <span class="filename">app.py — a ÚLTIMA linha vira isto</span>
+        <span class="filename">app.py — mapa para revisar o diff</span>
           <span class="lang-badge python">Python</span>
         </div>
 <pre><span class="kw">if</span> __name__ == <span class="st">"__main__"</span>:
