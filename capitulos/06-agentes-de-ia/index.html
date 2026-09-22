@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dia 06 · Programando com agentes de IA — Sistemas Web com Python | programa AI</title>
+<title>Dia 06 · Login com agentes — Sistemas Web com Python | programa AI</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../shared/styles.css">
 <link rel="stylesheet" href="../../shared/components.css">
@@ -12,7 +12,7 @@
 /* ══════════ CSS local do capítulo 06 (prefixo swp-) ══════════ */
 
 /* Ligatures OFF em toda classe mono local */
-.swp-diff,.swp-agent-body,.swp-spec-text,.swp-cost td,.swp-hunt-line{
+.swp-spec-text,.swp-cost td,.swp-hunt-line,.swp-ses-ticket,.swp-ses-log,.swp-rules{
   font-variant-ligatures:none;
   font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
 }
@@ -20,6 +20,7 @@
 .step-section.visible .reveal-stagger > *:nth-child(7){transition-delay:0.65s}
 .step-section.visible .reveal-stagger > *:nth-child(8){transition-delay:0.75s}
 
+/* ---------- botões/hud padrão das máquinas ---------- */
 .swp-machine-btn{
   background:linear-gradient(135deg,var(--accent6),#8b7ce8);color:#1a1030;
   border:0;font-weight:800;padding:9px 18px;border-radius:10px;cursor:pointer;
@@ -38,6 +39,12 @@
 .swp-machine-note{font-size:0.8rem;color:var(--text-dim);line-height:1.5;flex:1;min-width:180px}
 .swp-machine-note strong{color:var(--accent6)}
 
+/* ---------- navegador claro das máquinas (mesmo do cap 05) ---------- */
+.swp-mini{border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.10);background:#0f1320}
+.swp-mini-view{background:#fff;padding:14px 16px;font-family:'Nunito',sans-serif;min-height:200px}
+.swp-mini-view h2{font-size:0.95rem;margin:0 0 8px;color:#15151f}
+.swp-mini-view p{font-size:0.84rem;margin:4px 0;color:#3a3a4a}
+
 /* ---------- box do pré-encontro ---------- */
 .swp-preflight{
   border:2px dashed rgba(247,183,49,0.5);border-radius:18px;
@@ -51,51 +58,138 @@
 .swp-preflight li strong{color:var(--text)}
 .swp-preflight code{background:rgba(255,255,255,0.07);padding:1px 7px;border-radius:5px;font-size:0.84rem}
 
-/* ---------- MÁQUINA: agente em ação ---------- */
-.swp-agent{
-  border:1px solid rgba(167,139,250,0.32);border-radius:18px;overflow:hidden;margin:18px 0;
+/* ---------- ⭐ MÁQUINA: o bolso da sessão ---------- */
+.swp-ses{
+  border:1px solid rgba(247,183,49,0.32);border-radius:18px;overflow:hidden;margin:18px 0;
   background:
-    radial-gradient(1100px 280px at 50% -12%, rgba(167,139,250,0.12), transparent 70%),
+    radial-gradient(1100px 280px at 50% -12%, rgba(247,183,49,0.10), transparent 70%),
     linear-gradient(180deg,#0b1020,#0d0d1a);
   box-shadow:0 22px 60px rgba(0,0,0,0.45);
 }
-.swp-agent-term{background:#0b0b14;margin:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);overflow:hidden}
-.swp-agent-head{
-  display:flex;align-items:center;gap:8px;padding:8px 14px;
-  background:rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.06);
-  font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--text-dim);
-}
-.swp-agent-head .dots{display:flex;gap:6px}
-.swp-agent-head .dots i{width:10px;height:10px;border-radius:50%;display:block}
-.swp-agent-head .dots i:nth-child(1){background:#ff5f57}
-.swp-agent-head .dots i:nth-child(2){background:#febc2e}
-.swp-agent-head .dots i:nth-child(3){background:#28c840}
-.swp-agent-body{
-  padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:0.76rem;
-  line-height:1.85;color:#cdd6f4;min-height:280px;
-}
-.swp-agent-body .ln{display:block;opacity:0;transform:translateY(4px);transition:all .35s ease}
-.swp-agent-body .ln.on{opacity:1;transform:none}
-.swp-agent-body .you{color:var(--accent5)}
-.swp-agent-body .bot{color:var(--accent6)}
-.swp-agent-body .dim{color:#5b6478}
-.swp-agent-body .ok{color:var(--accent7)}
+.swp-ses-stage{display:grid;grid-template-columns:1.25fr 1fr;gap:0}
+@media(max-width:780px){.swp-ses-stage{grid-template-columns:1fr}}
+.swp-ses-pane{padding:16px 18px;min-width:0}
+.swp-ses-pane.left{border-right:1px solid rgba(255,255,255,0.06)}
+@media(max-width:780px){.swp-ses-pane.left{border-right:none;border-bottom:1px solid rgba(255,255,255,0.06)}}
 
-/* ---------- diff ---------- */
-.swp-diff{
-  font-family:'JetBrains Mono',monospace;font-size:0.74rem;line-height:1.9;
-  background:var(--code-bg);border:1px solid rgba(255,255,255,0.08);
-  border-radius:12px;padding:10px 0;margin:10px 0;overflow-x:auto;
-  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.15) transparent;
+.swp-ses .stab{
+  display:inline-block;font-size:0.62rem;font-weight:800;letter-spacing:1.4px;
+  text-transform:uppercase;color:var(--text-dim);margin-bottom:8px;
 }
-.swp-diff::-webkit-scrollbar{height:5px}
-.swp-diff::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:3px}
-.swp-diff .dl{display:block;padding:0 14px;white-space:pre;color:#8b96b0}
-.swp-diff .dl.add{background:rgba(6,214,160,0.08);color:#9be3cd}
-.swp-diff .dl.add::before{content:'+ ';color:var(--accent7);font-weight:700}
-.swp-diff .dl.del{background:rgba(255,71,87,0.10);color:#f0a5ab;text-decoration:line-through}
-.swp-diff .dl.del::before{content:'- ';color:var(--bug);font-weight:700}
-.swp-diff .dl.ctx::before{content:'  '}
+.swp-ses-view .who{
+  background:#eef0ff;border:1px solid #ccd0ff;color:#3b3bd1;border-radius:8px;
+  padding:6px 10px;font-size:0.78rem;font-weight:800;margin:0 0 10px;
+}
+.swp-ses-view .bar{
+  display:flex;gap:10px;font-size:0.74rem;color:#5a6270;
+  border-bottom:1px solid #e6e8ef;padding-bottom:7px;margin-bottom:10px;
+}
+.swp-ses-view .bar b{color:#3b3bd1}
+.swp-ses-view table{border-collapse:collapse;width:100%;font-size:0.78rem}
+.swp-ses-view th{background:#f2f3f7;color:#5a6270;padding:6px 9px;text-align:left;font-size:0.64rem;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid #e2e4ea}
+.swp-ses-view td{padding:6px 9px;color:#26282e;border-bottom:1px solid #eceef2}
+.swp-ses-view .acts{color:#3b3bd1;white-space:nowrap}
+.swp-ses-view .lform{display:flex;flex-direction:column;gap:8px;margin-top:10px;max-width:240px}
+.swp-ses-view .lform input{
+  font-family:'Nunito',sans-serif;font-size:0.82rem;padding:7px 10px;
+  border:1px solid #d0d4dd;border-radius:8px;background:#fff;color:#15151f;
+}
+.swp-ses-view .lform button{
+  background:#3b3bd1;color:#fff;border:0;border-radius:8px;padding:8px 14px;
+  font-weight:800;font-size:0.82rem;align-self:flex-start;
+}
+
+/* bolso da sessão */
+.swp-ses-pocket{
+  border:1px dashed rgba(255,255,255,0.18);border-radius:14px;
+  background:rgba(255,255,255,0.03);padding:14px 16px;min-height:104px;
+  display:flex;flex-direction:column;gap:10px;justify-content:center;align-items:center;
+}
+.swp-ses-pocket .plabel{font-size:0.74rem;color:var(--text-dim);text-align:center}
+.swp-ses-ticket{
+  background:linear-gradient(180deg,#f7e8a0,#f2d878);color:#4a3f10;
+  font-family:'JetBrains Mono',monospace;font-size:0.72rem;font-weight:700;
+  border-radius:8px;padding:6px 12px;transform:rotate(-2deg);
+  transition:all .45s ease;
+}
+.swp-ses-ticket.gone{transform:rotate(16deg) translateY(26px) scale(0.35);opacity:0}
+.swp-ses-log{
+  margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:0.7rem;
+  line-height:1.9;color:#8b96b0;background:var(--code-bg);
+  border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px 12px;
+  white-space:pre-wrap;min-height:76px;
+}
+.swp-ses-log .ok{color:var(--accent7)}
+.swp-ses-log .no{color:#ff8a8a}
+.swp-ses-lock{
+  display:inline-flex;align-items:center;gap:8px;cursor:pointer;
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.14);
+  border-radius:50px;padding:6px 14px;font-size:0.76rem;font-weight:800;
+  color:var(--text-dim);font-family:'Nunito',sans-serif;
+}
+.swp-ses-lock.on{border-color:rgba(6,214,160,0.45);color:var(--accent7);background:rgba(6,214,160,0.08)}
+
+/* ---------- ⭐ MÁQUINA: a dívida visual ---------- */
+.swp-visual{
+  border:1px solid rgba(78,205,196,0.32);border-radius:18px;overflow:hidden;margin:18px 0;
+  background:linear-gradient(180deg,#0a1416,#0d0d1a);
+}
+.swp-visual-tabs{display:flex;gap:8px;padding:14px 16px 4px;flex-wrap:wrap}
+.swp-visual-tabs button{
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);
+  color:var(--text-dim);border-radius:50px;padding:6px 14px;cursor:pointer;
+  font-size:0.76rem;font-weight:800;font-family:'Nunito',sans-serif;transition:all .2s;
+}
+.swp-visual-tabs button.sel{background:rgba(78,205,196,0.14);border-color:rgba(78,205,196,0.5);color:var(--accent3)}
+.swp-visual-tabs .flag{font-size:0.66rem;opacity:0.8;margin-left:4px}
+.swp-visual-stage{padding:6px 16px 14px}
+
+/* o "antes": HTML cru, sem nenhuma regra de CSS */
+.vis-view{
+  background:#fff;padding:16px;min-height:236px;
+  font-family:'Times New Roman',Times,serif;color:#000;transition:none;
+}
+.vis-view h2{font-family:inherit;font-size:1.3rem;font-weight:700;margin:0 0 10px;color:#000}
+.vis-view p{font-family:inherit;font-size:0.9rem;color:#000;margin:6px 0}
+.vis-view a{color:#0000ee;text-decoration:underline}
+.vis-view table{border-collapse:collapse;width:100%;font-size:0.82rem;margin-top:8px}
+.vis-view th,.vis-view td{border:1px solid #000;padding:2px 6px;text-align:left;color:#000;background:transparent}
+.vis-view .vform{display:flex;flex-direction:column;gap:6px;margin-top:10px;max-width:260px;align-items:flex-start}
+.vis-view input,.vis-view select{
+  font-family:inherit;font-size:0.9rem;padding:1px 3px;
+  border:1px solid #767676;border-radius:0;background:#fff;color:#000;
+}
+.vis-view button{
+  font-family:inherit;font-size:0.9rem;padding:2px 9px;
+  border:1px solid #767676;background:#efefef;color:#000;border-radius:0;
+}
+.vis-view .flashmsg{border:1px solid #000;padding:3px 7px;font-size:0.85rem;margin-bottom:10px}
+
+/* o "depois": as regras do Prompt 5 chegaram */
+.vis-view.v-on{font-family:'Nunito',sans-serif;color:#1d2433;padding:18px}
+.vis-view.v-on h2{font-weight:900;font-size:1.05rem;color:#15151f;margin-bottom:12px}
+.vis-view.v-on p{font-family:inherit;font-size:0.84rem;color:#3a3a4a}
+.vis-view.v-on a{color:#3b3bd1;text-decoration:none;font-weight:700}
+.vis-view.v-on table{border:1px solid #e2e4ea;border-radius:10px;overflow:hidden;font-size:0.8rem}
+.vis-view.v-on th{
+  background:#f2f3f7;color:#5a6270;border:0;border-bottom:1px solid #e2e4ea;
+  padding:8px 10px;font-size:0.64rem;letter-spacing:1px;text-transform:uppercase;
+}
+.vis-view.v-on td{border:0;border-bottom:1px solid #eceef2;padding:8px 10px;color:#26282e}
+.vis-view.v-on tr:nth-child(even) td{background:#fafbfd}
+.vis-view.v-on .vform{gap:9px;max-width:280px;align-items:stretch}
+.vis-view.v-on input,.vis-view.v-on select{
+  font-family:'Nunito',sans-serif;font-size:0.84rem;padding:8px 10px;
+  border:1px solid #d0d4dd;border-radius:8px;
+}
+.vis-view.v-on button{
+  background:#3b3bd1;color:#fff;border:0;border-radius:8px;padding:9px 16px;
+  font-weight:800;font-size:0.84rem;align-self:flex-start;
+}
+.vis-view.v-on .flashmsg{
+  background:#e6f9f2;border:1px solid #9be3cd;color:#0b7a58;
+  border-radius:10px;padding:9px 14px;font-weight:700;font-size:0.84rem;
+}
 
 /* ---------- MÁQUINA: caça ao bug no diff ---------- */
 .swp-hunt{
@@ -143,11 +237,21 @@
   color:#c9d1d9;padding:12px 16px;white-space:pre-wrap;
   background:var(--code-bg);
 }
+.swp-spec-text .sp-k{color:var(--accent6);font-weight:700}
+.lang-badge.prompt{background:linear-gradient(135deg,var(--accent6),#8b91ff);color:#0a0a12}
 .swp-spec-result{padding:12px 16px;font-size:0.83rem;color:var(--text-dim);line-height:1.6}
 .swp-spec-result strong{color:var(--text)}
 .swp-spec-result .li{display:flex;gap:8px;padding:3px 0}
 
-/* ---------- tabela de custos ---------- */
+/* ---------- bloco de regras do CLAUDE.md ---------- */
+.swp-rules{
+  font-family:'JetBrains Mono',monospace;font-size:0.74rem;line-height:1.9;
+  color:#c9d1d9;background:var(--code-bg);white-space:pre-wrap;
+  border:1px solid rgba(78,205,196,0.3);border-radius:12px;padding:14px 16px;margin:12px 0;
+}
+.swp-rules .rk{color:var(--accent3);font-weight:700}
+
+/* ---------- tabela de ferramentas ---------- */
 .swp-cost{
   width:100%;border-collapse:collapse;margin:14px 0;font-size:0.85rem;
   background:var(--code-bg);border:1px solid rgba(255,255,255,0.08);
@@ -161,7 +265,7 @@
 .swp-cost td:first-child{color:var(--text);font-weight:700}
 .swp-cost tr.hl td{background:rgba(6,214,160,0.06)}
 
-/* checklist de aceitação */
+/* ---------- checklist de aceitação ---------- */
 .swp-accept{margin:12px 0}
 .swp-accept label{
   display:flex;gap:10px;align-items:flex-start;padding:9px 12px;margin:6px 0;
@@ -170,6 +274,25 @@
 }
 .swp-accept input{accent-color:var(--accent7);width:17px;height:17px;flex-shrink:0;margin-top:2px}
 .swp-accept label:has(input:checked){border-color:rgba(6,214,160,0.4);color:var(--text)}
+
+/* ---------- rastreador de código (padrão dos caps anteriores) ---------- */
+.swp-trace .swp-tline{
+  display:block;padding:2px 10px;border-left:3px solid transparent;border-radius:4px;
+  transition:all .35s ease;
+}
+.swp-trace .swp-tline.active{
+  background:rgba(167,139,250,0.14);border-left-color:var(--accent6);
+}
+.swp-trace-msgs{position:relative;min-height:64px;margin-top:12px}
+.swp-trace-msgs > div{
+  position:absolute;inset:0;opacity:0;transition:opacity .4s ease;
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);
+  border-radius:12px;padding:12px 16px;font-size:0.88rem;color:var(--text-dim);
+  display:flex;align-items:center;gap:10px;line-height:1.5;
+}
+.swp-trace-msgs > div.on{opacity:1}
+.swp-trace-msgs strong{color:var(--text)}
+.swp-trace-msgs .tm-emoji{font-size:1.4rem;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -187,7 +310,7 @@
 <aside class="sidebar-nav" id="sidebar">
   <button class="sidebar-close" onclick="closeSidebar()" aria-label="Fechar menu">✕</button>
   <div class="sidebar-header">
-    <h3>🤖 Dia 06 · Agentes de IA</h3>
+    <h3>🔐 Dia 06 · Login com agentes</h3>
     <a href="../../index.html" class="sidebar-back">← Voltar ao hub</a>
   </div>
   <div class="sidebar-group">
@@ -195,28 +318,31 @@
     <a class="sidebar-link" onclick="goTo('pre-encontro')"><span class="dot" style="background:var(--accent5)"></span>Antes do encontro (checagem)</a>
   </div>
   <div class="sidebar-group">
-    <div class="sidebar-group-title">🤖 O que é um agente</div>
-    <a class="sidebar-link" onclick="goTo('aquecimento')"><span class="dot" style="background:var(--accent5)"></span>Aquecimento</a>
-    <a class="sidebar-link" onclick="goTo('o-que-e')"><span class="dot" style="background:var(--accent6)"></span>O estagiário genial</a>
-    <a class="sidebar-link" onclick="goTo('maquina-agente')"><span class="dot" style="background:var(--accent6)"></span>⭐ Agente em ação</a>
+    <div class="sidebar-group-title">🚪 A Loja sem porta</div>
+    <a class="sidebar-link" onclick="goTo('aquecimento')"><span class="dot" style="background:var(--accent5)"></span>Onde a Loja parou</a>
+    <a class="sidebar-link" onclick="goTo('maquina-sessao')"><span class="dot" style="background:var(--accent5)"></span>⭐ O bolso da sessão</a>
   </div>
   <div class="sidebar-group">
-    <div class="sidebar-group-title">🧭 O fluxo profissional</div>
-    <a class="sidebar-link" onclick="goTo('fluxo')"><span class="dot" style="background:var(--accent4)"></span>As 5 etapas</a>
-    <a class="sidebar-link" onclick="goTo('especificar')"><span class="dot" style="background:var(--accent7)"></span>⭐ Espec vaga vs boa</a>
-    <a class="sidebar-link" onclick="goTo('ler-diff')"><span class="dot" style="background:var(--bug)"></span>⭐ Caça ao bug no diff</a>
+    <div class="sidebar-group-title">🗺️ O plano da feature</div>
+    <a class="sidebar-link" onclick="goTo('retomada')"><span class="dot" style="background:var(--accent4)"></span>O contrato, em 1 minuto</a>
+    <a class="sidebar-link" onclick="goTo('especificar')"><span class="dot" style="background:var(--accent7)"></span>⭐ Prompt 0: o plano</a>
   </div>
   <div class="sidebar-group">
     <div class="sidebar-group-title">🔐 Missão: o login</div>
-    <a class="sidebar-link" onclick="goTo('missao-login')"><span class="dot" style="background:var(--python-y)"></span>O roteiro da missão</a>
+    <a class="sidebar-link" onclick="goTo('missao-login')"><span class="dot" style="background:var(--python-y)"></span>Prompts 1 e 2</a>
+    <a class="sidebar-link" onclick="goTo('ler-diff')"><span class="dot" style="background:var(--bug)"></span>⭐ Caça ao bug no diff</a>
+    <a class="sidebar-link" onclick="goTo('fechar-portas')"><span class="dot" style="background:var(--python-y)"></span>Prompt 3 + homologação</a>
     <a class="sidebar-link" onclick="goTo('entender')"><span class="dot" style="background:var(--accent)"></span>Entendendo o código gerado</a>
-    <a class="sidebar-link" onclick="goTo('custos')"><span class="dot" style="background:var(--accent3)"></span>Ferramentas e custos</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🎨 A dívida visual</div>
+    <a class="sidebar-link" onclick="goTo('visual')"><span class="dot" style="background:var(--accent3)"></span>⭐ As telas que ficaram cruas</a>
   </div>
   <div class="sidebar-group">
     <div class="sidebar-group-title">🏁 Fechamento</div>
+    <a class="sidebar-link" onclick="goTo('custos')"><span class="dot" style="background:var(--accent3)"></span>Ferramentas e acesso</a>
     <a class="sidebar-link" onclick="goTo('bugzilla')"><span class="dot" style="background:var(--bug)"></span>BugZilla do dia 🐛</a>
     <a class="sidebar-link" onclick="goTo('quiz')"><span class="dot" style="background:var(--accent5)"></span>Quiz de fixação</a>
-    <a class="sidebar-link" onclick="goTo('arena')"><span class="dot" style="background:var(--accent6)"></span>Arena de treino</a>
     <a class="sidebar-link" onclick="goTo('resumo')"><span class="dot" style="background:var(--accent7)"></span>Resumo do dia</a>
   </div>
 </aside>
@@ -226,20 +352,22 @@
      HERO
      ═══════════════════════════════════════════════════════ -->
 <section class="hero">
-  <div class="hero-icons">🧑‍💻 🤝 🤖</div>
+  <div class="hero-icons">🚪 🔑 🏪</div>
   <span class="hero-badge python">Dia 06 · Sistemas Web com Python</span>
-  <h1><span style="background:linear-gradient(135deg,var(--accent6),var(--accent3));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Programando<br>com agentes de IA</span></h1>
+  <h1><span style="background:linear-gradient(135deg,var(--accent6),var(--accent3));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Login com<br>agentes</span></h1>
   <p class="subtitle">
-    Hoje a Loja ganha <strong style="color:var(--python-y)">login</strong> — mas você não vai
-    digitá-lo. Vai <strong style="color:var(--accent6)">especificar, dirigir e revisar</strong>
-    um agente de IA escrevendo por você. Depois do CRUD em prompts pequenos, chegou a hora de uma
-    <strong style="color:var(--accent7)">especificação maior</strong>: tabela, telas, sessão e testes.
+    No fim do Dia 5 sua Loja ficou <strong style="color:var(--accent7)">completa</strong> — e
+    <strong style="color:var(--accent2)">escancarada</strong>: quem souber o endereço edita seu
+    estoque e apaga seus produtos. Hoje ela ganha porta. E a fechadura usa
+    <strong style="color:var(--python-y)">a mesma sessão do flash()</strong> que você já instalou
+    sem saber. Uma feature maior, em entregas pequenas — e, no fim, a
+    <strong style="color:var(--accent3)">dívida visual</strong> das telas cruas fica paga.
   </p>
   <div class="hero-stack">
-    <span class="stack-chip">🤖 Claude Code · Codex · Antigravity</span>
-    <span class="stack-chip" style="border-color:rgba(167,139,250,0.5);color:#c9b8ff">🤖 feature maior por prompt</span>
-    <span class="stack-chip">📋 especificar → revisar</span>
-    <span class="stack-chip">🔐 login</span>
+    <span class="stack-chip">🎫 session</span>
+    <span class="stack-chip">🔑 hash</span>
+    <span class="stack-chip" style="border-color:rgba(167,139,250,0.5);color:#c9b8ff">🛡️ @login_required</span>
+    <span class="stack-chip">🎨 o CSS que faltou</span>
   </div>
 </section>
 
@@ -253,24 +381,25 @@
       <div class="step-number sn-yellow">📥</div>
       <div>
         <div class="step-title">Antes do encontro: checagem rápida</div>
-        <div class="step-sub">Seu agente já trabalha com você desde o Dia 3 — confira que está tudo em pé</div>
+        <div class="step-sub">O encontro é 100% mão na massa — chegue com a Loja de pé</div>
       </div>
     </div>
 
     <div class="card">
       <div class="swp-preflight">
-        <div class="pf-title">⚠️ Confira ANTES do dia 6 — o encontro é 100% mão na massa</div>
+        <div class="pf-title">⚠️ Confira ANTES do dia 6</div>
         <ol>
+          <li><strong>A Loja do Dia 5 ainda roda?</strong> Se ficou um tempo sem abrir o projeto,
+            rode antes de vir: <code>/produtos</code>, <code>/vender</code> e <code>/vendas</code>
+            respondendo, e o <code>criar_banco.py</code> executando sem erro. Hoje a
+            tabela <code>usuarios</code> vai nascer dentro dele.</li>
           <li><strong>O agente abre na pasta da loja?</strong> Terminal do PyCharm → <code>claude</code>,
             <code>codex</code> ou <code>agy</code> → aparece o prompt. (Instalação: capítulo
             <a href="../02b-ia-agentes/" style="color:var(--accent6)">Dia 02½</a>.)</li>
-          <li><strong>O fluxo dos Dias 4–5 virou hábito?</strong> Regras do projeto, prompt-spec,
-            leitura do diff, teste feliz, teste de erro e correção específica. Hoje o mesmo ritual
-            recebe uma feature maior.</li>
-          <li><strong>A Loja roda</strong> com /produtos, /vender e /vendas funcionando, e o
-            <code>criar_banco.py</code> à mão (a tabela usuarios vai nascer nele).</li>
-          <li><strong>Releia o ritual de revisão</strong> (①–⑤ do Dia 2½). Hoje o diff é grande, e o
-            professor plantou um bug no dele de propósito. 🕵️</li>
+          <li><strong>Abra o seu <code>CLAUDE.md</code> (ou <code>AGENTS.md</code>) e leia o que está lá.</strong>
+            Hoje ele cresce: toda restrição que você já repetiu três vezes vira linha permanente.</li>
+          <li><strong>Releia o ritual de revisão</strong> (①–⑤ do Dia 2½). Hoje o diff é o maior do
+            curso — e você vai treinar leitura num diff com bug plantado. 🕵️</li>
         </ol>
       </div>
 
@@ -288,24 +417,30 @@
   <div class="section-connector"><div class="line"></div></div>
 
   <!-- ═══════════════════════════════════════════════════════
-       AQUECIMENTO
+       AQUECIMENTO — onde a Loja parou
        ═══════════════════════════════════════════════════════ -->
   <section class="step-section" id="aquecimento">
     <div class="step-header">
-      <div class="step-number sn-yellow">🔥</div>
+      <div class="step-number sn-yellow">🚪</div>
       <div>
-        <div class="step-title">Aquecimento: de uma operação para uma feature</div>
-        <div class="step-sub">O ritual é o mesmo; o tamanho e o risco aumentaram</div>
+        <div class="step-title">Onde a Loja parou: completa e sem porta</div>
+        <div class="step-sub">A última linha do quadro "antes vs agora" ficou faltando</div>
       </div>
     </div>
 
     <div class="card">
       <p style="color:var(--text-dim)">
-        Nos Dias 4–5 você comandou o agente em recortes pequenos: uma operação, poucos arquivos,
-        critérios observáveis. Hoje o login atravessa banco, rotas, templates, sessão e segurança.
-        Por isso ele não vira um pedido mágico: primeiro plano, depois implementação em etapas,
-        leitura do diff e testes. Um agente escreve código RÁPIDO; só entrega bem quem
-        <strong style="color:var(--text)">controla o escopo e verifica a consequência</strong>.
+        Você fechou o Dia 5 com o CRUD inteiro, a tela Vender com duas tabelas num commit só e o
+        faturamento saindo de um <code>SUM</code>. Um sistema de verdade. Só que abre o navegador e
+        digita <code>/produtos/3/excluir</code>: a Loja
+        <strong style="color:var(--text)">não pergunta quem é você</strong>. Nunca perguntou.
+        Editar preço, apagar produto, registrar venda — tudo liberado pra qualquer um que saiba o
+        endereço.
+      </p>
+      <p style="color:var(--text-dim)">
+        Hoje isso é inofensivo porque o endereço é <code>localhost:5000</code> — só a sua máquina
+        alcança. Mas no <strong style="color:var(--text)">Dia 8 esse sistema ganha URL pública</strong>,
+        e aí o mundo inteiro alcança. A porta precisa existir <em>antes</em> da mudança.
       </p>
 
       <div class="quiz">
@@ -337,118 +472,95 @@
   <div class="section-connector"><div class="line"></div></div>
 
   <!-- ═══════════════════════════════════════════════════════
-       O QUE É
+       ⭐ O BOLSO DA SESSÃO
        ═══════════════════════════════════════════════════════ -->
-  <section class="step-section" id="o-que-e">
+  <section class="step-section" id="maquina-sessao">
     <div class="step-header">
-      <div class="step-number sn-purple">🤖</div>
+      <div class="step-number sn-yellow">⭐</div>
       <div>
-        <div class="step-title">Agente ≠ chat: o estagiário genial</div>
-        <div class="step-sub">Ele não te dá código pra copiar — ele MEXE no seu projeto</div>
+        <div class="step-title">O bolso da sessão, agora com o seu nome dentro</div>
+        <div class="step-sub">Mesmo bolso do flash() do Dia 5 — mudou só o que vai guardado</div>
       </div>
     </div>
 
     <div class="card">
       <p style="color:var(--text-dim)">
-        Recap do Dia 2½, em um parágrafo: um <strong style="color:var(--text)">agente de
-        codificação</strong> roda <strong style="color:var(--text)">no terminal, dentro do seu
-        projeto</strong> — ele LÊ seus arquivos (app.py, banco.py, templates…), PROPÕE mudanças
-        neles e até RODA comandos, num loop até dar certo. Você conversa; ele trabalha; você aprova.
-        Hoje esse loop vai rodar em cima de uma feature de verdade.
+        Ligue e desligue o cadeado e tente abrir <code>/produtos</code> nos dois mundos.
+        Repare no <strong style="color:var(--accent5)">bolso</strong> à direita: é o mesmo lugar
+        onde o bilhete do <code>flash()</code> viajava.
       </p>
 
-      <div class="analogy">
-        <div class="analogy-title">O estagiário genial 🧑‍🎓⚡</div>
-        <p>
-          Imagina um estagiário que digita a 3.000 palavras por minuto, leu todo o código do
-          mundo, nunca cansa… e é <strong>confiante demais</strong>: entrega tudo com o mesmo
-          sorriso, esteja certo ou errado. Você jamais deixaria esse estagiário dar commit
-          sem revisão. <strong>Você é o chefe. O agente é o estagiário. A revisão é o seu
-          trabalho.</strong>
-        </p>
-      </div>
-
-      <div class="keyword-grid">
-        <div class="keyword-chip">
-          <span class="emoji">👀</span>
-          <span class="kw-name">Lê o projeto</span>
-          <span class="kw-desc">conhece seu app.py, banco.py e templates antes de mexer</span>
-        </div>
-        <div class="keyword-chip">
-          <span class="emoji">✍️</span>
-          <span class="kw-name">Propõe diffs</span>
-          <span class="kw-desc">mostra exatamente o que entra e o que sai de cada arquivo</span>
-        </div>
-        <div class="keyword-chip">
-          <span class="emoji">▶️</span>
-          <span class="kw-name">Roda comandos</span>
-          <span class="kw-desc">pode executar o criar_banco.py, testar o app…</span>
-        </div>
-        <div class="keyword-chip">
-          <span class="emoji">🛑</span>
-          <span class="kw-name">Espera aprovação</span>
-          <span class="kw-desc">nada muda sem você dizer sim — e é aí que você trabalha</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="section-connector"><div class="line"></div></div>
-
-  <!-- ═══════════════════════════════════════════════════════
-       ⭐ AGENTE EM AÇÃO
-       ═══════════════════════════════════════════════════════ -->
-  <section class="step-section" id="maquina-agente">
-    <div class="step-header">
-      <div class="step-number sn-purple">⭐</div>
-      <div>
-        <div class="step-title">Agente em ação: uma sessão de verdade</div>
-        <div class="step-sub">Assista ao replay — repare em CADA vez que o humano decide</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="swp-agent" id="swpAgent">
-        <div class="swp-agent-term">
-          <div class="swp-agent-head">
-            <span class="dots"><i></i><i></i><i></i></span>
-            <span>Terminal do PyCharm — claude · projeto loja</span>
+      <div class="swp-ses" id="swpSes">
+        <div class="swp-ses-stage">
+          <div class="swp-ses-pane left">
+            <div class="stab">🌐 o navegador</div>
+            <div class="swp-mini">
+              <div class="mb-chrome">
+                <span class="mb-dots"><i></i><i></i><i></i></span>
+                <span class="mb-url"><span class="lock">🔒</span><span class="addr" id="sesUrl">localhost:5000/produtos</span></span>
+              </div>
+              <div class="swp-mini-view swp-ses-view" id="sesScreen"></div>
+            </div>
           </div>
-          <div class="swp-agent-body" id="agentBody"></div>
+          <div class="swp-ses-pane">
+            <div class="stab">🎫 o servidor</div>
+            <div class="swp-ses-pocket">
+              <div class="plabel" id="sesPocketLabel">bolso da sessão (vazio)</div>
+              <span class="swp-ses-ticket gone" id="sesTicket">usuario = "admin"</span>
+            </div>
+            <div class="swp-ses-log" id="sesLog"></div>
+          </div>
         </div>
         <div class="swp-machine-hud">
-          <button class="swp-machine-btn" id="agentPlay">▶ Rodar o replay</button>
-          <span class="swp-machine-note" id="agentNote">uma feature pequena, do pedido ao teste — em câmera lenta</span>
+          <button class="swp-ses-lock" id="sesLock">🔓 sem cadeado (fim do Dia 5)</button>
+          <button class="swp-machine-btn" id="sesGo">🌐 Abrir /produtos</button>
+          <button class="swp-machine-btn" id="sesLogin" disabled>🔑 Entrar como admin</button>
+          <button class="swp-machine-btn ghost" id="sesOut" disabled>🚪 /logout</button>
+        </div>
+        <div class="swp-machine-hud" style="border-top:0;padding-top:0">
+          <span class="swp-machine-note" id="sesNote">clique em <strong>Abrir /produtos</strong> — hoje, sem cadeado, a Loja abre pra qualquer um</span>
         </div>
       </div>
 
       <div class="concept">
-        <div class="concept-title">💡 Reparou quantas vezes o HUMANO decidiu?</div>
+        <div class="concept-title">💡 Mesmo bolso, permanência diferente</div>
         <p>
-          O agente propôs; <strong>você</strong> leu o diff, <strong>você</strong> aprovou,
-          <strong>você</strong> testou. O agente é o motor — <strong>o volante continua na sua
-          mão</strong>. Sessão de agente sem decisão humana não é produtividade: é roleta.
+          O <code>flash()</code> guardava um <strong>bilhete de uma vez só</strong>: entregue na
+          próxima página, e some. O login guarda um <strong>crachá que fica</strong> — request
+          após request, até o <code>/logout</code> tirar do bolso. Mesma
+          <code>session</code>, mesmo <code>secret_key</code> assinando pra ninguém falsificar.
+          <strong>Você instalou a fechadura no Dia 5 sem saber que era fechadura.</strong>
         </p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🧠</span>
+        <div class="tip-content">
+          <strong>Por que "assinado" importa aqui:</strong> um bilhete de sucesso falsificado é
+          chato. Um <em>crachá</em> falsificado é invasão. É o <code>secret_key</code> que impede
+          alguém de escrever <code>usuario="admin"</code> no próprio bolso e entrar. Aquela linha
+          que você achou detalhe no Dia 5 virou a peça mais séria do sistema.
+        </div>
       </div>
     </div>
   </section>
 
   <div class="chapter-divider">
-    <div class="chapter-icon">🧭</div>
+    <div class="chapter-icon">🗺️</div>
     <div class="chapter-number">Parte 2</div>
-    <h2 style="background:linear-gradient(135deg,var(--accent4),var(--accent6));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">O fluxo profissional</h2>
-    <p class="chapter-subtitle">O que separa quem USA IA de quem é usado por ela</p>
+    <h2 style="background:linear-gradient(135deg,var(--accent4),var(--accent6));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">O plano da feature</h2>
+    <p class="chapter-subtitle">Mesmo contrato dos Dias 4–5 — só que agora ele protege uma feature inteira</p>
   </div>
 
-<!-- ═══════════════════════════════════════════════════════
-       O FLUXO
+  <!-- ═══════════════════════════════════════════════════════
+       RETOMADA (contrato comprimido + CLAUDE.md)
        ═══════════════════════════════════════════════════════ -->
-  <section class="step-section" id="fluxo">
+  <section class="step-section" id="retomada">
     <div class="step-header">
       <div class="step-number sn-blue">🧭</div>
       <div>
-        <div class="step-title">As 5 etapas — sempre, com qualquer agente</div>
-        <div class="step-sub">Grave este fluxo. Ele vale mais que qualquer ferramenta.</div>
+        <div class="step-title">O contrato dos Dias 4–5, em um minuto</div>
+        <div class="step-sub">Você já faz isso há duas aulas — só o tamanho da entrega mudou</div>
       </div>
     </div>
 
@@ -465,36 +577,50 @@
         <div class="flow-box fb-output">🔁<br>Ajustar</div>
       </div>
 
-      <div class="keyword-grid" style="margin-top:16px">
-        <div class="keyword-chip">
-          <span class="emoji">📋</span>
-          <span class="kw-name">Especificar</span>
-          <span class="kw-desc">dizer O QUE quer, com detalhes — a etapa que decide tudo</span>
-        </div>
-        <div class="keyword-chip">
-          <span class="emoji">👀</span>
-          <span class="kw-name">LER o diff</span>
-          <span class="kw-desc">a etapa que separa profissional de aventureiro</span>
-        </div>
-        <div class="keyword-chip">
-          <span class="emoji">🧪</span>
-          <span class="kw-name">Testar</span>
-          <span class="kw-desc">com roteiro: caminho feliz E caminho do erro</span>
-        </div>
-        <div class="keyword-chip">
-          <span class="emoji">🔁</span>
-          <span class="kw-name">Ajustar</span>
-          <span class="kw-desc">apontar o que não serviu e pedir de novo — sem drama</span>
+      <p style="color:var(--text-dim);margin-top:16px">
+        Nos Dias 4–5, cada prompt cobria <strong style="color:var(--text)">uma operação</strong>:
+        poucos arquivos, critério observável, teste em dois minutos. O login não cabe nesse
+        recorte — ele atravessa banco, rotas, templates, sessão e segurança de uma vez. A solução
+        não é aumentar o prompt: é <strong style="color:var(--text)">quebrar a feature em três
+        entregas que continuam cabendo na sua revisão</strong>. Cada aceite é uma catraca; o
+        próximo prompt só passa depois do teste anterior.
+      </p>
+
+      <div class="analogy">
+        <div class="analogy-title">A restrição que você repetiu três vezes 📌</div>
+        <p>
+          Repare nos seus prompts do Dia 5: <em>"SQL apenas no banco.py"</em>,
+          <em>"sem JavaScript"</em>, <em>"sem biblioteca nova"</em> — em todos eles. Restrição que
+          se repete não é instrução de prompt: é <strong>regra do projeto</strong>. E regra do
+          projeto mora no arquivo de instruções, que o agente lê sozinho antes de qualquer tarefa.
+          Escreveu lá uma vez, vale pra sempre — inclusive pros prompts de hoje.
+        </p>
+      </div>
+
+      <div class="swp-rules"><span class="rk">## Regras da Loja (CLAUDE.md ou AGENTS.md, na raiz do projeto)</span>
+
+- Stack fixa: Flask + Jinja + sqlite3. Sem ORM, sem framework de CSS, sem JavaScript.
+- Todo SQL fica em banco.py, sempre com placeholder ? (nunca texto colado na query).
+- Uma operacao por vez: nao refatore nem "melhore" arquivos fora da tarefa pedida.
+- Nao execute scripts que alterem o loja.db. Os testes no navegador sao meus.
+- Ao terminar, explique o diff e pare. Nao siga para a proxima tarefa sozinho.</div>
+
+      <div class="tip">
+        <span class="tip-icon">📌</span>
+        <div class="tip-content">
+          <strong>A quarta linha tem uma história</strong> — e ela aparece no BugZilla lá embaixo.
+          Guarde a pergunta: <em>se o agente roda um comando que muda o seu banco, isso aparece no
+          diff?</em>
         </div>
       </div>
 
       <div class="concept">
-        <div class="concept-title">💡 A regra de ouro</div>
+        <div class="concept-title">💡 A regra de ouro continua</div>
         <p>
           <strong>Nunca aceite às cegas.</strong> Todo código gerado passa por olho humano
-          (o seu) e por teste (o seu roteiro) antes de virar parte do sistema.
-          No demo day, cada trecho gerado por agente terá que ser <strong>explicado por
-          você</strong> — é o combinado do curso.
+          (o seu) e por teste (o seu roteiro) antes de virar parte do sistema. No Demo Day,
+          cada trecho gerado por agente terá que ser <strong>explicado por você</strong> —
+          é o combinado do curso.
         </p>
       </div>
     </div>
@@ -503,14 +629,14 @@
   <div class="section-connector"><div class="line"></div></div>
 
   <!-- ═══════════════════════════════════════════════════════
-       ⭐ ESPECIFICAR
+       ⭐ PROMPT 0
        ═══════════════════════════════════════════════════════ -->
   <section class="step-section" id="especificar">
     <div class="step-header">
       <div class="step-number sn-mint">⭐</div>
       <div>
-        <div class="step-title">Espec vaga vs espec boa</div>
-        <div class="step-sub">O mesmo pedido, dois destinos — a diferença é o detalhe</div>
+        <div class="step-title">Prompt 0: transformar “faz um login” em plano revisável</div>
+        <div class="step-sub">O agente primeiro lê e propõe; nenhum arquivo muda ainda</div>
       </div>
     </div>
 
@@ -539,21 +665,21 @@
           </div>
         </div>
         <div class="swp-spec-col good">
-          <div class="sp-head">✅ a espec boa (a que você vai colar hoje)</div>
-          <div class="swp-spec-text">Adicione login ao meu sistema Flask (app.py, banco.py, templates/).
+          <div class="sp-head">✅ Prompt 0 — plano antes da implementação</div>
+          <div class="swp-spec-text"><span class="sp-k">[CONTEXTO]</span> Minha Loja Flask já tem CRUD, vendas,
+flash e SQLite. Leia o arquivo de instruções e o projeto inteiro.
 
-1. Tabela usuarios (id, nome, senha_hash) no criar_banco.py,
-   com um usuário inicial: nome "admin", senha "trocar123"
-   — senha SEMPRE com hash, nunca texto puro.
-2. Tela /login (form com nome e senha) e rota /logout.
-3. Use generate_password_hash e check_password_hash
-   (werkzeug, que já vem com o Flask).
-4. Proteja as rotas de /produtos, /vender e /vendas:
-   sem login, redirecionar para /login.
-5. No menu do base.html, mostrar "Olá, NOME · sair"
-   quando logado.
-6. NÃO mexer no que já funciona. NÃO instalar
-   bibliotecas novas.</div>
+<span class="sp-k">[TAREFA]</span> Planeje a feature de login, sem editar arquivos.
+O plano deve ser dividido em 3 entregas homologáveis:
+1. tabela usuarios + funções de banco;
+2. login e logout;
+3. proteção das rotas + estado do menu.
+
+<span class="sp-k">[REGRAS]</span> Senha somente com hash do Werkzeug; sessão do
+Flask; sem biblioteca nova; sem ORM; preserve o CRUD e as vendas.
+
+<span class="sp-k">[ACEITE]</span> Para cada entrega, liste arquivos, responsabilidade,
+riscos e testes feliz/erro. Pare e espere minha aprovação.</div>
           <div class="swp-spec-result">
             <div class="li"><span>✅</span><span><strong>Cada decisão foi SUA</strong> — o agente só executa</span></div>
             <div class="li"><span>✅</span><span>Dá pra conferir item por item (vira o checklist de teste!)</span></div>
@@ -564,8 +690,8 @@
       <div class="concept">
         <div class="concept-title">💡 De onde saiu essa espec boa?</div>
         <p>
-          Releia os 6 itens: tabela com colunas e tipos (Dia 3), rotas GET/POST (Dias 2 e 4),
-          proteger/redirect (Dia 1), sessão (Dia 5)… <strong>Especificar bem EXIGE saber o que
+          Releia o plano: tabela com colunas e tipos (Dia 3), rotas GET/POST (Dias 2 e 4),
+          proteger/redirect (Dia 1), sessão (Dia 5)… <strong>Planejar bem EXIGE saber o que
           se está pedindo.</strong> É por isso que a feature inteira só chega no dia 6 — e é por isso
           que você, que aprendeu as peças na mão e homologou o CRUD por prompts, especifica melhor
           que muito dev por aí.
@@ -574,17 +700,105 @@
     </div>
   </section>
 
+  <div class="chapter-divider">
+    <div class="chapter-icon">🔐</div>
+    <div class="chapter-number">Parte 3</div>
+    <h2 style="background:linear-gradient(135deg,var(--python-y),var(--accent6));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Missão: o login</h2>
+    <p class="chapter-subtitle">Especificar, dirigir, revisar, testar — pra valer</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       MISSÃO LOGIN — prompts 1 e 2
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="missao-login">
+    <div class="step-header">
+      <div class="step-number sn-py">🔐</div>
+      <div>
+        <div class="step-title">Entrega 1 e 2: os dados e a autenticação</div>
+        <div class="step-sub">Banco primeiro; entrar e sair depois; proteger só no fim</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="exercise guided">
+        <div class="exercise-header">
+          <span class="exercise-icon">👨‍🏫</span>
+          <div>
+            <div class="exercise-title">Mão na massa: execute uma entrega por vez</div>
+            <div class="exercise-sub">Não cole o próximo prompt enquanto o anterior não estiver homologado</div>
+          </div>
+        </div>
+        <p style="color:var(--text-dim)">
+          Com o projeto <code>loja</code> aberto no terminal, envie primeiro o
+          <strong>Prompt 0</strong> da seção anterior e aprove o plano. Depois use os pedidos
+          abaixo. Em todos: leia o diff inteiro, execute o teste indicado e só então avance.
+        </p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">Prompt 1 — dados de usuário</span>
+            <span class="lang-badge prompt">prompt</span>
+          </div>
+          <div class="swp-spec-text"><span class="sp-k">[TAREFA]</span> Implemente somente a camada de dados do login aprovada no plano.
+No criar_banco.py, crie a tabela usuarios com id, nome UNIQUE e senha_hash. Cadastre o usuário
+inicial admin com senha trocar123 transformada por generate_password_hash. No banco.py, crie apenas
+a função buscar_usuario(nome), usando placeholder ? e fetchone.
+
+<span class="sp-k">[RESTRIÇÕES]</span> Não crie rotas nem templates. Nunca grave ou mostre a senha em texto puro.
+Não altere as tabelas e funções que já existem. Não instale bibliotecas.
+
+<span class="sp-k">[ACEITE]</span> criar_banco.py pode rodar novamente sem duplicar o admin; consultar a tabela
+mostra uma senha_hash ilegível; buscar_usuario("admin") encontra uma linha e um nome inexistente
+devolve None. Confira sintaxe, explique o diff e pare.</div>
+        </div>
+
+        <div class="tip">
+          <span class="tip-icon">✅</span>
+          <div class="tip-content"><strong>Checkpoint 1:</strong> rode <code>criar_banco.py</code>,
+          espie a tabela e faça as duas buscas. Hash visível, mas senha invisível. Só então continue.</div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">Prompt 2 — entrar e sair</span>
+            <span class="lang-badge prompt">prompt</span>
+          </div>
+          <div class="swp-spec-text"><span class="sp-k">[TAREFA]</span> Implemente a autenticação, sem proteger as outras rotas ainda.
+Crie /login com GET e POST, templates/login.html herdando de base.html e /logout. No POST, busque
+o usuário por banco.buscar_usuario(nome), valide com check_password_hash e grave o nome em
+session["usuario"]. Senha errada ou usuário inexistente mostram a mesma mensagem clara. Logout
+remove o usuário da sessão e redireciona para /login.
+
+<span class="sp-k">[RESTRIÇÕES]</span> Reutilize o banco.py; não escreva SQL no app.py. Não revele se foi o nome
+ou a senha que falhou. Preserve o CRUD e as vendas. Sem biblioteca nova.
+
+<span class="sp-k">[ACEITE]</span> admin + trocar123 entra; senha errada não entra; /logout encerra a sessão;
+as rotas antigas continuam funcionando como antes. Confira sintaxe, explique o diff e pare.</div>
+        </div>
+
+        <div class="tip">
+          <span class="tip-icon">🛑</span>
+          <div class="tip-content"><strong>Pare aqui, com o diff do Prompt 2 na tela.</strong>
+          Antes de aprovar, faça a próxima seção — ela é o treino de leitura, e o alvo é
+          exatamente este tipo de diff.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <div class="section-connector"><div class="line"></div></div>
 
   <!-- ═══════════════════════════════════════════════════════
-       ⭐ CAÇA AO BUG
+       ⭐ CAÇA AO BUG (agora DEPOIS do Prompt 2)
        ═══════════════════════════════════════════════════════ -->
   <section class="step-section" id="ler-diff">
     <div class="step-header">
       <div class="step-number sn-red">⭐</div>
       <div>
-        <div class="step-title">Caça ao bug no diff</div>
-        <div class="step-sub">O agente gerou este login… com 1 bug. Clique na linha culpada.</div>
+        <div class="step-title">Caça ao bug: treine aqui, aplique no seu diff</div>
+        <div class="step-sub">Este login foi gerado por um agente, roda sem erro nenhum — e tem 1 bug</div>
       </div>
     </div>
 
@@ -592,9 +806,10 @@
       <p style="color:var(--text-dim)">
         Ler um diff é simples: <strong style="color:#9be3cd">verde entra</strong>,
         <strong style="color:#f0a5ab">vermelho sai</strong>. Difícil é ler com
-        <strong style="color:var(--text)">desconfiança profissional</strong>. Treino real:
-        o diff abaixo foi gerado por um agente e tem <strong style="color:var(--text)">um bug
-        que quebra o login</strong>. Você tem o conhecimento pra achar. Clique na linha suspeita:
+        <strong style="color:var(--text)">desconfiança profissional</strong>. O diff abaixo é de
+        outro aluno, no mesmo Prompt 2 que você acabou de rodar: nenhum erro vermelho, nenhum
+        crash — e <strong style="color:var(--text)">ninguém consegue entrar</strong>.
+        Ache a linha culpada. Depois volte pro SEU diff e faça a mesma leitura.
       </p>
 
       <div class="swp-hunt" id="swpHunt">
@@ -609,33 +824,45 @@
       </div>
 
       <div class="concept">
-        <div class="concept-title">💡 Por que o professor PLANTOU esse bug</div>
+        <div class="concept-title">💡 Por que esse bug é o mais perigoso que existe</div>
         <p>
-          Porque agentes cometem exatamente esse tipo de erro: código que <strong>roda sem
-          crashar</strong>, parece profissional… e está funcionalmente errado. Nenhum erro
-          vermelho vai te avisar — <strong>só a sua leitura</strong>. É a habilidade nº 1
-          da era da IA.
+          Porque ele <strong>roda sem crashar</strong>, parece profissional e nenhuma tela
+          vermelha vai te avisar. Os bugs que o Python grita você conserta em 30 segundos.
+          Os que ele aceita em silêncio ficam meses no sistema. Só a
+          <strong>sua leitura</strong> pega esses — e é a habilidade nº 1 da era da IA.
+        </p>
+      </div>
+
+      <div class="exercise guided">
+        <div class="exercise-header">
+          <span class="exercise-icon">👀</span>
+          <div>
+            <div class="exercise-title">Agora no seu: homologue o Prompt 2</div>
+            <div class="exercise-sub">Três testes, nessa ordem</div>
+          </div>
+        </div>
+        <p style="color:var(--text-dim)">
+          1. <code>admin</code> + <code>trocar123</code> <strong>entra</strong>.
+          2. Senha errada <strong>não entra</strong>, e a mensagem não diz se errou o nome ou a
+          senha. 3. <code>/logout</code> encerra a sessão. E confira: autenticar já funciona,
+          mas <strong style="color:var(--text)">proteger o sistema ainda não é assunto deste
+          prompt</strong> — <code>/produtos</code> continua aberto de propósito.
         </p>
       </div>
     </div>
   </section>
 
-  <div class="chapter-divider">
-    <div class="chapter-icon">🔐</div>
-    <div class="chapter-number">Parte 3</div>
-    <h2 style="background:linear-gradient(135deg,var(--python-y),var(--accent6));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Missão: o login</h2>
-    <p class="chapter-subtitle">Especificar, dirigir, revisar, testar — pra valer</p>
-  </div>
+  <div class="section-connector"><div class="line"></div></div>
 
   <!-- ═══════════════════════════════════════════════════════
-       MISSÃO LOGIN
+       PROMPT 3 + HOMOLOGAÇÃO + AUDITORIA
        ═══════════════════════════════════════════════════════ -->
-  <section class="step-section" id="missao-login">
+  <section class="step-section" id="fechar-portas">
     <div class="step-header">
-      <div class="step-number sn-py">🔐</div>
+      <div class="step-number sn-py">🛡️</div>
       <div>
-        <div class="step-title">O roteiro da missão</div>
-        <div class="step-sub">Do prompt ao teste de aceitação</div>
+        <div class="step-title">Entrega 3: fechar as portas</div>
+        <div class="step-sub">O crachá passa a ser conferido antes de cada rota</div>
       </div>
     </div>
 
@@ -644,26 +871,32 @@
         <div class="exercise-header">
           <span class="exercise-icon">👨‍🏫</span>
           <div>
-            <div class="exercise-title">Mão na massa com o agente</div>
-            <div class="exercise-sub">O professor vai junto no telão — com Claude Code</div>
+            <div class="exercise-title">O último prompt de implementação do dia</div>
+            <div class="exercise-sub">Depois dele, só auditoria e homologação</div>
           </div>
         </div>
-        <p style="color:var(--text-dim)">
-          <strong style="color:var(--text)">1.</strong> Projeto <code>loja</code> aberto no
-          PyCharm → Terminal (<code>Alt+F12</code> / <code>⌥F12</code>) → <code>claude</code>
-          (ou <code>codex</code> / <code>agy</code>).<br>
-          <strong style="color:var(--text)">2.</strong> Cole a <strong>espec boa</strong>
-          (da seção anterior — digite ou copie do material com atenção, lendo cada item).<br>
-          <strong style="color:var(--text)">3.</strong> O agente vai propor mudanças arquivo por
-          arquivo. <strong>LEIA cada diff antes de aprovar</strong> — em voz alta com a dupla,
-          se estiver em dupla.<br>
-          <strong style="color:var(--text)">4.</strong> Terminou? Rode o
-          <code>criar_banco.py</code> (▶ — a tabela usuarios precisa nascer), suba o app e…
-          <strong>teste com o checklist abaixo</strong>.
-        </p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">Prompt 3 — fechar as portas</span>
+            <span class="lang-badge prompt">prompt</span>
+          </div>
+          <div class="swp-spec-text"><span class="sp-k">[TAREFA]</span> Proteja as rotas de produtos, cadastro, edição, exclusão, venda e
+histórico. Crie um decorator login_required que consulte session["usuario"] e redirecione para
+/login quando não houver usuário. No base.html, quando logado, mostre “Olá, NOME” e o link Sair;
+quando deslogado, mostre o link Entrar.
+
+<span class="sp-k">[RESTRIÇÕES]</span> /login, /logout e arquivos static continuam acessíveis. Não altere SQL,
+regras de estoque ou HTML interno das telas. Use @app.route acima de @login_required.
+
+<span class="sp-k">[ACEITE]</span> Sem login, abrir qualquer rota protegida redireciona para /login; depois do
+login todas abrem; após logout voltam a bloquear. O menu reflete os dois estados. Confira sintaxe,
+explique o diff e pare.</div>
+        </div>
 
         <p style="color:var(--text-dim);margin-top:14px">
-          <strong style="color:var(--text)">Checklist de aceitação</strong> — a espec virou teste
+          <strong style="color:var(--text)">Homologação final</strong> — os três aceites viraram um sistema
           (marque conforme confere no SEU sistema):
         </p>
         <div class="swp-accept">
@@ -682,6 +915,18 @@
             (DB Browser ou um consultar.py rápido). Se a senha estiver legível,
             o agente ignorou a espec — <strong>rejeite e peça o hash</strong>.
           </div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">Prompt 4 — auditoria final, sem editar</span>
+            <span class="lang-badge prompt">prompt</span>
+          </div>
+          <div class="swp-spec-text">Revise a feature de login inteira sem alterar arquivos. Compare o resultado com
+os critérios dos Prompts 1, 2 e 3. Procure senha em texto puro, SQL sem placeholder, rota sensível
+sem @login_required, decorator na ordem errada e mudança fora do escopo. Liste evidências por
+arquivo e entregue um roteiro final com caminho feliz e caminhos de erro.</div>
         </div>
       </div>
     </div>
@@ -713,7 +958,7 @@
             <span class="filename">loja/app.py (gerado pelo agente — trecho)</span>
             <span class="lang-badge python">Python</span>
           </div>
-<pre><span class="swp-tline" data-seq-step="0"><span class="kw">from</span> werkzeug.security <span class="kw">import</span> check_password_hash</span><span class="swp-tline" data-seq-step="1"><span class="kw">from</span> flask <span class="kw">import</span> session</span><span class="swp-tline"> </span><span class="swp-tline" data-seq-step="2"><span class="kw">if</span> check_password_hash(usuario[<span class="num">2</span>], senha):</span><span class="swp-tline" data-seq-step="3">    session[<span class="st">"usuario"</span>] = usuario[<span class="num">1</span>]</span><span class="swp-tline">    <span class="kw">return</span> <span class="fn">redirect</span>(<span class="st">"/produtos"</span>)</span><span class="swp-tline"> </span><span class="swp-tline" data-seq-step="4"><span class="dec">@login_required</span></span><span class="swp-tline"><span class="dec">@app.route</span>(<span class="st">"/produtos"</span>)
+<pre><span class="swp-tline" data-seq-step="0"><span class="kw">from</span> werkzeug.security <span class="kw">import</span> check_password_hash</span><span class="swp-tline" data-seq-step="1"><span class="kw">from</span> flask <span class="kw">import</span> session</span><span class="swp-tline"> </span><span class="swp-tline" data-seq-step="2"><span class="kw">if</span> <span class="fn">check_password_hash</span>(usuario[<span class="num">2</span>], senha):</span><span class="swp-tline" data-seq-step="3">    session[<span class="st">"usuario"</span>] = usuario[<span class="num">1</span>]</span><span class="swp-tline">    <span class="kw">return</span> <span class="fn">redirect</span>(<span class="st">"/produtos"</span>)</span><span class="swp-tline"> </span><span class="swp-tline" data-seq-step="4"><span class="dec">@app.route</span>(<span class="st">"/produtos"</span>)</span><span class="swp-tline"><span class="dec">@login_required</span>
 <span class="kw">def</span> <span class="fn">produtos</span>(): ...</span></pre>
         </div>
 
@@ -722,7 +967,7 @@
           <div data-seq-frame="1"><span class="tm-emoji">🎫</span><span>A <strong>session</strong> — o MESMO bolso assinado do flash() do Dia 5. Você já conhecia a peça-chave do login.</span></div>
           <div data-seq-frame="2"><span class="tm-emoji">🧐</span><span>A comparação certa: <strong>nunca <code>senha == hash</code></strong> — o hash não "desfaz". A função confere sem nunca revelar a senha.</span></div>
           <div data-seq-frame="3"><span class="tm-emoji">👤</span><span>Logou? O nome vai pro bolso: <strong>session["usuario"]</strong>. Em qualquer request futuro, o servidor sabe quem é — até o /logout esvaziar o bolso.</span></div>
-          <div data-seq-frame="4"><span class="tm-emoji">🏷️</span><span><strong>@login_required</strong> — uma etiqueta que ENVOLVE a função: antes de rodar, confere o crachá na session; sem crachá, redirect pro /login. Prima do @app.route que você usa desde o Dia 1.</span></div>
+          <div data-seq-frame="4"><span class="tm-emoji">🏷️</span><span><strong>@app.route fica acima de @login_required</strong>: assim o Flask registra a função já protegida. O crachá é conferido antes de a rota executar; sem crachá, redirect pro /login.</span></div>
         </div>
       </div>
 
@@ -739,38 +984,166 @@
     </div>
   </section>
 
-  <div class="section-connector"><div class="line"></div></div>
+  <div class="chapter-divider">
+    <div class="chapter-icon">🎨</div>
+    <div class="chapter-number">Parte 4</div>
+    <h2 style="background:linear-gradient(135deg,var(--accent3),var(--accent4));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">A dívida visual</h2>
+    <p class="chapter-subtitle">Seu sistema está seguro. E feio. As duas coisas têm conserto hoje.</p>
+  </div>
 
   <!-- ═══════════════════════════════════════════════════════
-       CUSTOS
+       ⭐ A DÍVIDA VISUAL
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="visual">
+    <div class="step-header">
+      <div class="step-number sn-green">⭐</div>
+      <div>
+        <div class="step-title">As telas que nasceram depois do CSS</div>
+        <div class="step-sub">O estilo não adivinha o que ainda não existia</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        No <strong style="color:var(--text)">Dia 3</strong> você escreveu uma espec de visual e o
+        agente criou o <code>static/style.css</code>. Naquele dia a Loja tinha duas telas.
+        <strong style="color:var(--text)">Editar, excluir, vender, vendas — e, de hoje, login —
+        nasceram DEPOIS.</strong> E o CSS não adivinha: elemento que não existia quando você
+        escreveu a espec não tem regra nenhuma. Por isso essas telas aparecem cruas, com cara
+        de 1998, enquanto a lista de produtos continua bonita.
+      </p>
+      <p style="color:var(--text-dim)">
+        Isso tem nome no mercado: <strong style="color:var(--accent3)">dívida técnica</strong> —
+        aqui, na versão visual. A feature entra, o estilo fica pra trás, e a diferença cresce a
+        cada entrega. Troque de tela abaixo e veja a sua Loja hoje:
+      </p>
+
+      <div class="swp-visual" id="swpVisual">
+        <div class="swp-visual-tabs">
+          <button data-screen="produtos" class="sel">📋 /produtos <span class="flag">Dia 3 ✅</span></button>
+          <button data-screen="vender">🛒 /vender <span class="flag">Dia 5 ❌</span></button>
+          <button data-screen="login">🔐 /login <span class="flag">hoje ❌</span></button>
+        </div>
+        <div class="swp-visual-stage">
+          <div class="swp-mini">
+            <div class="mb-chrome">
+              <span class="mb-dots"><i></i><i></i><i></i></span>
+              <span class="mb-url"><span class="lock">🔒</span><span class="addr" id="visUrl">localhost:5000/produtos</span></span>
+            </div>
+            <div class="vis-view" id="visView"></div>
+          </div>
+        </div>
+        <div class="swp-machine-hud">
+          <button class="swp-machine-btn" id="visApply">🎨 Aplicar o Prompt 5</button>
+          <button class="swp-machine-btn ghost" id="visReset">↩️ Voltar ao estado de hoje</button>
+          <span class="swp-machine-note" id="visNote">troque de tela: a mesma Loja, dois acabamentos diferentes</span>
+        </div>
+      </div>
+
+      <div class="exercise guided">
+        <div class="exercise-header">
+          <span class="exercise-icon">🎨</span>
+          <div>
+            <div class="exercise-title">Prompt 5 — pagar a dívida visual</div>
+            <div class="exercise-sub">Uma espec de CSS, com o aceite mais elegante do curso</div>
+          </div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">Prompt 5 — acabamento visual</span>
+            <span class="lang-badge prompt">prompt</span>
+          </div>
+          <div class="swp-spec-text"><span class="sp-k">[CONTEXTO]</span> Minha Loja tem static/style.css desde o Dia 3, mas as telas que
+nasceram depois (editar, excluir, vender, vendas e login) não têm regra nenhuma lá dentro e
+aparecem cruas.
+
+<span class="sp-k">[TAREFA]</span> Atualize SOMENTE o static/style.css para cobrir o que apareceu depois:
+o &lt;select&gt; e o campo de quantidade da tela de vender; os botões da página de confirmação de
+exclusão; o formulário de login; a tabela do histórico de vendas; o bloco de faturamento.
+Mensagens flash de sucesso em verde e de aviso/exclusão em vermelho. Mantenha a mesma paleta e
+tipografia que já estão no arquivo.
+
+<span class="sp-k">[RESTRIÇÕES]</span> Só o arquivo static/style.css. Não altere rotas, SQL, nomes de campo
+dos formulários nem a estrutura HTML dos templates. Sem framework de CSS, CDN, fonte externa ou
+JavaScript. Não renomeie classes que já existem.
+
+<span class="sp-k">[ACEITE]</span> Todas as telas ficam visualmente coerentes entre si e NENHUM comportamento
+muda: cadastrar, editar, excluir, vender e logar continuam funcionando exatamente como antes.
+No diff, nenhum arquivo .py e nenhum arquivo .html foi tocado.</div>
+        </div>
+
+        <div class="tip">
+          <span class="tip-icon">🎯</span>
+          <div class="tip-content">
+            <strong>Leia de novo a última linha do aceite:</strong> "nenhum arquivo .py e nenhum
+            .html foi tocado". Esse é um critério que você confere <em>só olhando a lista de
+            arquivos do diff</em>, em dois segundos, sem entender uma linha de CSS. Aceite bom é
+            assim: verificável por quem não é especialista no assunto.
+          </div>
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 Por que isso não foi um "capricho do professor"</div>
+        <p>
+          Em todo projeto real acontece igual: a entrega urgente passa na frente, o acabamento
+          fica pra depois, e o "depois" vira nunca. A diferença entre um time maduro e um time
+          bagunçado não é ter dívida — <strong>é fechar a dívida a cada entrega, com escopo
+          declarado</strong>. Você acabou de fazer isso com um prompt de cinco linhas.
+        </p>
+      </div>
+
+      <div class="warning">
+        <span class="tip-icon">🐛</span>
+        <div class="tip-content">
+          <strong>Cuidado clássico deste prompt:</strong> o agente vai querer "aproveitar" e mexer
+          nos templates pra facilitar a vida dele ("só adicionei uma classe aqui…"). Se o diff
+          tocar em <code>.html</code>, <strong>rejeite</strong>: o aceite foi explícito. Fazer o
+          CSS caber no HTML existente é justamente a parte difícil que você contratou.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="chapter-divider">
+    <div class="chapter-icon">🏁</div>
+    <div class="chapter-number">Parte 5</div>
+    <h2 style="background:linear-gradient(135deg,var(--accent5),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Fechamento do dia</h2>
+    <p class="chapter-subtitle">Ferramentas, os bugs da era da IA, quiz e treino</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       FERRAMENTAS
        ═══════════════════════════════════════════════════════ -->
   <section class="step-section" id="custos">
     <div class="step-header">
       <div class="step-number sn-mint">💳</div>
       <div>
-        <div class="step-title">As ferramentas (e quanto custam)</div>
-        <div class="step-sub">O fluxo é o mesmo — muda o crachá</div>
+        <div class="step-title">Sua ferramenta, o mesmo contrato</div>
+        <div class="step-sub">O comando muda; Prompt 0, checkpoints e homologação não</div>
       </div>
     </div>
 
     <div class="card">
       <table class="swp-cost">
-        <thead><tr><th>Agente</th><th>Plano</th><th>Como abre</th></tr></thead>
+        <thead><tr><th>Agente</th><th>Como abre</th><th>Regras do projeto</th></tr></thead>
         <tbody>
           <tr class="hl">
             <td>🟠 Claude Code</td>
-            <td>Claude Pro — <strong style="color:var(--accent7)">o que o professor usa em aula</strong></td>
-            <td><code>claude</code> no Terminal do PyCharm · regras do projeto em <code>CLAUDE.md</code></td>
+            <td><code>claude</code> no Terminal do PyCharm</td>
+            <td><code>CLAUDE.md</code></td>
           </tr>
           <tr>
             <td>⚪ Codex</td>
-            <td>ChatGPT Plus — se você já paga o ChatGPT, já tem</td>
-            <td><code>codex</code> · regras em <code>AGENTS.md</code></td>
+            <td><code>codex</code> no terminal ou app</td>
+            <td><code>AGENTS.md</code></td>
           </tr>
           <tr>
             <td>🔵 Antigravity</td>
-            <td>Google AI Pro</td>
-            <td><code>agy</code> (CLI) ou o editor Antigravity · regras em <code>AGENTS.md</code></td>
+            <td><code>agy</code> ou o editor Antigravity</td>
+            <td><code>AGENTS.md</code></td>
           </tr>
         </tbody>
       </table>
@@ -780,21 +1153,16 @@
         <div class="tip-content">
           <strong>O que você aprendeu NÃO é "usar o Claude Code".</strong> É o fluxo
           especificar → gerar → ler → testar → ajustar — e ele é idêntico nos três (e nos
-          próximos dez que lançarem até o fim do ano 😄). Ferramenta muda; critério fica.
-          Os preços e limites mudam rápido: na casa de US$ 20/mês cada, hoje.
+          próximos dez que lançarem 😄). Ferramenta, preço e limite mudam; critério fica.
+          Consulte a página atual de cada produto para saber quais planos dão acesso.
         </div>
       </div>
     </div>
   </section>
 
-  <div class="chapter-divider">
-    <div class="chapter-icon">🏁</div>
-    <div class="chapter-number">Parte 4</div>
-    <h2 style="background:linear-gradient(135deg,var(--accent5),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Fechamento do dia</h2>
-    <p class="chapter-subtitle">Os bugs da era da IA, quiz e treino</p>
-  </div>
+  <div class="section-connector"><div class="line"></div></div>
 
-<!-- ═══════════════════════════════════════════════════════
+  <!-- ═══════════════════════════════════════════════════════
        BUGZILLA
        ═══════════════════════════════════════════════════════ -->
   <section class="step-section" id="bugzilla">
@@ -818,7 +1186,7 @@
         <div class="bugzilla-body">
           <p>
             O diff parecia bom, você apertou "sim" em tudo… e três dias depois descobre que o
-            login aceita senha errada (o bug da caça, lembra?). Código gerado SEM revisão é
+            login não deixa ninguém entrar (o bug da caça, lembra?). Código gerado SEM revisão é
             <strong>bug agendado</strong>: vai estourar, só não se sabe quando.
           </p>
           <p>
@@ -855,20 +1223,29 @@
         <div class="bugzilla-header">
           <span class="bugzilla-emoji">🐛</span>
           <div>
-            <div class="bugzilla-title">Bug 3 — o "conserto" que ninguém pediu</div>
-            <div class="bugzilla-sub">Pediu login… e ele "melhorou" seu banco.py de brinde</div>
+            <div class="bugzilla-title">Bug 3 — o que o agente RODA não aparece no diff</div>
+            <div class="bugzilla-sub">História real desta turma, no Dia 5 🫣</div>
           </div>
         </div>
         <div class="bugzilla-body">
           <p>
-            Agentes adoram "aproveitar que estou aqui": renomear suas funções, "otimizar" seu
-            SQL, reformatar arquivos inteiros. Se você só olha o pedaço do login,
-            essas mudanças extras passam — e quebram o que funcionava.
+            No meio da aula, o estoque começou a mudar sozinho: recarregava a página e apareciam
+            produtos que ninguém tinha cadastrado; outros sumiam. A primeira suspeita caiu no
+            navegador — <em>"será que o F5 está cadastrando?"</em>. Não era.
           </p>
           <p>
-            💊 <strong>Remédio:</strong> leia o diff <strong>INTEIRO</strong>, inclusive dos
-            arquivos que você não esperava ver mudados (principalmente eles!). Mudança fora
-            da espec → rejeite: "só o que pedi, por favor".
+            O agente, para conferir se o que tinha acabado de implementar funcionava, escrevia e
+            <strong>executava</strong> scripts de teste que apagavam a tabela <code>produtos</code>
+            e inseriam produtos de exemplo — no mesmo <code>loja.db</code> que a turma estava
+            usando ao vivo. Nada disso aparecia no diff, porque
+            <strong>diff mostra o que ele ESCREVE nos seus arquivos, não o que ele EXECUTA</strong>.
+          </p>
+          <p>
+            💊 <strong>Remédio, em duas camadas:</strong> (1) leia também os
+            <strong>comandos</strong> que o agente pede pra rodar, não só o diff — é onde mora esse
+            tipo de estrago; (2) essa restrição não se repete a cada prompt: ela virou linha
+            permanente no arquivo de instruções —
+            <em>"Não execute scripts que alterem o loja.db. Os testes no navegador são meus."</em>
           </p>
         </div>
       </div>
@@ -885,33 +1262,33 @@
       <div class="step-number sn-yellow">🧠</div>
       <div>
         <div class="step-title">Quiz de fixação</div>
-        <div class="step-sub">4 perguntas pra carimbar o dia 6</div>
+        <div class="step-sub">5 decisões pra carimbar o dia 6</div>
       </div>
     </div>
 
     <div class="card">
       <div class="quiz">
-        <div class="quiz-q"><span class="q-emoji">1️⃣</span> A diferença entre um agente e o chat de IA comum é que o agente…</div>
+        <div class="quiz-q"><span class="q-emoji">1️⃣</span> O plano do login tem banco, autenticação e proteção. O que você envia primeiro?</div>
         <div class="quiz-options">
-          <button class="quiz-opt" onclick="checkQuiz(this,false)">É mais inteligente</button>
-          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Lê e edita os arquivos DO SEU projeto, e roda comandos</button>
-          <button class="quiz-opt" onclick="checkQuiz(this,false)">Não erra nunca</button>
-          <button class="quiz-opt" onclick="checkQuiz(this,false)">Funciona sem internet</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Os três de uma vez, para ganhar tempo</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Só o Prompt 1; homologo o banco antes de continuar</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">A proteção das rotas, porque aparece na tela</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Peço ao agente para escolher a ordem</button>
         </div>
         <div class="quiz-feedback" data-correct="Isso!" data-wrong="Quase!"
-             data-explain="chat te dá texto pra copiar; agente trabalha DENTRO do projeto — lê, propõe diffs, executa. Por isso a revisão é tão importante."></div>
+             data-explain="feature grande continua em recortes pequenos: banco → teste → aceite; autenticação → teste → aceite; proteção → teste → aceite."></div>
       </div>
 
       <div class="quiz">
-        <div class="quiz-q"><span class="q-emoji">2️⃣</span> Qual é a ordem do fluxo profissional?</div>
+        <div class="quiz-q"><span class="q-emoji">2️⃣</span> O login guarda o usuário em session["usuario"]. Que peça do Dia 5 já fazia isso funcionar?</div>
         <div class="quiz-options">
-          <button class="quiz-opt" onclick="checkQuiz(this,false)">Gerar → aceitar → torcer</button>
-          <button class="quiz-opt" onclick="checkQuiz(this,false)">Testar → gerar → especificar</button>
-          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Especificar → gerar → LER o diff → testar → ajustar</button>
-          <button class="quiz-opt" onclick="checkQuiz(this,false)">Gerar → gerar de novo → gerar mais</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">O fetchone do buscar_produto</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">O secret_key, que assina a sessão</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">O JOIN da tela de vendas</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">O AUTOINCREMENT da tabela</button>
         </div>
-        <div class="quiz-feedback" data-correct="Cravou!" data-wrong="Revisa o fluxo!"
-             data-explain="e as duas etapas que dependem 100% de você — especificar e ler — são as que decidem a qualidade do resultado."></div>
+        <div class="quiz-feedback" data-correct="Cravou!" data-wrong="Volta ao flash!"
+             data-explain="sem secret_key não existe sessão assinada — e sem sessão assinada qualquer um escreveria usuario='admin' no próprio bolso. A linha que parecia detalhe virou a fechadura."></div>
       </div>
 
       <div class="quiz">
@@ -927,7 +1304,19 @@
       </div>
 
       <div class="quiz">
-        <div class="quiz-q"><span class="q-emoji">4️⃣</span> O agente propôs mudanças num arquivo que a sua espec nem mencionava. Você…</div>
+        <div class="quiz-q"><span class="q-emoji">4️⃣</span> Você repetiu "SQL apenas no banco.py" em cinco prompts seguidos. O que isso está te dizendo?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Que o agente é burro e precisa ouvir sempre</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Que essa regra pertence ao CLAUDE.md / AGENTS.md</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Que é melhor parar de escrever restrições</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Que devo trocar de ferramenta</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Boa!" data-wrong="Pensa de novo!"
+             data-explain="restrição que se repete é regra do projeto, e regra do projeto mora no arquivo de instruções — que o agente lê sozinho antes de cada tarefa. Escreveu uma vez, vale pra sempre."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">5️⃣</span> O agente propôs mudanças num arquivo que a sua espec nem mencionava. Você…</div>
         <div class="quiz-options">
           <button class="quiz-opt" onclick="checkQuiz(this,false)">Aceita — ele sabe o que faz</button>
           <button class="quiz-opt" onclick="checkQuiz(this,false)">Nem olha, só o arquivo principal importa</button>
@@ -935,143 +1324,11 @@
           <button class="quiz-opt" onclick="checkQuiz(this,false)">Desinstala o agente</button>
         </div>
         <div class="quiz-feedback" data-correct="Boa!" data-wrong="Cuidado!"
-             data-explain="mudança não pedida é o Bug 3 do dia: o 'conserto' de brinde que quebra o que funcionava. Fora da espec → fora do diff."></div>
+             data-explain="mudança não pedida é o 'conserto' de brinde que quebra o que funcionava. Fora da espec → fora do diff. No Prompt 5 do CSS isso é literal: .py e .html não podem aparecer."></div>
       </div>
     </div>
   </section>
 
-  <div class="section-connector"><div class="line"></div></div>
-
-  <!-- ═══════════════════════════════════════════════════════
-       ARENA
-       ═══════════════════════════════════════════════════════ -->
-  <section class="step-section" id="arena">
-    <div class="step-header">
-      <div class="step-number sn-purple">🏟️</div>
-      <div>
-        <div class="step-title">Arena: horas de voo com o copiloto</div>
-        <div class="step-sub">Cinco missões dirigindo o agente — na SUA Loja</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="arena-banner">
-        <span class="ab-emoji">🏟️</span>
-        <div>
-          <div class="ab-tag">treino do dia 6</div>
-          <div class="ab-title">Especificar é músculo — treina que cresce</div>
-          <div class="ab-sub">Toda missão segue o fluxo completo: espec → diff → teste</div>
-        </div>
-      </div>
-
-      <div class="arena-track">
-        <span class="at-dot lv1">1</span><span class="at-arrow">→</span>
-        <span class="at-dot lv1">2</span><span class="at-arrow">→</span>
-        <span class="at-dot lv2">3</span><span class="at-arrow">→</span>
-        <span class="at-dot lv2">4</span><span class="at-arrow">→</span>
-        <span class="at-dot lv3">🏆</span>
-      </div>
-
-      <div class="exercise solo">
-        <div class="exercise-header">
-          <span class="exercise-icon">🧑‍💻</span>
-          <div>
-            <div class="exercise-title">Missão 1 — O tradutor</div>
-            <div class="exercise-sub">Agente como professor particular</div>
-          </div>
-        </div>
-        <div class="drill-tags">
-          <span class="drill-level lv1"><span class="stars">★</span> fácil</span>
-          <span class="drill-tag">explicar</span>
-        </div>
-        <p style="color:var(--text-dim)">
-          Peça: <em>"explique linha por linha o decorator login_required que você criou,
-          como se eu fosse iniciante"</em>. Compare com a explicação do material.
-          Agente também serve pra ISSO — e é de graça.
-        </p>
-      </div>
-
-      <div class="exercise solo">
-        <div class="exercise-header">
-          <span class="exercise-icon">🧑‍💻</span>
-          <div>
-            <div class="exercise-title">Missão 2 — Feature pequena, espec completa</div>
-            <div class="exercise-sub">Botão "cancelar" nas telas de formulário</div>
-          </div>
-        </div>
-        <div class="drill-tags">
-          <span class="drill-level lv1"><span class="stars">★</span> fácil</span>
-          <span class="drill-tag">espec</span>
-        </div>
-        <p style="color:var(--text-dim)">
-          Especifique: link "Cancelar" voltando pro /produtos em TODAS as telas de form
-          (novo, editar, vender), sem mexer em mais nada. Leia o diff: ele tocou só nos
-          3 templates? Aprovado. Tocou em mais? Você já sabe o que fazer.
-        </p>
-      </div>
-
-      <div class="exercise home">
-        <div class="exercise-header">
-          <span class="exercise-icon">🏠</span>
-          <div>
-            <div class="exercise-title">Missão 3 — O roteiro de testes</div>
-            <div class="exercise-sub">Agente escrevendo o teste, você executando</div>
-          </div>
-        </div>
-        <div class="drill-tags">
-          <span class="drill-level lv2"><span class="stars">★★</span> médio</span>
-          <span class="drill-tag">testar</span>
-        </div>
-        <p style="color:var(--text-dim)">
-          Peça: <em>"escreva um roteiro de teste manual da minha tela de vendas: caminho feliz
-          e todos os casos de erro"</em>. Execute o roteiro no seu sistema. Ele achou casos que
-          você não tinha pensado? (Aposto que sim.)
-        </p>
-      </div>
-
-      <div class="exercise home">
-        <div class="exercise-header">
-          <span class="exercise-icon">🏠</span>
-          <div>
-            <div class="exercise-title">Missão 4 — A rejeição educada</div>
-            <div class="exercise-sub">Treinando dizer NÃO pro estagiário</div>
-          </div>
-        </div>
-        <div class="drill-tags">
-          <span class="drill-level lv2"><span class="stars">★★</span> médio</span>
-          <span class="drill-tag">ajustar</span>
-        </div>
-        <p style="color:var(--text-dim)">
-          Peça uma tela "Sobre o sistema" (/sobre-sistema) e, quando vier o diff,
-          <strong style="color:var(--text)">rejeite de propósito</strong> algum detalhe
-          ("sem esse CSS extra; use o base.html como as outras"). Refine até vir EXATO.
-          Saber ajustar sem recomeçar é metade do jogo.
-        </p>
-      </div>
-
-      <div class="exercise home">
-        <div class="exercise-header">
-          <span class="exercise-icon">🏆</span>
-          <div>
-            <div class="exercise-title">Missão final — A espec do SEU projeto</div>
-            <div class="exercise-sub">Preparando o Dia 7 hoje</div>
-          </div>
-        </div>
-        <div class="drill-tags">
-          <span class="drill-level lv3"><span class="stars">★★★</span> desafio</span>
-          <span class="drill-tag">especificar</span>
-          <span class="drill-tag">dia 7</span>
-        </div>
-        <p style="color:var(--text-dim)">
-          Semana que vem você constrói um sistema SEU (barbearia? brechó? petshop?).
-          Escreva HOJE, num arquivo de texto, a espec no formato da espec boa:
-          as 2 entidades com colunas e tipos, e a operação principal.
-          <strong style="color:var(--text)">Não peça pro agente gerar nada ainda</strong> —
-          só a espec. Quem chega no Dia 7 com espec pronta, sai com sistema pronto.
-        </p>
-      </div>
-    </div>
-  </section>
 
   <div class="section-connector"><div class="line"></div></div>
 
@@ -1083,18 +1340,19 @@
       <div class="step-number sn-green">🎒</div>
       <div>
         <div class="step-title">O que você leva do Dia 6</div>
-        <div class="step-sub">Uma Loja com cadeado — e um superpoder com manual de segurança</div>
+        <div class="step-sub">A Loja ganhou porta — e acabamento</div>
       </div>
     </div>
 
     <div class="card">
       <div class="about-bullets">
-        <div>🤖 <strong>Agente ≠ chat:</strong> lê seu projeto, propõe diffs, roda comandos — e espera SUA aprovação</div>
-        <div>🧭 <strong>O fluxo:</strong> especificar → gerar → LER o diff → testar → ajustar (nunca aceitar às cegas)</div>
-        <div>📋 <strong>Espec boa:</strong> itens numerados, decisões suas, limites explícitos — e ela vira o checklist de teste</div>
-        <div>👀 <strong>Ler diff com desconfiança:</strong> verde entra, vermelho sai — e o bug mora no que "parece certo"</div>
-        <div>🔐 <strong>O login por dentro:</strong> session (o bolso do flash!), hash de mão única, @login_required de crachá</div>
-        <div>💳 <strong>Ferramentas:</strong> Claude Code (Claude Pro), Codex (ChatGPT Plus) ou Antigravity (Google AI Pro) — critério não se assina, se aprende</div>
+        <div>🎫 <strong>session:</strong> o mesmo bolso assinado do flash() do Dia 5, agora guardando quem você é — até o /logout esvaziar</div>
+        <div>🔑 <strong>hash:</strong> triturador de mão única; o login compara sopa com sopa, nunca senha com hash</div>
+        <div>🛡️ <strong>@login_required:</strong> o crachá conferido antes da rota — com @app.route sempre acima dele</div>
+        <div>🪜 <strong>Feature maior:</strong> Prompt 0 de plano → três entregas pequenas → auditoria final</div>
+        <div>📌 <strong>CLAUDE.md:</strong> restrição repetida virou regra permanente do projeto — inclusive a que salvou seu loja.db</div>
+        <div>👀 <strong>Diff com desconfiança:</strong> o bug perigoso é o que roda sem erro — e o que o agente EXECUTA nem aparece ali</div>
+        <div>🎨 <strong>Dívida visual:</strong> tela nova não herda CSS antigo; fechar a dívida é um prompt com escopo declarado</div>
       </div>
 
       <div class="concept" style="margin-top:18px">
@@ -1106,11 +1364,54 @@
         </p>
       </div>
 
+      <div class="exercise home" style="margin-top:18px">
+        <div class="exercise-header">
+          <span class="exercise-icon">📝</span>
+          <div>
+            <div class="exercise-title">A lição de casa do Dia 6 — e só esta</div>
+            <div class="exercise-sub">Escreva a espec do SEU projeto. Não peça pro agente gerar nada ainda.</div>
+          </div>
+        </div>
+        <p style="color:var(--text-dim)">
+          No Dia 7 você constrói um sistema seu — barbearia, brechó, petshop, oficina, o que
+          quiser. A diferença entre quem sai com sistema pronto e quem sai com sistema pela metade
+          não é velocidade de digitação: é <strong style="color:var(--text)">chegar com a espec
+          escrita</strong>. Você passou o dia inteiro aprendendo a escrever espec boa; hoje ela é
+          sobre o seu próprio projeto.
+        </p>
+        <p style="color:var(--text-dim)">
+          Num arquivo de texto, no caderno, onde for — mas <strong style="color:var(--text)">por
+          escrito</strong>. São sete linhas, e elas são <strong style="color:var(--text)">exatamente
+          a folha de projeto que o Dia 7 vai te pedir</strong> — quem trouxer isso pronto não
+          preenche nada em sala:
+        </p>
+        <div class="swp-accept">
+          <label><input type="checkbox"> <strong>SISTEMA</strong>: o nome e pra quem ele serve</label>
+          <label><input type="checkbox"> <strong>ENTIDADE 1</strong> (a principal), com TODAS as colunas e os tipos — igual ao <code>criar_banco.py</code> do Dia 3</label>
+          <label><input type="checkbox"> <strong>ENTIDADE 2</strong>, também com colunas e tipos — e qual coluna aponta pra entidade 1</label>
+          <label><input type="checkbox"> <strong>OPERAÇÃO DE MOVIMENTO</strong>: o que o sistema faz que mexe nas duas tabelas (o "vender" da Loja)</label>
+          <label><input type="checkbox"> <strong>TELAS</strong>: as rotas que vão existir</label>
+          <label><input type="checkbox"> <strong>VALIDAÇÃO PRINCIPAL</strong>: a regra que o servidor precisa barrar (o "estoque insuficiente" do seu tema)</label>
+          <label><input type="checkbox"> <strong>VISUAL</strong>, em três linhas: paleta, menu no topo ou na lateral, o que precisa saltar aos olhos</label>
+        </div>
+        <div class="tip">
+          <span class="tip-icon">🎨</span>
+          <div class="tip-content">
+            <strong>A última linha é nova — e é por causa da Parte 4 de hoje.</strong> Você acabou
+            de ver o que acontece quando o visual não entra na espec: ele vira dívida, e a dívida
+            só cresce. No projeto do Dia 7 você constrói oito operações; se a cara do sistema não
+            estiver escrita antes da primeira, você termina com oito telas cruas.
+            <strong>Três linhas agora; um capítulo inteiro depois.</strong>
+          </div>
+        </div>
+      </div>
+
       <div class="warning">
-        <span class="tip-icon">📝</span>
+        <span class="tip-icon">🚀</span>
         <div class="tip-content">
-          <strong>Pro Dia 7:</strong> traga a <strong>espec do seu projeto</strong> (missão final
-          da arena) e o tema decidido. Quem chegar com isso pronto começa a codar no minuto 10.
+          <strong>Pro Dia 7:</strong> traga essa espec e o tema decidido. Quem chegar com isso
+          pronto começa a codar no minuto 10 — e mostra a folha pro professor antes de gerar
+          qualquer coisa: dois minutos de conferência evitam a tarde inteira refazendo banco.
         </div>
       </div>
 
@@ -1133,60 +1434,244 @@
 <script>
 /* ══════════ Máquinas didáticas do capítulo 06 (vanilla) ══════════ */
 document.addEventListener('DOMContentLoaded', () => {
-  const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
-  /* ---------- ⭐ Agente em ação (replay) ---------- */
+  /* ---------- ⭐ O bolso da sessão ---------- */
   (function(){
-    const box = document.getElementById('swpAgent');
+    const box = document.getElementById('swpSes');
     if (!box) return;
-    const body = document.getElementById('agentBody');
-    const note = document.getElementById('agentNote');
-    const btn = document.getElementById('agentPlay');
-    let busy = false;
 
-    const SCRIPT = [
-      ['you', '> Adicione um link "Cancelar" na tela de novo produto,', 'você especifica — curto e exato'],
-      ['you', '  voltando pro /produtos. Não mude mais nada.', ''],
-      ['dim', '', ''],
-      ['bot', '⏺ Lendo templates/novo.html…', 'o agente LÊ o projeto antes de mexer'],
-      ['bot', '⏺ Proposta de mudança em templates/novo.html:', ''],
-      ['ok',  '  + <p><a href="/produtos">Cancelar</a></p>', 'o diff: UMA linha verde, exatamente o pedido'],
-      ['bot', '  Aplicar esta mudança? (s/n)', 'o agente PARA e espera — nada muda sem você'],
-      ['you', '> s', 'você leu, conferiu que era só isso… e aprovou'],
-      ['bot', '✓ templates/novo.html atualizado.', ''],
-      ['dim', '', ''],
-      ['you', '> (no navegador: F5 em /produtos/novo… link lá, funcionando)', 'e TESTOU — o fluxo completo em 30 segundos'],
-      ['ok',  '✓ feature entregue: especificada, revisada, testada.', 'assim, sempre — do link simples ao login inteiro'],
-    ];
+    const urlEl    = document.getElementById('sesUrl');
+    const screenEl = document.getElementById('sesScreen');
+    const ticket   = document.getElementById('sesTicket');
+    const pLabel   = document.getElementById('sesPocketLabel');
+    const logEl    = document.getElementById('sesLog');
+    const noteEl   = document.getElementById('sesNote');
+    const lockBtn  = document.getElementById('sesLock');
+    const goBtn    = document.getElementById('sesGo');
+    const inBtn    = document.getElementById('sesLogin');
+    const outBtn   = document.getElementById('sesOut');
 
-    async function play(){
-      if (busy) return;
-      busy = true;
-      body.innerHTML = '';
-      const lines = SCRIPT.map(([cls, text]) => {
-        const ln = document.createElement('span');
-        ln.className = 'ln ' + cls;
-        ln.textContent = text || ' ';
-        body.appendChild(ln);
-        return ln;
-      });
-      for (let i = 0; i < lines.length; i++){
-        lines[i].classList.add('on');
-        const legenda = SCRIPT[i][2];
-        if (legenda) note.innerHTML = '💬 ' + legenda;
-        await sleep(reduceMotion ? 200 : (SCRIPT[i][2] ? 1400 : 500));
+    let lock = false;      // cadeado instalado?
+    let logged = false;    // crachá no bolso?
+
+    const TABELA =
+      '<table><tr><th>ID</th><th>Produto</th><th>Qtd</th><th></th></tr>' +
+      '<tr><td>1</td><td>Fone Bluetooth</td><td>12</td><td class="acts">&#9999;&#65039; &#128465;&#65039;</td></tr>' +
+      '<tr><td>2</td><td>Mouse Gamer</td><td>7</td><td class="acts">&#9999;&#65039; &#128465;&#65039;</td></tr>' +
+      '<tr><td>3</td><td>Teclado Mec&acirc;nico</td><td>4</td><td class="acts">&#9999;&#65039; &#128465;&#65039;</td></tr></table>';
+
+    const TELAS = {
+      aberto:
+        '<div class="bar"><b>In&iacute;cio</b><span>Produtos</span><span>Vender</span><span>Vendas</span></div>' +
+        '<h2>&#128203; Estoque</h2>' + TABELA,
+      logado:
+        '<div class="who">&#128075; Ol&aacute;, admin &middot; Sair</div>' +
+        '<div class="bar"><b>In&iacute;cio</b><span>Produtos</span><span>Vender</span><span>Vendas</span></div>' +
+        '<h2>&#128203; Estoque</h2>' + TABELA,
+      login:
+        '<h2>&#128274; Entrar</h2>' +
+        '<p>Informe suas credenciais para acessar a Loja.</p>' +
+        '<div class="lform"><input value="admin" readonly><input type="password" value="trocar123" readonly>' +
+        '<button type="button">Entrar</button></div>'
+    };
+
+    function log(linhas){
+      logEl.innerHTML = linhas.join('\n');
+    }
+
+    function paintPocket(){
+      if (logged){
+        ticket.classList.remove('gone');
+        pLabel.textContent = 'bolso da sessão (assinado pelo secret_key)';
+      } else {
+        ticket.classList.add('gone');
+        pLabel.textContent = 'bolso da sessão (vazio)';
       }
-      note.innerHTML = '💬 <strong>4 decisões humanas</strong> numa feature de 1 linha. Essa proporção não muda com o tamanho.';
-      busy = false;
     }
 
-    btn.addEventListener('click', play);
-    if (!reduceMotion){
-      new IntersectionObserver((es, obs) => {
-        es.forEach(e => { if (e.isIntersecting){ play(); obs.disconnect(); } });
-      }, {threshold:0.4}).observe(box);
+    function syncButtons(){
+      lockBtn.textContent = lock ? '🔐 com cadeado (fim do Dia 6)' : '🔓 sem cadeado (fim do Dia 5)';
+      lockBtn.classList.toggle('on', lock);
+      inBtn.disabled  = !lock || logged;
+      outBtn.disabled = !lock || !logged;
     }
+
+    function go(){
+      if (!lock){
+        urlEl.textContent = 'localhost:5000/produtos';
+        screenEl.innerHTML = TELAS.aberto;
+        log([
+          'GET /produtos',
+          '<span class="no">(nenhum crach&aacute; foi pedido)</span>',
+          '200 OK &rarr; estoque na tela'
+        ]);
+        noteEl.innerHTML = '💬 a Loja <strong>não perguntou quem é você</strong> — e os botões ✏️ 🗑️ estão liberados pra qualquer visitante';
+      } else if (logged){
+        urlEl.textContent = 'localhost:5000/produtos';
+        screenEl.innerHTML = TELAS.logado;
+        log([
+          'GET /produtos',
+          '@login_required &rarr; session["usuario"]?',
+          '<span class="ok">&#10003; "admin" &mdash; crach&aacute; conferido</span>',
+          '200 OK &rarr; estoque na tela'
+        ]);
+        noteEl.innerHTML = '💬 o crachá estava no bolso: <strong>o decorator deixou passar</strong> e o menu mostra quem entrou';
+      } else {
+        urlEl.textContent = 'localhost:5000/login';
+        screenEl.innerHTML = TELAS.login;
+        log([
+          'GET /produtos',
+          '@login_required &rarr; session["usuario"]?',
+          '<span class="no">&#10007; bolso vazio</span>',
+          '302 &rarr; redirect /login'
+        ]);
+        noteEl.innerHTML = '💬 bolso vazio = porta fechada. <strong>Mesma URL, resposta diferente</strong> — quem decide é o conteúdo da sessão';
+      }
+      paintPocket();
+      syncButtons();
+    }
+
+    goBtn.addEventListener('click', go);
+
+    inBtn.addEventListener('click', () => {
+      logged = true;
+      urlEl.textContent = 'localhost:5000/produtos';
+      screenEl.innerHTML = TELAS.logado;
+      log([
+        'POST /login  (nome=admin, senha=***)',
+        'buscar_usuario("admin") &rarr; fetchone',
+        '<span class="ok">check_password_hash &#10003; confere</span>',
+        'session["usuario"] = "admin"',
+        '302 &rarr; redirect /produtos'
+      ]);
+      noteEl.innerHTML = '💬 o nome entrou no bolso. Agora <strong>todo request seguinte</strong> carrega esse crachá sozinho';
+      paintPocket();
+      syncButtons();
+    });
+
+    outBtn.addEventListener('click', () => {
+      logged = false;
+      urlEl.textContent = 'localhost:5000/login';
+      screenEl.innerHTML = TELAS.login;
+      log([
+        'GET /logout',
+        'session.pop("usuario")',
+        '<span class="no">bolso esvaziado</span>',
+        '302 &rarr; redirect /login'
+      ]);
+      noteEl.innerHTML = '💬 o crachá saiu do bolso. Tente abrir <strong>/produtos</strong> de novo — a porta voltou a barrar';
+      paintPocket();
+      syncButtons();
+    });
+
+    lockBtn.addEventListener('click', () => {
+      lock = !lock;
+      logged = false;
+      if (lock){
+        noteEl.innerHTML = '💬 cadeado instalado (é o que os Prompts 1, 2 e 3 fazem). Tente <strong>Abrir /produtos</strong> agora';
+      } else {
+        noteEl.innerHTML = '💬 voltamos ao fim do Dia 5: sem login nenhum. Tente <strong>Abrir /produtos</strong>';
+      }
+      go();
+    });
+
+    /* estado inicial */
+    screenEl.innerHTML = TELAS.aberto;
+    log(['(aguardando um pedido&hellip;)']);
+    paintPocket();
+    syncButtons();
+  })();
+
+  /* ---------- ⭐ A dívida visual ---------- */
+  (function(){
+    const box = document.getElementById('swpVisual');
+    if (!box) return;
+
+    const view    = document.getElementById('visView');
+    const urlEl   = document.getElementById('visUrl');
+    const noteEl  = document.getElementById('visNote');
+    const tabs    = [...box.querySelectorAll('.swp-visual-tabs button')];
+    const applyBt = document.getElementById('visApply');
+    const resetBt = document.getElementById('visReset');
+
+    let atual = 'produtos';
+    let aplicado = false;
+
+    const TELAS = {
+      produtos: {
+        url: 'localhost:5000/produtos',
+        html:
+          '<div class="flashmsg">&#9989; Produto cadastrado com sucesso!</div>' +
+          '<h2>&#128203; Estoque</h2>' +
+          '<table><tr><th>ID</th><th>Produto</th><th>Pre&ccedil;o</th><th>Qtd</th></tr>' +
+          '<tr><td>1</td><td>Fone Bluetooth</td><td>R$ 149,90</td><td>12</td></tr>' +
+          '<tr><td>2</td><td>Mouse Gamer</td><td>R$ 89,00</td><td>7</td></tr>' +
+          '<tr><td>3</td><td>Teclado Mec&acirc;nico</td><td>R$ 249,00</td><td>4</td></tr></table>',
+        nota: 'essa tela existia no Dia 3, quando você escreveu a espec do CSS — por isso tem regra'
+      },
+      vender: {
+        url: 'localhost:5000/vender',
+        html:
+          '<h2>&#128722; Vender</h2>' +
+          '<div class="vform">' +
+          '<select><option>Fone Bluetooth (12 em estoque)</option></select>' +
+          '<input value="2" readonly>' +
+          '<button type="button">Registrar venda</button></div>',
+        nota: 'o &lt;select&gt; e o campo de quantidade nasceram no Dia 5 — nenhuma regra no style.css fala deles'
+      },
+      login: {
+        url: 'localhost:5000/login',
+        html:
+          '<h2>&#128274; Entrar</h2>' +
+          '<div class="vform">' +
+          '<input value="admin" readonly>' +
+          '<input type="password" value="trocar123" readonly>' +
+          '<button type="button">Entrar</button></div>',
+        nota: 'essa tela nasceu hoje, no Prompt 2 — é a dívida visual mais nova do seu projeto'
+      }
+    };
+
+    /* /produtos já estava coberta desde o Dia 3 */
+    function estilizada(tela){
+      return tela === 'produtos' ? true : aplicado;
+    }
+
+    function render(){
+      const t = TELAS[atual];
+      urlEl.textContent = t.url;
+      view.innerHTML = t.html;
+      view.className = 'vis-view' + (estilizada(atual) ? ' v-on' : '');
+      tabs.forEach(b => b.classList.toggle('sel', b.dataset.screen === atual));
+
+      if (estilizada(atual)){
+        noteEl.innerHTML = (atual === 'produtos' && !aplicado)
+          ? '💬 ' + t.nota
+          : '💬 <strong>Prompt 5 aplicado:</strong> mesma tela, mesmo HTML, só o style.css mudou';
+      } else {
+        noteEl.innerHTML = '💬 ' + t.nota;
+      }
+    }
+
+    tabs.forEach(b => b.addEventListener('click', () => { atual = b.dataset.screen; render(); }));
+
+    applyBt.addEventListener('click', () => {
+      aplicado = true;
+      tabs.forEach(b => { const f = b.querySelector('.flag'); if (f) f.textContent = 'coberta ✅'; });
+      render();
+    });
+
+    resetBt.addEventListener('click', () => {
+      aplicado = false;
+      tabs.forEach(b => {
+        const f = b.querySelector('.flag');
+        if (!f) return;
+        f.textContent = b.dataset.screen === 'produtos' ? 'Dia 3 ✅'
+                      : b.dataset.screen === 'vender'   ? 'Dia 5 ❌' : 'hoje ❌';
+      });
+      render();
+    });
+
+    render();
   })();
 
   /* ---------- ⭐ Caça ao bug no diff ---------- */
@@ -1213,7 +1698,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ['        return render_template("login.html", erro="Senha incorreta")', 'Senha errada → erro na tela. Certinho.'],
     ];
 
-    LINES.forEach(([code, msg], i) => {
+    LINES.forEach(([code, msg]) => {
       const ln = document.createElement('span');
       ln.className = 'swp-hunt-line';
       ln.textContent = code;

@@ -285,3 +285,73 @@ Regras de produção dos capítulos:
 - o agente pode variar nomes e organização superficial; as regras técnicas e o comportamento são
   inegociáveis;
 - Dias 7–8 mantêm a exigência do Demo Day: todo trecho gerado deve ser explicado pelo aluno.
+
+### D18 · Dias 6–8 passam a usar a mesma gramática agent-first (2026-09-08)
+
+Revisão solicitada pelo professor para remover a quebra de estilo após os capítulos 4–5. O Dia 6
+deixa de parecer uma segunda introdução a agentes: mantém as máquinas úteis apenas como retomada e
+divide o login em plano sem edição, dados, autenticação, proteção e auditoria final. Cada fase possui
+prompt-spec, escopo, aceite e checkpoint próprios. A ordem correta dos decorators fica explícita:
+`@app.route` acima de `@login_required`.
+
+O Dia 7 passa a começar o sistema autoral em projeto vazio com uma esteira declarada: Prompt 0 de
+plano, Prompt 1 de fundação e uma moldura por operação. Uma catraca impede avançar sem diff restrito,
+teste feliz, teste de erro, persistência e explicação oral. O Dia 8 aplica a mesma gramática ao
+deploy: auditoria sem edição, correção mínima, homologação local e diagnóstico de produção baseado
+em Error log + caminhos + WSGI. O ZIP inclui `requirements.txt`, `templates/` e `static/`, e exclui
+venv, cache e banco local. No Demo Day, o aluno mostra critério de aceite, diff e código funcionando.
+
+---
+
+### D19 · Cap 06 religado ao Cap 05, e Arena removida do Dia 6 em diante (2026-09-22)
+
+Motivo: ao reler o Dia 6 depois de dar o Dia 5 em sala, o capítulo não parecia continuação do
+anterior. Diagnóstico: ~30% do corpo re-ensinava agentes antes de o login aparecer, e os três
+momentos ⭐ eram todos sobre método (replay do ritual, caça ao bug) — nenhum sobre o assunto do
+dia. O Cap 05 fecha em "falta um cadeado na porta"; o Cap 06 abria num checklist de instalação.
+
+Mudanças:
+
+- **Abre no estado do Cap 05**: a Loja completa e sem porta (`/produtos/3/excluir` responde pra
+  qualquer um), com o Dia 8 (URL pública) como prazo.
+- **`session` virou a ponte de abertura**, pagando a promessa plantada no `flash()` do Dia 5
+  ("guarde essa palavra sessão"). Antes, essa colheita era só a alternativa correta de um quiz.
+  Novo simulador ⭐ do bolso da sessão, que reusa deliberadamente o visual do bilhete do Dia 5.
+- **Metodologia comprimida**: o widget de replay do ritual saiu (já vivido nos Dias 4–5). No lugar
+  entrou o bloco do `CLAUDE.md` — restrição repetida três vezes vira regra permanente do projeto.
+- **Caça ao bug foi movida para depois do Prompt 2**. Antes dele, entregava o critério de aceite
+  do hash de bandeja; depois, é leitura do diff real que o aluno acabou de gerar.
+- **Parte 4 nova — a dívida visual.** O `static/style.css` nasce no Dia 3, quando a Loja tinha duas
+  telas; editar/excluir/vender/vendas/login vieram depois e ficam cruas. Prompt 5 fecha a dívida,
+  com aceite conferível por quem não sabe CSS: "no diff, nenhum .py e nenhum .html foi tocado".
+- **BugZilla 3 virou o caso real da turma**: o agente executando scripts de teste que apagavam e
+  repovoavam `produtos` no `loja.db` ao vivo. Lição: o diff mostra o que ele escreve, não o que ele
+  executa.
+- **Correção de bug**: o Cap 06 era o único capítulo sem o CSS local de `.swp-trace`, então a seção
+  "Entendendo o código gerado" renderizava as cinco mensagens empilhadas, sem destaque de linha.
+
+**Arena removida do Dia 6 em diante.** Decisão do professor: nem ele nem a turma fazem as missões em
+sala ("o exercício é sempre extra"), e os desafios que ele de fato passa são gerados à parte, não
+nesse formato de cinco missões com estrelinhas. A Arena permanece nos Dias 1–5, onde está costurada
+no enredo (o Cap 02 cita a arena do Dia 1 e entrega uma "Versão 2 com todas as missões resolvidas").
+Os Dias 7 e 8 nunca tiveram Arena. A única missão que era dependência — a espec do projeto, que o
+Dia 7 referencia — foi promovida a **lição de casa única** no fechamento do Dia 6, agora com um item
+a mais: três linhas sobre o visual do sistema.
+
+**Passada de continuidade nos Dias 7–8 (mesma revisão).** Com o Dia 6 mudado, três emendas
+quebraram e foram consertadas:
+
+1. **A lição de casa do Dia 6 não tinha a forma da folha do Dia 7.** Pedia 4 itens; a folha pede 6
+   (sistema, 2 entidades, movimento, telas, validação). O aluno chegaria faltando *telas* e
+   *validação*, e carregando um item *visual* sem campo correspondente. As duas viraram o mesmo
+   artefato de 7 linhas — o "já chegou com ela pronta 😎" do Dia 7 agora é verdade.
+2. **O fio do visual morria na porta do Dia 7.** O Dia 6 ensina que tela nova não herda CSS antigo,
+   e o Dia 7 mandava construir 8 operações recriando exatamente essa dívida. A folha e o
+   `[CONTEXTO]` do Prompt 0 ganharam o campo `VISUAL:`, e o aceite do Prompt 1 passou a exigir
+   `style.css` já com regra para tabela, formulário, botão e flash — antes de essas telas existirem.
+   As `[REGRAS PERMANENTES]` do Prompt 1 também herdaram a regra do `loja.db` do Dia 6.
+3. **O Dia 8 mandava publicar numa pasta chamada `loja`** (5 lugares), embora o Dia 7 diga
+   explicitamente "comece numa pasta nova com o nome do seu sistema; não transforme a Loja".
+   Virou o placeholder `meusistema`, com aviso no passo 3 de que o nome precisa ser idêntico nos
+   passos 3, 5 e 6 — que é a causa nº 1 do `no such table` do próprio BugZilla do capítulo, agora
+   nomeada lá também.

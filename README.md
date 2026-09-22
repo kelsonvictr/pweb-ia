@@ -5,7 +5,8 @@
 > [Programação para Iniciantes](../programacao-iniciantes-v2/) e o mundo dos sistemas profissionais.
 
 **8 encontros de 2h**: o aluno reconstrói o sistema de Loja do bootcamp como app web de verdade —
-Flask, Jinja, SQLite com SQL na mão, agentes de codificação (Claude Code/Codex/Antigravity, em escada desde o Dia 3)
+Flask, Jinja, SQLite com SQL na mão, agentes de codificação (Claude Code/Codex/Antigravity como
+ferramenta no Dia 3 e em modo agent-first a partir do Dia 4)
 e deploy com link público.
 
 | Dia | Encontro | O aluno sai com... |
@@ -15,9 +16,9 @@ e deploy com link público.
 | 03 | Banco de dados de verdade | SQL na mão: SQLite substituindo o TinyDB |
 | 04 | A Loja ganha banco | listar + cadastrar produtos com persistência real |
 | 05 | Editar, excluir e vender | a Loja completa: CRUD + vendas + faturamento |
-| 06 | Programando com agentes de IA | login gerado por agente — e revisado pelo aluno |
-| 07 | Projeto final | sistema com tema próprio, agente de par |
-| 08 | No ar! Deploy + Demo Day | link público + apresentação + próximo passo |
+| 06 | Login com agentes | feature maior dividida em prompts e homologada pelo aluno |
+| 07 | Projeto final | sistema autoral construído numa esteira agent-first |
+| 08 | No ar! Deploy + Demo Day | auditoria por prompt + link público + apresentação |
 
 ## Stack do material
 

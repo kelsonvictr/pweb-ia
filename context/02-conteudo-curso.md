@@ -100,27 +100,45 @@ Capítulo teórico entre o Dia 2 e o Dia 3 (D15), adaptado do cap 09 do fullstac
 - Dia 3: **tutor** do SQL escrito pelo aluno + primeira tarefa visual (CSS)
 - Dia 4: **virada agent-first** — todo o CRUD integrado nasce de prompts-spec; o aluno comanda
 - Dia 5: **sequência de entregas** — um prompt por operação, nunca “faça o resto da Loja”
-- Dia 6: **feature maior** — login inteiro, ainda dividido em plano, implementação e testes
+- Dia 6: **feature maior** — login inteiro, ainda dividido em plano, implementação e testes; fecha com o prompt de acabamento visual
 - Dias 7–8: projeto e deploy no mesmo fluxo; todo código gerado precisa ser explicado
 
 ---
 
-## Dia 6 · `06-agentes-de-ia` — Programando com agentes: uma feature maior
+## Dia 6 · `06-agentes-de-ia` — Login com agentes: uma feature maior
 
 **Pré-requisito pedagógico**: o aluno já aprendeu manualmente as peças fundamentais (Flask, Jinja,
 formulários e SQL) e construiu o CRUD da Loja por prompts nos Dias 4–5. Hoje ele sobe de várias
 operações pequenas para uma feature maior, sem abandonar o ritual de revisão.
 
-1. Recap do Dia 2½: o que é um agente de codificação — terminal + IA que lê e edita seu projeto
-2. Demonstração do professor: pedir uma feature pequena e ver o agente trabalhar
-3. **O fluxo profissional**: especificar → gerar → LER o diff → testar → ajustar (nunca aceitar às cegas)
-4. **Missão do dia: login no sistema** — o aluno escreve a especificação ("tela de login, senha com hash, proteger as rotas de produto, logout"), o agente implementa, o aluno revisa e testa
-5. Entender o que o agente fez: sessão, hash de senha, decorator de proteção (explicação guiada do código gerado)
-6. Agente errando de propósito: professor mostra uma geração com bug e a turma caça
-7. Ferramentas: Claude Code (Claude Pro — o do professor), Codex (ChatGPT Plus), Antigravity (Google AI Pro); sem opção gratuita
+1. **Abre no estado do Dia 5**: a Loja está completa e *sem porta* — `/produtos/3/excluir`
+   responde pra qualquer um. A dor antes do remédio; o Dia 8 (URL pública) é o prazo
+2. ⭐ **Simulador do bolso da sessão**: mesma `session` do `flash()` do Dia 5, agora guardando
+   o usuário — liga/desliga o cadeado, entra, sai, e vê o 302 do `@login_required`
+3. Retomada de 1 minuto do contrato dos Dias 4–5 (fluxo + regra de ouro) — **sem reapresentar
+   agentes como novidade** — e o bloco do `CLAUDE.md`: restrição repetida vira regra permanente
+4. Prompt 0 — ler o projeto e dividir o login em três entregas, **sem editar**
+5. Prompt 1 — tabela `usuarios`, hash e função de busca; homologar o banco isoladamente
+6. Prompt 2 — `/login`, `/logout` e sessão; homologar entrar, falhar e sair
+7. ⭐ **Caça ao bug no diff, DEPOIS do Prompt 2** (não antes: seria spoiler do aceite) — diff que
+   roda sem erro e impede qualquer login; o aluno treina e volta pro diff dele
+8. Prompt 3 — `login_required` e menu por estado; homologar todas as rotas protegidas
+9. Prompt 4 — auditoria final sem edição, procurando senha pura, SQL inseguro e decorator fora de ordem
+10. Entender o código gerado: sessão, hash e a ordem `@app.route` acima de `@login_required`
+11. 🎨 **A dívida visual** (Parte 4) — o `static/style.css` nasceu no Dia 3, quando a Loja tinha
+    duas telas; editar/excluir/vender/vendas/login vieram depois e estão cruas. ⭐ simulador
+    antes/depois + **Prompt 5**, cujo aceite é conferível sem entender CSS: *"no diff, nenhum
+    arquivo .py e nenhum .html foi tocado"*
 
-**Sai com**: Loja com login funcionando + o hábito de revisar código gerado.
-**BugZilla do dia**: aceitar código sem ler · pedir "faz um sistema completo" (especificação vaga = resultado ruim).
+12. **Lição de casa única** (substituiu a Arena, removida do Dia 6 em diante): escrever por
+    escrito a espec do projeto do Dia 7 — 2 entidades com colunas e tipos, a operação de
+    movimento e **três linhas sobre o visual** (item novo, consequência da Parte 4). O Dia 7
+    depende disso e referencia explicitamente
+
+**Sai com**: Loja com login funcionando, visualmente coerente + o hábito de revisar código gerado.
+**BugZilla do dia**: aceitar código sem ler · espec vaga · **o que o agente RODA não aparece no
+diff** (caso real da turma: scripts de teste do agente apagando e repovoando a tabela `produtos`
+no `loja.db` ao vivo → a restrição virou linha no `CLAUDE.md`).
 
 ---
 
@@ -128,8 +146,11 @@ operações pequenas para uma feature maior, sem abandonar o ritual de revisão.
 
 1. Aluno escolhe o próprio tema (barbearia, brechó, petshop, oficina…) — mesmo esqueleto: 2 entidades, CRUD + operação de "movimento" (agendamento, venda, empréstimo…)
 2. Checklist do projeto (mínimo: 1 CRUD completo + 1 tela de operação + login)
-3. Trabalho guiado em sala: professor circula, agente de IA liberado como par
-4. Regra do agente no projeto: **primeiro especifique; o agente implementa; você revisa, testa e explica**
+3. Novo projeto vazio; Prompt 0 transforma a folha aprovada em plano sem editar
+4. Prompt 1 cria somente fundação, instruções persistentes, tabelas, home e CSS
+5. Esteira explícita: listar → cadastrar → editar → excluir → segunda entidade → movimento → histórico → login
+6. Uma catraca entre prompts exige diff restrito, teste feliz, teste de erro, persistência e explicação oral
+7. Regra do projeto: **primeiro especifique; o agente implementa; você revisa, testa e explica**
 
 **Sai com**: projeto próprio ~80% pronto.
 
@@ -137,11 +158,14 @@ operações pequenas para uma feature maior, sem abandonar o ritual de revisão.
 
 ## Dia 8 · `08-deploy-demo-day` — No ar + Demo Day + e agora?
 
-1. Auditoria de deploy por prompt: limitar o escopo ao `app.py`, revisar o diff e testar localmente
-2. Deploy no PythonAnywhere (ou Render) — free tier, passo a passo visual
-3. Cada aluno publica o projeto e testa o link **no celular** (momento WOW final)
-4. **Demo Day**: 3–5min por aluno apresentando o sistema pra turma
-5. **A ponte**: limites do que construímos — e se precisar de app mobile? e se o front for de outro time? e se forem 10 devs? → separação front/back → API → **o que o mercado usa: React + Java/Spring** → convite para o curso Fullstack (com condição especial pra turma)
+1. Prompt 0 — auditoria de prontidão sem edição: `__main__`, secret key, requirements, caminhos, banco e sintaxe
+2. Prompt 1 — corrigir somente bloqueadores aprovados; diff pequeno + homologação local
+3. Pacote completo: Python, `requirements.txt`, `templates/` e `static/`; sem venv, cache ou `.db` local
+4. Deploy no PythonAnywhere (ou Render) — free tier, passo a passo visual
+5. Prompt 2 — diagnóstico por evidência quando a nuvem falhar: log + caminhos + WSGI, sem editar primeiro
+6. Cada aluno publica o projeto e testa o link **no celular** (momento WOW final)
+7. **Demo Day**: 3–5min por aluno mostrando critério de aceite, diff e código explicado
+8. **A ponte**: limites do que construímos — e se precisar de app mobile? e se o front for de outro time? e se forem 10 devs? → separação front/back → API → **o que o mercado usa: React + Java/Spring** → convite para o curso Fullstack (com condição especial pra turma)
 
 **Sai com**: link público do próprio sistema + clareza do próximo passo.
 

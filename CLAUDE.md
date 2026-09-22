@@ -48,9 +48,9 @@ sistemas-web-python/
 │   ├── 03-sql-sqlite/               ← Dia 3 · SQL na mão, adeus TinyDB
 │   ├── 04-crud-parte-1/             ← Dia 4 · virada agent-first: listar + cadastrar por prompts
 │   ├── 05-crud-parte-2/             ← Dia 5 · editar + excluir + vender por prompts
-│   ├── 06-agentes-de-ia/            ← Dia 6 · feature maior: login por especificação
-│   ├── 07-projeto-final/            ← Dia 7 · CRUD próprio do aluno, com agente
-│   └── 08-deploy-demo-day/          ← Dia 8 · deploy + apresentação + ponte fullstack
+│   ├── 06-agentes-de-ia/            ← Dia 6 · login em prompts + checkpoints
+│   ├── 07-projeto-final/            ← Dia 7 · sistema autoral em esteira agent-first
+│   └── 08-deploy-demo-day/          ← Dia 8 · auditoria por prompt + deploy + Demo Day
 ├── sobre/                           ← página do professor (copiada da v2)
 └── assets/images/
 ```

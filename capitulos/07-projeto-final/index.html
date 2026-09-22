@@ -101,6 +101,24 @@
 .swp-help td{padding:9px 14px;color:var(--text-dim);border-top:1px solid rgba(255,255,255,0.05);line-height:1.5}
 .swp-help td a{color:var(--accent4);font-weight:700;text-decoration:none}
 .swp-help td a:hover{text-decoration:underline}
+
+/* ---------- prompts + homologação (continuidade dos Dias 4–6) ---------- */
+.lang-badge.prompt{background:linear-gradient(135deg,var(--accent6),#8b91ff);color:#0a0a12}
+.swp-spec-text{
+  font-family:'JetBrains Mono',monospace;font-size:0.76rem;line-height:1.75;
+  font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+  color:#c9d1d9;padding:14px 16px;white-space:pre-wrap;background:var(--code-bg);
+  border:1px solid rgba(167,139,250,0.3);border-radius:12px;margin:10px 0;
+}
+.swp-spec-text .sp-k{color:var(--accent6);font-weight:700}
+.swp-accept{margin:12px 0}
+.swp-accept label{
+  display:flex;gap:10px;align-items:flex-start;padding:9px 12px;margin:6px 0;
+  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);
+  border-radius:10px;font-size:0.88rem;color:var(--text-dim);cursor:pointer;line-height:1.5;
+}
+.swp-accept input{accent-color:var(--accent7);width:17px;height:17px;flex-shrink:0;margin-top:2px}
+.swp-accept label:has(input:checked){border-color:rgba(6,214,160,0.4);color:var(--text)}
 </style>
 </head>
 <body>
@@ -129,6 +147,10 @@
     <a class="sidebar-link" onclick="goTo('planejamento')"><span class="dot" style="background:var(--accent5)"></span>A folha de projeto</a>
   </div>
   <div class="sidebar-group">
+    <div class="sidebar-group-title">🤖 Agent-first</div>
+    <a class="sidebar-link" onclick="goTo('esteira-prompts')"><span class="dot" style="background:var(--accent6)"></span>⭐ A esteira de prompts</a>
+  </div>
+  <div class="sidebar-group">
     <div class="sidebar-group-title">⚒️ Mão na massa</div>
     <a class="sidebar-link" onclick="goTo('roteiro')"><span class="dot" style="background:var(--python-y)"></span>O roteiro da aula</a>
     <a class="sidebar-link" onclick="goTo('travou')"><span class="dot" style="background:var(--accent4)"></span>Travou? Volta lá</a>
@@ -152,13 +174,14 @@
   <p class="subtitle">
     Chega de Loja: hoje nasce <strong style="color:var(--accent7)">O SEU sistema</strong> —
     barbearia, brechó, petshop, o que você quiser. Mesmo esqueleto que você já domina,
-    <strong style="color:var(--accent5)">tema seu, decisões suas</strong> — com o agente de
-    par e o professor circulando. É o dia de provar (pra você) que você sabe.
+    <strong style="color:var(--accent5)">tema seu, decisões suas</strong>. Todo código nasce pela
+    mesma pegada do Dia 04: você especifica uma operação, o agente implementa, e só o seu teste
+    libera o próximo prompt. É o dia de provar (pra você) que você sabe dirigir o processo.
   </p>
   <div class="hero-stack">
     <span class="stack-chip python">🐍 tudo que você aprendeu</span>
     <span class="stack-chip">📋 planejar primeiro</span>
-    <span class="stack-chip">🤖 agente de par</span>
+    <span class="stack-chip">🤖 um prompt por entrega</span>
   </div>
 </section>
 
@@ -322,7 +345,9 @@
   <span class="sc">← o "Vender" daqui: registra o fato + histórico + faturamento</span>
 
 <span class="sh">TELAS:</span> <span class="sv">/servicos (CRUD) · /clientes (CRUD) · /agendar · /agenda</span>
-<span class="sh">VALIDAÇÃO PRINCIPAL:</span> <span class="sv">não agendar sem cliente e serviço escolhidos</span></div>
+<span class="sh">VALIDAÇÃO PRINCIPAL:</span> <span class="sv">não agendar sem cliente e serviço escolhidos</span>
+<span class="sh">VISUAL:</span> <span class="sv">tons quentes (marrom/dourado), menu no topo, o preço em destaque</span>
+  <span class="sc">← as três linhas do Dia 6: entra na espec AGORA, não vira dívida depois</span></div>
 
       <div class="exercise guided">
         <div class="exercise-header">
@@ -337,7 +362,7 @@
           operação de movimento, telas, validação principal.
           <strong style="color:var(--text)">Mostre pro professor antes de codar</strong> —
           2 minutos de conferência evitam a tarde inteira de refazer banco.
-          (Quem fez a missão final do Dia 6 já chegou com ela pronta. 😎)
+          (Quem fez a lição de casa do Dia 6 já chegou com ela pronta. 😎)
         </p>
       </div>
 
@@ -348,6 +373,143 @@
           "estoque + fornecedores + funcionários + promoções"? Anota num papel chamado
           "versão 2" e volta pro mínimo. Sistema PEQUENO e COMPLETO impressiona;
           sistema grande pela metade, não.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ESTEIRA AGENT-FIRST
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="esteira-prompts">
+    <div class="step-header">
+      <div class="step-number sn-purple">🤖</div>
+      <div>
+        <div class="step-title">Da folha à esteira de prompts</div>
+        <div class="step-sub">Projeto novo, plano aprovado e uma entrega homologada por vez</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="concept">
+        <div class="concept-title">🎯 Regra central do projeto final</div>
+        <p>
+          <strong>O agente pode criar todo o sistema; ele não cria tudo de uma vez.</strong>
+          Cada prompt atravessa banco, Python e template para entregar uma operação completa.
+          O próximo pedido só começa quando o diff e os testes do anterior foram aprovados.
+        </p>
+      </div>
+
+      <div class="warning">
+        <span class="tip-icon">🛟</span>
+        <div class="tip-content">
+          <strong>Comece numa pasta nova.</strong> No PyCharm, crie um projeto vazio com o nome do
+          seu sistema e abra o agente dentro dele. Não transforme a Loja: ela continua guardada
+          como referência e como socorro para comparar padrões.
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">Prompt 0 — leia a folha e planeje, sem editar</span>
+          <span class="lang-badge prompt">prompt</span>
+        </div>
+        <div class="swp-spec-text"><span class="sp-k">[CONTEXTO]</span> Este é um projeto Flask novo e vazio para iniciantes. Minha folha aprovada é:
+SISTEMA: [NOME]
+ENTIDADE PRINCIPAL: [NOME, COLUNAS E TIPOS]
+SEGUNDA ENTIDADE: [NOME, COLUNAS E TIPOS]
+OPERAÇÃO DE MOVIMENTO: [NOME, DADOS QUE REGISTRA E O QUE ELA ALTERA]
+TELAS: [ROTAS]
+VALIDAÇÃO PRINCIPAL: [REGRA]
+VISUAL: [PALETA, POSIÇÃO DO MENU, O QUE DESTACAR]
+
+<span class="sp-k">[TAREFA]</span> Sem criar ou editar arquivos, transforme a folha em um plano de entregas.
+Para cada entrega, informe objetivo, arquivos previstos e testes feliz/erro. A ordem obrigatória é:
+fundação → listar → cadastrar → editar → excluir → segunda entidade → movimento → histórico → login.
+
+<span class="sp-k">[RESTRIÇÕES]</span> Python, Flask, Jinja, HTML, CSS e sqlite3 direto. Sem ORM, JavaScript,
+API separada, framework CSS ou biblioteca extra. SQL com valores externos usa placeholders ?.
+Código curto e literal. Uma operação por entrega; nada de “criar o sistema completo”.
+
+<span class="sp-k">[ACEITE]</span> O plano cobre o checklist do projeto, respeita a folha e deixa claro como
+testar cada etapa. Não altere nada e espere minha aprovação.</div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">Prompt 1 — fundação do projeto</span>
+          <span class="lang-badge prompt">prompt</span>
+        </div>
+        <div class="swp-spec-text"><span class="sp-k">[TAREFA]</span> Implemente somente a fundação aprovada: requirements.txt, arquivo de
+instruções da sua ferramenta, app.py mínimo, banco.py, criar_banco.py, templates/base.html,
+templates/index.html e static/style.css. Crie as tabelas exatamente como estão na minha folha,
+mas ainda não implemente CRUD, movimento, histórico ou login.
+
+<span class="sp-k">[REGRAS PERMANENTES]</span> Registre no arquivo de instruções a stack, os nomes aprovados,
+as proibições do Prompt 0, placeholders ?, uma operação por prompt e a obrigação de conferir
+sintaxe, explicar o diff e propor testes manuais após cada edição. Registre também: não executar
+scripts que alterem o banco de dados — os testes no navegador são meus.
+
+<span class="sp-k">[ACEITE]</span> criar_banco.py roda duas vezes sem erro; as tabelas e colunas conferem com
+a folha; a home abre com o CSS local aplicando o VISUAL da folha e já com regra para tabela,
+formulário, botão e mensagem flash — mesmo que nenhuma dessas telas exista ainda; não existe CRUD
+antecipado. Pare após explicar o diff.</div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🔁</span>
+        <div class="tip-content">
+          <strong>Do Prompt 2 em diante, reutilize esta moldura.</strong> Troque apenas a operação e
+          seus testes. Não entregue a solução linha por linha: entregue o comportamento esperado.
+        </div>
+      </div>
+
+      <div class="swp-spec-text"><span class="sp-k">[CONTEXTO]</span> O checkpoint anterior está aprovado. Leia o arquivo de instruções e preserve
+tudo que já funciona.
+
+<span class="sp-k">[TAREFA]</span> Implemente somente [LISTAR / CADASTRAR / EDITAR / EXCLUIR / MOVIMENTO / HISTÓRICO].
+O resultado esperado é: [DESCREVA O QUE O USUÁRIO FAZ E VÊ].
+
+<span class="sp-k">[RESTRIÇÕES]</span> Altere apenas os arquivos necessários para esta operação. SQL fica no banco.py;
+rotas e validação ficam no app.py; tela fica em templates/. Sem biblioteca nova, sem refatorar
+o que já funciona e sem antecipar a próxima operação.
+
+<span class="sp-k">[ACEITE]</span> Caminho feliz: [TESTE]. Caminho de erro: [TESTE]. Persistência: [TESTE].
+Confira sintaxe, execute o que puder, explique o diff por arquivo e pare.</div>
+
+      <div class="keyword-grid" style="margin-top:18px">
+        <div class="keyword-chip"><span class="emoji">2️⃣</span><span class="kw-name">Entidade 1</span><span class="kw-desc">listar → cadastrar → editar → excluir, um prompt por seta</span></div>
+        <div class="keyword-chip"><span class="emoji">3️⃣</span><span class="kw-name">Entidade 2</span><span class="kw-desc">repita o padrão já homologado; não peça tudo junto</span></div>
+        <div class="keyword-chip"><span class="emoji">4️⃣</span><span class="kw-name">Movimento</span><span class="kw-desc">primeiro a regra e a transação; depois histórico + total</span></div>
+        <div class="keyword-chip"><span class="emoji">5️⃣</span><span class="kw-name">Login</span><span class="kw-desc">reaplique os três checkpoints do Dia 6</span></div>
+      </div>
+
+      <div class="exercise guided">
+        <div class="exercise-header">
+          <span class="exercise-icon">✅</span>
+          <div>
+            <div class="exercise-title">A catraca entre dois prompts</div>
+            <div class="exercise-sub">Quatro confirmações antes de liberar a próxima entrega</div>
+          </div>
+        </div>
+        <div class="swp-accept">
+          <label><input type="checkbox"> O diff alterou somente arquivos necessários para a operação pedida?</label>
+          <label><input type="checkbox"> O caminho feliz e pelo menos um caminho de erro foram executados?</label>
+          <label><input type="checkbox"> Reiniciar o servidor preserva os dados e não duplica a última ação?</label>
+          <label><input type="checkbox"> Eu consigo explicar o caminho <code>tela → app.py → banco.py → SQLite</code> desta entrega?</label>
+        </div>
+      </div>
+
+      <div class="warning">
+        <span class="tip-icon">🛑</span>
+        <div class="tip-content">
+          <strong>Se o diff ficou grande demais para ler, o prompt ficou grande demais para aceitar.</strong>
+          Rejeite, restaure o checkpoint aprovado e divida a operação. Velocidade sem homologação
+          não conta como avanço no projeto final.
         </div>
       </div>
     </div>
@@ -376,21 +538,21 @@
       <div class="flow-container">
         <div class="flow-box fb-input">📋<br>Folha ok</div>
         <div class="flow-arrow">→</div>
-        <div class="flow-box">🗄️<br>criar_banco</div>
+        <div class="flow-box">📝<br>1 prompt</div>
         <div class="flow-arrow">→</div>
-        <div class="flow-box fb-process">📝<br>prompts por operação</div>
+        <div class="flow-box fb-process">🤖<br>agente implementa</div>
         <div class="flow-arrow">→</div>
-        <div class="flow-box">🤖<br>agente acelera</div>
+        <div class="flow-box">👀🧪<br>diff + testes</div>
         <div class="flow-arrow">→</div>
-        <div class="flow-box fb-output">🛡️<br>login + testes</div>
+        <div class="flow-box fb-output">✅<br>checkpoint</div>
       </div>
 
       <ul style="color:var(--text-dim);line-height:2;margin:16px 0 0;padding-left:22px">
-        <li><strong style="color:var(--text)">New Project</strong> no PyCharm com o nome do seu sistema (venv de brinde) + <code>pip install flask</code>.</li>
-        <li><strong style="color:var(--text)">Arquivo de instruções</strong> — registre stack, nomes, tabelas, proibições e critérios gerais antes da primeira edição.</li>
-        <li><strong style="color:var(--text)">Banco e CRUD da entidade 1 por prompts separados</strong> — criar tabela, listar, cadastrar, editar e excluir; nunca “faça o CRUD completo”.</li>
-        <li><strong style="color:var(--text)">Continue no mesmo fluxo</strong>: entidade 2, operação e login — sempre com contexto, tarefa, restrições, aceite e leitura do diff.</li>
-        <li><strong style="color:var(--text)">Checklist + testes</strong>: caminho feliz E caminhos de erro (vender sem estoque, editar id 99, form vazio…).</li>
+        <li><strong style="color:var(--text)">Execute o Prompt 0</strong>, revise o plano e corrija qualquer nome ou coluna que não corresponda à folha.</li>
+        <li><strong style="color:var(--text)">Execute o Prompt 1</strong> e homologue a fundação antes de pedir a primeira operação.</li>
+        <li><strong style="color:var(--text)">Construa a entidade principal por operações</strong>: listar, cadastrar, editar e excluir; um prompt e uma catraca para cada uma.</li>
+        <li><strong style="color:var(--text)">Repita o fluxo</strong> para a segunda entidade, movimento, histórico e login — nunca “faça o resto”.</li>
+        <li><strong style="color:var(--text)">Marque o checklist só com evidência</strong>: caminho feliz, caminho de erro, persistência e explicação oral.</li>
       </ul>
 
       <div class="concept">
@@ -428,7 +590,7 @@
           <tr><td>CREATE TABLE, INSERT, WHERE, commit sumindo dados</td><td><a href="../03-sql-sqlite/">Dia 3</a> — SQL + Rascunho e Carimbo</td></tr>
           <tr><td>banco.py, listar/cadastrar, F5 duplicando, validação</td><td><a href="../04-crud-parte-1/">Dia 4</a> — CRUD parte 1</td></tr>
           <tr><td>&lt;int:id&gt;, editar/excluir, flash, a operação de venda, JOIN</td><td><a href="../05-crud-parte-2/">Dia 5</a> — CRUD parte 2 + Vender</td></tr>
-          <tr><td>agente fazendo coisa errada, espec, diff, login</td><td><a href="../06-agentes-de-ia/">Dia 6</a> — o fluxo + caça ao bug</td></tr>
+          <tr><td>agente fazendo coisa errada, espec, diff, login, sessão/hash, tela nascendo crua</td><td><a href="../06-agentes-de-ia/">Dia 6</a> — o fluxo + caça ao bug</td></tr>
           <tr><td>erro que você não reconhece</td><td><strong>LEIA a mensagem em voz alta</strong> — 80% se resolve aí. Depois: BugZilla do capítulo do assunto → professor.</td></tr>
         </tbody>
       </table>
@@ -512,7 +674,7 @@
       <div class="step-number sn-yellow">🧠</div>
       <div>
         <div class="step-title">Mini-quiz de prontidão</div>
-        <div class="step-sub">2 perguntas antes de soltar você no projeto</div>
+        <div class="step-sub">3 decisões antes de soltar você no projeto</div>
       </div>
     </div>
 
@@ -539,6 +701,18 @@
         </div>
         <div class="quiz-feedback" data-correct="Cravou!" data-wrong="Revê o combinado!"
              data-explain="a regra do curso: código que você não sabe explicar não entra. No demo day, cada trecho gerado será seu na hora de apresentar."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">3️⃣</span> Você pediu apenas LISTAR, mas o diff também criou cadastro, edição e login. A decisão correta é…</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Aceitar, porque o checklist andou mais rápido</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Testar só a listagem e ignorar o restante</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Rejeitar o excedente e pedir novamente apenas a operação combinada</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Apagar o projeto e trocar de agente</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Catraca fechada!" data-wrong="Olha o escopo!"
+             data-explain="velocidade sem revisão cria dívida. Uma operação por entrega mantém o diff legível e permite provar exatamente o que passou no checkpoint."></div>
       </div>
     </div>
   </section>

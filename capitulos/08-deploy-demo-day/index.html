@@ -199,6 +199,24 @@
 .swp-final .fitem:last-child{border-bottom:none}
 .swp-final .fitem .fi{flex-shrink:0}
 .swp-final .fitem strong{color:var(--text)}
+
+/* ---------- prompts + homologação (continuidade agent-first) ---------- */
+.lang-badge.prompt{background:linear-gradient(135deg,var(--accent6),#8b91ff);color:#0a0a12}
+.swp-spec-text{
+  font-family:'JetBrains Mono',monospace;font-size:0.76rem;line-height:1.75;
+  font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+  color:#c9d1d9;padding:14px 16px;white-space:pre-wrap;background:var(--code-bg);
+  border:1px solid rgba(167,139,250,0.3);border-radius:12px;margin:10px 0;
+}
+.swp-spec-text .sp-k{color:var(--accent6);font-weight:700}
+.swp-accept{margin:12px 0}
+.swp-accept label{
+  display:flex;gap:10px;align-items:flex-start;padding:9px 12px;margin:6px 0;
+  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);
+  border-radius:10px;font-size:0.88rem;color:var(--text-dim);cursor:pointer;line-height:1.5;
+}
+.swp-accept input{accent-color:var(--accent7);width:17px;height:17px;flex-shrink:0;margin-top:2px}
+.swp-accept label:has(input:checked){border-color:rgba(6,214,160,0.4);color:var(--text)}
 </style>
 </head>
 <body>
@@ -223,7 +241,7 @@
     <div class="sidebar-group-title">🚀 Deploy</div>
     <a class="sidebar-link" onclick="goTo('aquecimento')"><span class="dot" style="background:var(--accent5)"></span>A conversa pendente</a>
     <a class="sidebar-link" onclick="goTo('o-que-e-deploy')"><span class="dot" style="background:var(--accent7)"></span>⭐ Do localhost pro mundo</a>
-    <a class="sidebar-link" onclick="goTo('preparar')"><span class="dot" style="background:var(--python-y)"></span>Preparando o app</a>
+    <a class="sidebar-link" onclick="goTo('preparar')"><span class="dot" style="background:var(--python-y)"></span>Auditoria agent-first</a>
     <a class="sidebar-link" onclick="goTo('pythonanywhere')"><span class="dot" style="background:var(--accent4)"></span>O passo a passo</a>
     <a class="sidebar-link" onclick="goTo('celular')"><span class="dot" style="background:var(--accent7)"></span>⭐ O momento do celular</a>
   </div>
@@ -250,11 +268,12 @@
   <p class="subtitle">
     Oito encontros atrás, seu sistema "não tinha link". Hoje ele ganha um —
     <strong style="color:var(--accent7)">público, de verdade, no ar</strong> — você
-    apresenta pra turma, e a gente conversa sobre
+    fecha o último ciclo agent-first com auditoria, diff e testes, apresenta pra turma e conversa sobre
     <strong style="color:var(--accent4)">o que vem depois</strong>. 🥂
   </p>
   <div class="hero-stack">
     <span class="stack-chip">🚀 deploy</span>
+    <span class="stack-chip">🤖 auditar → ajustar → homologar</span>
     <span class="stack-chip">📱 link no celular</span>
     <span class="stack-chip">🎤 demo day</span>
     <span class="stack-chip">🌉 a ponte</span>
@@ -288,9 +307,10 @@
       <div class="concept">
         <div class="concept-title">💡 O plano do dia</div>
         <p>
-          ① Preparar o app (2 ajustes) → ② subir no <strong>PythonAnywhere</strong>
-          (grátis) → ③ abrir NO CELULAR → ④ apresentar no demo day → ⑤ a conversa sobre
-          o próximo passo. Sem conteúdo novo pesado — hoje é dia de colheita. 🌾
+          ① Auditar sem editar → ② corrigir e homologar → ③ subir no
+          <strong>PythonAnywhere</strong> → ④ abrir NO CELULAR → ⑤ apresentar no
+          demo day → ⑥ enxergar o próximo passo. Sem conteúdo novo pesado — hoje é
+          dia de colheita. 🌾
         </p>
       </div>
     </div>
@@ -375,8 +395,8 @@
     <div class="step-header">
       <div class="step-number sn-py">🔧</div>
       <div>
-        <div class="step-title">Preparando o app: 2 ajustes</div>
-        <div class="step-sub">Uma linha nova no fim do app.py — e uma conferência</div>
+        <div class="step-title">Auditoria agent-first: só sobe o que foi homologado</div>
+        <div class="step-sub">Primeiro diagnóstico sem edição; depois um ajuste pequeno e testável</div>
       </div>
     </div>
 
@@ -384,21 +404,55 @@
       <div class="concept">
         <div class="concept-title">🤖 O modo do curso continua valendo na nuvem</div>
         <p>
-          Você não altera o arquivo por impulso na última hora. Primeiro pede uma auditoria de
-          deploy, limita o escopo, revisa o diff e testa a Loja localmente antes de compactar.
+          Você não altera o projeto por impulso na última hora. O fluxo do Dia 04 continua:
+          <strong>Prompt 0 sem editar → Prompt 1 com escopo mínimo → diff → testes → aceite.</strong>
+          Deploy não dá licença para o agente “melhorar” o sistema inteiro.
         </p>
       </div>
 
       <div class="code-block">
         <div class="code-header">
           <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-          <span class="filename">prompt de preparação para o deploy</span>
-          <span class="lang-badge python">prompt</span>
+          <span class="filename">Prompt 0 — auditoria de prontidão, sem editar</span>
+          <span class="lang-badge prompt">prompt</span>
         </div>
-<pre>Leia o arquivo de instruções do projeto e audite app.py para o deploy no PythonAnywhere.
-Garanta que app.run(debug=True) só execute dentro de if __name__ == "__main__" e confirme
-que existe secret_key para flash e login. Altere somente app.py e apenas se necessário.
-Depois explique o diff e me passe testes locais. Não instale nada e não mude regras da Loja.</pre>
+        <div class="swp-spec-text"><span class="sp-k">[CONTEXTO]</span> Este sistema Flask passou pelos checkpoints do projeto final e será publicado
+no PythonAnywhere. Leia o arquivo de instruções e o projeto inteiro.
+
+<span class="sp-k">[TAREFA]</span> Faça uma auditoria de prontidão sem editar nada. Confira: app.run protegido por
+if __name__ == "__main__"; secret_key existente; requirements.txt; caminhos relativos do SQLite;
+criar_banco.py repetível; templates e static presentes; sintaxe dos arquivos Python.
+
+<span class="sp-k">[RESTRIÇÕES]</span> Não altere arquivos, não instale nada, não refatore e não proponha features.
+
+<span class="sp-k">[ACEITE]</span> Entregue “pronto” ou uma lista curta de bloqueadores com arquivo, evidência e
+teste correspondente. Pare e espere minha decisão.</div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">Prompt 1 — correção mínima para o deploy</span>
+          <span class="lang-badge prompt">prompt</span>
+        </div>
+        <div class="swp-spec-text"><span class="sp-k">[TAREFA]</span> Corrija somente os bloqueadores aprovados na auditoria. Em app.py,
+garanta que app.run(debug=True) execute apenas dentro de if __name__ == "__main__". Preserve a
+secret_key já usada por flash e login. Crie ou complete requirements.txt somente com dependências
+que o projeto realmente importa.
+
+<span class="sp-k">[RESTRIÇÕES]</span> Não altere banco.py, regras de negócio, rotas, templates, CSS ou banco de dados.
+Não adicione biblioteca sem mostrar qual import existente exige essa dependência.
+
+<span class="sp-k">[ACEITE]</span> Sintaxe válida; sistema local abre, autentica e executa a operação principal;
+o diff contém apenas os bloqueadores aprovados. Explique o diff e pare.</div>
+      </div>
+
+      <div class="swp-accept">
+        <label><input type="checkbox"> O diff tocou somente <code>app.py</code> e, se necessário, <code>requirements.txt</code>?</label>
+        <label><input type="checkbox"> O servidor ainda inicia localmente e o login continua funcionando?</label>
+        <label><input type="checkbox"> CRUD e operação principal passaram nos testes feliz e de erro?</label>
+        <label><input type="checkbox"> <code>criar_banco.py</code> roda duas vezes sem apagar ou duplicar dados iniciais?</label>
+        <label><input type="checkbox"> Eu consigo explicar cada linha verde antes de criar o ZIP?</label>
       </div>
 
       <p style="color:var(--text-dim)">
@@ -470,14 +524,15 @@ Depois explique o diff e me passe testes locais. Não instale nada e não mude r
       <div class="swp-step">
         <div class="swp-step-head"><span class="swp-step-num">2</span><span class="swp-step-title">Compacte o projeto (SEM o venv!)</span></div>
         <div class="swp-step-body">
-          No seu computador, selecione <strong>só o conteúdo</strong> do projeto:
-          <code>app.py</code>, <code>banco.py</code>, <code>criar_banco.py</code> e a pasta
-          <code>templates</code> → botão direito → <strong>Comprimir</strong> →
+          No seu computador, selecione <strong>só o conteúdo necessário</strong> do projeto:
+          <code>app.py</code>, <code>banco.py</code>, <code>criar_banco.py</code>,
+          <code>requirements.txt</code>, <code>templates/</code> e <code>static/</code> →
+          botão direito → <strong>Comprimir</strong> →
           <code>projeto.zip</code>.
           <div class="note" style="margin-top:8px"></div>
           <strong>⚠️ NÃO inclua a pasta venv</strong> (são milhares de arquivos do SEU
-          computador — a nuvem tem o Python dela) nem o <code>loja.db</code>
-          (banco novo nasce lá, limpinho).
+          computador — a nuvem tem o Python dela), <code>__pycache__/</code> nem o arquivo
+          <code>.db</code> local (o banco novo nasce lá, limpinho).
         </div>
       </div>
 
@@ -487,11 +542,19 @@ Depois explique o diff e me passe testes locais. Não instale nada e não mude r
           Aba <strong>Files</strong> → botão <strong>Upload a file</strong> → mande o
           <code>projeto.zip</code>. Depois, aba <strong>Consoles → Bash</strong>
           (é um terminal — na nuvem!):
-          <div class="swp-step-code">unzip projeto.zip -d loja
-cd loja
+          <div class="swp-step-code">unzip projeto.zip -d meusistema
+cd meusistema
+pip3 install --user -r requirements.txt
 python3 criar_banco.py</div>
-          <strong>Checkpoint:</strong> o console imprime "Banco criado! 🗄️" — o
-          <code>loja.db</code> nasceu NA NUVEM, na pasta certa.
+          <div class="note" style="margin-top:8px"></div>
+          <strong>📌 Troque <code>meusistema</code> pelo nome do SEU projeto</strong>
+          (barbearia, petshop, brechó…) — e daqui pra frente
+          <strong>esse nome precisa ser IDÊNTICO nos passos 5 e 6</strong>. Uma letra diferente
+          entre os três lugares é a causa nº 1 do <em>no such table</em> do BugZilla aqui embaixo.
+          Escreva o nome num papel agora. ✍️
+          <div class="note" style="margin-top:8px"></div>
+          <strong>Checkpoint:</strong> as dependências terminam sem erro e o console imprime
+          "Banco criado! 🗄️" — o arquivo <code>.db</code> nasceu NA NUVEM, na pasta certa.
         </div>
       </div>
 
@@ -500,11 +563,11 @@ python3 criar_banco.py</div>
         <div class="swp-step-body">
           Aba <strong>Web</strong> → <strong>Add a new web app</strong> →
           <em>Next</em> → escolha <strong>Manual configuration</strong> (NÃO o atalho "Flask"!)
-          → Python 3.10 (ou o mais novo) → <em>Next</em>.
+          → escolha uma versão Python disponível compatível com seu projeto → <em>Next</em>.
           <div class="swp-pa">
             <div class="swp-pa-bar"><span>Dashboard</span><span>Consoles</span><span>Files</span><span class="on">Web</span><span>Databases</span></div>
             <div class="swp-pa-body">
-              <span class="btnish">+ Add a new web app</span> &nbsp;→&nbsp; Manual configuration → Python 3.10
+              <span class="btnish">+ Add a new web app</span> &nbsp;→&nbsp; Manual configuration → sua versão Python
             </div>
           </div>
           Por que manual? Porque VOCÊ sabe configurar — o atalho esconde exatamente as
@@ -520,12 +583,12 @@ python3 criar_banco.py</div>
           <div class="swp-pa">
             <div class="swp-pa-bar"><span class="on">Web</span></div>
             <div class="swp-pa-body">
-              Source code: <span class="field">/home/SEUNOME/loja</span><br>
-              <strong>Working directory:</strong> <span class="field">/home/SEUNOME/loja</span>
+              Source code: <span class="field">/home/SEUNOME/meusistema</span><br>
+              <strong>Working directory:</strong> <span class="field">/home/SEUNOME/meusistema</span>
             </div>
           </div>
           O <strong>working directory</strong> é ONDE o app "está parado" quando roda —
-          é ele que faz o <code>connect("loja.db")</code> achar o arquivo certo.
+          é ele que faz o <code>connect(...)</code> do seu <code>banco.py</code> achar o arquivo certo.
           Lembra do <em>no such table</em> do Dia 3? <strong>É a mesma pegadinha,
           agora em produção.</strong> Este campo é o remédio.
         </div>
@@ -538,7 +601,7 @@ python3 criar_banco.py</div>
           Apague TUDO que está lá e deixe só isto (trocando SEUNOME):
           <div class="swp-step-code">import sys
 
-path = "/home/SEUNOME/loja"
+path = "/home/SEUNOME/meusistema"
 if path not in sys.path:
     sys.path.append(path)
 
@@ -557,9 +620,9 @@ from app import app as application</div>
           Clique. Espere os segundinhos. E abra:
           <div class="swp-pa">
             <div class="swp-pa-bar"><span class="on">🌍 seunome.pythonanywhere.com</span></div>
-            <div class="swp-pa-body">🛍️ <strong>Minha Loja</strong> — no ar. Com login. Pro mundo.</div>
+            <div class="swp-pa-body">🌍 <strong>Seu sistema</strong> — no ar. Com login. Pro mundo.</div>
           </div>
-          <strong>Checkpoint final:</strong> logue, cadastre um produto, faça uma venda —
+          <strong>Checkpoint final:</strong> logue, cadastre um item, execute a operação principal —
           NA URL PÚBLICA. Funciona? Respira. Você tem um sistema em produção.
         </div>
       </div>
@@ -580,16 +643,38 @@ from app import app as application</div>
             💊 90% das vezes: nome errado no WSGI (SEUNOME!) ou esqueceu o Reload.
           </p>
           <p>
-            <strong>② no such table: produtos</strong> → o velho conhecido:
-            <strong>working directory</strong> não configurado (passo 5) ou esqueceu o
-            <code>criar_banco.py</code> no console (passo 3). 💊 Conferir os dois → Reload.
+            <strong>② no such table: alguma_tabela</strong> → o velho conhecido:
+            <strong>working directory</strong> não configurado (passo 5), <strong>nome da pasta
+            diferente</strong> entre os passos 3, 5 e 6, ou esqueceu o
+            <code>criar_banco.py</code> no console (passo 3).
+            💊 Confira os três lugares (o nome que você anotou no papel!) → Reload.
           </p>
           <p>
-            <strong>③ ModuleNotFoundError: flask</strong> → raro no PythonAnywhere (o Flask
-            já vem), mas se pintar: console Bash →
-            <code>pip3 install --user flask</code> → Reload.
+            <strong>③ ModuleNotFoundError</strong> → uma dependência do
+            <code>requirements.txt</code> não foi instalada: console Bash, dentro da pasta →
+            <code>pip3 install --user -r requirements.txt</code> → Reload.
           </p>
         </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">Prompt 2 — diagnosticar a nuvem, sem chute</span>
+          <span class="lang-badge prompt">prompt</span>
+        </div>
+        <div class="swp-spec-text"><span class="sp-k">[CONTEXTO]</span> O sistema funciona localmente, mas falhou no PythonAnywhere. Este é o trecho
+final do Error log: [COLE AQUI O TRACEBACK COMPLETO, DA PRIMEIRA À ÚLTIMA LINHA].
+Working directory configurado: [CAMINHO]. WSGI atual: [COLE O CONTEÚDO].
+
+<span class="sp-k">[TAREFA]</span> Sem editar arquivos, identifique a causa mais provável usando evidências do log.
+Separe erro de código, dependência, caminho, banco e configuração WSGI.
+
+<span class="sp-k">[RESTRIÇÕES]</span> Não invente mensagens que não aparecem no log. Não refatore nem proponha
+migração de plataforma. Faça uma pergunta se faltar uma evidência indispensável.
+
+<span class="sp-k">[ACEITE]</span> Entregue: causa provável, linha que sustenta o diagnóstico, menor correção possível
+e um teste que prove a correção depois do Reload. Espere minha aprovação antes de alterar código.</div>
       </div>
 
       <div class="tip">
@@ -698,8 +783,8 @@ from app import app as application</div>
         <div class="swp-step-body">Faça a operação (venda/agendamento/empréstimo)… e <strong>tente quebrar de propósito</strong> (estoque insuficiente, campo vazio). A validação barrando impressiona MAIS que o caminho feliz — é o que separa sistema de protótipo.</div>
       </div>
       <div class="swp-step">
-        <div class="swp-step-head"><span class="swp-step-num">4</span><span class="swp-step-title">O trecho do agente, explicado (1min)</span></div>
-        <div class="swp-step-body">Abra UM código que o agente gerou e explique como se fosse seu — porque agora é. É o combinado do curso, e é a habilidade que o mercado está pagando caro: <strong>dirigir IA sabendo o que ela fez</strong>.</div>
+        <div class="swp-step-head"><span class="swp-step-num">4</span><span class="swp-step-title">Prompt + diff + código explicado (1min)</span></div>
+        <div class="swp-step-body">Mostre um critério de aceite que você escreveu, a parte correspondente do diff aprovado e o código funcionando. Explique por que aceitou aquela mudança. A evidência fecha o ciclo: <strong>você dirigiu a IA e sabe o que entrou</strong>.</div>
       </div>
       <div class="swp-step">
         <div class="swp-step-head"><span class="swp-step-num">5</span><span class="swp-step-title">Fecho (30s)</span></div>
@@ -833,7 +918,7 @@ from app import app as application</div>
     <div class="step-header">
       <div class="step-number sn-yellow">🧠</div>
       <div>
-        <div class="step-title">Quiz final — os 8 dias em 4 perguntas</div>
+        <div class="step-title">Quiz final — os 8 dias em 5 perguntas</div>
         <div class="step-sub">Repare como as respostas saem sozinhas agora</div>
       </div>
     </div>
@@ -876,7 +961,19 @@ from app import app as application</div>
       </div>
 
       <div class="quiz">
-        <div class="quiz-q"><span class="q-emoji">4️⃣</span> No modelo separado (a evolução), o que viaja entre o React e o backend?</div>
+        <div class="quiz-q"><span class="q-emoji">4️⃣</span> A URL pública falhou. Qual é o primeiro uso correto do agente?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Pedir “conserte o deploy” e deixar editar tudo</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Colar log, caminhos e WSGI; pedir diagnóstico sem edição</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Gerar outro app.py completo</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Trocar imediatamente de plataforma</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Diagnóstico antes do remédio!" data-wrong="Sem chute!"
+             data-explain="na nuvem, evidência primeiro: traceback + configuração. O agente explica a causa e a menor correção; você aprova antes de mudar."></div>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">5️⃣</span> No modelo separado (a evolução), o que viaja entre o React e o backend?</div>
         <div class="quiz-options">
           <button class="quiz-opt" onclick="checkQuiz(this,false)">Páginas HTML prontas</button>
           <button class="quiz-opt" onclick="checkQuiz(this,false)">Arquivos .py</button>
@@ -1019,14 +1116,5 @@ document.addEventListener('DOMContentLoaded', () => {
   })();
 });
 </script>
-</body>
-</html>
-
-<footer class="footer">
-  <p>Feito com 🌶️ pelo prof. Kelson Almeida — programa AI</p>
-</footer>
-
-<script src="../../shared/scripts.js" defer></script>
-<script type="module" src="../../shared/motion-fx.js"></script>
 </body>
 </html>
