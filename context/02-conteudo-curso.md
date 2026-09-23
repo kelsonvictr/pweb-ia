@@ -130,10 +130,8 @@ operações pequenas para uma feature maior, sem abandonar o ritual de revisão.
     antes/depois + **Prompt 5**, cujo aceite é conferível sem entender CSS: *"no diff, nenhum
     arquivo .py e nenhum .html foi tocado"*
 
-12. **Lição de casa única** (substituiu a Arena, removida do Dia 6 em diante): escrever por
-    escrito a espec do projeto do Dia 7 — 2 entidades com colunas e tipos, a operação de
-    movimento e **três linhas sobre o visual** (item novo, consequência da Parte 4). O Dia 7
-    depende disso e referencia explicitamente
+12. **Preparação pro Dia 7** (substituiu a Arena, removida do Dia 6 em diante): pasta vazia
+    `estante` criada no PyCharm e o agente abrindo nela; a Loja fica intacta como referência
 
 **Sai com**: Loja com login funcionando, visualmente coerente + o hábito de revisar código gerado.
 **BugZilla do dia**: aceitar código sem ler · espec vaga · **o que o agente RODA não aparece no
@@ -142,17 +140,32 @@ no `loja.db` ao vivo → a restrição virou linha no `CLAUDE.md`).
 
 ---
 
-## Dia 7 · `07-projeto-final` — Seu sistema, seu tema
+## Dia 7 · `07-projeto-final` — Projeto final: a Estante
 
-1. Aluno escolhe o próprio tema (barbearia, brechó, petshop, oficina…) — mesmo esqueleto: 2 entidades, CRUD + operação de "movimento" (agendamento, venda, empréstimo…)
-2. Checklist do projeto (mínimo: 1 CRUD completo + 1 tela de operação + login)
-3. Novo projeto vazio; Prompt 0 transforma a folha aprovada em plano sem editar
-4. Prompt 1 cria somente fundação, instruções persistentes, tabelas, home e CSS
-5. Esteira explícita: listar → cadastrar → editar → excluir → segunda entidade → movimento → histórico → login
-6. Uma catraca entre prompts exige diff restrito, teste feliz, teste de erro, persistência e explicação oral
-7. Regra do projeto: **primeiro especifique; o agente implementa; você revisa, testa e explica**
+**Um sistema único para a turma inteira** (D20): a **Estante**, de uma biblioteca comunitária.
+Mantém a fórmula da Loja (2 entidades + movimento), mas o movimento é de **ida e volta**
+(empréstimo → devolução), trazendo datas, prazo, atraso e painel.
 
-**Sai com**: projeto próprio ~80% pronto.
+1. **Tudo por agente**: o único gesto manual é criar a pasta vazia `estante` no PyCharm. O agente
+   cria inclusive o `criar_banco.py` e o executa **uma vez, autorizado por escrito** no Prompt 1
+2. ⭐ **O alvo**: maquete navegável da Estante pronta (painel, acervo, novo empréstimo,
+   empréstimos, login) com alternância claro/escuro — o contrato visual do Prompt 1
+3. Modelo de dados dado pronto (livros, leitores, emprestimos, usuarios) — o dia é de dirigir, não
+   de desenhar; datas em AAAA-MM-DD no banco e dd/mm/aaaa na tela
+4. **Marca-texto amarelo** (`<mark class="hl">`) nas partes decisivas de cada prompt — regra de
+   negócio, segurança e escopo. Não vai junto na cópia (botão Copiar por prompt)
+5. **12 prompts**: 0 plano · 1 fundação + design system (variáveis no `:root`, paleta do Python
+   #3776AB/#FFD43B, `prefers-color-scheme`, componentes antes das telas) · 2 listar/buscar
+   (GET `?q=`, LIKE) · 3 cadastrar/editar · 4 excluir com trava de histórico · 5 CRUD de leitores
+   espelhando o acervo · 6 lista de empréstimos com status · 7 emprestar · 8 devolver ·
+   9 painel · 10 login · 11 auditoria sem editar
+6. Trilha com progresso salvo (localStorage `swp-estante`) + a catraca de 4 confirmações
+7. **Meta da aula: Prompt 8** (ciclo ida e volta fechado). Prompts 9–11 em casa, obrigatórios
+   antes do Dia 8
+
+**Sai com**: a Estante emprestando e devolvendo, no visual final.
+**BugZilla do dia**: três prompts de uma vez · o design system que derrete (style inline, cor
+fora do `:root`) · a data que mente (dd/mm/aaaa no banco invertendo o atraso).
 
 ---
 

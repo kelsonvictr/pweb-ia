@@ -49,7 +49,7 @@ sistemas-web-python/
 │   ├── 04-crud-parte-1/             ← Dia 4 · virada agent-first: listar + cadastrar por prompts
 │   ├── 05-crud-parte-2/             ← Dia 5 · editar + excluir + vender por prompts
 │   ├── 06-agentes-de-ia/            ← Dia 6 · login em prompts + checkpoints
-│   ├── 07-projeto-final/            ← Dia 7 · sistema autoral em esteira agent-first
+│   ├── 07-projeto-final/            ← Dia 7 · a Estante: sistema novo do zero, 100% por prompts
 │   └── 08-deploy-demo-day/          ← Dia 8 · auditoria por prompt + deploy + Demo Day
 ├── sobre/                           ← página do professor (copiada da v2)
 └── assets/images/

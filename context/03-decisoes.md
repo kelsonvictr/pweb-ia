@@ -355,3 +355,43 @@ quebraram e foram consertadas:
    Virou o placeholder `meusistema`, com aviso no passo 3 de que o nome precisa ser idêntico nos
    passos 3, 5 e 6 — que é a causa nº 1 do `no such table` do próprio BugZilla do capítulo, agora
    nomeada lá também.
+
+---
+
+### D20 · Dia 7 vira a Estante: um sistema único, do zero, 100% por prompts (2026-09-23)
+
+Pedido do professor: o Dia 7 parecia exigir criação manual no começo (folha preenchida à mão,
+escolha de tema, `criar_banco.py` com cara de tarefa do aluno) e oferecia vários temas. Agora:
+
+- **Um único sistema para toda a turma**: a **Estante**, de uma biblioteca comunitária. Escolhida
+  por manter a fórmula da Loja (2 entidades + movimento) com um movimento de **ida e volta**, que
+  traz datas, prazo, atraso e painel sem sair do território do curso (Flask + Jinja + sqlite3, sem
+  JS, sem ORM).
+- **Tudo por agente.** O único gesto manual é criar a pasta vazia no PyCharm. O agente cria todos
+  os arquivos, instala o Flask e executa o `criar_banco.py` **uma única vez, autorizado por
+  escrito** no Prompt 1 — que também grava no arquivo de instruções que isso não se repete. Deixa
+  explícita a nuance da lição do Dia 6: não é "o agente não roda nada", é "só roda o que você
+  autorizou por escrito".
+- **Visual muito acima do da Loja**, definido no Prompt 1 antes de existir tela: variáveis no
+  `:root`, paleta do Python (#3776AB / #FFD43B), fonte do sistema, `prefers-color-scheme` para o
+  modo escuro automático e todos os componentes prontos de antemão. Paga no Dia 7 a lição da
+  dívida visual do Dia 6. O capítulo mostra uma **maquete navegável** (5 telas, claro/escuro) como
+  contrato visual; o botão de tema da maquete é simulação — a Estante real não tem JS.
+- **Marca-texto amarelo** (`<mark class="hl">`, tinta escura sobre amarelo) nas partes decisivas
+  dos prompts. Não entra na cópia; cada prompt tem botão Copiar. Vira o roteiro de leitura do diff.
+- **12 prompts** (plano, fundação, 3 do acervo, leitores em um prompt espelhando o acervo, lista
+  de empréstimos antes de emprestar — pra ter onde ver o efeito —, emprestar, devolver, painel,
+  login, auditoria). Leitores num prompt só é a única exceção à "uma operação por prompt", porque
+  o desafio ali é verificar que o padrão homologado foi copiado, não reinventado.
+- **Integridade**: livro/leitor que aparece em qualquer empréstimo não se exclui (liga com a
+  história do id reaproveitado contada em sala).
+- **Meta da aula: Prompt 8.** Prompts 9–11 em casa, obrigatórios antes do deploy.
+
+Propagação: Dia 6 troca a lição de casa (espec do "seu tema") por preparar a pasta `estante`;
+Dia 8 usa a pasta `estante` nos passos 3/5/6, `minhaestante.pythonanywhere.com` nos exemplos e
+um roteiro de Demo Day da Estante (pitch com o extra de cada aluno, empréstimo barrado e devolução
+repetida). Hub, README e CLAUDE.md atualizados. Os "extras" do Dia 7 incluem **levar a Estante
+para o próprio tema**, como ponte para a promessa do Cap 00.
+
+⚠️ **Pendente de decisão do professor**: o Cap 00 (apresentação/venda, já mostrado à turma)
+ainda promete "um sistema do SEU tema — barbearia, petshop, brechó, você escolhe". Não foi alterado.

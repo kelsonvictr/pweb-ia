@@ -542,16 +542,15 @@ o diff contém apenas os bloqueadores aprovados. Explique o diff e pare.</div>
           Aba <strong>Files</strong> → botão <strong>Upload a file</strong> → mande o
           <code>projeto.zip</code>. Depois, aba <strong>Consoles → Bash</strong>
           (é um terminal — na nuvem!):
-          <div class="swp-step-code">unzip projeto.zip -d meusistema
-cd meusistema
+          <div class="swp-step-code">unzip projeto.zip -d estante
+cd estante
 pip3 install --user -r requirements.txt
 python3 criar_banco.py</div>
           <div class="note" style="margin-top:8px"></div>
-          <strong>📌 Troque <code>meusistema</code> pelo nome do SEU projeto</strong>
-          (barbearia, petshop, brechó…) — e daqui pra frente
-          <strong>esse nome precisa ser IDÊNTICO nos passos 5 e 6</strong>. Uma letra diferente
-          entre os três lugares é a causa nº 1 do <em>no such table</em> do BugZilla aqui embaixo.
-          Escreva o nome num papel agora. ✍️
+          <strong>📌 A pasta se chama <code>estante</code> — e esse nome precisa ser IDÊNTICO
+          nos passos 5 e 6.</strong> Tudo minúsculo, sem acento, sem espaço. Uma letra diferente
+          entre os três lugares (<code>Estante</code>, <code>estante2</code>…) é a causa nº 1 do
+          <em>no such table</em> do BugZilla aqui embaixo.
           <div class="note" style="margin-top:8px"></div>
           <strong>Checkpoint:</strong> as dependências terminam sem erro e o console imprime
           "Banco criado! 🗄️" — o arquivo <code>.db</code> nasceu NA NUVEM, na pasta certa.
@@ -583,8 +582,8 @@ python3 criar_banco.py</div>
           <div class="swp-pa">
             <div class="swp-pa-bar"><span class="on">Web</span></div>
             <div class="swp-pa-body">
-              Source code: <span class="field">/home/SEUNOME/meusistema</span><br>
-              <strong>Working directory:</strong> <span class="field">/home/SEUNOME/meusistema</span>
+              Source code: <span class="field">/home/SEUNOME/estante</span><br>
+              <strong>Working directory:</strong> <span class="field">/home/SEUNOME/estante</span>
             </div>
           </div>
           O <strong>working directory</strong> é ONDE o app "está parado" quando roda —
@@ -601,7 +600,7 @@ python3 criar_banco.py</div>
           Apague TUDO que está lá e deixe só isto (trocando SEUNOME):
           <div class="swp-step-code">import sys
 
-path = "/home/SEUNOME/meusistema"
+path = "/home/SEUNOME/estante"
 if path not in sys.path:
     sys.path.append(path)
 
@@ -622,7 +621,7 @@ from app import app as application</div>
             <div class="swp-pa-bar"><span class="on">🌍 seunome.pythonanywhere.com</span></div>
             <div class="swp-pa-body">🌍 <strong>Seu sistema</strong> — no ar. Com login. Pro mundo.</div>
           </div>
-          <strong>Checkpoint final:</strong> logue, cadastre um item, execute a operação principal —
+          <strong>Checkpoint final:</strong> logue, cadastre um livro, faça um empréstimo —
           NA URL PÚBLICA. Funciona? Respira. Você tem um sistema em produção.
         </div>
       </div>
@@ -725,7 +724,7 @@ e um teste que prove a correção depois do Reload. Espere minha aprovação ant
         </div>
         <div class="swp-bubble me" data-seq-step="1,2,3,4">
           <span class="who">Você</span>
-          toma: <a href="javascript:void(0)">minhaloja.pythonanywhere.com</a> 😎
+          toma: <a href="javascript:void(0)">minhaestante.pythonanywhere.com</a> 😎
         </div>
         <div class="swp-bubble them" data-seq-step="2,3,4">
           abriu AQUI NO MEU CELULAR
@@ -772,15 +771,15 @@ e um teste que prove a correção depois do Reload. Espere minha aprovação ant
     <div class="card">
       <div class="swp-step">
         <div class="swp-step-head"><span class="swp-step-num">1</span><span class="swp-step-title">O pitch (30s)</span></div>
-        <div class="swp-step-body">"Este é o <em>[nome]</em>, um sistema pra <em>[quem]</em> resolver <em>[o quê]</em>." Uma frase. Abra JÁ na URL pública — deploy é a primeira coisa a mostrar.</div>
+        <div class="swp-step-body">"Esta é a minha Estante, o sistema de uma biblioteca comunitária." Uma frase — e, se a sua tem um extra, é agora que ele aparece. Abra JÁ na URL pública: deploy é a primeira coisa a mostrar.</div>
       </div>
       <div class="swp-step">
         <div class="swp-step-head"><span class="swp-step-num">2</span><span class="swp-step-title">Login + um CRUD completo (2min)</span></div>
-        <div class="swp-step-body">Entre com o login, cadastre um item AO VIVO, edite, mostre o flash aparecendo. Coisas funcionando &gt; slides falando.</div>
+        <div class="swp-step-body">Entre com o login, faça uma busca no acervo, cadastre um livro AO VIVO, edite, mostre o flash aparecendo. Coisas funcionando &gt; slides falando.</div>
       </div>
       <div class="swp-step">
         <div class="swp-step-head"><span class="swp-step-num">3</span><span class="swp-step-title">A operação de movimento — COM o erro (1min)</span></div>
-        <div class="swp-step-body">Faça a operação (venda/agendamento/empréstimo)… e <strong>tente quebrar de propósito</strong> (estoque insuficiente, campo vazio). A validação barrando impressiona MAIS que o caminho feliz — é o que separa sistema de protótipo.</div>
+        <div class="swp-step-body">Faça um empréstimo e uma devolução… e <strong>tente quebrar de propósito</strong> (o quarto empréstimo pro mesmo leitor, a devolução repetida). A validação barrando impressiona MAIS que o caminho feliz — é o que separa sistema de protótipo.</div>
       </div>
       <div class="swp-step">
         <div class="swp-step-head"><span class="swp-step-num">4</span><span class="swp-step-title">Prompt + diff + código explicado (1min)</span></div>
@@ -925,7 +924,7 @@ e um teste que prove a correção depois do Reload. Espere minha aprovação ant
 
     <div class="card">
       <div class="quiz">
-        <div class="quiz-q"><span class="q-emoji">1️⃣</span> Sua amiga abre minhaloja.pythonanywhere.com no celular. O que acontece, na ordem?</div>
+        <div class="quiz-q"><span class="q-emoji">1️⃣</span> Sua amiga abre minhaestante.pythonanywhere.com no celular. O que acontece, na ordem?</div>
         <div class="quiz-options">
           <button class="quiz-opt" onclick="checkQuiz(this,false)">O site é baixado pro celular dela</button>
           <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Request → rota no Flask → SELECT no SQLite → response com HTML renderizado</button>
