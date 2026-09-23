@@ -171,14 +171,50 @@ fora do `:root`) · a data que mente (dd/mm/aaaa no banco invertendo o atraso).
 
 ## Dia 8 · `08-deploy-demo-day` — No ar + Demo Day + e agora?
 
-1. Prompt 0 — auditoria de prontidão sem edição: `__main__`, secret key, requirements, caminhos, banco e sintaxe
-2. Prompt 1 — corrigir somente bloqueadores aprovados; diff pequeno + homologação local
-3. Pacote completo: Python, `requirements.txt`, `templates/` e `static/`; sem venv, cache ou `.db` local
-4. Deploy no PythonAnywhere (ou Render) — free tier, passo a passo visual
-5. Prompt 2 — diagnóstico por evidência quando a nuvem falhar: log + caminhos + WSGI, sem editar primeiro
-6. Cada aluno publica o projeto e testa o link **no celular** (momento WOW final)
-7. **Demo Day**: 3–5min por aluno mostrando critério de aceite, diff e código explicado
-8. **A ponte**: limites do que construímos — e se precisar de app mobile? e se o front for de outro time? e se forem 10 devs? → separação front/back → API → **o que o mercado usa: React + Java/Spring** → convite para o curso Fullstack (com condição especial pra turma)
+**Deploy da Estante (D21): Docker + Render, tudo em sala, sem Docker Desktop na máquina do aluno.**
+
+0. **Antes do encontro**: Estante com os Prompts 0–11 homologados, conta no GitHub e conta no
+   Render (entrando com o GitHub). Docker Desktop NÃO é pré-requisito
+1. Roteiro com relógio: 0:00 fundamentos em resumo · 0:15 Prompts 12–13 · 0:28 Prompt 14 + GitHub ·
+   0:38 Render · 0:52 celular · 0:57 Demo Day · 1:50 ponte. **Regra do relógio**: às 0:57 o Demo
+   Day começa com ou sem deploy (quem não subiu apresenta do localhost)
+1b. **Parte 1 — Os fundamentos** (leitura recomendada antes; em sala vira resumo de 15 min), no
+   fluxo teoria → simulação → prática da skill `capitulo-didatico-interativo`:
+   - o que é deploy (desenvolvimento × produção), servidor e nuvem, e o **mapa das 6 estações**
+     (casa → empacotar → enviar → construir → ligar → endereçar), cada uma apontando pro prompt
+     ou pro passo que a executa
+   - **Por que o Docker existe**: "na minha máquina funciona", definição, Dockerfile → build →
+     imagem → run → container, a marmita **e onde a analogia falha** (imagem imutável; o que o
+     container escreve morre com ele), `FROM python:3.12-slim`, container × máquina virtual
+   - **Onde a caixa mora**: notebook × VPS × PaaS (controle por conveniência), as 5 coisas que o
+     Render faz, HTTPS/certificado, os limites do plano grátis
+   - **Git e GitHub**: commit, repositório, push, a esteira push → build → no ar, `.gitignore`
+   - **O que muda de lugar pra lugar** — a regra central do dia: *"A caixa é igual em todo lugar.
+     O que muda de lugar pra lugar — porta, segredos, dados — não mora dentro dela."* Variável de
+     ambiente (`os.environ.get`), porta, 127.0.0.1 × 0.0.0.0, gunicorn × app.run, e o limite da
+     regra (o `estante.db`)
+   - ⭐ **Prática "Dentro da caixa ou de fora?"**: 10 peças em 3 destinos (caixa → Dockerfile ·
+     de fora → variável de ambiente · em casa → `.gitignore`/`.dockerignore`), feedback na
+     própria peça e nova tentativa; as três colunas são exatamente o que os Prompts 12–13 pedem
+   - Dicionário de bolso do deploy (recolhível)
+2. ⭐ **A marmita**: container explicado por analogia; simulador que monta a imagem linha a linha do
+   Dockerfile, liga o container, cadastra um livro e mostra o **disco descartável** apagando tudo
+   quando o serviço dorme (e a semente voltando porque o `criar_banco.py` roda a cada boot)
+3. A trilha da Estante continua, com marca-texto e botão Copiar: **Prompt 12** auditoria de deploy
+   sem editar (segredos no código, `app.run`, requirements, arquivos que não vão pro GitHub) ·
+   **Prompt 13** empacotar (gunicorn, `SECRET_KEY` e `ADMIN_SENHA` de variáveis de ambiente,
+   Dockerfile com `python:3.12-slim` e `gunicorn --bind 0.0.0.0:$PORT`, `.dockerignore`/`.gitignore`)
+   · **Prompt 14** git init + primeiro commit mostrando a lista de arquivos antes
+4. GitHub pelo PyCharm (*Git → GitHub → Share Project on GitHub*) → Render (New → Web Service →
+   Language Docker → Free → 2 variáveis de ambiente → Create Web Service → logs) → homologar na URL
+   pública, incluindo `trocar123` sendo recusada
+5. BugZilla: *No open ports detected* (bind) · o livro que sumiu (disco descartável) · *Build
+   failed* (venv no repo / dependência faltando). **Prompt 15**: diagnóstico pelo log, sem editar
+6. Sem cartão ou conta travada no Render: deploy em dupla, na conta de um colega
+7. Momento do celular, com a regra de abrir a URL 2 minutos antes (o serviço grátis dorme após
+   15 min e leva ~1 min pra acordar)
+8. **Demo Day**: 3–5min por aluno mostrando critério de aceite, diff e código explicado
+9. **A ponte**: limites do que construímos — e os dados que somem com a caixa? e se precisar de app mobile? e se o front for de outro time? e se forem 10 devs? → separação front/back → API → **o que o mercado usa: React + Java/Spring** → convite para o curso Fullstack (com condição especial pra turma)
 
 **Sai com**: link público do próprio sistema + clareza do próximo passo.
 
@@ -186,4 +222,4 @@ fora do `:root`) · a data que mente (dd/mm/aaaa no banco invertendo o atraso).
 
 ## Fora do escopo (decidido — NÃO incluir)
 
-JavaScript · React · API REST/JSON · ORM (SQLAlchemy) · JOIN além do essencial da tela de vendas · upload de arquivos · testes automatizados · Docker · Git aprofundado (só o mínimo pro deploy, se necessário). Vários desses são "ganchos" explícitos para o curso Fullstack.
+JavaScript · React · API REST/JSON · ORM (SQLAlchemy) · JOIN além do essencial da tela de vendas · upload de arquivos · testes automatizados · Docker além da embalagem de deploy (sem Docker Desktop, sem compose, sem volumes — D21) · Git aprofundado (só o mínimo pro deploy). Vários desses são "ganchos" explícitos para o curso Fullstack.

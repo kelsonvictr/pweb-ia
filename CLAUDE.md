@@ -50,7 +50,7 @@ sistemas-web-python/
 │   ├── 05-crud-parte-2/             ← Dia 5 · editar + excluir + vender por prompts
 │   ├── 06-agentes-de-ia/            ← Dia 6 · login em prompts + checkpoints
 │   ├── 07-projeto-final/            ← Dia 7 · a Estante: sistema novo do zero, 100% por prompts
-│   └── 08-deploy-demo-day/          ← Dia 8 · auditoria por prompt + deploy + Demo Day
+│   └── 08-deploy-demo-day/          ← Dia 8 · Estante em Docker no Render + Demo Day
 ├── sobre/                           ← página do professor (copiada da v2)
 └── assets/images/
 ```

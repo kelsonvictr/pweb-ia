@@ -18,7 +18,7 @@ e deploy com link público.
 | 05 | Editar, excluir e vender | a Loja completa: CRUD + vendas + faturamento |
 | 06 | Login com agentes | feature maior dividida em prompts e homologada pelo aluno |
 | 07 | Projeto final: a Estante | sistema de biblioteca do zero, 100% por prompts, com design system moderno |
-| 08 | No ar! Deploy + Demo Day | auditoria por prompt + link público + apresentação |
+| 08 | No ar! Deploy + Demo Day | Estante em container Docker no Render + link público + apresentação |
 
 ## Stack do material
 

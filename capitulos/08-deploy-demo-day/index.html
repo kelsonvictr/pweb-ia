@@ -11,7 +11,7 @@
 <style>
 /* ══════════ CSS local do capítulo 08 (prefixo swp-) ══════════ */
 
-.swp-world-url,.swp-step-code,.swp-evo-api{
+.swp-world-url,.swp-step-code,.swp-evo-api,.bx-file,.bx-log,.bx-lid{
   font-variant-ligatures:none;
   font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
 }
@@ -119,7 +119,7 @@
 }
 .swp-step-code::-webkit-scrollbar{height:5px}
 .swp-step-code::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:3px}
-/* mockup simplificado de tela do PythonAnywhere */
+/* mockup simplificado de tela do Render */
 .swp-pa{
   border:1px solid rgba(255,255,255,0.10);border-radius:10px;overflow:hidden;margin:10px 0;
   background:#fff;font-family:'Nunito',sans-serif;
@@ -217,6 +217,204 @@
 }
 .swp-accept input{accent-color:var(--accent7);width:17px;height:17px;flex-shrink:0;margin-top:2px}
 .swp-accept label:has(input:checked){border-color:rgba(6,214,160,0.4);color:var(--text)}
+
+/* ---------- box do pré-encontro ---------- */
+.swp-preflight{
+  border:2px dashed rgba(247,183,49,0.5);border-radius:18px;
+  background:rgba(247,183,49,0.05);padding:22px 24px;margin:18px 0;
+}
+.swp-preflight .pf-title{font-weight:900;font-size:1.05rem;margin-bottom:6px;color:var(--accent5)}
+.swp-preflight ol{margin:10px 0 0;padding-left:22px;color:var(--text-dim);font-size:0.92rem;line-height:1.8}
+.swp-preflight li strong{color:var(--text)}
+.swp-preflight code{background:rgba(255,255,255,0.07);padding:1px 7px;border-radius:5px;font-size:0.84rem}
+
+/* 🖍️ marca-texto e peças dos prompts (mesmas do Dia 7) */
+mark.hl{
+  color:#1c1600;font-weight:700;
+  background:linear-gradient(100deg,
+    rgba(255,212,59,0) 0.4%, rgba(255,212,59,0.95) 2%,
+    rgba(255,224,102,0.88) 50%, rgba(255,212,59,0.95) 97.5%,
+    rgba(255,212,59,0) 99.6%);
+  border-radius:3px 7px 4px 6px;padding:0 0.28em;margin:0 -0.04em;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone;
+}
+.swp-spec-text{line-height:1.85}
+.est-copy{
+  margin-left:auto;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.05);
+  color:var(--text-dim);font-family:'Nunito',sans-serif;font-weight:800;font-size:0.72rem;
+  padding:5px 12px;border-radius:8px;cursor:pointer;transition:all .2s;flex-shrink:0;
+}
+.est-copy:hover{color:var(--text);border-color:rgba(255,255,255,0.3)}
+.est-copy.ok{color:#06281f;background:var(--accent7);border-color:var(--accent7)}
+.code-header .est-copy + .lang-badge{margin-left:8px}
+.est-done{
+  display:flex;gap:12px;align-items:flex-start;padding:12px 14px;margin:10px 0 4px;
+  background:rgba(6,214,160,0.05);border:1px dashed rgba(6,214,160,0.35);
+  border-radius:12px;font-size:0.88rem;color:var(--text-dim);line-height:1.55;
+}
+.est-done .ck{display:flex;align-items:center;gap:8px;flex-shrink:0;cursor:pointer;
+  font-weight:800;color:var(--text);font-size:0.8rem;white-space:nowrap}
+.est-done input{accent-color:var(--accent7);width:18px;height:18px}
+.est-done strong{color:var(--text)}
+.est-done:has(input:checked){border-style:solid;border-color:rgba(6,214,160,0.55);background:rgba(6,214,160,0.09)}
+.est-prompt-label{display:inline-flex;align-items:center;gap:8px;margin:22px 0 2px;font-weight:900;font-size:1.02rem;color:var(--text)}
+.est-prompt-label .n{
+  display:inline-grid;place-items:center;min-width:30px;height:30px;padding:0 6px;border-radius:9px;
+  background:linear-gradient(135deg,var(--accent6),#8b91ff);color:#0a0a12;font-size:0.85rem;
+}
+
+/* ---------- ⭐ MÁQUINA: a marmita (container) ---------- */
+.swp-box{
+  border:1px solid rgba(69,183,209,0.35);border-radius:18px;overflow:hidden;margin:18px 0;
+  background:
+    radial-gradient(1000px 260px at 50% -12%, rgba(69,183,209,0.14), transparent 70%),
+    linear-gradient(180deg,#0b1020,#0d0d1a);
+  box-shadow:0 22px 60px rgba(0,0,0,0.45);
+}
+.swp-box-stage{display:grid;grid-template-columns:1.3fr 1fr;gap:0}
+@media(max-width:780px){.swp-box-stage{grid-template-columns:1fr}}
+.swp-box-pane{padding:16px 18px;min-width:0}
+.swp-box-pane:first-child{border-right:1px solid rgba(255,255,255,0.06)}
+@media(max-width:780px){.swp-box-pane:first-child{border-right:none;border-bottom:1px solid rgba(255,255,255,0.06)}}
+.bx-tag{font-size:0.62rem;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px}
+.bx-file{
+  margin:0;font-family:'JetBrains Mono',monospace;font-size:0.72rem;line-height:1.9;
+  background:var(--code-bg);border:1px solid rgba(255,255,255,0.08);border-radius:10px;
+  padding:8px 0;overflow-x:auto;color:#8b96b0;
+}
+.bx-file .bl{display:block;padding:0 12px;white-space:pre;border-left:3px solid transparent;transition:all .3s}
+.bx-file .bl.done{color:#c9d1d9}
+.bx-file .bl.lit{background:rgba(69,183,209,0.14);border-left-color:var(--accent4);color:#fff}
+.bx-log{
+  margin-top:10px;font-family:'JetBrains Mono',monospace;font-size:0.7rem;line-height:1.8;
+  color:#8b96b0;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.06);
+  border-radius:10px;padding:8px 12px;min-height:58px;white-space:pre-wrap;
+}
+.bx-log .ok{color:var(--accent7)}
+.bx-log .no{color:#ff8a8a}
+.bx-crate{
+  border:2px solid rgba(69,183,209,0.4);border-radius:12px;padding:8px;min-height:190px;
+  display:flex;flex-direction:column;gap:6px;justify-content:flex-end;
+  background:repeating-linear-gradient(135deg,rgba(69,183,209,0.04) 0 10px,transparent 10px 20px);
+  position:relative;transition:box-shadow .4s;
+}
+.bx-crate.on{box-shadow:0 0 0 3px rgba(6,214,160,0.35),0 0 30px rgba(6,214,160,0.18);border-color:rgba(6,214,160,0.6)}
+.bx-layer{
+  font-size:0.76rem;font-weight:700;color:var(--text);padding:7px 10px;border-radius:8px;
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);
+  opacity:0;transform:translateY(-10px);transition:all .35s ease;
+}
+.bx-layer.on{opacity:1;transform:none}
+.bx-lid{
+  font-family:'JetBrains Mono',monospace;font-size:0.68rem;font-weight:700;text-align:center;
+  padding:6px 8px;border-radius:8px;color:#06281f;background:var(--accent7);
+  opacity:0;transform:translateY(-10px);transition:all .35s ease;
+}
+.bx-lid.on{opacity:1;transform:none}
+.bx-disk{
+  margin-top:10px;display:flex;justify-content:space-between;align-items:center;gap:8px;
+  border:1px dashed rgba(255,255,255,0.18);border-radius:10px;padding:9px 12px;font-size:0.8rem;
+}
+.bx-disk .dk-tag{color:var(--text-dim);font-weight:700}
+.bx-disk .dk-val{font-family:'JetBrains Mono',monospace;font-size:0.74rem;color:var(--text);text-align:right;transition:all .3s}
+.bx-disk.new .dk-val{color:var(--accent7)}
+.bx-disk.wipe{border-color:rgba(255,71,87,0.6);animation:wrongShake .4s ease}
+.bx-disk.wipe .dk-val{color:#ff8a8a}
+
+/* ══════════ Fundamentos (prefixo dep-) ══════════ */
+.dep-duo{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}
+@media(max-width:760px){.dep-duo{grid-template-columns:1fr}}
+.dep-duo > div{background:var(--surface);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px 16px}
+.dep-duo .dd-h{font-weight:900;font-size:0.95rem;margin-bottom:6px;color:var(--text)}
+.dep-duo p{margin:0;font-size:0.88rem;color:var(--text-dim);line-height:1.65}
+.dep-duo strong{color:var(--text)}
+.dep-duo code{background:rgba(255,255,255,0.07);padding:1px 6px;border-radius:5px;font-size:0.8rem}
+
+.dep-map{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0;counter-reset:st}
+@media(max-width:820px){.dep-map{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.dep-map{grid-template-columns:1fr}}
+.dm-st{
+  display:flex;gap:10px;align-items:flex-start;position:relative;
+  background:linear-gradient(180deg,rgba(69,183,209,0.08),rgba(255,255,255,0.02));
+  border:1px solid rgba(69,183,209,0.25);border-radius:14px;padding:12px 12px 12px 14px;
+}
+.dm-st .dm-n{
+  position:absolute;top:-9px;left:12px;font-size:0.62rem;font-weight:900;
+  background:var(--accent4);color:#04202a;border-radius:50px;padding:1px 8px;
+}
+.dm-st .dm-i{font-size:1.5rem;line-height:1;margin-top:4px}
+.dm-st b{display:block;font-size:0.92rem;color:var(--text)}
+.dm-st span:not(.dm-n):not(.dm-i){display:block;font-size:0.8rem;color:var(--text-dim);line-height:1.45;margin-top:2px}
+.dm-st em{display:block;font-style:normal;font-size:0.68rem;font-weight:800;color:var(--accent4);margin-top:5px;letter-spacing:0.3px}
+
+.dep-steps{display:flex;flex-direction:column;gap:10px;margin:14px 0}
+.ds-step{display:flex;gap:12px;align-items:flex-start;background:var(--surface);
+  border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:12px 16px}
+.ds-step .ds-i{font-size:1.5rem;line-height:1;margin-top:2px}
+.ds-step b{display:block;color:var(--text);font-size:0.94rem}
+.ds-step p{margin:3px 0 0;font-size:0.87rem;color:var(--text-dim);line-height:1.6}
+.ds-step p strong{color:var(--text)}
+.ds-step code{background:rgba(255,255,255,0.07);padding:1px 6px;border-radius:5px;font-size:0.8rem}
+
+.dep-cmp{
+  width:100%;border-collapse:collapse;font-size:0.84rem;margin:14px 0;
+  background:var(--code-bg);border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;display:table;
+}
+.dep-cmp th{background:var(--surface2);color:var(--text-dim);font-size:0.68rem;font-weight:800;
+  letter-spacing:0.8px;text-transform:uppercase;padding:9px 12px;text-align:left}
+.dep-cmp td{padding:9px 12px;color:var(--text-dim);border-top:1px solid rgba(255,255,255,0.05);line-height:1.5;vertical-align:top}
+.dep-cmp td:first-child{color:var(--text);font-weight:700;white-space:nowrap}
+.dep-cmp td.new{color:#bff3e3}
+@media(max-width:640px){.dep-cmp{font-size:0.76rem}.dep-cmp td,.dep-cmp th{padding:7px 8px}.dep-cmp td:first-child{white-space:normal}}
+
+.dep-rule{
+  margin:18px 0;padding:18px 20px;border-radius:16px;font-size:1.08rem;font-weight:800;line-height:1.55;
+  color:var(--text);text-align:center;
+  background:linear-gradient(135deg,rgba(255,212,59,0.14),rgba(69,183,209,0.10));
+  border:2px solid rgba(255,212,59,0.5);
+}
+.dep-rule strong{color:var(--python-y)}
+.dep-rule .dr-tag{display:block;font-size:0.66rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--python-y);margin-bottom:6px}
+
+/* ⭐ prática: dentro da caixa ou de fora? */
+.df-game{border:1px solid rgba(78,205,196,0.35);border-radius:18px;overflow:hidden;margin:16px 0;
+  background:linear-gradient(180deg,#0a1416,#0d0d1a)}
+.df-list{padding:14px 16px 6px;display:flex;flex-direction:column;gap:8px}
+.df-item{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;border-radius:12px;
+  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);transition:all .25s}
+.df-item .df-n{flex:1;min-width:180px;font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--text);
+  font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
+.df-item .df-opts{display:flex;gap:6px;flex-wrap:wrap}
+.df-item button{border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.05);color:var(--text-dim);
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:0.74rem;padding:6px 10px;border-radius:9px;cursor:pointer;transition:all .2s}
+.df-item button:hover,.df-item button:focus-visible{color:var(--text);border-color:rgba(255,255,255,0.4);outline:none}
+.df-item.nope{animation:wrongShake .4s ease;border-color:rgba(255,71,87,0.5)}
+.df-item.done{border-color:rgba(6,214,160,0.45);background:rgba(6,214,160,0.06)}
+.df-item.done .df-opts{display:none}
+.df-item .df-tag{display:none;font-size:0.72rem;font-weight:800;color:var(--accent7);padding:4px 10px;border-radius:50px;background:rgba(6,214,160,0.12)}
+.df-item.done .df-tag{display:inline-block}
+.df-why{flex-basis:100%;font-size:0.8rem;line-height:1.5;display:none}
+.df-why.ok{display:block;color:#bff3e3}
+.df-why.err{display:block;color:#ffb3b8}
+.df-bins{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:6px 16px 14px}
+@media(max-width:760px){.df-bins{grid-template-columns:1fr}}
+.df-bin{border:1px dashed rgba(255,255,255,0.18);border-radius:12px;padding:10px;min-height:86px}
+.df-bin .df-bh{font-weight:900;font-size:0.84rem;color:var(--text);margin-bottom:6px}
+.df-bin .df-bh span{display:block;font-size:0.66rem;font-weight:700;color:var(--text-dim)}
+.df-bl{display:flex;flex-wrap:wrap;gap:5px}
+.df-bl i{font-style:normal;font-family:'JetBrains Mono',monospace;font-size:0.68rem;padding:3px 8px;border-radius:7px;
+  background:rgba(6,214,160,0.12);color:#bff3e3;animation:popIn .35s ease;
+  font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
+#dfNote strong{color:var(--accent7)}
+#dfNote.err strong{color:#ff8a8a}
+
+.dep-gloss{margin:16px 0 4px;border:1px solid rgba(255,255,255,0.1);border-radius:14px;background:var(--surface);overflow:hidden}
+.dep-gloss summary{cursor:pointer;padding:12px 16px;font-weight:900;color:var(--text);font-size:0.94rem}
+.dep-gloss summary span{font-weight:600;color:var(--text-dim);font-size:0.8rem}
+.dep-gloss table{width:100%;border-collapse:collapse;font-size:0.84rem}
+.dep-gloss td{padding:8px 16px;border-top:1px solid rgba(255,255,255,0.06);color:var(--text-dim);line-height:1.5;vertical-align:top}
+.dep-gloss td:first-child{color:var(--text);font-weight:800;white-space:nowrap;width:1%}
+@media(max-width:560px){.dep-gloss td:first-child{white-space:normal}}
 </style>
 </head>
 <body>
@@ -238,11 +436,25 @@
     <a href="../../index.html" class="sidebar-back">← Voltar ao hub</a>
   </div>
   <div class="sidebar-group">
-    <div class="sidebar-group-title">🚀 Deploy</div>
+    <div class="sidebar-group-title">🚀 Abertura</div>
+    <a class="sidebar-link" onclick="goTo('pre-encontro')"><span class="dot" style="background:var(--accent5)"></span>Antes do encontro</a>
     <a class="sidebar-link" onclick="goTo('aquecimento')"><span class="dot" style="background:var(--accent5)"></span>A conversa pendente</a>
-    <a class="sidebar-link" onclick="goTo('o-que-e-deploy')"><span class="dot" style="background:var(--accent7)"></span>⭐ Do localhost pro mundo</a>
-    <a class="sidebar-link" onclick="goTo('preparar')"><span class="dot" style="background:var(--python-y)"></span>Auditoria agent-first</a>
-    <a class="sidebar-link" onclick="goTo('pythonanywhere')"><span class="dot" style="background:var(--accent4)"></span>O passo a passo</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">📚 Os fundamentos</div>
+    <a class="sidebar-link" onclick="goTo('o-que-e-deploy')"><span class="dot" style="background:var(--accent7)"></span>⭐ O que é deploy + as 6 estações</a>
+    <a class="sidebar-link" onclick="goTo('docker')"><span class="dot" style="background:var(--accent4)"></span>Por que o Docker existe</a>
+    <a class="sidebar-link" onclick="goTo('caixa')"><span class="dot" style="background:var(--accent4)"></span>⭐ A marmita em movimento</a>
+    <a class="sidebar-link" onclick="goTo('onde-mora')"><span class="dot" style="background:var(--accent7)"></span>Onde a caixa mora: Render</a>
+    <a class="sidebar-link" onclick="goTo('git')"><span class="dot" style="background:var(--accent6)"></span>Git e GitHub no meio</a>
+    <a class="sidebar-link" onclick="goTo('ambiente')"><span class="dot" style="background:var(--accent5)"></span>O que muda de lugar pra lugar</a>
+    <a class="sidebar-link" onclick="goTo('dentro-fora')"><span class="dot" style="background:var(--accent3)"></span>⭐ Dentro da caixa ou de fora?</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🛠️ Mão na massa</div>
+    <a class="sidebar-link" onclick="goTo('empacotar')"><span class="dot" style="background:var(--accent6)"></span>Prompts 12, 13 e 14</a>
+    <a class="sidebar-link" onclick="goTo('render')"><span class="dot" style="background:var(--accent7)"></span>GitHub → Render → URL</a>
+    <a class="sidebar-link" onclick="goTo('bugzilla')"><span class="dot" style="background:var(--bug)"></span>BugZilla do deploy 🐛</a>
     <a class="sidebar-link" onclick="goTo('celular')"><span class="dot" style="background:var(--accent7)"></span>⭐ O momento do celular</a>
   </div>
   <div class="sidebar-group">
@@ -266,14 +478,17 @@
   <span class="hero-badge python">Dia 08 · Sistemas Web com Python — o último</span>
   <h1><span style="background:linear-gradient(135deg,var(--accent7),var(--accent4));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">No ar +<br>Demo Day</span></h1>
   <p class="subtitle">
-    Oito encontros atrás, seu sistema "não tinha link". Hoje ele ganha um —
-    <strong style="color:var(--accent7)">público, de verdade, no ar</strong> — você
-    fecha o último ciclo agent-first com auditoria, diff e testes, apresenta pra turma e conversa sobre
-    <strong style="color:var(--accent4)">o que vem depois</strong>. 🥂
+    Oito encontros atrás, seu sistema "não tinha link". Hoje a Estante ganha um —
+    <strong style="color:var(--accent7)">público, com HTTPS, no ar</strong>. Ela vai
+    <strong style="color:var(--accent4)">empacotada num container Docker</strong>, com os
+    segredos fora do código, publicada no Render a partir do GitHub — e tudo pelo mesmo ritual de
+    prompt, diff e teste. Depois: Demo Day e <strong style="color:var(--accent6)">o que vem
+    depois</strong>. 🥂
   </p>
   <div class="hero-stack">
-    <span class="stack-chip">🚀 deploy</span>
-    <span class="stack-chip">🤖 auditar → ajustar → homologar</span>
+    <span class="stack-chip">🐳 container</span>
+    <span class="stack-chip">☁️ Render</span>
+    <span class="stack-chip">🔑 segredos fora do código</span>
     <span class="stack-chip">📱 link no celular</span>
     <span class="stack-chip">🎤 demo day</span>
     <span class="stack-chip">🌉 a ponte</span>
@@ -281,6 +496,39 @@
 </section>
 
 <div class="container">
+
+  <!-- ═══════════════════════════════════════════════════════
+       PRÉ-ENCONTRO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="pre-encontro">
+    <div class="step-header">
+      <div class="step-number sn-yellow">📥</div>
+      <div>
+        <div class="step-title">Antes do encontro: duas contas e a Estante completa</div>
+        <div class="step-sub">Hoje tem Demo Day — o tempo de sala é todo pro deploy e pras apresentações</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="swp-preflight">
+        <div class="pf-title">⚠️ Confira ANTES do dia 8</div>
+        <ol>
+          <li><strong>A Estante com os 12 prompts homologados</strong> (0 a 11 do Dia 7), com login
+            funcionando. Sem login, ela não vai pro ar.</li>
+          <li><strong>Conta no GitHub</strong> criada em <code>github.com</code>, com o e-mail
+            confirmado. O nome de usuário aparece no seu portfólio — escolha algo apresentável.</li>
+          <li><strong>Conta no Render</strong>: em <code>render.com</code>, entre com o botão
+            <strong>GitHub</strong> (uma conta a menos pra lembrar). Não crie nenhum serviço ainda.</li>
+          <li><strong>Docker Desktop: você NÃO precisa instalar.</strong> Quem monta a imagem é o
+            próprio Render. Se quiser ver a caixa rodando no seu notebook, é um extra pra casa.</li>
+          <li><strong>Recomendado: leia a Parte 1, "Os fundamentos".</strong> Em sala ela vira um
+            resumo de 15 minutos — quem chega tendo lido entende cada prompt na primeira leitura.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
 
   <!-- ═══════════════════════════════════════════════════════
        AQUECIMENTO
@@ -305,18 +553,32 @@
       </p>
 
       <div class="concept">
-        <div class="concept-title">💡 O plano do dia</div>
+        <div class="concept-title">⏱️ O plano do dia, no relógio</div>
         <p>
-          ① Auditar sem editar → ② corrigir e homologar → ③ subir no
-          <strong>PythonAnywhere</strong> → ④ abrir NO CELULAR → ⑤ apresentar no
-          demo day → ⑥ enxergar o próximo passo. Sem conteúdo novo pesado — hoje é
-          dia de colheita. 🌾
+          <strong>0:00</strong> os fundamentos, em resumo (as 6 estações, a caixa, a regra do
+          dia e a prática "dentro ou fora") ·
+          <strong>0:15</strong> Prompts 12 e 13 — auditar e empacotar ·
+          <strong>0:28</strong> Prompt 14 + GitHub pelo PyCharm ·
+          <strong>0:38</strong> Render e o primeiro build ·
+          <strong>0:52</strong> o momento do celular ·
+          <strong>0:57</strong> Demo Day ·
+          <strong>1:50</strong> a ponte pro que vem depois.
+        </p>
+        <p>
+          <strong>A regra do relógio:</strong> às 0:57 começa o Demo Day, com ou sem deploy.
+          Quem não subiu apresenta a Estante rodando em casa, no <code>localhost</code>, e sobe
+          depois. Apresentação não espera build.
         </p>
       </div>
     </div>
   </section>
 
-  <div class="section-connector"><div class="line"></div></div>
+  <div class="chapter-divider">
+    <div class="chapter-icon">📚</div>
+    <div class="chapter-number">Parte 1</div>
+    <h2 style="background:linear-gradient(135deg,var(--accent4),var(--accent7));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Os fundamentos</h2>
+    <p class="chapter-subtitle">O que acontece num deploy — antes de pedir qualquer coisa ao agente</p>
+  </div>
 
   <!-- ═══════════════════════════════════════════════════════
        ⭐ DO LOCALHOST PRO MUNDO
@@ -326,7 +588,7 @@
       <div class="step-number sn-mint">⭐</div>
       <div>
         <div class="step-title">Do localhost pro mundo</div>
-        <div class="step-sub">O que muda (e o que NÃO muda) quando o sistema vai pro ar</div>
+        <div class="step-sub">O que é deploy, o que muda (e o que NÃO muda) — e o caminho inteiro em 6 estações</div>
       </div>
     </div>
 
@@ -357,8 +619,8 @@
             <div class="swp-world-server" id="worldCloud">
               <div class="glow"></div>
               <div class="ico">☁️</div>
-              <div class="nm">PythonAnywhere</div>
-              <span class="swp-world-url">voce.pythonanywhere.com</span>
+              <div class="nm">Render</div>
+              <span class="swp-world-url">estante-voce.onrender.com</span>
             </div>
             <div class="swp-world-clients" id="worldClients">
               <div class="swp-world-client" data-side="after"><span class="pkt">✉️</span>📱<span class="cl-name">sua mãe</span></div>
@@ -366,7 +628,7 @@
               <div class="swp-world-client" data-side="after"><span class="pkt">✉️</span>💻<span class="cl-name">o RH 👀</span></div>
               <div class="swp-world-client" data-side="after"><span class="pkt">✉️</span>📱<span class="cl-name">a turma</span></div>
             </div>
-            <div class="swp-world-note">um computador <strong>que nunca desliga</strong>, com endereço público — requests chegando de qualquer lugar</div>
+            <div class="swp-world-note">um computador na nuvem, <strong>com endereço público</strong> — requests chegando de qualquer lugar (no plano grátis ele cochila sem visita e acorda no primeiro acesso)</div>
           </div>
         </div>
         <div class="swp-machine-hud">
@@ -380,7 +642,81 @@
         <div class="tip-content">
           <strong>Nada de novo por dentro:</strong> request → rota → banco.py → SQLite →
           response. O ciclo que você domina desde o Dia 1, num computador alugado
-          (de graça) que fica ligado por você.
+          (de graça), dentro de uma caixa que leva o seu sistema inteiro junto.
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 Deploy, em uma frase</div>
+        <p>
+          <strong>Deploy</strong> (do inglês <em>to deploy</em>: implantar, pôr em posição) é levar
+          um sistema do computador onde ele foi feito para o computador onde ele vai ser usado — e
+          deixá-lo rodando lá. Onde ele é feito chama-se <strong>ambiente de desenvolvimento</strong>:
+          o seu PyCharm, o seu <code>localhost</code>. Onde ele é usado chama-se
+          <strong>produção</strong>: o lugar que a amiga, o RH e a turma acessam.
+        </p>
+      </div>
+
+      <div class="dep-duo">
+        <div>
+          <div class="dd-h">🖥️ Servidor, sem mistério</div>
+          <p>
+            Servidor é um computador que fica <strong>ligado esperando pedidos</strong> (os
+            requests do Dia 1) e respondendo. Não precisa ser uma máquina especial: o seu
+            notebook é servidor desde o primeiro <code>localhost:5000</code>. O que ele não tem é
+            <strong>endereço público</strong> — e ninguém quer que você deixe o notebook aberto
+            24 horas.
+          </p>
+        </div>
+        <div>
+          <div class="dd-h">☁️ Nuvem, sem mistério</div>
+          <p>
+            "Nuvem" é o nome bonito para <strong>servidores de uma empresa</strong>, num prédio
+            cheio deles (um <em>data center</em>), que você aluga e usa pela internet. Tem uma
+            frase famosa entre programadores que é literalmente verdade:
+            <strong>"a nuvem é só o computador de outra pessoa"</strong>.
+          </p>
+        </div>
+      </div>
+
+      <p style="color:var(--text-dim);margin-top:18px">
+        <strong style="color:var(--text)">O caminho da Estante, do PyCharm até o celular</strong>
+        — seis estações. Cada uma ganha a sua explicação nas próximas seções:
+      </p>
+
+      <div class="dep-map">
+        <div class="dm-st">
+          <span class="dm-n">1</span><span class="dm-i">💻</span>
+          <div><b>Casa</b><span>a Estante homologada, rodando com ▶ no seu notebook</span><em>você · Dia 7</em></div>
+        </div>
+        <div class="dm-st">
+          <span class="dm-n">2</span><span class="dm-i">📦</span>
+          <div><b>Empacotar</b><span>a receita da caixa (Dockerfile) e os segredos pra fora do código</span><em>o agente · Prompts 12 e 13</em></div>
+        </div>
+        <div class="dm-st">
+          <span class="dm-n">3</span><span class="dm-i">🗂️</span>
+          <div><b>Enviar</b><span>uma "foto" do projeto (commit) enviada pro GitHub (push)</span><em>o agente + o PyCharm · Prompt 14</em></div>
+        </div>
+        <div class="dm-st">
+          <span class="dm-n">4</span><span class="dm-i">🏗️</span>
+          <div><b>Construir</b><span>o Render segue a receita e monta a imagem (build)</span><em>o Render</em></div>
+        </div>
+        <div class="dm-st">
+          <span class="dm-n">5</span><span class="dm-i">▶️</span>
+          <div><b>Ligar</b><span>o Render liga o container; o gunicorn atende na porta combinada</span><em>o Render</em></div>
+        </div>
+        <div class="dm-st">
+          <span class="dm-n">6</span><span class="dm-i">🌍</span>
+          <div><b>Endereçar</b><span>URL pública com HTTPS — e a amiga abre no celular</span><em>o Render</em></div>
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🧭</span>
+        <div class="tip-content">
+          <strong>Travou no meio da aula? Volte a este mapa</strong> e pergunte: "em que estação
+          eu estou?". Erro no Prompt 13 é estação 2; "Build failed" é estação 4; "No open ports" é
+          estação 5. Saber a estação já corta o problema pela metade.
         </div>
       </div>
     </div>
@@ -389,240 +725,845 @@
   <div class="section-connector"><div class="line"></div></div>
 
   <!-- ═══════════════════════════════════════════════════════
-       PREPARAR
+       FUNDAMENTO: POR QUE O DOCKER EXISTE
        ═══════════════════════════════════════════════════════ -->
-  <section class="step-section" id="preparar">
+  <section class="step-section" id="docker">
     <div class="step-header">
-      <div class="step-number sn-py">🔧</div>
+      <div class="step-number sn-blue">🐳</div>
       <div>
-        <div class="step-title">Auditoria agent-first: só sobe o que foi homologado</div>
-        <div class="step-sub">Primeiro diagnóstico sem edição; depois um ajuste pequeno e testável</div>
+        <div class="step-title">Por que o Docker existe</div>
+        <div class="step-sub">Estação 2: a caixa que leva o sistema inteiro junto</div>
       </div>
     </div>
 
     <div class="card">
-      <div class="concept">
-        <div class="concept-title">🤖 O modo do curso continua valendo na nuvem</div>
-        <p>
-          Você não altera o projeto por impulso na última hora. O fluxo do Dia 04 continua:
-          <strong>Prompt 0 sem editar → Prompt 1 com escopo mínimo → diff → testes → aceite.</strong>
-          Deploy não dá licença para o agente “melhorar” o sistema inteiro.
-        </p>
-      </div>
-
-      <div class="code-block">
-        <div class="code-header">
-          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-          <span class="filename">Prompt 0 — auditoria de prontidão, sem editar</span>
-          <span class="lang-badge prompt">prompt</span>
-        </div>
-        <div class="swp-spec-text"><span class="sp-k">[CONTEXTO]</span> Este sistema Flask passou pelos checkpoints do projeto final e será publicado
-no PythonAnywhere. Leia o arquivo de instruções e o projeto inteiro.
-
-<span class="sp-k">[TAREFA]</span> Faça uma auditoria de prontidão sem editar nada. Confira: app.run protegido por
-if __name__ == "__main__"; secret_key existente; requirements.txt; caminhos relativos do SQLite;
-criar_banco.py repetível; templates e static presentes; sintaxe dos arquivos Python.
-
-<span class="sp-k">[RESTRIÇÕES]</span> Não altere arquivos, não instale nada, não refatore e não proponha features.
-
-<span class="sp-k">[ACEITE]</span> Entregue “pronto” ou uma lista curta de bloqueadores com arquivo, evidência e
-teste correspondente. Pare e espere minha decisão.</div>
-      </div>
-
-      <div class="code-block">
-        <div class="code-header">
-          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-          <span class="filename">Prompt 1 — correção mínima para o deploy</span>
-          <span class="lang-badge prompt">prompt</span>
-        </div>
-        <div class="swp-spec-text"><span class="sp-k">[TAREFA]</span> Corrija somente os bloqueadores aprovados na auditoria. Em app.py,
-garanta que app.run(debug=True) execute apenas dentro de if __name__ == "__main__". Preserve a
-secret_key já usada por flash e login. Crie ou complete requirements.txt somente com dependências
-que o projeto realmente importa.
-
-<span class="sp-k">[RESTRIÇÕES]</span> Não altere banco.py, regras de negócio, rotas, templates, CSS ou banco de dados.
-Não adicione biblioteca sem mostrar qual import existente exige essa dependência.
-
-<span class="sp-k">[ACEITE]</span> Sintaxe válida; sistema local abre, autentica e executa a operação principal;
-o diff contém apenas os bloqueadores aprovados. Explique o diff e pare.</div>
-      </div>
-
-      <div class="swp-accept">
-        <label><input type="checkbox"> O diff tocou somente <code>app.py</code> e, se necessário, <code>requirements.txt</code>?</label>
-        <label><input type="checkbox"> O servidor ainda inicia localmente e o login continua funcionando?</label>
-        <label><input type="checkbox"> CRUD e operação principal passaram nos testes feliz e de erro?</label>
-        <label><input type="checkbox"> <code>criar_banco.py</code> roda duas vezes sem apagar ou duplicar dados iniciais?</label>
-        <label><input type="checkbox"> Eu consigo explicar cada linha verde antes de criar o ZIP?</label>
-      </div>
-
       <p style="color:var(--text-dim)">
-        <strong style="color:var(--text)">Ajuste 1:</strong> na nuvem, quem LIGA o seu app é a
-        plataforma — o <code>app.run()</code> é só pra sua máquina. O jeito profissional de
-        dizer isso em Python:
+        Pra rodar, a Estante precisa de <strong style="color:var(--text)">quatro coisas</strong>:
+        o Python na versão certa, o Flask e o gunicorn instalados, os arquivos do projeto
+        (<code>app.py</code>, <code>templates/</code>…) e o comando certo pra ligar. No seu
+        notebook, tudo isso está lá porque você e o agente arrumaram ao longo de sete aulas.
+        Num servidor novo, <strong style="color:var(--text)">não tem nada</strong>.
       </p>
 
-      <div class="code-block">
-        <div class="code-header">
-          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-        <span class="filename">app.py — mapa para revisar o diff</span>
-          <span class="lang-badge python">Python</span>
-        </div>
-<pre><span class="kw">if</span> __name__ == <span class="st">"__main__"</span>:
-    app.run(debug=<span class="bool">True</span>)</pre>
-      </div>
-
-      <div class="concept">
-        <div class="concept-title">💡 O if do "quem me chamou?"</div>
+      <div class="analogy">
+        <div class="analogy-title">"Na minha máquina funciona" 🤷</div>
         <p>
-          <code>__name__</code> vale <code>"__main__"</code> quando VOCÊ roda o arquivo
-          (▶ no PyCharm) — aí o app.run liga o servidor local, como sempre.
-          Quando o PythonAnywhere <strong>importa</strong> seu app, o if é falso e o
-          app.run nem roda — a plataforma liga do jeito dela. Um if, dois mundos.
-          (Você já viu esse padrão em código por aí — agora sabe o que ele faz.)
+          Antes do Docker, alguém entrava no servidor e instalava tudo na mão, torcendo pra ficar
+          igual ao computador do programador. Nunca ficava: Python 3.13 aqui, 3.10 lá; Flask de
+          uma versão aqui, de outra lá; uma pasta com outro nome. O programa quebrava só no
+          servidor, e a desculpa clássica virou meme: <strong>"mas na minha máquina
+          funciona!"</strong>. O Docker nasceu, em 2013, pra acabar com essa frase.
         </p>
       </div>
 
+      <div class="concept">
+        <div class="concept-title">💡 Docker, em uma frase</div>
+        <p>
+          <strong>Docker</strong> é uma ferramenta que empacota um programa junto com
+          <strong>tudo o que ele precisa pra rodar</strong> — a versão do Python, as bibliotecas,
+          os arquivos e o comando de partida — num pacote padronizado que roda
+          <strong>igualzinho em qualquer computador que tenha Docker</strong>: o seu notebook, o
+          Render, o servidor de uma empresa.
+        </p>
+      </div>
+
+      <p style="color:var(--text-dim);margin-top:16px">
+        <strong style="color:var(--text)">Como funciona, em três passos</strong> — e as três
+        palavras que você vai ver no diff e nos logs:
+      </p>
+
+      <div class="dep-steps">
+        <div class="ds-step">
+          <span class="ds-i">📝</span>
+          <div>
+            <b>1. Dockerfile — a receita</b>
+            <p>Um arquivo de texto, sem extensão, que diz linha por linha como montar o pacote:
+            "comece com um Linux que já tem Python, instale estas bibliotecas, copie estes
+            arquivos, e quando ligar rode este comando". Hoje o agente escreve; você lê.</p>
+          </div>
+        </div>
+        <div class="ds-step">
+          <span class="ds-i">🧊</span>
+          <div>
+            <b>2. build → a imagem</b>
+            <p><em>Build</em> (construir) é seguir a receita. O resultado se chama
+            <strong>imagem</strong>: o pacote pronto e fechado. Imagem não se edita — como o
+            arquivo de instalação de um programa, que ninguém abre pra mudar, só usa.</p>
+          </div>
+        </div>
+        <div class="ds-step">
+          <span class="ds-i">🔥</span>
+          <div>
+            <b>3. run → o container</b>
+            <p><em>Run</em> (rodar) liga a imagem. A imagem ligada, rodando de verdade, se chama
+            <strong>container</strong>. Da mesma imagem dá pra ligar um container ou dez, todos
+            idênticos — é assim que um sistema grande aguenta muita gente.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="analogy">
+        <div class="analogy-title">A marmita 🍱 — e onde ela deixa de valer</div>
+        <p>
+          Pense numa marmita com tampa: vai o prato (o seu código), o tempero (Python, Flask,
+          gunicorn) e, colado na tampa, o modo de preparo (o comando de ligar). O
+          <strong>Dockerfile</strong> é a receita, a <strong>imagem</strong> é a marmita montada e
+          congelada, o <strong>container</strong> é a marmita no micro-ondas. Qualquer micro-ondas
+          esquenta igual.
+        </p>
+        <p>
+          <strong>Onde a comparação falha:</strong> marmita de verdade você abre e come. A imagem,
+          nunca — ela não muda. Cada container trabalha numa <em>cópia</em>, e tudo o que ele
+          escrever no disco dele (como o <code>estante.db</code>) fica numa camada só dele,
+          <strong>que some quando o container é descartado</strong>. Guarde essa frase: ela é o
+          "disco que esquece" do simulador.
+        </p>
+      </div>
+
+      <div class="dep-duo">
+        <div>
+          <div class="dd-h">🐍 A primeira linha não começa do zero</div>
+          <p>
+            <code>FROM python:3.12-slim</code> pega uma <strong>imagem pronta</strong>, publicada
+            pelos mantenedores oficiais do Python: um Linux pequeno com o Python 3.12 instalado
+            (<em>slim</em> = enxuto). O seu Dockerfile só acrescenta o que é da Estante. Imagens
+            prontas assim ficam num catálogo público chamado <strong>Docker Hub</strong>.
+          </p>
+        </div>
+        <div>
+          <div class="dd-h">🖥️ Container não é um computador inteiro</div>
+          <p>
+            Uma <strong>máquina virtual</strong> finge um computador completo, com sistema
+            operacional próprio — pesada, leva minutos pra ligar. O <strong>container</strong>
+            aproveita o núcleo do sistema da máquina onde roda e leva só o necessário — leve,
+            liga em segundos. Por isso cabem dezenas num servidor só.
+          </p>
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🏢</span>
+        <div class="tip-content">
+          <strong>Por que o mercado inteiro usa:</strong> a mesma caixa roda no notebook do
+          programador, no servidor de testes e na produção — fim do "na minha máquina funciona".
+          E trocar de nuvem vira trocar de micro-ondas: a marmita é a mesma.
+        </div>
+      </div>
+
+      <div class="warning">
+        <span class="tip-icon">🙅</span>
+        <div class="tip-content">
+          <strong>Precisa instalar o Docker hoje? Não.</strong> Quem faz o build e liga o container
+          é o Render. Instalar o Docker Desktop no seu computador é um extra pra casa, se você
+          quiser ver a caixa rodando aí também.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ A CAIXA (DOCKER)
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="caixa">
+    <div class="step-header">
+      <div class="step-number sn-blue">⭐</div>
+      <div>
+        <div class="step-title">A marmita em movimento</div>
+        <div class="step-sub">Monte, ligue e deixe dormir — a teoria acontecendo na sua frente</div>
+      </div>
+    </div>
+
+    <div class="card">
       <p style="color:var(--text-dim)">
-        <strong style="color:var(--text)">Ajuste 2 — conferência:</strong> seu
-        <code>secret_key</code> está definido? (Sem ele, flash e login quebram na nuvem
-        igual quebrariam local.) E o <code>debug=True</code> pode ficar — dentro do if,
-        ele nunca roda no servidor público. ✅
+        Cada linha da receita vira uma camada da imagem, de baixo pra cima. A última linha
+        (<code>CMD</code>) não roda na montagem: fica gravada na tampa e só executa quando o
+        container <strong style="color:var(--text)">liga</strong>. Monte, ligue — e depois faça a
+        maldade: cadastre um livro e deixe o serviço dormir.
+        <strong style="color:var(--text)">Olhe o disco da caixa.</strong>
+      </p>
+
+      <div class="swp-box" id="swpBox">
+        <div class="swp-box-stage">
+          <div class="swp-box-pane">
+            <div class="bx-tag">📝 Dockerfile (o agente escreve, você lê)</div>
+            <pre class="bx-file" id="boxFile"><span class="bl" data-l="0">FROM python:3.12-slim
+</span><span class="bl" data-l="1">WORKDIR /app
+</span><span class="bl" data-l="2">COPY requirements.txt .
+</span><span class="bl" data-l="3">RUN pip install --no-cache-dir -r requirements.txt
+</span><span class="bl" data-l="4">COPY . .
+</span><span class="bl" data-l="5">CMD python criar_banco.py &amp;&amp; gunicorn --bind 0.0.0.0:$PORT app:app
+</span></pre>
+            <div class="bx-log" id="boxLog">(ainda nada — aperte Montar)</div>
+          </div>
+          <div class="swp-box-pane">
+            <div class="bx-tag">📦 a caixa</div>
+            <div class="bx-crate" id="boxCrate">
+              <div class="bx-lid" id="boxLid">▶ criar_banco.py &amp;&amp; gunicorn :$PORT</div>
+              <div class="bx-layer" data-l="4">🧾 app.py · banco.py · templates · static</div>
+              <div class="bx-layer" data-l="3">📦 Flask + gunicorn</div>
+              <div class="bx-layer" data-l="1">📁 pasta /app</div>
+              <div class="bx-layer" data-l="0">🐧 Linux mínimo + 🐍 Python 3.12</div>
+            </div>
+            <div class="bx-disk" id="boxDisk">
+              <span class="dk-tag">💾 disco da caixa</span>
+              <span class="dk-val" id="boxDiskVal">vazio</span>
+            </div>
+          </div>
+        </div>
+        <div class="swp-machine-hud">
+          <button class="swp-machine-btn" id="boxBuild">📦 Montar a imagem</button>
+          <button class="swp-machine-btn" id="boxRun" disabled>▶ Ligar o container</button>
+          <button class="swp-machine-btn" id="boxAdd" disabled>📚 Cadastrar um livro</button>
+          <button class="swp-machine-btn ghost" id="boxSleep" disabled>😴 15 min sem visita…</button>
+        </div>
+        <div class="swp-machine-hud" style="border-top:0;padding-top:0">
+          <span class="swp-machine-note" id="boxNote">cada linha do Dockerfile vira uma camada da caixa — de baixo pra cima</span>
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 O disco que esquece — e por que a Estante sobrevive</div>
+        <p>
+          No plano grátis do Render, o disco da caixa é <strong>descartável</strong>: toda vez que
+          o serviço reinicia (depois de 15 minutos sem visita, ou a cada deploy novo), ele volta
+          vazio. O <code>estante.db</code> vai junto. A Estante não quebra por um motivo que
+          você mesmo pediu no Dia 7: o <code>criar_banco.py</code> roda toda vez que a caixa liga
+          e <strong>não duplica nada</strong> — então ela sempre acorda com a semente.
+          <strong>Ótimo pra vitrine e pro Demo Day; péssimo pra uma biblioteca de verdade.</strong>
+          Guarde esse limite: ele abre a conversa do fim da aula.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       FUNDAMENTO: ONDE A CAIXA MORA (RENDER)
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="onde-mora">
+    <div class="step-header">
+      <div class="step-number sn-mint">☁️</div>
+      <div>
+        <div class="step-title">Onde a caixa mora: notebook, VPS ou plataforma?</div>
+        <div class="step-sub">Estações 4, 5 e 6: quem constrói, liga e dá endereço</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        A caixa está pronta. Falta um <strong style="color:var(--text)">computador ligado o tempo
+        todo, com endereço público</strong>, pra ela morar. Existem três jeitos — e a diferença
+        entre eles é <strong style="color:var(--text)">quem cuida da máquina</strong>:
+      </p>
+
+      <table class="dep-cmp">
+        <thead><tr><th></th><th>💻 Seu notebook</th><th>🖥️ VPS</th><th>☁️ PaaS — o Render</th></tr></thead>
+        <tbody>
+          <tr><td>O que é</td><td>o computador que você já tem</td><td><em>Virtual Private Server</em>: um servidor virtual alugado, só seu</td><td><em>Platform as a Service</em>: uma plataforma que roda sistemas pra você</td></tr>
+          <tr><td>Quem cuida da máquina</td><td>você</td><td>você: Linux, atualizações, firewall, HTTPS, segurança</td><td class="new">a plataforma</td></tr>
+          <tr><td>Endereço público</td><td>não — só <code>localhost</code></td><td>sim, depois de configurar</td><td class="new">sim, automático, com HTTPS</td></tr>
+          <tr><td>Custo</td><td>zero</td><td>mensalidade</td><td class="new">tem plano grátis (com limites)</td></tr>
+          <tr><td>O seu trabalho</td><td>▶</td><td>tudo</td><td class="new">entregar a caixa</td></tr>
+        </tbody>
+      </table>
+
+      <div class="concept">
+        <div class="concept-title">💡 A troca: controle por conveniência</div>
+        <p>
+          Uma <strong>VPS</strong> te entrega a máquina inteira: você pode tudo, e responde por
+          tudo — inclusive por um servidor ligado 24 horas na internet, que precisa ser protegido.
+          Uma <strong>PaaS</strong> esconde a máquina: você entrega a caixa e ela cuida do resto.
+          Pra quem está publicando o primeiro sistema, a PaaS deixa você focar no que aprendeu.
+          VPS é o próximo degrau.
+        </p>
+      </div>
+
+      <p style="color:var(--text-dim);margin-top:16px">
+        <strong style="color:var(--text)">O Render é uma PaaS.</strong> Existem outras — Railway,
+        Fly.io e a pioneira, Heroku — e o que você aprende hoje vale pra todas. Depois de
+        conectado ao seu repositório, ele faz cinco coisas sozinho:
+      </p>
+
+      <div class="dep-steps">
+        <div class="ds-step"><span class="ds-i">👀</span><div><b>1. Observa o GitHub</b><p>Fica de olho no seu repositório. Chegou código novo (um push)? Começa o trabalho.</p></div></div>
+        <div class="ds-step"><span class="ds-i">🏗️</span><div><b>2. Faz o build</b><p>Segue o seu Dockerfile e monta a imagem — estação 4.</p></div></div>
+        <div class="ds-step"><span class="ds-i">▶️</span><div><b>3. Liga o container</b><p>Liga a imagem e avisa ao programa qual porta usar — estação 5.</p></div></div>
+        <div class="ds-step"><span class="ds-i">🔒</span><div><b>4. Dá o endereço</b><p>Um endereço público com HTTPS, tipo <code>estante-ana.onrender.com</code> — estação 6.</p></div></div>
+        <div class="ds-step"><span class="ds-i">📜</span><div><b>5. Guarda os logs</b><p><em>Log</em> é o diário do servidor: tudo o que o programa imprime e todo erro que acontece. É a primeira coisa a ler quando algo dá errado.</p></div></div>
+      </div>
+
+      <div class="dep-duo">
+        <div>
+          <div class="dd-h">🔒 O que é o S do HTTPS</div>
+          <p>
+            <strong>HTTPS</strong> é o HTTP do Dia 1 com a conversa <strong>criptografada</strong>
+            (embaralhada) entre o celular e o servidor. Sem ele, alguém no mesmo Wi-Fi do shopping
+            poderia ler a senha do admin no caminho. Pra isso existe um <strong>certificado</strong>:
+            o documento digital que prova "este endereço é mesmo o seu". O Render emite e renova
+            sozinho — é o cadeado 🔒 da barra de endereço.
+          </p>
+        </div>
+        <div>
+          <div class="dd-h">💸 O preço do grátis</div>
+          <p>
+            O plano gratuito do Render tem limites: o serviço <strong>dorme</strong> depois de 15
+            minutos sem visita (e leva cerca de 1 minuto pra acordar); o
+            <strong>disco é descartável</strong>; são 512 MB de memória e 750 horas por mês. Pra
+            vitrine e Demo Day, sobra. Pra um sistema com usuários de verdade, é aqui que se começa
+            a pagar.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       FUNDAMENTO: GIT E GITHUB
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="git">
+    <div class="step-header">
+      <div class="step-number sn-purple">🗂️</div>
+      <div>
+        <div class="step-title">Por que o GitHub fica no meio do caminho</div>
+        <div class="step-sub">Estação 3: o Render não entra no seu notebook — ele busca o código num lugar combinado</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        O Render não tem acesso ao seu computador (ainda bem). Ele precisa de um
+        <strong style="color:var(--text)">lugar na internet</strong> onde o código da Estante
+        fique guardado e de onde ele possa buscar. Esse lugar é um repositório no GitHub.
+      </p>
+
+      <div class="keyword-grid">
+        <div class="keyword-chip">
+          <span class="emoji">🌳</span>
+          <span class="kw-name">Git</span>
+          <span class="kw-desc">um programa que guarda o histórico do projeto, versão por versão</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">📸</span>
+          <span class="kw-name">commit</span>
+          <span class="kw-desc">uma "foto" do projeto inteiro naquele momento, com uma mensagem explicando</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">📚</span>
+          <span class="kw-name">repositório</span>
+          <span class="kw-desc">a pasta do projeto junto com todas as fotos já tiradas</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">🐙</span>
+          <span class="kw-name">GitHub</span>
+          <span class="kw-desc">um site que guarda repositórios Git na nuvem — e vira o seu portfólio</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">🚀</span>
+          <span class="kw-name">push</span>
+          <span class="kw-desc">enviar as fotos novas do seu computador pro GitHub</span>
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 A esteira: push → build → no ar</div>
+        <p>
+          Depois de conectado, o caminho é automático: você faz <strong>push</strong>, o Render
+          percebe, faz um <strong>build</strong> novo e troca o container antigo pelo novo.
+          <strong>Atualizar a Estante no ar vira "commit + push" — mais nada.</strong> (E, no plano
+          grátis, cada deploy novo também devolve o banco à semente.)
+        </p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🙈</span>
+        <div class="tip-content">
+          <strong>Nem tudo da pasta deve virar foto.</strong> O <code>.gitignore</code> é a lista
+          do que o Git finge que não vê: o <code>venv</code> (milhares de arquivos do SEU
+          computador), o <code>__pycache__</code> (um cache que o Python gera sozinho) e o
+          <code>estante.db</code> (os seus dados de teste). O <code>.dockerignore</code> faz o mesmo
+          papel na hora de montar a caixa.
+        </div>
+      </div>
+
+      <p style="color:var(--text-dim);font-size:0.88rem">
+        Git tem muito mais — ramificações (<em>branches</em>), juntar trabalho de várias pessoas,
+        resolver conflitos. É assunto do Fullstack. Hoje é só o mínimo: <strong style="color:var(--text)">um
+        commit e um push</strong>.
       </p>
     </div>
   </section>
 
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       FUNDAMENTO: O QUE MUDA DE LUGAR PRA LUGAR (REGRA CENTRAL)
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="ambiente">
+    <div class="step-header">
+      <div class="step-number sn-yellow">🔑</div>
+      <div>
+        <div class="step-title">O que muda de lugar pra lugar</div>
+        <div class="step-sub">A regra que costura o dia inteiro — e o que o app.run não aguenta</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        A mesma caixa vai rodar no Render — e poderia rodar no notebook de um colega ou num
+        servidor de empresa. Mas algumas coisas <strong style="color:var(--text)">mudam de lugar
+        pra lugar</strong>: a porta que o lugar oferece, os segredos daquele lugar, os dados
+        daquele lugar. Se estiverem escritas dentro da caixa, ela deixa de servir pra qualquer
+        lugar.
+      </p>
+
+      <div class="dep-rule">
+        <span class="dr-tag">🎯 a regra do dia</span>
+        A caixa é igual em todo lugar. O que muda de lugar pra lugar —
+        <strong>porta, segredos, dados</strong> — não mora dentro dela.
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 Variável de ambiente</div>
+        <p>
+          É um par <strong>nome = valor</strong> que o lugar entrega ao programa na hora de
+          ligar. O programa não sabe o valor de antemão: ele <strong>pergunta</strong>. No Render,
+          você cadastra as variáveis num painel; em casa, se ninguém cadastrou, o programa usa um
+          valor padrão.
+        </p>
+      </div>
+
+      <p style="color:var(--text-dim)">
+        O resultado primeiro: <strong style="color:var(--text)">no Render, a Estante assina a
+        sessão com a chave secreta que você cadastrou no painel; em casa, com um valor padrão
+        qualquer.</strong> O código que faz isso é uma linha — o agente escreve no Prompt 13 e você
+        lê no diff:
+      </p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">estante/app.py (gerado no Prompt 13 — trecho)</span>
+          <span class="lang-badge python">Python</span>
+        </div>
+<pre><span class="kw">import</span> os
+
+app.secret_key = os.environ.<span class="fn">get</span>(<span class="st">"SECRET_KEY"</span>, <span class="st">"so-pra-rodar-em-casa"</span>)</pre>
+      </div>
+
+      <div class="dep-duo">
+        <div>
+          <div class="dd-h">📖 Lendo a linha</div>
+          <p>
+            <code>os.environ</code> é o "painel de variáveis" do lugar onde o programa está
+            rodando. <code>.get("SECRET_KEY", "so-pra-rodar-em-casa")</code> quer dizer: "me dá a
+            SECRET_KEY daqui; se ela não existir, use este padrão". O mesmo
+            <code>.get</code> dos dicionários do bootcamp.
+          </p>
+        </div>
+        <div>
+          <div class="dd-h">🧳 As três que vêm de fora hoje</div>
+          <p>
+            <strong><code>PORT</code></strong> — a porta; quem escolhe é o Render (10000).<br>
+            <strong><code>SECRET_KEY</code></strong> — a assinatura da sessão (Dias 5 e 6).<br>
+            <strong><code>ADMIN_SENHA</code></strong> — a senha do admin; a <code>trocar123</code>
+            está publicada neste material.
+          </p>
+        </div>
+      </div>
+
+      <div class="dep-duo">
+        <div>
+          <div class="dd-h">🚪 Porta, 127.0.0.1 e 0.0.0.0</div>
+          <p>
+            <strong>Porta</strong> é o número da "porta de entrada" de um programa num computador
+            — em <code>localhost:5000</code>, o 5000 era a porta. <code>127.0.0.1</code> é o
+            endereço "eu mesmo": quem escuta nele só atende pedidos que nascem dentro da própria
+            máquina — ou da própria caixa. <code>0.0.0.0</code> quer dizer "atenda em todas as
+            entradas", inclusive a que vem de fora. <strong>Dentro da caixa, 127.0.0.1 é uma porta
+            trancada por dentro.</strong>
+          </p>
+        </div>
+        <div>
+          <div class="dd-h">🦄 Por que gunicorn, e não app.run()</div>
+          <p>
+            O <code>app.run()</code> liga o <strong>servidor de desenvolvimento</strong> do Flask:
+            feito pra uma pessoa só, e com <code>debug=True</code> mostra pedaços do seu código na
+            tela quando dá erro — ótimo em casa, perigoso em público. O <strong>gunicorn</strong> é
+            um <strong>servidor de produção</strong>: atende várias pessoas ao mesmo tempo e não
+            expõe nada. <code>gunicorn app:app</code> se lê: "no arquivo <code>app.py</code>,
+            sirva o objeto <code>app</code>" — o mesmo <code>app = Flask(__name__)</code> do Dia 1.
+          </p>
+        </div>
+      </div>
+
+      <div class="warning">
+        <span class="tip-icon">⚖️</span>
+        <div class="tip-content">
+          <strong>O limite da regra — os dados.</strong> O <code>estante.db</code> também muda de
+          lugar pra lugar: os livros da nuvem não são os do seu notebook. Pela regra, ele não
+          deveria morar na caixa. No nosso deploy grátis, <strong>ele mora</strong> — nasce lá
+          dentro, pelo <code>criar_banco.py</code> — e por isso some a cada reinício. Não é
+          descuido: é o limite do plano grátis, e é a pergunta que abre a ponte no fim da aula.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ PRÁTICA: DENTRO DA CAIXA OU DE FORA?
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="dentro-fora">
+    <div class="step-header">
+      <div class="step-number sn-green">⭐</div>
+      <div>
+        <div class="step-title">Dentro da caixa ou de fora?</div>
+        <div class="step-sub">Dez peças da Estante — decida onde cada uma mora</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Aplique a regra do dia. Pra cada peça, escolha: <strong style="color:var(--text)">vai na
+        caixa</strong> (a imagem leva), <strong style="color:var(--text)">vem de fora</strong> (o
+        lugar entrega na hora de ligar) ou <strong style="color:var(--text)">fica em casa</strong>
+        (não viaja pra lugar nenhum). Errar também ensina: tente de novo.
+      </p>
+
+      <div class="df-game" id="dfGame">
+        <div class="df-list" id="dfList"></div>
+        <div class="df-bins">
+          <div class="df-bin" data-b="caixa"><div class="df-bh">📦 Na caixa <span>→ Dockerfile</span></div><div class="df-bl" id="dfBinCaixa"></div></div>
+          <div class="df-bin" data-b="fora"><div class="df-bh">🌍 Vem de fora <span>→ variável de ambiente</span></div><div class="df-bl" id="dfBinFora"></div></div>
+          <div class="df-bin" data-b="casa"><div class="df-bh">🏠 Fica em casa <span>→ .gitignore / .dockerignore</span></div><div class="df-bl" id="dfBinCasa"></div></div>
+        </div>
+        <div class="swp-machine-hud">
+          <span class="swp-machine-note" id="dfNote" aria-live="polite">escolha um destino pra primeira peça</span>
+          <button class="swp-machine-btn ghost" id="dfReset" type="button">🔄 Recomeçar</button>
+        </div>
+      </div>
+
+      <div class="concept" id="dfEnd" hidden>
+        <div class="concept-title">🎯 Você acabou de escrever o deploy — sem escrever código</div>
+        <p>
+          Olhe as três colunas: <strong>é exatamente o que os Prompts 12 e 13 pedem ao
+          agente</strong>. O que ficou "na caixa" vira Dockerfile; o que "vem de fora" vira
+          variável de ambiente no painel do Render; o que "fica em casa" vai pro
+          <code>.gitignore</code> e pro <code>.dockerignore</code>. A caixa é igual em todo lugar
+          — o que muda de lugar pra lugar não mora dentro dela.
+        </p>
+      </div>
+
+      <details class="dep-gloss">
+        <summary>📖 Dicionário de bolso do deploy <span>(abra quando esquecer uma palavra)</span></summary>
+        <table>
+          <tbody>
+            <tr><td>deploy</td><td>levar o sistema de onde foi feito pra onde vai ser usado, e deixá-lo rodando</td></tr>
+            <tr><td>desenvolvimento × produção</td><td>o seu PyCharm × o lugar que os usuários acessam</td></tr>
+            <tr><td>servidor</td><td>computador ligado esperando requests e respondendo</td></tr>
+            <tr><td>nuvem</td><td>servidores de uma empresa, alugados e usados pela internet</td></tr>
+            <tr><td>VPS</td><td>Virtual Private Server — servidor virtual alugado, você cuida de tudo</td></tr>
+            <tr><td>PaaS</td><td>Platform as a Service — plataforma que roda o sistema por você (o Render)</td></tr>
+            <tr><td>Git · commit</td><td>o programa do histórico · uma "foto" do projeto com mensagem</td></tr>
+            <tr><td>repositório · GitHub · push</td><td>projeto + histórico · o site que guarda · enviar pra lá</td></tr>
+            <tr><td>Docker</td><td>ferramenta que empacota o programa com tudo o que ele precisa</td></tr>
+            <tr><td>Dockerfile · build</td><td>a receita da caixa · seguir a receita</td></tr>
+            <tr><td>imagem · container</td><td>a caixa pronta e fechada · a caixa ligada, rodando</td></tr>
+            <tr><td>variável de ambiente</td><td>nome = valor que o lugar entrega ao programa ao ligar</td></tr>
+            <tr><td>porta · 0.0.0.0</td><td>a entrada de um programa · "atenda em todas as entradas"</td></tr>
+            <tr><td>gunicorn</td><td>servidor de produção que roda o seu app Flask</td></tr>
+            <tr><td>HTTPS · certificado</td><td>HTTP criptografado · o documento que prova que o endereço é seu</td></tr>
+            <tr><td>log</td><td>o diário do servidor: o que o programa imprime e os erros</td></tr>
+          </tbody>
+        </table>
+      </details>
+    </div>
+  </section>
+
   <div class="chapter-divider">
-    <div class="chapter-icon">🚀</div>
-    <div class="chapter-number">A subida</div>
-    <h2 style="background:linear-gradient(135deg,var(--accent4),var(--accent7));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">PythonAnywhere, passo a passo</h2>
-    <p class="chapter-subtitle">Do zip ao link público em 7 passos</p>
+    <div class="chapter-icon">🛠️</div>
+    <div class="chapter-number">Parte 2</div>
+    <h2 style="background:linear-gradient(135deg,var(--accent6),var(--accent4));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Mão na massa</h2>
+    <p class="chapter-subtitle">Agora os prompts aplicam a regra — e a Estante sobe</p>
   </div>
 
-<!-- ═══════════════════════════════════════════════════════
-       PYTHONANYWHERE PASSO A PASSO
+  <!-- ═══════════════════════════════════════════════════════
+       EMPACOTAR — prompts 12, 13 e 14
        ═══════════════════════════════════════════════════════ -->
-  <section class="step-section" id="pythonanywhere">
+  <section class="step-section" id="empacotar">
     <div class="step-header">
-      <div class="step-number sn-blue">🗺️</div>
+      <div class="step-number sn-purple">🤖</div>
       <div>
-        <div class="step-title">Os 7 passos (com o professor junto no telão)</div>
+        <div class="step-title">A trilha continua: Prompts 12, 13 e 14</div>
+        <div class="step-sub">Auditar, empacotar e versionar — o mesmo contrato da Estante, com o marca-texto</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        A Estante parou no Prompt 11. O deploy é mais uma entrega — e segue o mesmo ritual:
+        primeiro o agente <strong style="color:var(--text)">olha sem mexer</strong>, depois muda
+        só o necessário, e você lê o diff. Nenhuma rota, template ou SQL muda hoje:
+        <strong style="color:var(--text)">o sistema está pronto, só vai ganhar embalagem</strong>.
+        Repare que os Prompts 12 e 13 pedem exatamente as três colunas da prática
+        "dentro ou fora": o que vai na caixa, o que vem de fora e o que fica em casa.
+      </p>
+
+      <div class="est-prompt-label"><span class="n">12</span> Auditoria de deploy, sem editar</div>
+      <div class="code-block" id="p12">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">Prompt 12 — o que impede a Estante de ir pro ar?</span>
+          <button class="est-copy" type="button">📋 Copiar</button>
+          <span class="lang-badge prompt">prompt</span>
+        </div>
+        <div class="swp-spec-text"><span class="sp-k">[CONTEXTO]</span> A Estante vai ser publicada no Render, dentro de um container Docker, a partir
+de um repositório no GitHub. O Render informa a porta pela variável de ambiente PORT, e o disco
+dele é descartável: volta vazio a cada reinício.
+
+<span class="sp-k">[TAREFA]</span> <mark class="hl">Sem alterar nenhum arquivo</mark>, audite o projeto para esse deploy. Procure:
+<mark class="hl">segredo escrito no código</mark> (a secret_key e a senha do admin da semente); o app.run fora
+do if __name__ == "__main__"; dependência faltando no requirements.txt; como o estante.db é
+encontrado; e arquivos que não podem ir para o GitHub (venv, __pycache__, estante.db).
+
+<span class="sp-k">[ACEITE]</span> Uma lista curta de bloqueadores, cada um com arquivo, evidência e a menor
+correção possível. Pare e espere minha decisão.</div>
+      </div>
+      <div class="est-done">
+        <label class="ck"><input type="checkbox"> Homologado</label>
+        <span><strong>Checkpoint:</strong> a lista tem que citar pelo menos os dois segredos. A
+        senha <code>trocar123</code> está escrita no próprio material do curso: com a URL
+        pública, qualquer um que leu este capítulo entraria como admin na sua Estante.</span>
+      </div>
+
+      <div class="est-prompt-label"><span class="n">13</span> Empacotar</div>
+      <div class="code-block" id="p13">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">Prompt 13 — a marmita</span>
+          <button class="est-copy" type="button">📋 Copiar</button>
+          <span class="lang-badge prompt">prompt</span>
+        </div>
+        <div class="swp-spec-text"><span class="sp-k">[TAREFA]</span> Corrija os bloqueadores aprovados e prepare a Estante para rodar em container:
+- adicione gunicorn ao requirements.txt;
+- <mark class="hl">a secret_key passa a vir da variável de ambiente SECRET_KEY</mark>, e a senha do admin
+  da semente, de ADMIN_SENHA — cada uma com um valor padrão só para rodar em casa;
+- crie o Dockerfile a partir de python:3.12-slim: instala o requirements.txt, copia o projeto
+  e, ao ligar, <mark class="hl">roda o criar_banco.py e depois o gunicorn escutando em 0.0.0.0, na porta da
+  variável PORT</mark>;
+- crie o .dockerignore e o .gitignore deixando de fora venv, __pycache__, .env e
+  <mark class="hl">o estante.db</mark>.
+
+<span class="sp-k">[RESTRIÇÕES]</span> <mark class="hl">Não altere rotas, templates, SQL nem regras de negócio.</mark> Não execute o
+docker nem scripts que alterem o banco.
+
+<span class="sp-k">[ACEITE]</span> ▶ no app.py continua funcionando como antes; o diff só toca requirements.txt,
+app.py, criar_banco.py, Dockerfile, .dockerignore e .gitignore. Explique cada linha do
+Dockerfile e pare.</div>
+      </div>
+      <div class="est-done">
+        <label class="ck"><input type="checkbox"> Homologado</label>
+        <span><strong>Checkpoint:</strong> compare o Dockerfile gerado com o do simulador lá em
+        cima — as linhas podem variar um pouco, mas as seis ideias têm que estar lá. Procure no
+        diff o <code>0.0.0.0</code> e o <code>PORT</code>: sem eles, o deploy falha (é o
+        Bug 1 lá embaixo). E dê ▶ no <code>app.py</code>: a Estante tem que abrir em casa
+        exatamente como antes.</span>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🔑</span>
+        <div class="tip-content">
+          <strong>Lembra da <code>secret_key</code> "troque-por-algo-secreto" do Dia 5?</strong>
+          Em sala, o professor avisou: o certo nem é ela estar no código, porque o código sobe pro
+          GitHub. Hoje ele sobe mesmo. <strong>Variável de ambiente</strong> é um valor que a
+          plataforma entrega pro programa na hora de ligar — fica no painel do Render, nunca no
+          repositório. O código só pergunta: "qual é a SECRET_KEY daqui?".
+        </div>
+      </div>
+
+      <div class="est-prompt-label"><span class="n">14</span> Versionar</div>
+      <div class="code-block" id="p14">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">Prompt 14 — o primeiro commit</span>
+          <button class="est-copy" type="button">📋 Copiar</button>
+          <span class="lang-badge prompt">prompt</span>
+        </div>
+        <div class="swp-spec-text"><span class="sp-k">[TAREFA]</span> Transforme a pasta estante num repositório Git: git init e um primeiro commit
+com a mensagem "Estante pronta para o deploy". <mark class="hl">Antes do commit, me mostre a lista de
+arquivos que vão entrar</mark> e confirme que venv, __pycache__ e estante.db não estão nela.
+
+<span class="sp-k">[RESTRIÇÕES]</span> <mark class="hl">Não crie repositório remoto e não faça push.</mark> Não altere nenhum arquivo.
+
+<span class="sp-k">[ACEITE]</span> git status limpo depois do commit, e a lista mostrada bate com o que entrou.
+Pare.</div>
+      </div>
+      <div class="est-done">
+        <label class="ck"><input type="checkbox"> Homologado</label>
+        <span><strong>Checkpoint:</strong> leia a lista antes de dizer "pode". Se aparecer
+        <code>venv/</code> — milhares de arquivos do SEU computador — o <code>.gitignore</code>
+        do Prompt 13 falhou: rejeite e peça pra corrigir.</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="chapter-divider">
+    <div class="chapter-icon">☁️</div>
+    <div class="chapter-number">A subida</div>
+    <h2 style="background:linear-gradient(135deg,var(--accent4),var(--accent7));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">GitHub → Render → URL</h2>
+    <p class="chapter-subtitle">Dois cliques no PyCharm, um formulário no Render, e o link existe</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       GITHUB + RENDER
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="render">
+    <div class="step-header">
+      <div class="step-number sn-mint">☁️</div>
+      <div>
+        <div class="step-title">Do PyCharm ao link público, em 5 passos</div>
         <div class="step-sub">Siga na ordem — cada passo tem seu checkpoint</div>
       </div>
     </div>
 
     <div class="card">
       <div class="swp-step">
-        <div class="swp-step-head"><span class="swp-step-num">1</span><span class="swp-step-title">Conta gratuita — e o nome IMPORTA</span></div>
+        <div class="swp-step-head"><span class="swp-step-num">1</span><span class="swp-step-title">Publicar no GitHub (pelo PyCharm)</span></div>
         <div class="swp-step-body">
-          Em <code>pythonanywhere.com</code> → <strong>Create a Beginner account</strong> (grátis).
-          Atenção máxima ao <strong>username</strong>: ele vira sua URL pública pra sempre —
-          <code>SEUNOME.pythonanywhere.com</code>. Escolha algo apresentável
-          (o RH vai ver 👀). Confirme o e-mail.
+          No menu do PyCharm: <strong>Git → GitHub → Share Project on GitHub</strong>
+          (em versões antigas: <strong>VCS → Share Project on → GitHub</strong>). Na primeira vez
+          ele pede pra entrar na sua conta do GitHub pelo navegador — é só autorizar.
+          Nome do repositório: <code>estante</code>.
+          <div class="note" style="margin-top:8px"></div>
+          <strong>Público ou privado?</strong> Público vira portfólio (o RH pode ler o seu código)
+          e é seguro, porque o Prompt 13 tirou os segredos do código. Privado também funciona
+          no Render. Você escolhe.
+          <div class="note" style="margin-top:8px"></div>
+          <strong>Checkpoint:</strong> abra o repositório no GitHub. Tem <code>Dockerfile</code>,
+          <code>app.py</code>, <code>templates/</code>… e <strong>não</strong> tem
+          <code>venv</code> nem <code>estante.db</code>.
         </div>
       </div>
 
       <div class="swp-step">
-        <div class="swp-step-head"><span class="swp-step-num">2</span><span class="swp-step-title">Compacte o projeto (SEM o venv!)</span></div>
+        <div class="swp-step-head"><span class="swp-step-num">2</span><span class="swp-step-title">Criar o Web Service no Render</span></div>
         <div class="swp-step-body">
-          No seu computador, selecione <strong>só o conteúdo necessário</strong> do projeto:
-          <code>app.py</code>, <code>banco.py</code>, <code>criar_banco.py</code>,
-          <code>requirements.txt</code>, <code>templates/</code> e <code>static/</code> →
-          botão direito → <strong>Comprimir</strong> →
-          <code>projeto.zip</code>.
-          <div class="note" style="margin-top:8px"></div>
-          <strong>⚠️ NÃO inclua a pasta venv</strong> (são milhares de arquivos do SEU
-          computador — a nuvem tem o Python dela), <code>__pycache__/</code> nem o arquivo
-          <code>.db</code> local (o banco novo nasce lá, limpinho).
-        </div>
-      </div>
-
-      <div class="swp-step">
-        <div class="swp-step-head"><span class="swp-step-num">3</span><span class="swp-step-title">Upload + unzip no console</span></div>
-        <div class="swp-step-body">
-          Aba <strong>Files</strong> → botão <strong>Upload a file</strong> → mande o
-          <code>projeto.zip</code>. Depois, aba <strong>Consoles → Bash</strong>
-          (é um terminal — na nuvem!):
-          <div class="swp-step-code">unzip projeto.zip -d estante
-cd estante
-pip3 install --user -r requirements.txt
-python3 criar_banco.py</div>
-          <div class="note" style="margin-top:8px"></div>
-          <strong>📌 A pasta se chama <code>estante</code> — e esse nome precisa ser IDÊNTICO
-          nos passos 5 e 6.</strong> Tudo minúsculo, sem acento, sem espaço. Uma letra diferente
-          entre os três lugares (<code>Estante</code>, <code>estante2</code>…) é a causa nº 1 do
-          <em>no such table</em> do BugZilla aqui embaixo.
-          <div class="note" style="margin-top:8px"></div>
-          <strong>Checkpoint:</strong> as dependências terminam sem erro e o console imprime
-          "Banco criado! 🗄️" — o arquivo <code>.db</code> nasceu NA NUVEM, na pasta certa.
-        </div>
-      </div>
-
-      <div class="swp-step">
-        <div class="swp-step-head"><span class="swp-step-num">4</span><span class="swp-step-title">Criar o web app (Manual configuration)</span></div>
-        <div class="swp-step-body">
-          Aba <strong>Web</strong> → <strong>Add a new web app</strong> →
-          <em>Next</em> → escolha <strong>Manual configuration</strong> (NÃO o atalho "Flask"!)
-          → escolha uma versão Python disponível compatível com seu projeto → <em>Next</em>.
+          Em <strong>render.com</strong> (você já entrou com a conta do GitHub antes da aula):
+          <strong>New → Web Service</strong> → escolha o repositório <code>estante</code>.
+          Se ele não aparecer na lista, clique pra dar ao Render acesso aos seus repositórios.
           <div class="swp-pa">
-            <div class="swp-pa-bar"><span>Dashboard</span><span>Consoles</span><span>Files</span><span class="on">Web</span><span>Databases</span></div>
+            <div class="swp-pa-bar"><span class="on">New Web Service</span></div>
             <div class="swp-pa-body">
-              <span class="btnish">+ Add a new web app</span> &nbsp;→&nbsp; Manual configuration → sua versão Python
+              Name: <span class="field">estante-seunome</span> &nbsp;←&nbsp; vira parte da URL<br>
+              Language: <span class="field">Docker</span> &nbsp;←&nbsp; por causa do Dockerfile<br>
+              Branch: <span class="field">main</span> &nbsp;·&nbsp; Region: a disponível mais próxima<br>
+              Instance Type: <span class="field">Free</span>
             </div>
           </div>
-          Por que manual? Porque VOCÊ sabe configurar — o atalho esconde exatamente as
-          partes que você entende.
+          Com <strong>Docker</strong> escolhido, os campos de comando de build e de start não
+          importam: quem manda é o Dockerfile.
         </div>
       </div>
 
       <div class="swp-step">
-        <div class="swp-step-head"><span class="swp-step-num">5</span><span class="swp-step-title">Apontar os caminhos (o passo que evita o BugZilla)</span></div>
+        <div class="swp-step-head"><span class="swp-step-num">3</span><span class="swp-step-title">As duas variáveis de ambiente</span></div>
         <div class="swp-step-body">
-          Ainda na aba Web, seção <strong>Code</strong>, preencha os DOIS campos com a
-          pasta do projeto:
+          Ainda no formulário, em <strong>Environment Variables</strong>, adicione:
           <div class="swp-pa">
-            <div class="swp-pa-bar"><span class="on">Web</span></div>
+            <div class="swp-pa-bar"><span class="on">Environment Variables</span></div>
             <div class="swp-pa-body">
-              Source code: <span class="field">/home/SEUNOME/estante</span><br>
-              <strong>Working directory:</strong> <span class="field">/home/SEUNOME/estante</span>
+              <span class="field">SECRET_KEY</span> = uma frase longa e aleatória<br>
+              <span class="field">ADMIN_SENHA</span> = a senha do seu admin — <strong>não use trocar123</strong>
             </div>
           </div>
-          O <strong>working directory</strong> é ONDE o app "está parado" quando roda —
-          é ele que faz o <code>connect(...)</code> do seu <code>banco.py</code> achar o arquivo certo.
-          Lembra do <em>no such table</em> do Dia 3? <strong>É a mesma pegadinha,
-          agora em produção.</strong> Este campo é o remédio.
+          Pra gerar a <code>SECRET_KEY</code>, peça ao agente: <em>"gere uma chave aleatória
+          longa e só me mostre — não salve em arquivo nenhum"</em>. A <code>PORT</code> você
+          <strong>não</strong> cria: o Render já entrega (vale 10000).
         </div>
       </div>
 
       <div class="swp-step">
-        <div class="swp-step-head"><span class="swp-step-num">6</span><span class="swp-step-title">O arquivo WSGI — a ponte da plataforma</span></div>
+        <div class="swp-step-head"><span class="swp-step-num">4</span><span class="swp-step-title">Create Web Service — e ler os logs</span></div>
         <div class="swp-step-body">
-          Na seção Code, clique no link do <strong>WSGI configuration file</strong>.
-          Apague TUDO que está lá e deixe só isto (trocando SEUNOME):
-          <div class="swp-step-code">import sys
-
-path = "/home/SEUNOME/estante"
-if path not in sys.path:
-    sys.path.append(path)
-
-from app import app as application</div>
-          Traduzindo: "Python, olhe na minha pasta… e o <code>app</code> do meu
-          <code>app.py</code> é o aplicativo que você vai servir". É por ISSO que o
-          <code>if __name__</code> importa: aqui o seu arquivo é <strong>importado</strong>,
-          não executado. Salve (o disquete verde).
+          Clique em <strong>Create Web Service</strong> e fique olhando os logs. Os textos
+          exatos variam um pouco, mas a ordem é esta:
+          <div class="swp-step-code">==&gt; Building…                   ← montando a imagem (o pip install)
+(a mensagem do criar_banco.py)  ← ele rodou dentro da caixa
+[INFO] Listening at: http://0.0.0.0:10000
+==&gt; Your service is live 🎉</div>
+          O primeiro build leva alguns minutos. Enquanto isso, é hora de respirar — não de
+          apertar botão.
+          <div class="note" style="margin-top:8px"></div>
+          <strong>Checkpoint:</strong> "Your service is live" apareceu? A URL está no topo da
+          página: <code>https://estante-seunome.onrender.com</code>.
         </div>
       </div>
 
       <div class="swp-step">
-        <div class="swp-step-head"><span class="swp-step-num">7</span><span class="swp-step-title">Reload — e o link existe 🎉</span></div>
+        <div class="swp-step-head"><span class="swp-step-num">5</span><span class="swp-step-title">Homologar NA URL PÚBLICA</span></div>
         <div class="swp-step-body">
-          De volta à aba Web: o botão verde <strong>Reload SEUNOME.pythonanywhere.com</strong>.
-          Clique. Espere os segundinhos. E abra:
-          <div class="swp-pa">
-            <div class="swp-pa-bar"><span class="on">🌍 seunome.pythonanywhere.com</span></div>
-            <div class="swp-pa-body">🌍 <strong>Seu sistema</strong> — no ar. Com login. Pro mundo.</div>
+          Abra a URL. Entre como <code>admin</code> com a <strong>sua</strong> senha (a do passo
+          3). Busque um livro, cadastre outro, faça um empréstimo, devolva.
+          E o teste de segurança: <strong><code>trocar123</code> tem que ser recusada</strong>.
+          <div class="note" style="margin-top:8px"></div>
+          <strong>Mudou alguma coisa no código depois?</strong> Commit + push pelo PyCharm e o
+          Render faz o deploy sozinho. Só lembre: a cada deploy, o banco volta à semente.
+        </div>
+      </div>
+
+      <div class="warning">
+        <span class="tip-icon">💳</span>
+        <div class="tip-content">
+          <strong>E se o Render pedir cartão ou travar a sua conta?</strong> O plano Free não
+          cobra enquanto você não escolher uma instância paga — mas, se você não tem ou não quer
+          usar cartão, <strong>não trave a aula</strong>: faça o deploy da sua Estante na conta
+          de um colega (cada conta aceita vários serviços grátis), apresente, e repita na sua
+          conta em casa.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       BUGZILLA DO DEPLOY
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="bugzilla">
+    <div class="step-header">
+      <div class="step-number sn-red">🐛</div>
+      <div>
+        <div class="step-title">BugZilla do deploy — os 3 de sempre</div>
+        <div class="step-sub">Todo deploy em container do mundo passa por eles. Sério.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="bugzilla-card">
+        <div class="bugzilla-header">
+          <span class="bugzilla-emoji">🐛</span>
+          <div>
+            <div class="bugzilla-title">Bug 1 — "No open ports detected"</div>
+            <div class="bugzilla-sub">o build passou, mas o deploy fica rodando até falhar</div>
           </div>
-          <strong>Checkpoint final:</strong> logue, cadastre um livro, faça um empréstimo —
-          NA URL PÚBLICA. Funciona? Respira. Você tem um sistema em produção.
+        </div>
+        <div class="bugzilla-body">
+          <p>
+            O gunicorn subiu escutando em <code>127.0.0.1</code> ou numa porta fixa, como a 5000.
+            Dentro da caixa, <code>127.0.0.1</code> quer dizer "só eu mesmo" — ninguém de fora
+            alcança. O Render procura alguém atendendo em <code>0.0.0.0</code>, na porta da
+            <code>PORT</code>, e não acha.
+          </p>
+          <p>
+            💊 <strong>Remédio:</strong> a última linha do Dockerfile tem que ter
+            <code>--bind 0.0.0.0:$PORT</code>. Estava marcado no Prompt 13.
+          </p>
         </div>
       </div>
 
@@ -630,68 +1571,64 @@ from app import app as application</div>
         <div class="bugzilla-header">
           <span class="bugzilla-emoji">🐛</span>
           <div>
-            <div class="bugzilla-title">BugZilla do deploy — os 3 de sempre</div>
-            <div class="bugzilla-sub">Todo deploy do mundo passa por isso. Sério.</div>
+            <div class="bugzilla-title">Bug 2 — "o livro que eu cadastrei sumiu"</div>
+            <div class="bugzilla-sub">ontem estava lá; hoje a Estante voltou pros 8 da semente</div>
           </div>
         </div>
         <div class="bugzilla-body">
           <p>
-            <strong>① "Something went wrong :-("</strong> → aba Web →
-            <strong>Error log</strong> (o último erro fica no FINAL do arquivo).
-            É um traceback Python — você lê traceback desde o Dia 1.
-            💊 90% das vezes: nome errado no WSGI (SEUNOME!) ou esqueceu o Reload.
+            Não é bug seu. O serviço dormiu (15 minutos sem visita), acordou com o disco vazio e
+            o <code>criar_banco.py</code> recriou a semente — exatamente o que o simulador da
+            marmita mostrou. O mesmo acontece a cada push.
           </p>
           <p>
-            <strong>② no such table: alguma_tabela</strong> → o velho conhecido:
-            <strong>working directory</strong> não configurado (passo 5), <strong>nome da pasta
-            diferente</strong> entre os passos 3, 5 e 6, ou esqueceu o
-            <code>criar_banco.py</code> no console (passo 3).
-            💊 Confira os três lugares (o nome que você anotou no papel!) → Reload.
-          </p>
-          <p>
-            <strong>③ ModuleNotFoundError</strong> → uma dependência do
-            <code>requirements.txt</code> não foi instalada: console Bash, dentro da pasta →
-            <code>pip3 install --user -r requirements.txt</code> → Reload.
+            💊 <strong>Remédio:</strong> no plano grátis, nenhum. É o limite da vitrine. A
+            solução de verdade é o banco morar <strong>fora</strong> da caixa — e é assim que o
+            mercado trabalha (lá embaixo, na ponte).
           </p>
         </div>
       </div>
 
-      <div class="code-block">
+      <div class="bugzilla-card">
+        <div class="bugzilla-header">
+          <span class="bugzilla-emoji">🐛</span>
+          <div>
+            <div class="bugzilla-title">Bug 3 — "Build failed"</div>
+            <div class="bugzilla-sub">o log vermelho aparece antes mesmo de a Estante ligar</div>
+          </div>
+        </div>
+        <div class="bugzilla-body">
+          <p>
+            Dois suspeitos de sempre: o <code>venv</code> foi pro GitHub (o build tenta copiar
+            milhares de arquivos de outro computador) ou falta uma dependência no
+            <code>requirements.txt</code> (o log termina em <code>ModuleNotFoundError</code>).
+          </p>
+          <p>
+            💊 <strong>Remédio:</strong> confira o repositório no GitHub e o
+            <code>requirements.txt</code>. Corrigiu? Commit + push, e o Render tenta de novo sozinho.
+          </p>
+        </div>
+      </div>
+
+      <div class="est-prompt-label"><span class="n">15</span> Diagnóstico pelo log, sem chute</div>
+      <div class="code-block" id="p15">
         <div class="code-header">
           <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-          <span class="filename">Prompt 2 — diagnosticar a nuvem, sem chute</span>
+          <span class="filename">Prompt 15 — só se o deploy falhar</span>
+          <button class="est-copy" type="button">📋 Copiar</button>
           <span class="lang-badge prompt">prompt</span>
         </div>
-        <div class="swp-spec-text"><span class="sp-k">[CONTEXTO]</span> O sistema funciona localmente, mas falhou no PythonAnywhere. Este é o trecho
-final do Error log: [COLE AQUI O TRACEBACK COMPLETO, DA PRIMEIRA À ÚLTIMA LINHA].
-Working directory configurado: [CAMINHO]. WSGI atual: [COLE O CONTEÚDO].
+        <div class="swp-spec-text"><span class="sp-k">[CONTEXTO]</span> A Estante roda em casa, mas o deploy no Render falhou. Este é o final do log
+do Render: [COLE AQUI, DA PRIMEIRA LINHA VERMELHA ATÉ O FIM].
 
-<span class="sp-k">[TAREFA]</span> Sem editar arquivos, identifique a causa mais provável usando evidências do log.
-Separe erro de código, dependência, caminho, banco e configuração WSGI.
+<span class="sp-k">[TAREFA]</span> <mark class="hl">Sem editar arquivos</mark>, identifique a causa mais provável usando só
+evidências do log. Separe: erro de build, dependência, porta, variável de ambiente e código.
 
-<span class="sp-k">[RESTRIÇÕES]</span> Não invente mensagens que não aparecem no log. Não refatore nem proponha
-migração de plataforma. Faça uma pergunta se faltar uma evidência indispensável.
+<span class="sp-k">[RESTRIÇÕES]</span> <mark class="hl">Não invente mensagens que não estão no log.</mark> Não proponha trocar de
+plataforma nem refatorar.
 
-<span class="sp-k">[ACEITE]</span> Entregue: causa provável, linha que sustenta o diagnóstico, menor correção possível
-e um teste que prove a correção depois do Reload. Espere minha aprovação antes de alterar código.</div>
-      </div>
-
-      <div class="tip">
-        <span class="tip-icon">🔁</span>
-        <div class="tip-content">
-          <strong>Atualizou o código depois?</strong> O ciclo é: upload do arquivo novo
-          (ou edite direto na aba Files — tem editor!) → <strong>Reload</strong>.
-          Sem reload, a nuvem continua servindo a versão antiga.
-        </div>
-      </div>
-
-      <div class="tip">
-        <span class="tip-icon">🛤️</span>
-        <div class="tip-content">
-          <strong>Alternativa que você verá por aí:</strong> o Render (render.com) faz deploy
-          direto do GitHub — mais "de mercado", porém pede Git, que não aprofundamos.
-          Fica o nome anotado pra sua segunda subida. O conceito é idêntico.
-        </div>
+<span class="sp-k">[ACEITE]</span> Causa provável, a linha do log que a sustenta, a menor correção e como
+confirmar depois do próximo push. Espere minha aprovação antes de alterar qualquer coisa.</div>
       </div>
     </div>
   </section>
@@ -717,6 +1654,15 @@ e um teste que prove a correção depois do Reload. Espere minha aprovação ant
         E aquela conversa lá do começo?
       </p>
 
+      <div class="warning">
+        <span class="tip-icon">😴</span>
+        <div class="tip-content">
+          <strong>Demorou quase um minuto pra abrir?</strong> Normal: depois de 15 minutos sem
+          visita, o serviço grátis dorme, e o primeiro acesso acorda ele. Pro Demo Day, a regra
+          é simples: <strong>abra a sua URL uns 2 minutos antes da sua vez</strong>.
+        </div>
+      </div>
+
       <div class="swp-chat" data-seq="1800">
         <div class="swp-bubble them" data-seq-step="0,1,2,3,4">
           <span class="who">A amiga</span>
@@ -724,7 +1670,7 @@ e um teste que prove a correção depois do Reload. Espere minha aprovação ant
         </div>
         <div class="swp-bubble me" data-seq-step="1,2,3,4">
           <span class="who">Você</span>
-          toma: <a href="javascript:void(0)">minhaestante.pythonanywhere.com</a> 😎
+          toma: <a href="javascript:void(0)">estante-ana.onrender.com</a> 😎
         </div>
         <div class="swp-bubble them" data-seq-step="2,3,4">
           abriu AQUI NO MEU CELULAR
@@ -817,7 +1763,7 @@ e um teste que prove a correção depois do Reload. Espere minha aprovação ant
       <div class="step-number" style="background:linear-gradient(135deg,var(--react),var(--spring))">⭐</div>
       <div>
         <div class="step-title">A evolução: o que vem depois do monólito</div>
-        <div class="step-sub">Três perguntas que o seu sistema (ainda) não responde</div>
+        <div class="step-sub">Quatro perguntas que o seu sistema (ainda) não responde</div>
       </div>
     </div>
 
@@ -825,11 +1771,16 @@ e um teste que prove a correção depois do Reload. Espere minha aprovação ant
       <p style="color:var(--text-dim)">
         Seu sistema é o que o mercado chama de <strong style="color:var(--text)">monólito
         server-rendered</strong>: um Flask que faz tudo — telas E dados. Pra um negócio
-        pequeno, é PERFEITO (e há empresas grandes rodando assim!). Mas três perguntas
-        quebram ele:
+        pequeno, é PERFEITO (e há empresas grandes rodando assim!). Mas quatro perguntas
+        quebram ele — e a primeira você já sentiu hoje:
       </p>
 
       <div class="keyword-grid">
+        <div class="keyword-chip">
+          <span class="emoji">💾</span>
+          <span class="kw-name">"E os dados, que somem?"</span>
+          <span class="kw-desc">pela regra do dia, dados mudam de lugar pra lugar: no mercado, o banco mora FORA da caixa, num serviço próprio</span>
+        </div>
         <div class="keyword-chip">
           <span class="emoji">📱</span>
           <span class="kw-name">"E o app do celular?"</span>
@@ -924,7 +1875,7 @@ e um teste que prove a correção depois do Reload. Espere minha aprovação ant
 
     <div class="card">
       <div class="quiz">
-        <div class="quiz-q"><span class="q-emoji">1️⃣</span> Sua amiga abre minhaestante.pythonanywhere.com no celular. O que acontece, na ordem?</div>
+        <div class="quiz-q"><span class="q-emoji">1️⃣</span> Sua amiga abre estante-ana.onrender.com no celular. O que acontece, na ordem?</div>
         <div class="quiz-options">
           <button class="quiz-opt" onclick="checkQuiz(this,false)">O site é baixado pro celular dela</button>
           <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Request → rota no Flask → SELECT no SQLite → response com HTML renderizado</button>
@@ -936,39 +1887,39 @@ e um teste que prove a correção depois do Reload. Espere minha aprovação ant
       </div>
 
       <div class="quiz">
-        <div class="quiz-q"><span class="q-emoji">2️⃣</span> Por que o app.run() vai dentro do if __name__ == "__main__"?</div>
+        <div class="quiz-q"><span class="q-emoji">2️⃣</span> Por que a secret_key e a senha do admin saíram do código?</div>
         <div class="quiz-options">
-          <button class="quiz-opt" onclick="checkQuiz(this,false)">Pra rodar mais rápido</button>
-          <button class="quiz-opt" onclick="checkQuiz(this,false)">É obrigatório em Python</button>
-          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Na nuvem o app é IMPORTADO — quem liga o servidor é a plataforma</button>
-          <button class="quiz-opt" onclick="checkQuiz(this,false)">Pra esconder o debug</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Pra deixar o código mais curto</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Porque o código foi pro GitHub — segredo no código vira segredo público; na nuvem ele vem das variáveis de ambiente</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Porque o Docker não aceita texto</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Porque o Render exige</button>
         </div>
-        <div class="quiz-feedback" data-correct="Exato!" data-wrong="Revisa o preparo!"
-             data-explain="rodou você (▶): __main__ → app.run liga local. Importou a plataforma (WSGI): o if é falso e ela assume. Um if, dois mundos."></div>
+        <div class="quiz-feedback" data-correct="Exato!" data-wrong="Pensa no GitHub!"
+             data-explain="o repositório pode ser lido por qualquer um; o painel do Render, não. O código só pergunta 'qual é a SECRET_KEY daqui?' — e cada lugar responde a sua."></div>
       </div>
 
       <div class="quiz">
-        <div class="quiz-q"><span class="q-emoji">3️⃣</span> "no such table" SÓ na nuvem (local funciona). O suspeito número 1:</div>
+        <div class="quiz-q"><span class="q-emoji">3️⃣</span> Ontem você cadastrou um livro na URL pública. Hoje ele sumiu e a Estante voltou pros livros da semente. O que houve?</div>
         <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Alguém invadiu e apagou</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">O serviço dormiu, a caixa religou com o disco vazio e o criar_banco.py recriou a semente</button>
           <button class="quiz-opt" onclick="checkQuiz(this,false)">O SQLite não funciona em nuvem</button>
-          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Working directory errado — ou o criar_banco.py não rodou lá</button>
-          <button class="quiz-opt" onclick="checkQuiz(this,false)">Faltou pagar o plano</button>
-          <button class="quiz-opt" onclick="checkQuiz(this,false)">O zip corrompeu</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Esqueceu o commit() no cadastro</button>
         </div>
-        <div class="quiz-feedback" data-correct="Diagnóstico de gente grande!" data-wrong="É o velho conhecido!"
-             data-explain="a pegadinha do Dia 3 em produção: connect procura o .db na pasta 'atual' — e quem define a pasta atual na nuvem é o working directory."></div>
+        <div class="quiz-feedback" data-correct="Entendeu a marmita!" data-wrong="Volta ao simulador!"
+             data-explain="disco descartável: é o limite do plano grátis, não bug seu. A saída de verdade é o banco morar fora da caixa — a primeira pergunta da ponte."></div>
       </div>
 
       <div class="quiz">
         <div class="quiz-q"><span class="q-emoji">4️⃣</span> A URL pública falhou. Qual é o primeiro uso correto do agente?</div>
         <div class="quiz-options">
           <button class="quiz-opt" onclick="checkQuiz(this,false)">Pedir “conserte o deploy” e deixar editar tudo</button>
-          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Colar log, caminhos e WSGI; pedir diagnóstico sem edição</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Colar o log do Render e pedir diagnóstico sem edição (Prompt 15)</button>
           <button class="quiz-opt" onclick="checkQuiz(this,false)">Gerar outro app.py completo</button>
           <button class="quiz-opt" onclick="checkQuiz(this,false)">Trocar imediatamente de plataforma</button>
         </div>
         <div class="quiz-feedback" data-correct="Diagnóstico antes do remédio!" data-wrong="Sem chute!"
-             data-explain="na nuvem, evidência primeiro: traceback + configuração. O agente explica a causa e a menor correção; você aprova antes de mudar."></div>
+             data-explain="na nuvem, evidência primeiro: o log. O agente explica a causa e a menor correção; você aprova antes de mudar."></div>
       </div>
 
       <div class="quiz">
@@ -1007,7 +1958,7 @@ e um teste que prove a correção depois do Reload. Espere minha aprovação ant
         <div class="fitem"><span class="fi">🗄️</span><span><strong>Você fala SQL:</strong> CREATE, INSERT, SELECT (WHERE, JOIN, SUM, GROUP BY), UPDATE, DELETE — com placeholders, transação e a cicatriz honrosa do commit esquecido</span></div>
         <div class="fitem"><span class="fi">🏗️</span><span><strong>Você arquiteta:</strong> camadas (app/banco/templates), PRG, duas tabelas relacionadas, operação de negócio com validação</span></div>
         <div class="fitem"><span class="fi">🤖</span><span><strong>Você dirige agentes de IA</strong> com o fluxo profissional — especifica, lê diff, testa, e explica cada linha que entra</span></div>
-        <div class="fitem"><span class="fi">🚀</span><span><strong>Você fez deploy:</strong> tem um sistema COM LOGIN rodando numa URL pública, que você construiu e apresenta com a boca cheia</span></div>
+        <div class="fitem"><span class="fi">🚀</span><span><strong>Você publicou em container:</strong> Dockerfile lido e aprovado, segredos em variáveis de ambiente, deploy a partir do GitHub — e um sistema COM LOGIN numa URL pública, que você apresenta com a boca cheia</span></div>
         <div class="fitem"><span class="fi">🐛</span><span><strong>E o mais raro:</strong> você lê mensagens de erro sem pânico. O BugZilla virou colega de trabalho.</span></div>
       </div>
 
@@ -1042,6 +1993,230 @@ e um teste que prove a correção depois do Reload. Espere minha aprovação ant
 document.addEventListener('DOMContentLoaded', () => {
   const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  /* ---------- ⭐ Prática: dentro da caixa ou de fora? ---------- */
+  (function(){
+    const list = document.getElementById('dfList');
+    if (!list) return;
+    const note = document.getElementById('dfNote');
+    const end = document.getElementById('dfEnd');
+    const bins = { caixa: document.getElementById('dfBinCaixa'), fora: document.getElementById('dfBinFora'), casa: document.getElementById('dfBinCasa') };
+    const NOMES = { caixa: '📦 na caixa', fora: '🌍 vem de fora', casa: '🏠 fica em casa' };
+    const ITENS = [
+      { n: 'app.py, banco.py, templates/ e static/', b: 'caixa',
+        ok: 'é o prato da marmita: o código da Estante. O COPY . . do Dockerfile coloca tudo lá dentro.',
+        no: 'o código é justamente o que a caixa existe pra carregar — ele é igual em todo lugar.' },
+      { n: 'SECRET_KEY', b: 'fora',
+        ok: 'segredo que muda de lugar pra lugar: variável de ambiente, cadastrada no painel do Render.',
+        no: 'dentro da caixa, ela estaria no código — e o código vai pro GitHub. Segredo mora no lugar.' },
+      { n: 'venv/', b: 'casa',
+        ok: 'é o Python e as bibliotecas do SEU notebook. A caixa tem os dela.',
+        no: 'são milhares de arquivos feitos pro seu computador. A caixa instala o Flask sozinha, lá dentro.' },
+      { n: 'Flask e gunicorn', b: 'caixa',
+        ok: 'instalados DENTRO da caixa pelo RUN pip install, a partir do requirements.txt.',
+        no: 'as bibliotecas são o que a caixa leva pra não depender do computador de ninguém.' },
+      { n: 'PORT', b: 'fora',
+        ok: 'quem escolhe a porta é o lugar: o Render entrega 10000 pela variável PORT.',
+        no: 'a porta depende de onde a caixa está ligada — quem escolhe é o Render, não você.' },
+      { n: 'estante.db do seu notebook (com os seus livros de teste)', b: 'casa',
+        ok: 'os seus dados de teste não viajam. Na nuvem, o banco nasce lá dentro pelo criar_banco.py — e, por não morar fora da caixa, some a cada reinício: o limite da regra.',
+        no: 'são OS SEUS dados de teste, que não servem pra nuvem. E dados mudam de lugar pra lugar.' },
+      { n: 'Python 3.12', b: 'caixa',
+        ok: 'vem da imagem base: FROM python:3.12-slim.',
+        no: 'a versão do Python é a causa nº 1 do "na minha máquina funciona" — por isso ela vai travada na caixa.' },
+      { n: 'ADMIN_SENHA', b: 'fora',
+        ok: 'variável de ambiente: a trocar123 está publicada no material; a senha de verdade fica no painel do Render.',
+        no: 'senha é segredo, e o valor de casa (trocar123) é público. Ela vem de fora.' },
+      { n: '__pycache__/', b: 'casa',
+        ok: 'cache que o Python gera sozinho quando roda. Não viaja: é recriado onde precisar.',
+        no: 'é útil só pro seu computador — o Python recria onde for rodar.' },
+      { n: 'criar_banco.py', b: 'caixa',
+        ok: 'é código: vai na caixa, e a tampa (CMD) manda rodar a cada vez que ela liga.',
+        no: 'é um arquivo .py do projeto, igual em todo lugar. O banco que ele CRIA é outra história.' },
+    ];
+    let feitos = 0;
+
+    function montar(){
+      list.innerHTML = '';
+      Object.values(bins).forEach(b => b.innerHTML = '');
+      feitos = 0;
+      end.hidden = true;
+      note.classList.remove('err');
+      note.textContent = 'escolha um destino pra primeira peça';
+      ITENS.forEach((it, i) => {
+        const row = document.createElement('div');
+        row.className = 'df-item';
+        row.setAttribute('role', 'group');
+        row.setAttribute('aria-label', it.n);
+        row.innerHTML = '<span class="df-n"></span><span class="df-opts"></span><span class="df-tag"></span><span class="df-why" aria-live="polite"></span>';
+        row.querySelector('.df-n').textContent = it.n;
+        const opts = row.querySelector('.df-opts');
+        Object.keys(NOMES).forEach(b => {
+          const bt = document.createElement('button');
+          bt.type = 'button';
+          bt.textContent = NOMES[b];
+          bt.setAttribute('aria-label', it.n + ': ' + NOMES[b]);
+          bt.addEventListener('click', () => escolher(row, it, b));
+          opts.appendChild(bt);
+        });
+        list.appendChild(row);
+      });
+    }
+
+    function escolher(row, it, b){
+      if (row.classList.contains('done')) return;
+      if (b === it.b){
+        row.classList.remove('nope');
+        row.classList.add('done');
+        row.querySelector('.df-tag').textContent = '✓ ' + NOMES[b];
+        const chip = document.createElement('i');
+        chip.textContent = it.n.split(' (')[0];
+        bins[b].appendChild(chip);
+        feitos++;
+        const why = row.querySelector('.df-why');
+        why.className = 'df-why ok';
+        why.textContent = it.ok;
+        note.classList.remove('err');
+        note.innerHTML = '<strong>' + feitos + ' de ' + ITENS.length + '</strong> no lugar certo';
+        if (feitos === ITENS.length){
+          end.hidden = false;
+          note.innerHTML = '<strong>10 de 10!</strong> A caixa é igual em todo lugar — o que muda de lugar pra lugar não mora dentro dela.';
+          if (typeof confettiAt === 'function') confettiAt(row);
+        }
+      } else {
+        row.classList.remove('nope'); void row.offsetWidth; row.classList.add('nope');
+        const why = row.querySelector('.df-why');
+        why.className = 'df-why err';
+        why.textContent = '🤔 Ainda não: ' + it.no + ' Tente outro destino.';
+        note.classList.add('err');
+        note.innerHTML = '<strong>' + feitos + ' de ' + ITENS.length + '</strong> no lugar certo — a explicação aparece na própria peça';
+      }
+    }
+
+    document.getElementById('dfReset').addEventListener('click', montar);
+    montar();
+  })();
+
+  /* ---------- 📋 Copiar prompt (o marca-texto não vai junto) ---------- */
+  (function(){
+    function copiar(texto){
+      if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(texto);
+      return new Promise((ok, falha) => {
+        const ta = document.createElement('textarea');
+        ta.value = texto; ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy') ? ok() : falha(); } catch(e){ falha(e); }
+        document.body.removeChild(ta);
+      });
+    }
+    document.querySelectorAll('.est-copy').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const bloco = btn.closest('.code-block').querySelector('.swp-spec-text');
+        copiar(bloco.textContent.trim()).then(() => {
+          btn.textContent = '✅ Copiado!'; btn.classList.add('ok');
+          setTimeout(() => { btn.textContent = '📋 Copiar'; btn.classList.remove('ok'); }, 1600);
+        }, () => { btn.textContent = 'Selecione e copie'; });
+      });
+    });
+  })();
+
+  /* ---------- ⭐ A marmita (container) ---------- */
+  (function(){
+    const box = document.getElementById('swpBox');
+    if (!box) return;
+    const lines = [...box.querySelectorAll('.bx-file .bl')];
+    const layers = [...box.querySelectorAll('.bx-layer')];
+    const lid = document.getElementById('boxLid');
+    const crate = document.getElementById('boxCrate');
+    const disk = document.getElementById('boxDisk');
+    const diskVal = document.getElementById('boxDiskVal');
+    const log = document.getElementById('boxLog');
+    const note = document.getElementById('boxNote');
+    const bBuild = document.getElementById('boxBuild');
+    const bRun = document.getElementById('boxRun');
+    const bAdd = document.getElementById('boxAdd');
+    const bSleep = document.getElementById('boxSleep');
+    let livros = 0, busy = false;
+
+    const NOTAS = [
+      'FROM: a caixa começa com um Linux pequenininho que já tem o Python 3.12',
+      'WORKDIR: dentro da caixa, tudo vai morar na pasta /app',
+      'COPY requirements.txt: primeiro só a lista de dependências…',
+      'RUN pip install: …e o Flask e o gunicorn são instalados DENTRO da caixa — o seu venv não vai junto',
+      'COPY . .: agora o seu código entra (menos o que o .dockerignore barra: venv e estante.db)',
+      'CMD: não roda agora — é o modo de preparo, gravado na tampa. Roda toda vez que a caixa LIGAR'
+    ];
+
+    function setDisk(txt, cls){
+      disk.classList.remove('new','wipe'); void disk.offsetWidth;
+      if (cls) disk.classList.add(cls);
+      diskVal.textContent = txt;
+    }
+    function litLine(i){
+      lines.forEach((l, j) => { l.classList.toggle('lit', j === i); if (j < i) l.classList.add('done'); });
+    }
+
+    async function build(){
+      if (busy) return; busy = true;
+      bBuild.disabled = true;
+      log.innerHTML = '==> Building…';
+      for (let i = 0; i < lines.length; i++){
+        litLine(i);
+        layers.filter(l => +l.dataset.l === i).forEach(l => l.classList.add('on'));
+        if (i === 5) lid.classList.add('on');
+        note.innerHTML = '💬 ' + NOTAS[i];
+        await sleep(reduceMotion ? 150 : 1300);
+      }
+      lines.forEach(l => { l.classList.remove('lit'); l.classList.add('done'); });
+      log.innerHTML += '\n<span class="ok">==> imagem pronta (a marmita congelada)</span>';
+      note.innerHTML = '💬 imagem montada. Repare: <strong>o disco ainda está vazio</strong> — o banco não vai na caixa, ele nasce quando ela liga';
+      bRun.disabled = false; busy = false;
+    }
+
+    async function ligar(motivo){
+      crate.classList.add('on');
+      lines.forEach(l => l.classList.remove('lit'));
+      lines[5].classList.add('lit');
+      log.innerHTML = (motivo ? motivo + '\n' : '') + '▶ python criar_banco.py';
+      await sleep(reduceMotion ? 150 : 900);
+      livros = 8;
+      setDisk('estante.db · 8 livros (semente)', 'new');
+      log.innerHTML += '\n▶ gunicorn --bind 0.0.0.0:$PORT\n<span class="ok">Listening at: http://0.0.0.0:10000 — Your service is live 🎉</span>';
+    }
+
+    bBuild.addEventListener('click', build);
+
+    bRun.addEventListener('click', async () => {
+      if (busy) return; busy = true; bRun.disabled = true;
+      await ligar();
+      note.innerHTML = '💬 a tampa foi lida: o <strong>criar_banco.py</strong> criou o banco com a semente e o gunicorn abriu a porta. A Estante está no ar';
+      bAdd.disabled = false; bSleep.disabled = false; busy = false;
+    });
+
+    bAdd.addEventListener('click', () => {
+      livros++;
+      setDisk('estante.db · ' + livros + ' livros', 'new');
+      log.innerHTML = 'POST /livros/novo → INSERT → commit\n<span class="ok">✅ Livro cadastrado com sucesso!</span>';
+      note.innerHTML = '💬 salvo de verdade, com commit e tudo. Agora deixe o serviço sem visita por 15 minutos…';
+    });
+
+    bSleep.addEventListener('click', async () => {
+      if (busy) return; busy = true;
+      bAdd.disabled = true; bSleep.disabled = true;
+      const perdidos = livros - 8;
+      crate.classList.remove('on');
+      setDisk('vazio — o disco foi descartado', 'wipe');
+      log.innerHTML = '<span class="no">😴 15 min sem visita → serviço dormiu</span>';
+      note.innerHTML = '💬 a caixa desligou… e o disco dela foi junto';
+      await sleep(reduceMotion ? 200 : 1600);
+      await ligar('<span class="no">😴 dormiu</span> → 👋 primeiro acesso → a caixa liga de novo (≈1 min)');
+      note.innerHTML = perdidos > 0
+        ? '💬 <strong>' + (perdidos === 1 ? 'o livro que você cadastrou sumiu' : 'os ' + perdidos + ' livros que você cadastrou sumiram') + '</strong>. A Estante voltou com a semente porque o criar_banco.py roda toda vez que a caixa liga — e não duplica nada'
+        : '💬 voltou com a semente de novo. Cadastre um livro antes de dormir pra ver o que acontece com ele';
+      bAdd.disabled = false; bSleep.disabled = false; busy = false;
+    });
+  })();
 
   /* ---------- ⭐ Do localhost pro mundo ---------- */
   (function(){

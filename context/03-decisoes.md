@@ -395,3 +395,54 @@ para o próprio tema**, como ponte para a promessa do Cap 00.
 
 ⚠️ **Pendente de decisão do professor**: o Cap 00 (apresentação/venda, já mostrado à turma)
 ainda promete "um sistema do SEU tema — barbearia, petshop, brechó, você escolhe". Não foi alterado.
+
+---
+
+### D21 · Dia 8: deploy em Docker no Render, tudo em sala (2026-09-23)
+
+Pedido do professor: deploy com Docker e um serviço como Render ou VPS — e ele já havia prometido
+Docker à turma em sala ("não está no material, mas a gente vai fazer um Docker pra ele").
+
+- **Render, não VPS.** VPS custa mensalidade e exige SSH, Linux, firewall e HTTPS — cada item é
+  uma aula — além do risco de um servidor exposto 24h montado por iniciante. Fica como "próximo
+  degrau" na ponte.
+- **Docker como embalagem, não como assunto.** O agente escreve o Dockerfile; o aluno lê. O Render
+  faz o build — **nenhum aluno instala Docker Desktop** (WSL2/BIOS/RAM no Windows comeriam a aula).
+  O "fora do escopo" da ementa foi refinado: Docker além da embalagem de deploy continua gancho do
+  Fullstack.
+- **O disco descartável vira conteúdo.** No Render grátis o filesystem é efêmero: SQLite some a cada
+  reinício e o serviço dorme após 15 min sem tráfego (≈1 min pra acordar). A Estante sobrevive
+  porque o container roda `criar_banco.py` a cada boot e a semente não duplica — vitrine sim,
+  produção não. Um simulador mostra isso, e o limite abre a ponte pro Fullstack ("o banco mora
+  fora da caixa"), sem ensinar Postgres.
+- **Segredos fora do código.** `SECRET_KEY` e `ADMIN_SENHA` passam a vir de variáveis de ambiente
+  (a senha `trocar123` está publicada no próprio material). Retoma o alerta que o professor fez em
+  sala no Dia 5 sobre a secret_key ir pro GitHub. O Cap 07 não mudou: a troca acontece no Prompt 13,
+  no momento em que o código vai a público.
+- **Git mínimo, por agente + PyCharm**: o agente faz init e commit mostrando a lista de arquivos; o
+  PyCharm publica (*Share Project on GitHub*), evitando autenticação no terminal.
+- **PythonAnywhere removido** (decisão do professor), inclusive como plano B. Para quem o Render
+  pedir cartão ou travar: deploy em dupla, na conta de um colega.
+- **Tudo em sala** (decisão do professor), com roteiro de relógio e a regra de que o Demo Day começa
+  às 0:55 com ou sem deploy.
+
+Fatos verificados em 23/09/2026 na documentação do Render: bind obrigatório em `0.0.0.0` na porta
+`PORT` (padrão 10000); filesystem efêmero e sem disco persistente no Free; spin-down após 15 min;
+deploy automático a cada push. Cartão: oficialmente não exigido no Free, mas há relatos de contas
+cobradas pra verificação. Rever antes de cada turma — planos grátis mudam.
+
+⚠️ Pendente: o Cap 00 e `divulgacao/cards.html` ainda usam `minha-loja.pythonanywhere.com` como
+URL de exemplo da narrativa de venda.
+
+**Adendo D21 — fundamentação teórica do Dia 8 (mesmo dia).** O professor pediu "uma boa
+explicação" de Docker, Render e deploy para embasar os prompts. Aplicada a skill
+`capitulo-didatico-interativo`: uma **Parte 1 — Os fundamentos** antes da mão na massa, costurada
+por uma regra central única — *"A caixa é igual em todo lugar. O que muda de lugar pra lugar —
+porta, segredos, dados — não mora dentro dela."* A regra explica o Docker (a caixa), as variáveis
+de ambiente (o que vem de fora), o `.gitignore` (o que fica em casa) e o disco que esquece (o
+limite: o `estante.db` deveria morar fora e, no plano grátis, mora dentro). O simulador da marmita
+passou a ser a "teoria em movimento" (a analogia migrou pra seção de Docker, com o ponto em que ela
+falha), e uma prática nova — "Dentro da caixa ou de fora?" — exige aplicar a regra antes dos
+Prompts 12–13, que pedem as mesmas três colunas. Feedback da prática fica na própria peça: no
+celular, um aviso no rodapé ficaria dez peças abaixo do clique. Leitura da Parte 1 recomendada
+antes da aula; em sala, resumo de 15 min, e o relógio andou 2 minutos (Demo Day às 0:57).
