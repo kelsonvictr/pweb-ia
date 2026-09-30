@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistemas Web com Python · Apresentação</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   JetBrains Mono tem ligatures: "->" vira seta, "!=" vira ≠, ">=" vira ≥, "==" gruda.
+   Desligado ANTES de qualquer outra regra de pre/code (ver CLAUDE.md).
+   ═══════════════════════════════════════════════════════════════ */
+pre, code, .mono, .term, .code, .kicker {
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "clig" 0, "calt" 0;
+}
+
+/* Identidade da divulgação do curso (D9): P&B + 1 acento = amarelo Python */
+:root {
+  --ink: #0a0a0b;
+  --ink2: #121214;
+  --ink3: #1a1a1e;
+  --line: rgba(255,255,255,.1);
+  --paper: #f6f6f7;
+  --mute: #9a9aa2;
+  --y: #ffd43b;
+  --y2: #ffe48a;
+  --py: #3776ab;
+  --py2: #5b9bd5;
+  --claude: #d97757;
+  --ok: #3ddc97;
+  --bug: #ff5a67;
+  --ease: cubic-bezier(.2, .8, .2, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; }
+body { background: #000; color: var(--paper); font-family: 'Nunito', system-ui, sans-serif; -webkit-font-smoothing: antialiased; user-select: none; }
+code, .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+/* ─────────── palco 1600×900 escalado pra qualquer projetor ─────────── */
+#stage { position: fixed; left: 50%; top: 50%; width: 1600px; height: 900px; background: var(--ink); overflow: hidden; }
+.grid-bg { position: absolute; inset: 0; pointer-events: none;
+  background-image: linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+  background-size: 64px 64px; }
+.glow { position: absolute; border-radius: 50%; pointer-events: none; filter: blur(120px); animation: drift 20s ease-in-out infinite; }
+.glow.g1 { width: 700px; height: 700px; background: rgba(255,212,59,.10); left: -200px; top: -260px; }
+.glow.g2 { width: 600px; height: 600px; background: rgba(55,118,171,.14); right: -200px; bottom: -240px; animation-delay: -8s; }
+@keyframes drift { 50% { transform: translate(50px, 40px); } }
+
+.slide { position: absolute; inset: 0; padding: 70px 100px 96px; display: flex; flex-direction: column; justify-content: center;
+  opacity: 0; visibility: hidden; transform: scale(1.02); transition: opacity .55s var(--ease), transform .7s var(--ease), visibility 0s .55s; }
+.slide.active { opacity: 1; visibility: visible; transform: none; transition: opacity .55s var(--ease), transform .7s var(--ease); }
+
+.rise { opacity: 0; }
+.slide.active .rise { animation: rise .8s var(--ease) both; animation-delay: var(--d, 0s); }
+@keyframes rise { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+.slide.active .pop { animation: pop .7s cubic-bezier(.3,1.5,.5,1) both; animation-delay: var(--d, 0s); }
+@keyframes pop { from { opacity: 0; transform: scale(.7); } to { opacity: 1; transform: none; } }
+.frag { opacity: 0; transform: translateY(22px); transition: opacity .5s var(--ease), transform .6s var(--ease); }
+.frag.shown { opacity: 1; transform: none; }
+
+.kicker { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 20px; letter-spacing: .32em; text-transform: uppercase; color: var(--y); }
+.bar-y { width: 110px; height: 8px; border-radius: 8px; background: var(--y); margin-bottom: 26px; }
+h1, h2 { font-weight: 900; letter-spacing: -.025em; line-height: 1; }
+h2.title { font-size: 68px; margin: 18px 0 14px; }
+.y { color: var(--y); }
+.mute { color: var(--mute); }
+.lead { font-size: 28px; color: var(--mute); line-height: 1.45; max-width: 1150px; }
+.lead b { color: var(--paper); }
+.box { background: var(--ink2); border: 1px solid var(--line); border-radius: 22px; }
+.chip { display: inline-flex; align-items: center; gap: 12px; padding: 14px 22px; border-radius: 16px; background: var(--ink2); border: 1px solid var(--line); font-weight: 800; font-size: 22px; }
+.chip img { height: 30px; }
+.pill-y { display: inline-block; background: var(--y); color: #111; font-weight: 900; border-radius: 16px; padding: 6px 22px; box-shadow: 0 0 40px rgba(255,212,59,.35); }
+
+.presencial { position: absolute; top: 44px; right: 60px; z-index: 30; border: 2px solid var(--y); border-radius: 16px; padding: 8px 18px; background: rgba(255,212,59,.05); text-align: left; }
+.presencial b { display: block; font-size: 20px; font-weight: 900; }
+.presencial span { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--mute); letter-spacing: .12em; }
+
+/* ─────────── HUD ─────────── */
+.hud { position: absolute; left: 0; right: 0; bottom: 0; height: 50px; padding: 0 60px; display: flex; align-items: center; justify-content: space-between; font-size: 15px; font-weight: 800; color: #5b5b63; z-index: 40; }
+.hud .l { display: flex; gap: 14px; align-items: center; }
+.hud .l .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--y); }
+.hud .r { display: flex; gap: 18px; align-items: center; font-family: 'JetBrains Mono', monospace; }
+.timer { padding: 3px 10px; border-radius: 8px; background: rgba(255,255,255,.04); }
+.timer.ok { color: var(--ok); } .timer.late { color: var(--y); background: rgba(255,212,59,.1); } .timer.over { color: var(--bug); background: rgba(255,90,103,.12); }
+.progress { position: absolute; left: 0; bottom: 0; height: 4px; width: 0; background: var(--y); transition: width .6s var(--ease); z-index: 41; }
+.nav-hint { position: absolute; left: 100px; bottom: 60px; font-size: 14px; color: #55555d; font-weight: 700; z-index: 40; transition: opacity .6s; }
+.nav-hint kbd { font-family: 'JetBrains Mono', monospace; border: 1px solid #333; border-radius: 6px; padding: 1px 7px; color: var(--mute); }
+
+/* ─────────── terminal genérico ─────────── */
+.term { background: #0c0c0e; border: 1px solid #26262c; border-radius: 18px; overflow: hidden; box-shadow: 0 40px 90px rgba(0,0,0,.6); }
+.term .tbar { display: flex; align-items: center; gap: 8px; padding: 13px 18px; background: #151518; border-bottom: 1px solid #222228; font-family: 'JetBrains Mono', monospace; font-size: 15px; color: var(--mute); }
+.term .tbar i { width: 12px; height: 12px; border-radius: 50%; background: #333; display: block; }
+.term .tbar img { height: 18px; margin-left: 8px; }
+.term pre { font-family: 'JetBrains Mono', monospace; font-size: 21px; line-height: 1.7; padding: 22px 26px; white-space: pre-wrap; }
+.t-user { color: var(--paper); } .t-dim { color: #6b6b74; } .t-ok { color: var(--ok); } .t-cl { color: var(--claude); } .t-y { color: var(--y); } .t-url { color: var(--py2); text-decoration: underline; }
+.caret { display: inline-block; width: 11px; height: 24px; background: var(--y); vertical-align: -4px; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ═══════════ S1 · CAPA ═══════════ */
+#s1 { flex-direction: row; align-items: center; gap: 60px; }
+#s1 .left { flex: 1.45; }
+#s1 .logo { height: 52px; margin-bottom: 30px; display: block; }
+#s1 h1 { font-size: 100px; text-transform: uppercase; white-space: nowrap; }
+#s1 .sub { font-size: 42px; white-space: nowrap; font-weight: 900; margin: 22px 0 28px; }
+#s1 .row { display: flex; align-items: center; gap: 16px; font-size: 38px; font-weight: 900; }
+#s1 .chips { display: flex; gap: 14px; margin-top: 38px; flex-wrap: wrap; }
+#s1 .right { flex: 1; }
+#s1 .term pre { min-height: 400px; font-size: 17px; }
+
+/* ═══════════ S2 · PROFESSOR ═══════════ */
+#s2 { padding-bottom: 170px; }
+#s2 .txt { max-width: 860px; position: relative; z-index: 2; }
+#s2 h2 { font-size: 96px; margin: 20px 0 22px; }
+#s2 .bio { font-size: 29px; color: var(--mute); line-height: 1.45; }
+#s2 .bio b { color: var(--paper); }
+#s2 .stats { display: flex; gap: 60px; margin-top: 34px; }
+#s2 .stat strong { display: block; font-size: 76px; font-weight: 900; color: var(--y); line-height: 1; }
+#s2 .stat > span { font-size: 22px; color: var(--mute); font-weight: 700; }
+#s2 .photo { position: absolute; right: 30px; bottom: 120px; width: 700px; z-index: 1; }
+#s2 .photo::before { content: ""; position: absolute; inset: 15% 10% 0; background: radial-gradient(circle, rgba(255,212,59,.28), transparent 65%); filter: blur(30px); }
+#s2 .photo img { position: relative; width: 100%; display: block; -webkit-mask-image: linear-gradient(180deg, #000 78%, transparent); mask-image: linear-gradient(180deg, #000 78%, transparent); }
+.marquee { position: absolute; left: 0; right: 0; bottom: 56px; height: 70px; overflow: hidden; z-index: 3; mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.marquee .track { display: flex; gap: 18px; width: max-content; animation: marquee 40s linear infinite; }
+.marquee .logo { height: 64px; padding: 10px 24px; background: #f4f4f6; border-radius: 14px; display: grid; place-items: center; }
+.marquee .logo img { max-height: 42px; max-width: 140px; object-fit: contain; filter: grayscale(1) contrast(1.1); }
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* ═══════════ S3 · SEM LINK ═══════════ */
+#s3 .phones { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; margin-top: 16px; }
+.phone { background: #0e0e11; border: 1px solid #26262c; border-radius: 30px; padding: 20px 24px 26px; min-height: 480px; position: relative; }
+.phone .ph-top { display: flex; justify-content: space-between; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 15px; color: var(--mute); padding-bottom: 14px; border-bottom: 1px solid #1f1f25; margin-bottom: 18px; }
+.phone .tag { font-weight: 800; letter-spacing: .1em; }
+.phone.antes .tag { color: var(--bug); } .phone.depois .tag { color: var(--ok); }
+.msg { max-width: 82%; padding: 12px 18px; border-radius: 18px; font-size: 22px; font-weight: 700; line-height: 1.35; margin-bottom: 12px; }
+.msg.ela { background: #1f1f25; border-bottom-left-radius: 4px; }
+.msg.eu { background: #1d3b2b; margin-left: auto; border-bottom-right-radius: 4px; }
+.msg small { display: block; font-size: 14px; color: var(--mute); font-weight: 800; margin-bottom: 2px; }
+.msg .link { display: block; margin-top: 6px; padding: 10px 14px; border-radius: 12px; background: rgba(0,0,0,.35); font-family: 'JetBrains Mono', monospace; font-size: 18px; color: var(--py2); }
+.phone .msg { opacity: 0; transform: translateY(14px); transition: opacity .45s var(--ease), transform .5s var(--ease); }
+.slide.active .phone.antes .msg, .phone.depois.shown .msg { opacity: 1; transform: none; }
+.slide.active .phone.antes .msg:nth-child(2) { transition-delay: .5s; } .slide.active .phone.antes .msg:nth-child(3) { transition-delay: 1.4s; }
+.slide.active .phone.antes .msg:nth-child(4) { transition-delay: 2.3s; } .slide.active .phone.antes .msg:nth-child(5) { transition-delay: 3.2s; }
+.phone.depois.shown .msg:nth-child(2) { transition-delay: .3s; } .phone.depois.shown .msg:nth-child(3) { transition-delay: 1s; }
+.phone.depois.shown .msg:nth-child(4) { transition-delay: 1.9s; } .phone.depois.shown .msg:nth-child(5) { transition-delay: 2.8s; }
+
+/* ═══════════ S4 · CAMINHO DE UM CLIQUE ═══════════ */
+#s4 .road { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; margin-top: 40px; }
+#s4 .st { padding: 30px 26px; text-align: center; position: relative; z-index: 1; transition: border-color .4s, box-shadow .4s, transform .4s var(--ease); }
+#s4 .st.on { border-color: var(--y); box-shadow: 0 0 50px rgba(255,212,59,.18); transform: translateY(-8px); }
+#s4 .st .n { font-family: 'JetBrains Mono', monospace; font-size: 15px; color: var(--y); letter-spacing: .15em; font-weight: 700; }
+#s4 .st .e { font-size: 64px; display: block; margin: 14px 0 10px; }
+#s4 .st h4 { font-size: 27px; font-weight: 900; }
+#s4 .st p { font-size: 19px; color: var(--mute); margin-top: 8px; font-weight: 700; line-height: 1.35; }
+#s4 .st code { color: var(--y); font-size: 17px; }
+#s4 .wire { position: absolute; left: 10%; right: 10%; top: 50%; height: 3px; background: repeating-linear-gradient(90deg, #3a3a42 0 12px, transparent 12px 22px); z-index: 0; }
+#s4 .packet { position: absolute; top: calc(50% - 26px); left: 10%; font-size: 40px; z-index: 2; filter: drop-shadow(0 0 16px rgba(255,212,59,.6)); transition: left 1s var(--ease); }
+#s4 .foot { margin-top: 46px; font-size: 28px; font-weight: 800; color: var(--mute); }
+#s4 .foot b { color: var(--paper); }
+
+/* ═══════════ S5 · AGENTES ═══════════ */
+#s5 h2 { font-size: 80px; margin: 18px 0 30px; }
+#s5 .cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 36px; }
+#s5 .spec { padding: 24px 28px; font-size: 20px; line-height: 1.5; }
+#s5 .spec h5 { font-family: 'JetBrains Mono', monospace; font-size: 14px; letter-spacing: .2em; color: var(--mute); margin: 10px 0 2px; }
+#s5 .spec h5:first-child { margin-top: 0; }
+#s5 .spec p { color: #d9d9de; font-weight: 600; }
+mark.hl { background: var(--y); color: #111; padding: 0 5px; border-radius: 4px; font-weight: 800; }
+#s5 .term pre { font-size: 19px; min-height: 290px; }
+#s5 .flow { display: flex; gap: 14px; align-items: center; margin-top: 26px; }
+#s5 .flow .f { font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 700; padding: 12px 22px; border-radius: 14px; background: var(--ink2); border: 1px solid var(--line); transition: all .4s; }
+#s5 .flow .f.on { background: var(--y); color: #111; border-color: var(--y); box-shadow: 0 0 36px rgba(255,212,59,.35); }
+#s5 .flow .ar { color: var(--y); font-size: 24px; font-weight: 900; }
+#s5 .tools { margin-left: auto; font-size: 19px; color: var(--mute); font-weight: 800; }
+#s5 .tools b { color: var(--paper); }
+
+/* ═══════════ S6 · TRILHA ═══════════ */
+#s6 .modes { display: grid; grid-template-columns: 3fr 5fr; gap: 16px; margin-top: 22px; }
+#s6 .mode { padding: 12px 20px; border-radius: 14px; font-size: 20px; font-weight: 900; }
+#s6 .mode.m1 { background: rgba(55,118,171,.18); border: 1px solid rgba(91,155,213,.5); color: #b9d6f3; }
+#s6 .mode.m2 { background: rgba(217,119,87,.14); border: 1px solid rgba(217,119,87,.5); color: #f1b9a5; }
+#s6 .days { display: grid; grid-template-columns: repeat(8, 1fr); gap: 16px; margin-top: 16px; }
+#s6 .day { padding: 20px 16px; min-height: 280px; display: flex; flex-direction: column; opacity: .22; transform: translateY(10px); transition: opacity .5s, transform .5s var(--ease), border-color .5s; }
+#s6 .day.lit { opacity: 1; transform: none; }
+#s6 .day.lit.m1 { border-color: rgba(91,155,213,.55); } #s6 .day.lit.m2 { border-color: rgba(217,119,87,.55); }
+#s6 .day .n { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--y); font-weight: 700; letter-spacing: .12em; }
+#s6 .day .e { font-size: 42px; margin: 10px 0 8px; }
+#s6 .day h4 { font-size: 21px; font-weight: 900; line-height: 1.15; }
+#s6 .day p { font-size: 16px; color: var(--mute); margin-top: auto; padding-top: 12px; font-weight: 700; line-height: 1.3; }
+#s6 .day.final { background: linear-gradient(170deg, rgba(255,212,59,.16), var(--ink2)); }
+#s6 .punch { margin-top: 30px; font-size: 30px; font-weight: 900; }
+
+/* ═══════════ S7 · CAÇA AO BUG ═══════════ */
+#s7 h2 { font-size: 58px; }
+#s7 .grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 40px; margin-top: 14px; align-items: start; }
+.diff { background: #0c0c0e; border: 1px solid #26262c; border-radius: 18px; overflow: hidden; }
+.diff .tbar { padding: 12px 18px; background: #151518; border-bottom: 1px solid #222228; font-family: 'JetBrains Mono', monospace; font-size: 15px; color: var(--mute); display: flex; justify-content: space-between; }
+.diff .tbar .plus { color: var(--ok); }
+.diff pre { font-family: 'JetBrains Mono', monospace; font-size: 17px; line-height: 1.85; padding: 14px 0; }
+.diff .ln { display: block; padding: 0 22px; white-space: pre; position: relative; transition: background .4s; }
+.diff .ln.add { background: rgba(61,220,151,.08); }
+.diff .ln.add::before { content: "+"; position: absolute; left: 7px; color: var(--ok); }
+.diff .ln.bad { background: rgba(255,90,103,.2); }
+.diff .ln.bad::before { content: "!"; color: var(--bug); font-weight: 900; }
+.diff .ln.fix { background: rgba(61,220,151,.2); }
+.k { color: #c792ea; } .fn { color: #82aaff; } .s { color: #c3e88d; } .c { color: #6b6b74; }
+#s7 .side .big { font-size: 110px; display: block; animation: sway 2.6s ease-in-out infinite; }
+@keyframes sway { 0%,100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
+#s7 .side .q { font-size: 34px; font-weight: 900; margin-top: 6px; }
+#s7 .side .ans { margin-top: 20px; padding: 18px 22px; border-left: 5px solid var(--bug); background: rgba(255,90,103,.08); border-radius: 0 16px 16px 0; font-size: 22px; font-weight: 700; line-height: 1.4; }
+#s7 .side .ans code { color: var(--y); font-size: 19px; }
+#s7 .side .moral { margin-top: 16px; padding: 18px 22px; border-left: 5px solid var(--ok); background: rgba(61,220,151,.07); border-radius: 0 16px 16px 0; font-size: 22px; font-weight: 800; line-height: 1.4; }
+#s7 .fixed { margin-top: 16px; }
+
+/* ═══════════ S8 · SQL ═══════════ */
+#s8 .grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 44px; margin-top: 20px; align-items: center; }
+#s8 .term pre { font-size: 17px; line-height: 1.75; white-space: pre; }
+#s8 .tbl { padding: 22px 26px; }
+#s8 .tbl h5 { font-family: 'JetBrains Mono', monospace; font-size: 15px; color: var(--mute); letter-spacing: .12em; margin-bottom: 12px; display: flex; justify-content: space-between; }
+#s8 table { width: 100%; border-collapse: collapse; font-size: 22px; }
+#s8 th { text-align: left; font-family: 'JetBrains Mono', monospace; font-size: 15px; color: var(--y); padding: 8px 12px; border-bottom: 1px solid var(--line); }
+#s8 td { padding: 11px 12px; border-bottom: 1px solid rgba(255,255,255,.05); font-weight: 700; transition: opacity .5s, background .5s; }
+#s8 tr.out td { opacity: .15; text-decoration: line-through; }
+#s8 tr.hit td { background: rgba(255,212,59,.07); }
+#s8 .chips { display: flex; gap: 12px; margin-top: 30px; flex-wrap: wrap; }
+#s8 .chips .chip { font-size: 19px; padding: 11px 18px; }
+
+/* ═══════════ S9 · ESTANTE ═══════════ */
+#s9 .grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.35fr); gap: 50px; margin-top: 10px; align-items: center; }
+#s9 ul { list-style: none; display: grid; gap: 14px; }
+#s9 li { font-size: 24px; font-weight: 700; color: #d9d9de; display: flex; gap: 14px; align-items: center; }
+#s9 li b { color: var(--paper); }
+#s9 .stamp { margin-top: 26px; display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700; padding: 10px 18px; border: 2px dashed var(--y); color: var(--y); border-radius: 12px; transform: rotate(-2deg); }
+.browser { border-radius: 16px; overflow: hidden; border: 1px solid #2a2a30; box-shadow: 0 40px 90px rgba(0,0,0,.6); }
+.browser .chrome { background: #1b1b20; padding: 11px 16px; display: flex; align-items: center; gap: 8px; }
+.browser .chrome i { width: 12px; height: 12px; border-radius: 50%; display: block; background: #3a3a42; }
+.browser .url { margin-left: 12px; flex: 1; background: #0f0f12; border-radius: 8px; padding: 6px 14px; font: 600 15px 'JetBrains Mono', monospace; color: var(--mute); }
+.browser .url b { color: var(--ok); font-weight: 600; }
+/* a Estante: paleta do Python + claro/escuro (como no Prompt 1 do Dia 7) */
+.est { --bg: #f7f8fb; --card: #fff; --tx: #1c2433; --mt: #6b7280; --bd: #e5e8ef; --pri: #3776ab; --acc: #ffd43b; --red: #d64550; --grn: #1f9d6b;
+  background: var(--bg); color: var(--tx); height: 500px; display: grid; grid-template-columns: 200px 1fr; transition: background .6s, color .6s; font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; }
+.est.dark { --bg: #0f1522; --card: #172033; --tx: #e8edf6; --mt: #93a0b8; --bd: #26314a; --pri: #6aa7e0; --red: #ff6b75; --grn: #45d19b; }
+.est aside { background: var(--pri); color: #fff; padding: 22px 18px; display: flex; flex-direction: column; gap: 8px; transition: background .6s; }
+.est.dark aside { background: #0b1120; border-right: 1px solid var(--bd); }
+.est aside .brand { font-size: 22px; font-weight: 800; margin-bottom: 14px; }
+.est aside .brand span { color: var(--acc); }
+.est aside a { font-size: 16px; font-weight: 600; padding: 9px 12px; border-radius: 9px; color: rgba(255,255,255,.85); }
+.est aside a.on { background: rgba(255,255,255,.16); color: #fff; }
+.est aside .theme { margin-top: auto; font-size: 14px; opacity: .8; }
+.est main { padding: 22px 26px; overflow: hidden; }
+.est h3 { font-size: 24px; font-weight: 800; }
+.est .sub { color: var(--mt); font-size: 14px; margin-top: 2px; }
+.est .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 16px 0; }
+.est .kpi { background: var(--card); border: 1px solid var(--bd); border-radius: 12px; padding: 12px 14px; transition: background .6s, border-color .6s; }
+.est .kpi small { color: var(--mt); font-size: 13px; font-weight: 600; }
+.est .kpi b { display: block; font-size: 30px; font-weight: 800; }
+.est .kpi.alert b { color: var(--red); }
+.est table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--bd); border-radius: 12px; overflow: hidden; font-size: 15px; transition: background .6s; }
+.est th { text-align: left; color: var(--mt); font-weight: 600; font-size: 13px; padding: 9px 12px; border-bottom: 1px solid var(--bd); }
+.est td { padding: 10px 12px; border-bottom: 1px solid var(--bd); }
+.est .bdg { font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
+.est .bdg.late { background: color-mix(in srgb, var(--red) 16%, transparent); color: var(--red); }
+.est .bdg.okk { background: color-mix(in srgb, var(--grn) 16%, transparent); color: var(--grn); }
+.est .bdg.back { background: color-mix(in srgb, var(--mt) 16%, transparent); color: var(--mt); }
+.est .btn { display: inline-block; font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 8px; background: var(--acc); color: #1c2433; }
+
+/* ═══════════ S10 · DEPLOY ═══════════ */
+#s10 .pipe { display: grid; grid-template-columns: repeat(5, 1fr); gap: 34px; margin-top: 34px; position: relative; }
+#s10 .pipe::before { content: ""; position: absolute; left: 8%; right: 8%; top: 68px; height: 4px; background: #2a2a30; border-radius: 4px; }
+#s10 .pipe .fill { position: absolute; left: 8%; top: 68px; height: 4px; width: 0; background: var(--y); border-radius: 4px; box-shadow: 0 0 20px rgba(255,212,59,.6); transition: width .9s var(--ease); max-width: 84%; }
+#s10 .stn { text-align: center; position: relative; z-index: 1; }
+#s10 .stn .c { width: 136px; height: 136px; margin: 0 auto; border-radius: 34px; display: grid; place-items: center; font-size: 62px; background: var(--ink2); border: 2px solid #2a2a30; transition: border-color .4s, box-shadow .4s, transform .4s var(--ease); }
+#s10 .stn.on .c { border-color: var(--y); box-shadow: 0 0 44px rgba(255,212,59,.25); transform: scale(1.06); }
+#s10 .stn h4 { font-size: 25px; font-weight: 900; margin-top: 18px; }
+#s10 .stn p { font-size: 18px; color: var(--mute); font-weight: 700; margin-top: 6px; line-height: 1.35; }
+#s10 .stn code { color: var(--y); font-size: 16px; }
+#s10 .end { margin-top: 50px; display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+#s10 .end .box { padding: 24px 30px; display: flex; gap: 20px; align-items: center; }
+#s10 .end .e { font-size: 52px; }
+#s10 .end p { font-size: 23px; font-weight: 800; line-height: 1.35; }
+#s10 .end p small { display: block; color: var(--mute); font-size: 18px; font-weight: 700; }
+#s10 .end .url { font-family: 'JetBrains Mono', monospace; color: var(--py2); font-size: 22px; }
+
+/* ═══════════ S11 · PRA QUEM ═══════════ */
+#s11 .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 20px; }
+#s11 .col { padding: 30px 34px; }
+#s11 .col h4 { font-family: 'JetBrains Mono', monospace; font-size: 17px; letter-spacing: .2em; color: var(--y); margin-bottom: 18px; }
+#s11 .col ul { list-style: none; display: grid; gap: 16px; }
+#s11 .col li { display: flex; gap: 16px; align-items: flex-start; font-size: 24px; font-weight: 800; line-height: 1.3; }
+#s11 .col li .e { font-size: 32px; line-height: 1; }
+#s11 .col li small { display: block; font-size: 18px; color: var(--mute); font-weight: 700; margin-top: 4px; }
+#s11 .note { margin-top: 26px; font-size: 22px; color: var(--mute); font-weight: 700; }
+#s11 .note b { color: var(--paper); }
+
+/* ═══════════ S12 · OFERTA ═══════════ */
+#s12 { flex-direction: row; align-items: center; gap: 40px; padding-right: 60px; }
+#s12 .left { flex: 1.25; position: relative; z-index: 2; }
+#s12 h2 { font-size: 80px; margin: 16px 0 24px; }
+#s12 .inc { list-style: none; display: grid; gap: 10px; }
+#s12 .inc li { font-size: 22px; font-weight: 800; display: flex; gap: 12px; }
+#s12 .inc li span { color: var(--mute); font-weight: 700; }
+#s12 .offer { margin-top: 26px; display: flex; gap: 30px; align-items: center; padding: 22px 30px; border: 2px solid var(--y); border-radius: 22px; background: rgba(255,212,59,.05); }
+#s12 .price small { display: block; font-size: 17px; color: var(--mute); font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+#s12 .price b { display: block; font-size: 70px; font-weight: 900; color: var(--y); line-height: 1.05; }
+#s12 .price em { font-style: normal; font-size: 22px; font-weight: 800; }
+#s12 dl { display: grid; gap: 6px; border-left: 1px solid var(--line); padding-left: 26px; }
+#s12 dl .r { display: flex; gap: 12px; font-size: 20px; }
+#s12 dt { color: var(--mute); font-weight: 800; min-width: 120px; }
+#s12 dd { font-weight: 800; }
+#s12 .qr { background: #fff; padding: 10px; border-radius: 12px; display: none; margin-left: auto; }
+#s12 .qr.on { display: block; }
+#s12 .qr img, #s12 .qr canvas { display: block; width: 150px !important; height: 150px !important; }
+#s12 .cta { margin-top: 20px; font-size: 23px; font-weight: 800; color: var(--mute); }
+#s12 .cta b { color: var(--paper); }
+#s12 .scarce { display: inline-block; margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 16px; letter-spacing: .2em; color: var(--y); }
+#s12 .photo { flex: .75; align-self: flex-end; margin-bottom: -96px; position: relative; }
+#s12 .photo::before { content: ""; position: absolute; inset: 10% 5% 0; background: radial-gradient(circle, rgba(255,212,59,.22), transparent 65%); filter: blur(30px); }
+#s12 .photo img { position: relative; width: 100%; display: block; }
+.confetti { position: absolute; top: -20px; width: 12px; height: 18px; border-radius: 3px; pointer-events: none; z-index: 45; animation: fall linear forwards; }
+@keyframes fall { to { transform: translateY(960px) rotate(720deg); } }
+
+#help { position: absolute; inset: 0; background: rgba(0,0,0,.85); z-index: 100; display: none; place-items: center; }
+#help.on { display: grid; }
+#help .box { padding: 40px 50px; font-size: 22px; line-height: 2; }
+#help kbd { font-family: 'JetBrains Mono', monospace; background: var(--ink3); border-radius: 6px; padding: 2px 10px; margin-right: 10px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; transition-delay: 0s !important; }
+}
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <div class="grid-bg"></div>
+  <div class="glow g1"></div><div class="glow g2"></div>
+  <div class="presencial"><b>📍 Presencial</b><span>aulas ao vivo</span></div>
+
+  <!-- ══════════════ 1 · CAPA ══════════════ -->
+  <section class="slide" id="s1" data-peso="0.6">
+    <div class="left">
+      <img class="logo rise" src="../assets/svg/logo-full.svg" alt="programa AI" style="--d:.05s">
+      <div class="bar-y rise" style="--d:.15s"></div>
+      <h1 class="rise" style="--d:.25s">Sistemas Web<br>com Python</h1>
+      <div class="sub rise" style="--d:.4s">criando junto com <span class="y">Agentes de IA</span></div>
+      <div class="row rise" style="--d:.55s">Curso rápido · <span class="pill-y">8 encontros</span></div>
+      <div class="chips rise" style="--d:.7s">
+        <span class="chip"><img src="../assets/svg/python.svg" alt="">Python</span>
+        <span class="chip"><img src="../assets/svg/flask.svg" alt="">Flask</span>
+        <span class="chip"><img src="../assets/svg/sqlite-mono.svg" alt="" style="filter:invert(1)">SQLite</span>
+        <span class="chip"><img src="../assets/svg/claude.svg" alt="">Claude Code</span>
+      </div>
+    </div>
+    <div class="right rise" style="--d:.5s">
+      <div class="term">
+        <div class="tbar"><i></i><i></i><i></i><img src="../assets/svg/claude.svg" alt="">&nbsp;claude — ~/estante</div>
+        <pre id="typer"></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ 2 · PROFESSOR ══════════════ -->
+  <section class="slide" id="s2" data-peso="1">
+    <div class="photo pop" style="--d:.2s"><img src="../assets/prof/cut-kelson-python.png" alt="Prof. Kelson Almeida segurando um troféu do Python"></div>
+    <div class="txt">
+      <span class="kicker rise" style="--d:.1s">Quem te ensina</span>
+      <h2 class="rise" style="--d:.2s">Prof. Kelson<br><span class="y">Almeida</span></h2>
+      <p class="bio rise" style="--d:.35s"><b>Mestre em Informática</b> pela UFPB · <b>Dev Sênior</b> na NTT Data, alocado no <b>Itaú</b> · pesquisa na <b>University of New Brunswick</b> 🇨🇦 · <b>professor universitário</b> na UNIESP e fundador da <b>programa AI</b>.</p>
+      <div class="stats">
+        <div class="stat pop" style="--d:.55s"><strong>~<span data-count="200">0</span></strong><span>devs formados</span></div>
+        <div class="stat pop" style="--d:.65s"><strong>+<span data-count="12">0</span></strong><span>turmas</span></div>
+        <div class="stat pop" style="--d:.75s"><strong>+<span data-count="10">0</span></strong><span>anos de engenharia</span></div>
+      </div>
+    </div>
+    <div class="marquee rise" style="--d:.9s"><div class="track" id="logoTrack"></div></div>
+  </section>
+
+  <!-- ══════════════ 3 · SEM LINK ══════════════ -->
+  <section class="slide" id="s3" data-peso="1">
+    <span class="kicker rise" style="--d:.1s">Isso já aconteceu com você?</span>
+    <h2 class="title rise" style="--d:.2s">Sem link, seu sistema <span class="y">não existe.</span></h2>
+    <div class="phones">
+      <div class="phone antes rise" style="--d:.3s">
+        <div class="ph-top"><span>💬 Ana</span><span class="tag">HOJE</span></div>
+        <div class="msg ela"><small>Ana</small>mostra aí o sistema que você fez no curso! 😍</div>
+        <div class="msg eu">peraí… liga o notebook, abre o PyCharm, roda o programa…</div>
+        <div class="msg ela"><small>Ana</small>ah, me manda o <b>link</b> que eu abro aqui no celular</div>
+        <div class="msg eu">é que… não tem link 😅 só roda na minha máquina</div>
+      </div>
+      <div class="phone depois frag">
+        <div class="ph-top"><span>💬 Ana</span><span class="tag">DEPOIS DO CURSO</span></div>
+        <div class="msg ela"><small>Ana</small>mostra aí o sistema que você fez! 😍</div>
+        <div class="msg eu">toma 👇<span class="link">🔒 minhaestante.onrender.com</span></div>
+        <div class="msg ela"><small>Ana</small>PERA. ISSO TÁ NA INTERNET?? 🤯 com login e tudo??</div>
+        <div class="msg eu">tá. banco de dados, login e deploy. cadastra um livro aí 😎</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ 4 · CAMINHO DE UM CLIQUE ══════════════ -->
+  <section class="slide" id="s4" data-peso="0.9">
+    <span class="kicker rise" style="--d:.1s">Como a web funciona</span>
+    <h2 class="title rise" style="--d:.2s">O caminho de <span class="y">um clique</span></h2>
+    <p class="lead rise" style="--d:.3s">Quando alguém abre o seu link, essa viagem acontece em milissegundos — e <b>cada parada é código seu</b>.</p>
+    <div class="road" id="road">
+      <div class="wire"></div>
+      <div class="packet" id="packet">✉️</div>
+      <div class="box st rise" style="--d:.4s"><span class="n">1 · O MUNDO</span><span class="e">📱</span><h4>Alguém abre seu link</h4><p>o navegador faz um <b>request</b></p></div>
+      <div class="box st rise" style="--d:.5s"><span class="n">2 · SEU CÓDIGO</span><span class="e">🌶️</span><h4>Flask decide</h4><p><code>@app.route("/livros")</code><br>em Python</p></div>
+      <div class="box st rise" style="--d:.6s"><span class="n">3 · SEUS DADOS</span><span class="e">🗄️</span><h4>SQLite busca</h4><p>com <b>SQL</b> que você entende</p></div>
+      <div class="box st rise" style="--d:.7s"><span class="n">4 · A TELA</span><span class="e">✨</span><h4>A página aparece</h4><p>HTML montado com <b>Jinja</b></p></div>
+    </div>
+    <p class="foot rise" style="--d:.9s">O Streamlit fazia isso escondido. Aqui, <b>você assume o volante</b>.</p>
+  </section>
+
+  <!-- ══════════════ 5 · AGENTES ══════════════ -->
+  <section class="slide" id="s5" data-peso="1">
+    <span class="kicker rise" style="--d:.1s">Programando com agentes de IA</span>
+    <h2 class="rise" style="--d:.2s">A IA escreve código. <span class="y">Você comanda.</span></h2>
+    <div class="cols">
+      <div class="box spec rise" style="--d:.35s">
+        <h5>CONTEXTO</h5><p>Loja em Flask + sqlite3. Já existe a tabela <code>produtos</code>.</p>
+        <h5>TAREFA</h5><p>Criar a rota <code>/produtos</code> listando <mark class="hl">nome, preço e quantidade</mark>.</p>
+        <h5>RESTRIÇÕES</h5><p><mark class="hl">Sem ORM, sem JavaScript.</mark> SQL sempre com <code>?</code>. Não mexa em outras rotas.</p>
+        <h5>ACEITE</h5><p>Reinicio o servidor e os produtos <mark class="hl">continuam na tela</mark>.</p>
+      </div>
+      <div class="term rise" style="--d:.5s">
+        <div class="tbar"><i></i><i></i><i></i><img src="../assets/svg/claude.svg" alt="">&nbsp;agente trabalhando</div>
+        <pre id="agentPre"></pre>
+      </div>
+    </div>
+    <div class="flow rise" style="--d:.7s" id="flow">
+      <span class="f">especificar</span><span class="ar">→</span><span class="f">gerar</span><span class="ar">→</span><span class="f">revisar</span><span class="ar">→</span><span class="f">testar</span>
+      <span class="tools"><b>Claude Code</b> · <b>Codex</b> · <b>Antigravity</b></span>
+    </div>
+  </section>
+
+  <!-- ══════════════ 6 · TRILHA ══════════════ -->
+  <section class="slide" id="s6" data-peso="1">
+    <span class="kicker rise" style="--d:.1s">A jornada</span>
+    <h2 class="title rise" style="--d:.2s">8 encontros, <span class="y">8 vitórias</span></h2>
+    <div class="modes rise" style="--d:.3s">
+      <div class="mode m1">✋ Dias 1–3 · você aprende as peças na mão</div>
+      <div class="mode m2">🤖 Dias 4–8 · você dirige o agente como um dev</div>
+    </div>
+    <div class="days" id="days">
+      <div class="box day m1"><span class="n">DIA 01</span><span class="e">🌐</span><h4>Olá, Web! Olá, Flask!</h4><p>seu 1º site com URL própria</p></div>
+      <div class="box day m1"><span class="n">DIA 02</span><span class="e">📝</span><h4>Telas que falam com Python</h4><p>formulários, GET e POST</p></div>
+      <div class="box day m1"><span class="n">DIA 03</span><span class="e">🗄️</span><h4>SQL de verdade</h4><p>adeus TinyDB, olá SQLite</p></div>
+      <div class="box day m2"><span class="n">DIA 04</span><span class="e">📦</span><h4>A Loja ganha banco</h4><p>dados que sobrevivem ao reinício 🤯</p></div>
+      <div class="box day m2"><span class="n">DIA 05</span><span class="e">🛒</span><h4>Editar, excluir e vender</h4><p>a Loja completa, com faturamento</p></div>
+      <div class="box day m2"><span class="n">DIA 06</span><span class="e">🔐</span><h4>Login com agentes</h4><p>senha com hash, rotas protegidas</p></div>
+      <div class="box day m2"><span class="n">DIA 07</span><span class="e">📚</span><h4>Projeto final: a Estante</h4><p>sistema novo do zero, só com prompts</p></div>
+      <div class="box day m2 final"><span class="n">DIA 08</span><span class="e">🚀</span><h4>No ar + Demo Day</h4><p>Docker, Render e link público</p></div>
+    </div>
+    <p class="punch frag">Quem não sabe construir, <span class="mute">não sabe julgar o que a IA gerou.</span> <span class="y">Você vai saber os dois.</span></p>
+  </section>
+
+  <!-- ══════════════ 7 · CAÇA AO BUG NO DIFF ══════════════ -->
+  <section class="slide" id="s7" data-peso="1">
+    <span class="kicker rise" style="--d:.1s">Teste relâmpago 🐛</span>
+    <h2 class="title rise" style="--d:.2s">O agente fez o login. <span class="y">Ninguém consegue entrar.</span></h2>
+    <div class="grid">
+      <div>
+        <div class="diff rise" style="--d:.35s">
+          <div class="tbar"><span>app.py — diff do agente</span><span class="plus">+5 linhas</span></div>
+          <pre><span class="ln"><span class="k">@app.route</span>(<span class="s">"/login"</span>, methods=[<span class="s">"GET"</span>, <span class="s">"POST"</span>])</span><span class="ln"><span class="k">def</span> <span class="fn">login</span>():</span><span class="ln">    <span class="k">if</span> request.method == <span class="s">"POST"</span>:</span><span class="ln add">        usuario = <span class="fn">buscar_usuario</span>(request.form[<span class="s">"usuario"</span>])</span><span class="ln add">        senha = request.form[<span class="s">"senha"</span>]</span><span class="ln add" id="bugLine">        <span class="k">if</span> usuario <span class="k">and</span> senha == usuario[<span class="s">"senha_hash"</span>]:</span><span class="ln add">            session[<span class="s">"usuario"</span>] = usuario[<span class="s">"nome"</span>]</span><span class="ln add">            <span class="k">return</span> <span class="fn">redirect</span>(<span class="fn">url_for</span>(<span class="s">"painel"</span>))</span></pre>
+        </div>
+        <div class="diff fixed frag" data-order="2">
+          <div class="tbar"><span>✅ linha corrigida</span><span class="plus">revisado por você</span></div>
+          <pre><span class="ln fix">        <span class="k">if</span> usuario <span class="k">and</span> <span class="fn">check_password_hash</span>(usuario[<span class="s">"senha_hash"</span>], senha):</span></pre>
+        </div>
+      </div>
+      <div class="side rise" style="--d:.5s">
+        <span class="big">🔎</span>
+        <div class="q">Roda sem erro nenhum.<br>Quem acha o bug?</div>
+        <div class="ans frag" data-order="1" data-act="bug">Compara a senha <b>digitada</b> com a senha <b>embaralhada</b> (o hash). Nunca vai ser igual — ninguém entra. 🙃</div>
+        <div class="moral frag" data-order="3">No curso, você <b>lê cada diff antes de aprovar</b>. É isso que separa quem usa IA de quem é usado por ela.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ 8 · SQL ══════════════ -->
+  <section class="slide" id="s8" data-peso="0.8">
+    <span class="kicker rise" style="--d:.1s">Banco de dados de verdade</span>
+    <h2 class="title rise" style="--d:.2s">SQL na mão: <span class="y">a língua dos dados</span></h2>
+    <div class="grid">
+      <div class="term rise" style="--d:.3s">
+        <div class="tbar"><i></i><i></i><i></i>&nbsp;banco.py</div>
+        <pre><span class="k">import</span> sqlite3
+
+conexao = sqlite3.<span class="fn">connect</span>(<span class="s">"loja.db"</span>)
+cursor = conexao.<span class="fn">execute</span>(
+    <span class="t-y">"SELECT nome, preco FROM produtos WHERE quantidade &gt; ?"</span>,
+    (<span class="t-y">0</span>,)
+)
+<span class="k">for</span> nome, preco <span class="k">in</span> cursor.<span class="fn">fetchall</span>():
+    <span class="fn">print</span>(nome, preco)</pre>
+      </div>
+      <div class="box tbl rise" style="--d:.45s">
+        <h5><span>TABELA produtos</span><span id="sqlStatus">…</span></h5>
+        <table>
+          <tr><th>id</th><th>nome</th><th>preco</th><th>quantidade</th></tr>
+          <tr><td>1</td><td>Fone Bluetooth</td><td>149.90</td><td>12</td></tr>
+          <tr data-zero><td>2</td><td>Teclado Mecânico</td><td>299.00</td><td>0</td></tr>
+          <tr><td>3</td><td>Mouse Gamer</td><td>89.90</td><td>23</td></tr>
+          <tr data-zero><td>4</td><td>Webcam HD</td><td>210.00</td><td>0</td></tr>
+          <tr><td>5</td><td>Mousepad XL</td><td>59.90</td><td>40</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="chips rise" style="--d:.7s">
+      <span class="chip">🧾 sem ORM escondendo a query</span><span class="chip">🛡️ <code>?</code> contra SQL injection</span><span class="chip">📱 SQLite: o banco que já tá no seu celular</span>
+    </div>
+  </section>
+
+  <!-- ══════════════ 9 · ESTANTE ══════════════ -->
+  <section class="slide" id="s9" data-peso="1">
+    <span class="kicker rise" style="--d:.1s">Projeto final</span>
+    <h2 class="title rise" style="--d:.2s">A <span class="y">Estante</span> 📚 — do zero, só com prompts</h2>
+    <div class="grid">
+      <div>
+        <ul>
+          <li class="rise" style="--d:.3s">📖 Acervo de livros e cadastro de leitores</li>
+          <li class="rise" style="--d:.4s">🔁 Empréstimo e devolução, com <b>prazo e atraso</b></li>
+          <li class="rise" style="--d:.5s">📊 Painel com os números da biblioteca</li>
+          <li class="rise" style="--d:.6s">🔐 Login protegendo tudo</li>
+          <li class="rise" style="--d:.7s">🌗 Design moderno, claro e escuro</li>
+        </ul>
+        <div class="stamp rise" style="--d:.9s">12 prompts · 0 linha copiada · cada linha lida por você</div>
+      </div>
+      <div class="browser rise" style="--d:.45s">
+        <div class="chrome"><i></i><i></i><i></i><div class="url"><b>🔒</b> minhaestante.onrender.com/painel</div></div>
+        <div class="est" id="est">
+          <aside>
+            <div class="brand">📚 Est<span>ante</span></div>
+            <a class="on">📊 Painel</a><a>📖 Acervo</a><a>🔁 Empréstimos</a><a>👥 Leitores</a><a>🚪 Sair</a>
+            <div class="theme" id="estTheme">☀️ tema claro</div>
+          </aside>
+          <main>
+            <h3>Bom dia, Kelson 👋</h3>
+            <div class="sub">Biblioteca Comunitária · hoje</div>
+            <div class="kpis">
+              <div class="kpi"><small>Livros</small><b>128</b></div>
+              <div class="kpi"><small>Leitores</small><b>42</b></div>
+              <div class="kpi"><small>Emprestados</small><b>17</b></div>
+              <div class="kpi alert"><small>Atrasados</small><b>3</b></div>
+            </div>
+            <table>
+              <tr><th>Livro</th><th>Leitor</th><th>Devolver até</th><th>Status</th><th></th></tr>
+              <tr><td>Dom Casmurro</td><td>Marina</td><td>22/09/2026</td><td><span class="bdg late">atrasado</span></td><td><span class="btn">Devolver</span></td></tr>
+              <tr><td>O Cortiço</td><td>Rafael</td><td>06/10/2026</td><td><span class="bdg okk">no prazo</span></td><td><span class="btn">Devolver</span></td></tr>
+              <tr><td>Vidas Secas</td><td>Júlia</td><td>28/09/2026</td><td><span class="bdg back">devolvido</span></td><td></td></tr>
+            </table>
+          </main>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ 10 · DEPLOY ══════════════ -->
+  <section class="slide" id="s10" data-peso="0.9">
+    <span class="kicker rise" style="--d:.1s">Dia 8</span>
+    <h2 class="title rise" style="--d:.2s">No ar, <span class="y">com link pra mandar pra qualquer um</span></h2>
+    <div class="pipe" id="pipe">
+      <div class="fill" id="pipeFill"></div>
+      <div class="stn"><div class="c">💻</div><h4>Seu código</h4><p>a Estante no PyCharm</p></div>
+      <div class="stn"><div class="c">🐙</div><h4>GitHub</h4><p>versionado e publicado</p></div>
+      <div class="stn"><div class="c">🐳</div><h4>Docker</h4><p>a "marmita": tudo empacotado numa caixa</p></div>
+      <div class="stn"><div class="c">☁️</div><h4>Render</h4><p>liga a caixa na nuvem, com HTTPS</p></div>
+      <div class="stn"><div class="c">📱</div><h4>O mundo</h4><p>abre no celular de qualquer pessoa</p></div>
+    </div>
+    <div class="end">
+      <div class="box rise" style="--d:.5s"><span class="e">🔗</span><p><span class="url">minhaestante.onrender.com</span><small>link no currículo, no LinkedIn e na entrevista</small></p></div>
+      <div class="box rise" style="--d:.65s"><span class="e">🎤</span><p>Demo Day<small>cada aluno apresenta o próprio sistema no ar pra turma</small></p></div>
+    </div>
+  </section>
+
+  <!-- ══════════════ 11 · PRA QUEM É ══════════════ -->
+  <section class="slide" id="s11" data-peso="0.8">
+    <span class="kicker rise" style="--d:.1s">Pra quem é</span>
+    <h2 class="title rise" style="--d:.2s">É pra você <span class="y">se…</span></h2>
+    <div class="cols">
+      <div class="box col rise" style="--d:.3s">
+        <h4>VOCÊ QUER</h4>
+        <ul>
+          <li><span class="e">🚀</span><span>Ver seu código sair do computador<small>e virar um sistema que qualquer um abre</small></span></li>
+          <li><span class="e">🤖</span><span>Programar com IA do jeito do mercado<small>especificando, revisando e testando</small></span></li>
+          <li><span class="e">💼</span><span>Um projeto no ar pro portfólio<small>link real pra mostrar em entrevista</small></span></li>
+          <li><span class="e">🧠</span><span>Entender a web por dentro<small>HTTP, rotas, formulários e banco</small></span></li>
+        </ul>
+      </div>
+      <div class="box col rise" style="--d:.45s">
+        <h4>VOCÊ PRECISA TER</h4>
+        <ul>
+          <li><span class="e">🐍</span><span>O básico de Python<small>variáveis, if, loops, funções (fez o bootcamp? tá pronto)</small></span></li>
+          <li><span class="e">💻</span><span>Um notebook<small>com Python e PyCharm instalados</small></span></li>
+          <li><span class="e">🔑</span><span>Assinatura de um agente de IA<small>Claude Pro, ChatGPT Plus ou Google AI Pro</small></span></li>
+          <li><span class="e">🐙</span><span>Contas no GitHub e no Render<small>as duas são gratuitas</small></span></li>
+        </ul>
+      </div>
+    </div>
+    <p class="note rise" style="--d:.7s">💡 <b>Não precisa</b> saber HTML, CSS, SQL nem nada de web. A gente começa do zero nessa parte.</p>
+  </section>
+
+  <!-- ══════════════ 12 · OFERTA ══════════════ -->
+  <section class="slide" id="s12" data-peso="0.9">
+    <div class="left">
+      <span class="kicker rise" style="--d:.1s">Garanta sua vaga</span>
+      <h2 class="rise" style="--d:.2s">Bora colocar seu<br>código <span class="y">no mundo?</span></h2>
+      <ul class="inc">
+        <li class="rise" style="--d:.3s">📅 8 encontros ao vivo de 2h <span>— 16h de mão na massa</span></li>
+        <li class="rise" style="--d:.38s">📚 Material interativo completo <span>— seu pra sempre</span></li>
+        <li class="rise" style="--d:.46s">🤖 Agentes de IA na prática <span>— Claude Code e cia.</span></li>
+        <li class="rise" style="--d:.54s">🌍 Seu sistema publicado <span>— com link pro currículo</span></li>
+      </ul>
+      <div class="offer pop" style="--d:.7s">
+        <div class="price" id="price"></div>
+        <dl id="infoList"></dl>
+        <div class="qr" id="qr"></div>
+      </div>
+      <p class="cta rise" style="--d:.9s" id="cta"></p>
+      <span class="scarce rise" style="--d:1s">TURMA ÚNICA · VAGAS LIMITADAS</span>
+    </div>
+    <div class="photo pop" style="--d:.4s"><img src="../assets/prof/cut-prof2.png" alt="Prof. Kelson programando"></div>
+  </section>
+
+  <div class="nav-hint" id="navHint"><kbd>→</kbd> avançar · <kbd>F</kbd> tela cheia · <kbd>?</kbd> atalhos</div>
+  <div class="hud">
+    <div class="l"><span class="dot"></span>Sistemas Web com Python · Flask + Agentes de IA</div>
+    <div class="r"><span id="count">01 / 12</span><span class="timer" id="timer">⏱ 00:00 / 10:00</span></div>
+  </div>
+  <div class="progress" id="progress"></div>
+
+  <div id="help"><div class="box">
+    <div><kbd>→</kbd><kbd>espaço</kbd> avançar (passador de slides funciona)</div>
+    <div><kbd>←</kbd> voltar</div>
+    <div><kbd>F</kbd> tela cheia</div>
+    <div><kbd>T</kbd> iniciar / pausar cronômetro · <kbd>R</kbd> zerar</div>
+    <div><kbd>Home</kbd> primeiro slide · <kbd>End</kbd> último</div>
+    <div><kbd>?</kbd> fechar esta ajuda</div>
+  </div></div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   ✏️  PREENCHA AQUI as informações da turma.
+   Campo vazio ("") não aparece no slide final.
+   Se "inscricao" tiver um link, vira QR code automaticamente.
+   Preço e parcelas vieram do Cap 00 (D8) — confira antes de apresentar.
+   ═══════════════════════════════════════════════════════════════ */
+const CURSO = {
+  preco:     "R$ 499,99",
+  parcelas:  "em até 12x no cartão",
+  inicio:    "",   // ex.: "Sábado, 18 de outubro"
+  horario:   "",   // ex.: "8h às 10h"
+  local:     "",   // ex.: "programa AI · João Pessoa"
+  inscricao: "",   // ex.: "https://programa.ai/sistemas-web"
+  contato:   ""    // ex.: "@programa.ai"
+};
+const DURACAO_MIN = 10;
+
+/* ─────────── palco escalado ─────────── */
+const stage = document.getElementById('stage');
+function fit() { stage.style.transform = `translate(-50%, -50%) scale(${Math.min(innerWidth / 1600, innerHeight / 900)})`; }
+addEventListener('resize', fit); fit();
+
+/* ─────────── navegação com fragmentos ─────────── */
+const slides = [...document.querySelectorAll('.slide')];
+let cur = 0, timers = [];
+const later = (fn, ms) => timers.push(setTimeout(fn, ms));
+const every = (fn, ms) => timers.push(setInterval(fn, ms));
+const clearTimers = () => { timers.forEach(t => { clearTimeout(t); clearInterval(t); }); timers = []; };
+// ordem de revelação = data-order (se houver) ou ordem no HTML
+const fragsDe = (s, sel) => [...s.querySelectorAll(sel)].sort((a, b) => (+a.dataset.order || 0) - (+b.dataset.order || 0));
+
+function go(i, fromBack = false) {
+  if (i < 0 || i >= slides.length) return;
+  slides[cur].classList.remove('active');
+  clearTimers();
+  cur = i;
+  const s = slides[cur];
+  s.querySelectorAll('.frag').forEach(f => { f.classList.toggle('shown', fromBack); fromBack ? fragAct(f) : fragUndo(f); });
+  void s.offsetWidth;
+  s.classList.add('active');
+  enter(s);
+  document.getElementById('count').textContent = `${String(cur + 1).padStart(2, '0')} / ${slides.length}`;
+  document.getElementById('progress').style.width = `${(cur / (slides.length - 1)) * 100}%`;
+  history.replaceState(null, '', '#' + (cur + 1));
+  if (cur > 0) { document.getElementById('navHint').style.opacity = 0; if (!clock.started) clock.start(); }
+  clock.draw();
+}
+function next() {
+  const f = fragsDe(slides[cur], '.frag:not(.shown)')[0];
+  if (f) { f.classList.add('shown'); fragAct(f); return; }
+  go(cur + 1);
+}
+function prev() {
+  const shown = fragsDe(slides[cur], '.frag.shown');
+  if (shown.length) { const f = shown.at(-1); f.classList.remove('shown'); fragUndo(f); return; }
+  go(cur - 1, true);
+}
+function fragAct(f) { if (f.dataset.act === 'bug') document.getElementById('bugLine').classList.add('bad'); }
+function fragUndo(f) { if (f.dataset.act === 'bug') document.getElementById('bugLine').classList.remove('bad'); }
+
+addEventListener('keydown', e => {
+  const k = e.key;
+  if (['ArrowRight', 'PageDown', ' ', 'Enter', 'ArrowDown'].includes(k)) { e.preventDefault(); next(); }
+  else if (['ArrowLeft', 'PageUp', 'ArrowUp', 'Backspace'].includes(k)) { e.preventDefault(); prev(); }
+  else if (k === 'Home') go(0);
+  else if (k === 'End') go(slides.length - 1, true);
+  else if (k === 'f' || k === 'F') { if (!document.fullscreenElement) document.documentElement.requestFullscreen?.(); else document.exitFullscreen?.(); }
+  else if (k === 't' || k === 'T') clock.toggle();
+  else if (k === 'r' || k === 'R') clock.reset();
+  else if (k === '?') document.getElementById('help').classList.toggle('on');
+  else if (k === 'Escape') document.getElementById('help').classList.remove('on');
+});
+stage.addEventListener('click', e => {
+  if (e.target.closest('button, a, #help, .est')) return;
+  if (e.clientX < innerWidth * 0.18) prev(); else next();
+});
+let tx = null;
+addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+addEventListener('touchend', e => {
+  if (tx === null) return;
+  const dx = e.changedTouches[0].clientX - tx; tx = null;
+  if (Math.abs(dx) > 50) dx < 0 ? next() : prev();
+});
+
+/* ─────────── cronômetro de 10 min com ritmo por slide ─────────── */
+const clock = {
+  started: false, running: false, acc: 0, t0: 0,
+  el: document.getElementById('timer'),
+  now() { return this.acc + (this.running ? Date.now() - this.t0 : 0); },
+  start() { this.started = this.running = true; this.t0 = Date.now(); setInterval(() => this.draw(), 500); this.draw(); },
+  toggle() {
+    if (!this.started) return this.start();
+    if (this.running) { this.acc = this.now(); this.running = false; } else { this.t0 = Date.now(); this.running = true; }
+    this.draw();
+  },
+  reset() { this.acc = 0; this.t0 = Date.now(); this.draw(); },
+  draw() {
+    const sec = Math.floor(this.now() / 1000);
+    this.el.textContent = `${this.running ? '⏱' : '⏸'} ${String(Math.floor(sec / 60)).padStart(2, '0')}:${String(sec % 60).padStart(2, '0')} / ${String(DURACAO_MIN).padStart(2, '0')}:00`;
+    const pesos = slides.map(s => +s.dataset.peso || 1), total = pesos.reduce((a, b) => a + b, 0);
+    const esperado = pesos.slice(0, cur + 1).reduce((a, b) => a + b, 0) / total * DURACAO_MIN * 60;
+    this.el.className = 'timer ' + (sec > DURACAO_MIN * 60 ? 'over' : sec > esperado + 20 ? 'late' : 'ok');
+  }
+};
+
+/* ─────────── efeitos por slide ─────────── */
+function enter(s) {
+  s.querySelectorAll('[data-count]').forEach(countUp);
+  ({ s1: typeCapa, s4: viagem, s5: agente, s6: acendeDias, s8: consulta, s9: temaEstante, s10: esteira, s12: oferta })[s.id]?.();
+}
+
+function countUp(el) {
+  const alvo = +el.dataset.count, t0 = performance.now() + 400;
+  el.textContent = '0';
+  const tick = t => {
+    if (!el.closest('.slide').classList.contains('active')) return;
+    const p = Math.max(0, Math.min(1, (t - t0) / 1400));
+    el.textContent = Math.round(alvo * (1 - Math.pow(1 - p, 3))).toLocaleString('pt-BR');
+    if (p < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+
+const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+/* digita linhas num <pre>: {txt, cls, typed} — typed=true digita letra a letra */
+function roteiro(pre, linhas, t = 700) {
+  let html = '';
+  pre.innerHTML = '<span class="caret"></span>';
+  linhas.forEach(({ txt, cls = '', typed = false, pausa = 450 }) => {
+    const abre = cls ? `<span class="${cls}">` : '<span>';
+    if (typed) {
+      for (let i = 1; i <= txt.length; i++) {
+        const parcial = txt.slice(0, i);
+        later(() => { pre.innerHTML = html + abre + esc(parcial) + '</span><span class="caret"></span>'; }, t);
+        t += 38;
+      }
+    }
+    t += typed ? 250 : pausa;
+    later(() => { html += abre + esc(txt) + '</span>\n'; pre.innerHTML = html + '<span class="caret"></span>'; }, t);
+  });
+}
+
+/* S1 · o agente construindo a Estante */
+function typeCapa() {
+  roteiro(document.getElementById('typer'), [
+    { txt: '> crie a tela de empréstimos da Estante,', cls: 't-user', typed: true },
+    { txt: '  sem JavaScript, SQL sempre com ?', cls: 't-user', typed: true },
+    { txt: '● Lendo o projeto…', cls: 't-cl', pausa: 700 },
+    { txt: '✔ banco.py       listar_emprestimos()', cls: 't-ok' },
+    { txt: '✔ app.py         rota /emprestimos', cls: 't-ok' },
+    { txt: '✔ templates/     emprestimos.html', cls: 't-ok' },
+    { txt: '⏸ Aguardando sua revisão do diff', cls: 't-y', pausa: 700 },
+    { txt: '> aprovado ✅  agora sobe pro ar', cls: 't-user', typed: true },
+    { txt: '🌍 https://minhaestante.onrender.com', cls: 't-url', pausa: 900 },
+  ]);
+}
+
+/* S2 · faixa de logos */
+(function () {
+  const L = ['itau.avif', 'nttdata.png', 'stefanini.png', 'abinbev.png', 'motorola-logo-png_seeklogo-272432.png', 'governo-sp.png', 'prodesp.png', 'db1.png', 'logo-creditas.png', 'linx.png', 'brk-ambiental.png', 'ufpb.png', 'ifpb.png', 'unb-canadian-institute-for-cybersec.webp', 'uniesp.webp', 'lavid.png'];
+  const html = L.map(f => `<div class="logo"><img src="../assets/logos-empresas/${f}" alt="" loading="lazy"></div>`).join('');
+  document.getElementById('logoTrack').innerHTML = html + html;
+})();
+
+/* S4 · request vai, response volta */
+function viagem() {
+  const pk = document.getElementById('packet'), st = [...document.querySelectorAll('#road .st')];
+  const pos = ['10%', '36%', '62%', '86%'];
+  const passo = (i, emoji) => { pk.textContent = emoji; pk.style.left = pos[i]; st.forEach((s, j) => s.classList.toggle('on', j === i)); };
+  let seq = [[0, '✉️'], [1, '✉️'], [2, '🔍'], [1, '📦'], [3, '📦']];
+  let k = 0;
+  pk.style.transition = 'none'; passo(0, '✉️'); void pk.offsetWidth; pk.style.transition = '';
+  later(() => every(() => { k = (k + 1) % seq.length; passo(...seq[k]); }, 1300), 1200);
+}
+
+/* S5 · o agente respondendo + ciclo do fluxo */
+function agente() {
+  roteiro(document.getElementById('agentPre'), [
+    { txt: '● Lendo app.py, banco.py, templates/…', cls: 't-cl', pausa: 900 },
+    { txt: '✔ banco.py: listar_produtos()', cls: 't-ok', pausa: 800 },
+    { txt: '✔ app.py: rota /produtos', cls: 't-ok', pausa: 600 },
+    { txt: '✔ templates/produtos.html', cls: 't-ok', pausa: 600 },
+    { txt: '  2 arquivos alterados, 1 criado', cls: 't-dim', pausa: 600 },
+    { txt: '⏸ Revise o diff e teste no navegador.', cls: 't-y', pausa: 800 },
+  ], 900);
+  const fs = [...document.querySelectorAll('#flow .f')];
+  let i = 0;
+  later(() => { const on = () => { fs.forEach((f, j) => f.classList.toggle('on', j === i)); i = (i + 1) % fs.length; }; on(); every(on, 1500); }, 1400);
+}
+
+/* S6 · dias acendendo */
+function acendeDias() {
+  const d = [...document.querySelectorAll('#days .day')];
+  d.forEach(x => x.classList.remove('lit'));
+  d.forEach((x, i) => later(() => x.classList.add('lit'), 500 + i * 300));
+}
+
+/* S8 · o WHERE filtrando a tabela */
+function consulta() {
+  const rows = [...document.querySelectorAll('#s8 tr[data-zero]')], all = [...document.querySelectorAll('#s8 tr')].slice(1);
+  const st = document.getElementById('sqlStatus');
+  all.forEach(r => r.classList.remove('out', 'hit')); st.textContent = '5 linhas';
+  later(() => { rows.forEach(r => r.classList.add('out')); st.textContent = 'WHERE quantidade > 0'; }, 1800);
+  later(() => { all.filter(r => !r.hasAttribute('data-zero')).forEach(r => r.classList.add('hit')); st.textContent = '✔ 3 resultados'; }, 2700);
+}
+
+/* S9 · claro ↔ escuro (prefers-color-scheme simulado) */
+function temaEstante() {
+  const est = document.getElementById('est'), lbl = document.getElementById('estTheme');
+  est.classList.remove('dark'); lbl.textContent = '☀️ tema claro';
+  every(() => { const d = est.classList.toggle('dark'); lbl.textContent = d ? '🌙 tema escuro' : '☀️ tema claro'; }, 3000);
+}
+document.getElementById('est').addEventListener('click', () => {
+  const est = document.getElementById('est'), d = est.classList.toggle('dark');
+  document.getElementById('estTheme').textContent = d ? '🌙 tema escuro' : '☀️ tema claro';
+});
+
+/* S10 · esteira do deploy */
+function esteira() {
+  const st = [...document.querySelectorAll('#pipe .stn')], fill = document.getElementById('pipeFill');
+  st.forEach(s => s.classList.remove('on')); fill.style.transition = 'none'; fill.style.width = 0; void fill.offsetWidth; fill.style.transition = '';
+  st.forEach((s, i) => later(() => { s.classList.add('on'); fill.style.width = (i / (st.length - 1) * 84) + '%'; }, 600 + i * 850));
+}
+
+/* S12 · oferta + QR + confete */
+function oferta() {
+  const e = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  document.getElementById('price').innerHTML = CURSO.preco ? `<small>tudo isso por</small><b>${e(CURSO.preco)}</b><em>${e(CURSO.parcelas || '')}</em>` : '';
+  const rot = { inicio: '📅 Início', horario: '🕐 Horário', local: '📍 Local', inscricao: '📲 Inscrição', contato: '💬 Contato' };
+  const linhas = Object.entries(rot).filter(([k]) => CURSO[k]).map(([k, r]) => `<div class="r"><dt>${r}</dt><dd>${e(k === 'inscricao' ? CURSO[k].replace(/^https?:\/\//, '') : CURSO[k])}</dd></div>`);
+  const dl = document.getElementById('infoList');
+  dl.innerHTML = linhas.join(''); dl.style.display = linhas.length ? '' : 'none';
+  document.getElementById('cta').innerHTML = CURSO.inscricao
+    ? '📲 Aponta a câmera pro QR code e <b>garante sua vaga</b>.'
+    : '👋 A matrícula é comigo — <b>fala comigo no fim da aula</b> (tô bem aqui na sua frente 😄)';
+  const qr = document.getElementById('qr');
+  if (CURSO.inscricao && window.QRCode && !qr.dataset.done) { new QRCode(qr, { text: CURSO.inscricao, width: 300, height: 300, correctLevel: QRCode.CorrectLevel.M }); qr.dataset.done = 1; }
+  qr.classList.toggle('on', !!(CURSO.inscricao && window.QRCode));
+  later(confete, 600);
+}
+function confete() {
+  const cores = ['#ffd43b', '#ffe48a', '#3776ab', '#f6f6f7', '#d97757'];
+  for (let i = 0; i < 80; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 1600 + 'px';
+    c.style.background = cores[i % cores.length];
+    c.style.animationDuration = (2.6 + Math.random() * 2.4) + 's';
+    c.style.animationDelay = (Math.random() * .8) + 's';
+    stage.appendChild(c); setTimeout(() => c.remove(), 6500);
+  }
+}
+
+/* ─────────── início (respeita #n na URL) ─────────── */
+go(Math.max(0, Math.min(slides.length - 1, (parseInt(location.hash.slice(1)) || 1) - 1)));
+</script>
+</body>
+</html>
