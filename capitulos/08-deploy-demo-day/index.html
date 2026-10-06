@@ -93,6 +93,66 @@
 .swp-world-note{font-size:0.8rem;color:var(--text-dim);text-align:center;margin-top:14px;line-height:1.5;min-height:40px}
 .swp-world-note strong{color:var(--text)}
 
+/* ---------- ⭐ MÁQUINA: a agenda da internet (DNS) ---------- */
+.swp-dns{
+  border:1px solid rgba(255,209,102,0.32);border-radius:18px;overflow:hidden;margin:18px 0;
+  background:
+    radial-gradient(1100px 280px at 50% -12%, rgba(255,209,102,0.10), transparent 70%),
+    linear-gradient(180deg,#0b1020,#0d0d1a);
+  box-shadow:0 22px 60px rgba(0,0,0,0.45);
+}
+.swp-dns-bar{
+  margin:16px 16px 0;padding:9px 14px;border-radius:999px;
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
+  font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--text);
+  display:flex;align-items:center;gap:8px;
+}
+.swp-dns-bar .lock{opacity:0.35;transition:opacity .3s}
+.swp-dns-bar.secure .lock{opacity:1}
+.swp-dns-bar.broken{border-color:rgba(255,107,107,0.5);color:#ff9b9b}
+.swp-dns-stage{
+  display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;align-items:center;
+  gap:6px;padding:18px 16px 6px;
+}
+@media(max-width:640px){
+  .swp-dns-stage{grid-template-columns:1fr 1fr;gap:10px}
+  .swp-dns-arrow{display:none}
+}
+.swp-dns-node{
+  text-align:center;padding:12px 6px;border-radius:14px;min-width:0;
+  border:1px solid rgba(255,255,255,0.12);background:var(--surface2);
+  transition:box-shadow .35s,border-color .35s,transform .35s;
+}
+.swp-dns-node .ic{font-size:1.7rem;line-height:1}
+.swp-dns-node .nm{font-weight:800;font-size:0.8rem;margin-top:4px}
+.swp-dns-node .sub{font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--text-dim);margin-top:2px;word-break:break-all}
+.swp-dns-node.on{border-color:var(--accent5);box-shadow:0 0 26px 2px rgba(255,209,102,0.35);transform:translateY(-3px)}
+.swp-dns-node.err{border-color:#ff6b6b;box-shadow:0 0 26px 2px rgba(255,107,107,0.35)}
+.swp-dns-arrow{font-size:1.3rem;color:rgba(255,255,255,0.18);transition:color .3s;text-align:center}
+.swp-dns-arrow.on{color:var(--accent5)}
+.swp-dns-log{
+  margin:10px 16px 14px;padding:12px 14px;border-radius:12px;min-height:118px;
+  background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.06);
+  font-size:0.8rem;line-height:1.55;color:var(--text-dim);
+}
+.swp-dns-log .ln{opacity:0;transform:translateY(4px);transition:opacity .35s,transform .35s;padding:2px 0}
+.swp-dns-log .ln.on{opacity:1;transform:none}
+.swp-dns-log .ln strong{color:var(--text)}
+.swp-dns-log .ln code{font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--accent5)}
+.swp-dns-log .ln.bad code{color:#ff9b9b}
+.swp-dns-log .ln.bad strong{color:#ff9b9b}
+.swp-dns-log .ln.good code{color:var(--accent7)}
+.swp-dns-rec{
+  width:100%;border-collapse:collapse;margin:12px 0;font-size:0.84rem;
+}
+.swp-dns-rec th,.swp-dns-rec td{padding:9px 10px;border-bottom:1px solid rgba(255,255,255,0.08);text-align:left;vertical-align:top}
+.swp-dns-rec th{font-size:0.7rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim)}
+.swp-dns-rec code{font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--accent5);white-space:nowrap}
+.swp-dns-rec td.why{color:var(--text-dim);font-size:0.78rem}
+@media(prefers-reduced-motion:reduce){
+  .swp-dns-node,.swp-dns-log .ln{transition:none}
+}
+
 /* ---------- passo a passo do deploy ---------- */
 .swp-step{
   border:1px solid rgba(255,255,255,0.08);border-radius:14px;background:var(--surface);
@@ -457,6 +517,7 @@ mark.hl{
     <a class="sidebar-link" onclick="goTo('render')"><span class="dot" style="background:var(--accent7)"></span>GitHub → Render → URL</a>
     <a class="sidebar-link" onclick="goTo('bugzilla')"><span class="dot" style="background:var(--bug)"></span>BugZilla do deploy 🐛</a>
     <a class="sidebar-link" onclick="goTo('celular')"><span class="dot" style="background:var(--accent7)"></span>⭐ O momento do celular</a>
+    <a class="sidebar-link" onclick="goTo('dominio')"><span class="dot" style="background:var(--accent5)"></span>⭐ Um endereço com o seu nome</a>
   </div>
   <div class="sidebar-group">
     <div class="sidebar-group-title">🎤 Demo Day</div>
@@ -566,6 +627,8 @@ mark.hl{
           <strong>0:40</strong> Render e o primeiro build ·
           <strong>0:53</strong> o momento do celular ·
           <strong>0:57</strong> Demo Day ·
+          <strong>1:38</strong> um endereço com o seu nome — domínio ao vivo (o professor compra e
+          aponta; você acompanha e repete em casa) ·
           <strong>1:50</strong> a ponte pro que vem depois.
         </p>
         <p>
@@ -711,7 +774,7 @@ mark.hl{
         </div>
         <div class="dm-st">
           <span class="dm-n">6</span><span class="dm-i">🌍</span>
-          <div><b>Endereçar</b><span>URL pública com HTTPS — e a amiga abre no celular</span><em>o Render</em></div>
+          <div><b>Endereçar</b><span>URL pública com HTTPS — e a amiga abre no celular (e, no fim da aula, um nome só seu)</span><em>o Render</em></div>
         </div>
       </div>
 
@@ -1796,6 +1859,268 @@ confirmar depois do próximo push. Espere minha aprovação antes de alterar qua
       </div>
     </div>
   </section>
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ UM ENDEREÇO COM O SEU NOME — domínio + DNS
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="dominio">
+    <div class="step-header">
+      <div class="step-number sn-yellow">🌐</div>
+      <div>
+        <div class="step-title">Um endereço com o seu nome</div>
+        <div class="step-sub">Estação 6, versão final: de <code>estante-ana.onrender.com</code> para <code>estante-ana.shop</code> — o professor faz ao vivo, você acompanha e repete em casa</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        A URL que o Render te deu funciona — mas o nome é do Render. Um
+        <strong style="color:var(--text)">domínio</strong> é um nome que você aluga por ano e que
+        é só seu: <code>estante-ana.shop</code>, <code>biblioteca-da-vila.com.br</code>. Custa a partir
+        de R$ 6 no primeiro ano, e a Estante <strong style="color:var(--text)">não muda uma linha</strong>
+        pra ganhar esse nome. Lembra da regra do dia? Endereço é coisa que vem de fora da caixa.
+      </p>
+
+      <div class="concept">
+        <div class="concept-title">💡 Domínio, em uma frase</div>
+        <p>
+          Domínio é o nome que as pessoas digitam pra chegar no seu sistema. Ele é
+          <strong>alugado</strong> (por ano, renovável) de um <strong>registrador</strong> — uma empresa
+          autorizada a vender nomes, como a Superdomínios, o Registro.br ou a Namecheap. Você não
+          compra o nome pra sempre: aluga, e renova enquanto quiser.
+        </p>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 DNS, em uma frase</div>
+        <p>
+          Computador só fala <strong>números</strong>. O servidor do Render que atende a sua Estante
+          tem um endereço numérico, o <strong>IP</strong>: <code>216.24.57.1</code>. Ninguém decora isso.
+          O <strong>DNS</strong> (<em>Domain Name System</em>) é a <strong>agenda de contatos da
+          internet</strong>: você salva o nome e o número, e, quando alguém digita o nome, a agenda
+          responde o número. É igual à agenda do celular: você aperta "Mãe", e o telefone disca o
+          número que está salvo embaixo.
+        </p>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">⭐ A agenda da internet, ao vivo</div>
+        <p style="color:var(--text-dim);margin-bottom:0">
+          Três cenários. Repare que o caminho é o mesmo do Dia 1 — request, servidor, response —
+          com <strong style="color:var(--text)">uma consulta à agenda antes</strong>. E repare quem
+          escreveu a linha na agenda em cada caso.
+        </p>
+
+        <div class="swp-dns" id="dnsMachine">
+          <div class="swp-dns-bar" id="dnsBar"><span class="lock">🔒</span><span id="dnsUrl">digite um endereço…</span></div>
+          <div class="swp-dns-stage">
+            <div class="swp-dns-node" data-n="cel"><div class="ic">📱</div><div class="nm">celular</div><div class="sub">só fala números</div></div>
+            <div class="swp-dns-arrow" data-a="1">→</div>
+            <div class="swp-dns-node" data-n="dns"><div class="ic">📒</div><div class="nm">DNS</div><div class="sub">a agenda</div></div>
+            <div class="swp-dns-arrow" data-a="2">→</div>
+            <div class="swp-dns-node" data-n="render"><div class="ic">☁️</div><div class="nm">Render</div><div class="sub">216.24.57.1</div></div>
+            <div class="swp-dns-arrow" data-a="3">→</div>
+            <div class="swp-dns-node" data-n="est"><div class="ic">📚</div><div class="nm">Estante</div><div class="sub">o container</div></div>
+          </div>
+          <div class="swp-dns-log" id="dnsLog"><div class="ln on">escolha um cenário aqui embaixo ↓</div></div>
+          <div class="swp-machine-hud">
+            <button class="swp-machine-btn" type="button" data-dns="render">▶ estante-ana.onrender.com</button>
+            <button class="swp-machine-btn" type="button" data-dns="nx">▶ estante-ana.shop, antes do DNS</button>
+            <button class="swp-machine-btn" type="button" data-dns="ok">▶ estante-ana.shop, depois do DNS</button>
+            <div class="swp-machine-note" id="dnsNote">a diferença entre os três cenários é só <strong>quem escreveu a linha na agenda</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">📒 As linhas da agenda: registro A e registro CNAME</div>
+        <p>
+          A sua agenda no registrador chama-se <strong>zona DNS</strong>, e cada linha dela é um
+          <strong>registro</strong>. Hoje você escreve só duas linhas, de dois tipos:
+        </p>
+        <table class="swp-dns-rec">
+          <thead><tr><th>tipo</th><th>nome</th><th>valor</th><th>o que quer dizer</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><code>A</code></td>
+              <td><code>@</code></td>
+              <td><code>216.24.57.1</code></td>
+              <td class="why"><strong>A de <em>Address</em>: nome → número.</strong> O <code>@</code> é a raiz, o domínio puro
+                (<code>estante-ana.shop</code>, sem nada na frente). Esse IP é o do Render — ele te mostra na tela.</td>
+            </tr>
+            <tr>
+              <td><code>CNAME</code></td>
+              <td><code>www</code></td>
+              <td><code>estante-ana.onrender.com</code></td>
+              <td class="why"><strong>CNAME é um apelido: nome → outro nome.</strong> "Quem procurar
+                <code>www.estante-ana.shop</code>, trate como <code>estante-ana.onrender.com</code>." A agenda
+                do onrender.com termina a conta e devolve o número.</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          Por que dois? Porque gente digita dos dois jeitos: com e sem <code>www</code>. E por que a raiz
+          não pode ser CNAME? Regra antiga do DNS: a raiz do domínio precisa apontar pra um número.
+          Por isso o Render te dá um IP pra ela.
+        </p>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">🐢 Propagação: a agenda é copiada pelo mundo</div>
+        <p>
+          Não existe <em>uma</em> agenda: existem milhares de cópias, em servidores DNS espalhados pelo
+          planeta — o da sua operadora, o do Wi-Fi da faculdade, o do Google. Quando você escreve
+          uma linha nova no registrador, cada cópia atualiza <strong>no seu tempo</strong>, de minutos
+          a algumas horas. Esse intervalo chama-se <strong>propagação</strong>. Enquanto dura, o seu
+          celular pode já abrir o site e o do colega ainda dizer que o nome não existe. Não é bug: é a
+          agenda chegando.
+        </p>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">🛒 Do carrinho ao cadeado, em 5 passos</div>
+        <p style="color:var(--text-dim)">
+          Hoje quem faz é o professor, num domínio da turma. Em casa, você repete com o seu —
+          cada passo tem checkpoint, igual ao deploy.
+        </p>
+
+        <div class="swp-step">
+          <div class="swp-step-head"><span class="swp-step-num">1</span><span class="swp-step-title">Alugar o nome na Superdomínios</span></div>
+          <div class="swp-step-body">
+            Em <code>superdominios.org</code>, pesquise o nome que você quer. A extensão mais barata
+            hoje é a <code>.shop</code> (R$ 5,99 no primeiro ano); <code>.top</code> e <code>.xyz</code> vêm logo
+            atrás, e <code>.com.br</code> (R$ 39,99) é a que renova quase pelo mesmo preço. Carrinho →
+            cadastro → pagamento.
+            <br><br>
+            <strong>⚠️ Antes de pagar, desligue a renovação automática.</strong> A promoção vale só
+            pro primeiro ano: a <code>.shop</code> renova a R$ 184,99. Pra vitrine e portfólio, um ano
+            basta — e você decide depois.
+            <br><br>
+            <strong>Checkpoint:</strong> chegou o e-mail de confirmação e o domínio aparece em
+            <em>Área do Cliente → Domínios</em>.
+          </div>
+        </div>
+
+        <div class="swp-step">
+          <div class="swp-step-head"><span class="swp-step-num">2</span><span class="swp-step-title">Avisar o Render</span></div>
+          <div class="swp-step-body">
+            No serviço da Estante: <em>Settings → Custom Domains → Add Custom Domain</em>. Digite
+            <code>estante-ana.shop</code>; ele oferece incluir o <code>www</code> junto — aceite. O Render
+            mostra na tela <strong>exatamente as duas linhas</strong> que ele espera encontrar na
+            sua agenda (o IP do registro A e o alvo do CNAME).
+            <br><br>
+            <strong>Checkpoint:</strong> o domínio aparece na lista com status
+            <em>DNS update needed</em>. É esperado: a agenda ainda está vazia.
+          </div>
+        </div>
+
+        <div class="swp-step">
+          <div class="swp-step-head"><span class="swp-step-num">3</span><span class="swp-step-title">Escrever as duas linhas na agenda</span></div>
+          <div class="swp-step-body">
+            Na Superdomínios: <em>Área do Cliente → Domínios → Gerenciar → DNS avançado</em> (o nome do
+            menu pode variar um pouco). Crie os dois registros da tabela acima, copiando os valores da
+            tela do Render:
+            <table class="swp-dns-rec">
+              <thead><tr><th>tipo</th><th>nome</th><th>valor</th></tr></thead>
+              <tbody>
+                <tr><td><code>A</code></td><td><code>@</code></td><td><code>216.24.57.1</code></td></tr>
+                <tr><td><code>CNAME</code></td><td><code>www</code></td><td><code>estante-ana.onrender.com</code></td></tr>
+              </tbody>
+            </table>
+            Se já existir alguma linha <code>A</code> ou <code>AAAA</code> apontando pra outro lugar (uma
+            "página em construção" do registrador), <strong>apague</strong>: o Render só fala IPv4, e
+            uma linha <code>AAAA</code> sobrando faz o celular tentar o caminho errado. Se o painel disser
+            que o domínio usa "DNS externo", troque pros servidores DNS da própria Superdomínios.
+            <br><br>
+            <strong>Checkpoint:</strong> as duas linhas salvas, sem nenhuma outra <code>A</code>/<code>AAAA</code>
+            na raiz.
+          </div>
+        </div>
+
+        <div class="swp-step">
+          <div class="swp-step-head"><span class="swp-step-num">4</span><span class="swp-step-title">Esperar a agenda chegar — e o cadeado aparecer</span></div>
+          <div class="swp-step-body">
+            O Render fica conferindo a agenda sozinho. Quando a linha chega, o status muda pra
+            <em>Verified</em> e ele pede ao Let's Encrypt um <strong>certificado</strong> pro seu nome — o
+            documento que prova "este endereço é mesmo o seu", o mesmo S do HTTPS lá de cima. Tudo
+            automático, de graça, renovado sozinho.
+            <br><br>
+            <strong>Checkpoint:</strong> <em>Certificate issued</em> ao lado do domínio. Pode levar de 2
+            minutos a algumas horas: é a propagação. Enquanto isso, respira — não é hora de apertar botão.
+          </div>
+        </div>
+
+        <div class="swp-step">
+          <div class="swp-step-head"><span class="swp-step-num">5</span><span class="swp-step-title">O momento do celular, take 3</span></div>
+          <div class="swp-step-body">
+            4G, sem Wi-Fi. Digite <code>estante-ana.shop</code>. Cadeado 🔒, tela de login, o seu
+            nome na barra de endereço. A URL do Render continua funcionando — agora ela só tem
+            um apelido melhor.
+            <br><br>
+            <strong>Checkpoint:</strong> abriu com e sem <code>www</code>, com cadeado nos dois.
+          </div>
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🎯</span>
+        <div class="tip-content">
+          <strong>Repare no que NÃO aconteceu:</strong> nenhum commit, nenhum push, nenhum deploy.
+          A Estante não sabe o próprio nome — e não precisa saber. O nome mora na agenda, fora da
+          caixa. É a regra do dia pela quarta vez: porta, segredos, dados… e endereço.
+        </div>
+      </div>
+
+      <div class="bugzilla-card">
+        <div class="bugzilla-header">
+          <span class="bugzilla-emoji">🐛</span>
+          <div>
+            <div class="bugzilla-title">BugZilla do domínio — os 3 de sempre</div>
+            <div class="bugzilla-sub">todos têm a mesma cara: "o site não abre"</div>
+          </div>
+        </div>
+        <div class="bugzilla-body">
+          <p>
+            <strong>1 · <code>DNS_PROBE_FINISHED_NXDOMAIN</code></strong> ("este site não pode ser
+            acessado"). A agenda não tem a linha — ou ela ainda não chegou na cópia que o seu celular
+            usa. 💊 Confira os dois registros no painel; se estão certos, é propagação: espere. Teste
+            no 4G e no Wi-Fi: se um abre e o outro não, é a agenda chegando.
+          </p>
+          <p>
+            <strong>2 · No Render, <em>DNS update needed</em> pra sempre.</strong> A linha existe, mas
+            está errada: IP digitado com um número trocado, CNAME colocado na raiz (<code>@</code>) em
+            vez de <code>www</code>, ou uma linha <code>AAAA</code> antiga sobrando. 💊 Compare caractere por
+            caractere com a tela do Render e apague o que sobrou.
+          </p>
+          <p>
+            <strong>3 · Abre, mas "não seguro" / sem cadeado.</strong> A agenda chegou, mas o
+            certificado ainda não foi emitido. 💊 Nada a fazer: o Render emite assim que verifica o
+            DNS. Se passar de uma hora com <em>Verified</em> e sem certificado, remova o domínio no Render
+            e adicione de novo.
+          </p>
+        </div>
+      </div>
+
+      <details class="dep-gloss">
+        <summary>📖 Dicionário de bolso do domínio</summary>
+        <table>
+          <tbody>
+            <tr><td>domínio</td><td>o nome que as pessoas digitam; alugado por ano de um registrador</td></tr>
+            <tr><td>registrador</td><td>empresa autorizada a vender nomes (Superdomínios, Registro.br, Namecheap…)</td></tr>
+            <tr><td>IP</td><td>o endereço numérico de um servidor — o que o computador entende de verdade</td></tr>
+            <tr><td>DNS</td><td>a agenda de contatos da internet: nome → número</td></tr>
+            <tr><td>zona DNS · registro</td><td>a sua página na agenda · uma linha dela</td></tr>
+            <tr><td>registro A</td><td>nome → número (IP)</td></tr>
+            <tr><td>registro CNAME</td><td>nome → outro nome (um apelido)</td></tr>
+            <tr><td><code>@</code> · <code>www</code></td><td>a raiz do domínio · o subdomínio com www na frente</td></tr>
+            <tr><td>propagação</td><td>o tempo até todas as cópias da agenda receberem a linha nova</td></tr>
+            <tr><td>certificado</td><td>o documento que prova que o endereço é seu — o cadeado do HTTPS</td></tr>
+          </tbody>
+        </table>
+      </details>
+    </div>
+  </section>
 
   <div class="chapter-divider">
     <div class="chapter-icon">🎤</div>
@@ -2197,6 +2522,83 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('dfReset').addEventListener('click', montar);
     montar();
+  })();
+
+  /* ---------- ⭐ A agenda da internet (DNS) ---------- */
+  (function(){
+    const m = document.getElementById('dnsMachine'); if (!m) return;
+    const bar = document.getElementById('dnsBar'), url = document.getElementById('dnsUrl');
+    const log = document.getElementById('dnsLog'), note = document.getElementById('dnsNote');
+    const nodes = {}; m.querySelectorAll('.swp-dns-node').forEach(n => nodes[n.dataset.n] = n);
+    const arrows = {}; m.querySelectorAll('.swp-dns-arrow').forEach(a => arrows[a.dataset.a] = a);
+    const btns = m.querySelectorAll('[data-dns]');
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const PASSO = reduced ? 0 : 1250;
+
+    const cenarios = {
+      render: {
+        url: 'estante-ana.onrender.com', secure: true,
+        passos: [
+          { n:'cel', t:'Você digita <strong>estante-ana.onrender.com</strong>. O celular não sabe onde isso fica — ele só entende números.' },
+          { n:'dns', a:'1', t:'Pergunta pra agenda: <code>estante-ana.onrender.com</code>, qual é o número?' },
+          { n:'dns', t:'A agenda do <code>onrender.com</code> já tem a linha — <strong>o Render escreveu</strong> quando criou o serviço. Por isso o endereço grátis funcionou na hora.' },
+          { n:'render', a:'2', t:'Request vai pro <code>216.24.57.1</code> com o nome no envelope: <code>Host: estante-ana.onrender.com</code>.' },
+          { n:'est', a:'3', t:'O Render lê o nome, acha o serviço ligado a ele e entrega pro container. Response: a tela de login. 🔒' },
+        ],
+        note: 'quem escreveu a linha: <strong>o Render</strong>. Você não fez nada — e por isso o nome é dele.'
+      },
+      nx: {
+        url: 'estante-ana.shop', secure: false, broken: true,
+        passos: [
+          { n:'cel', t:'Você digita <strong>estante-ana.shop</strong>. Domínio comprado, Render avisado — mas a agenda ainda está vazia.' },
+          { n:'dns', a:'1', t:'Pergunta pra agenda: <code>estante-ana.shop</code>, qual é o número?' },
+          { n:'dns', err:true, bad:true, t:'A agenda procura… e não tem linha nenhuma. Resposta: <code>NXDOMAIN</code> — "esse nome não existe".' },
+          { n:'cel', err:true, bad:true, t:'O navegador mostra: <strong>Este site não pode ser acessado</strong> · <code>DNS_PROBE_FINISHED_NXDOMAIN</code>. O request nem saiu do celular.' },
+        ],
+        note: 'não é o Render, não é o seu código: é <strong>a agenda sem a linha</strong> — ou a linha ainda chegando (propagação).'
+      },
+      ok: {
+        url: 'estante-ana.shop', secure: true,
+        passos: [
+          { n:'cel', t:'Você digita <strong>estante-ana.shop</strong>.' },
+          { n:'dns', a:'1', t:'Pergunta pra agenda: <code>estante-ana.shop</code>, qual é o número?' },
+          { n:'dns', good:true, t:'A agenda acha a linha que <strong>você</strong> escreveu na Superdomínios: <code>A  @  216.24.57.1</code>.' },
+          { n:'render', a:'2', t:'Request vai pro <code>216.24.57.1</code> com o nome no envelope: <code>Host: estante-ana.shop</code>.' },
+          { n:'est', a:'3', t:'O Render lê o nome, acha o serviço que você ligou a ele em <em>Custom Domains</em> e entrega pro container. Response: login, com cadeado 🔒 — o certificado é do SEU nome.' },
+        ],
+        note: 'quem escreveu a linha: <strong>você</strong>. Mesmo caminho, mesma caixa, nenhum commit — só a agenda mudou.'
+      }
+    };
+
+    let timer = null;
+    function limpar(){
+      Object.values(nodes).forEach(n => n.classList.remove('on','err'));
+      Object.values(arrows).forEach(a => a.classList.remove('on'));
+      bar.classList.remove('secure','broken'); log.innerHTML = '';
+      if (timer) { clearTimeout(timer); timer = null; }
+    }
+    function rodar(c){
+      limpar(); url.textContent = c.url; btns.forEach(b => b.disabled = true);
+      note.innerHTML = 'consultando a agenda…';
+      let i = 0;
+      function passo(){
+        if (i > 0) { const p = c.passos[i-1]; nodes[p.n].classList.remove('on'); }
+        if (i >= c.passos.length) {
+          if (c.secure) bar.classList.add('secure'); if (c.broken) bar.classList.add('broken');
+          note.innerHTML = c.note; btns.forEach(b => b.disabled = false); return;
+        }
+        const p = c.passos[i];
+        if (p.a) arrows[p.a].classList.add('on');
+        nodes[p.n].classList.add(p.err ? 'err' : 'on');
+        const ln = document.createElement('div');
+        ln.className = 'ln' + (p.bad ? ' bad' : '') + (p.good ? ' good' : '');
+        ln.innerHTML = p.t; log.appendChild(ln);
+        requestAnimationFrame(() => requestAnimationFrame(() => ln.classList.add('on')));
+        i++; timer = setTimeout(passo, PASSO);
+      }
+      passo();
+    }
+    btns.forEach(b => b.addEventListener('click', () => rodar(cenarios[b.dataset.dns])));
   })();
 
   /* ---------- 📋 Copiar prompt (o marca-texto não vai junto) ---------- */

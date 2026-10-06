@@ -481,3 +481,33 @@ Decisão:
 
 Verificado em 06/10/2026: Render Free sem cartão (cadastro via GitHub), spin-down 15 min,
 750 h/mês.
+
+---
+
+### D23 · Dia 8: domínio próprio ao vivo (Superdomínios + DNS no Render) (2026-10-06)
+
+Pedido do professor: comprar um domínio em sala, na Superdomínios (a mais barata pesquisada:
+`.shop` R$ 5,99 no 1º ano; `.top` R$ 9,99; `.com.br` R$ 39,99 — renovações muito mais caras,
+exceto `.com.br`), apontar pro Render e explicar DNS do zero.
+
+- **Nova seção "⭐ Um endereço com o seu nome"** (`#dominio`), depois do "momento do celular"
+  e antes do Demo Day; no relógio, 1:38–1:50, como demo do professor (a turma acompanha e repete
+  em casa). Fecha a estação 6 e aplica a regra do dia pela quarta vez: endereço também mora fora
+  da caixa (nenhum commit, nenhum deploy).
+- **Didática**: domínio = nome alugado por ano de um registrador; DNS = agenda de contatos da
+  internet (nome → número/IP); zona = a página na agenda; registro = uma linha; A = nome → IP;
+  CNAME = apelido; `@` = raiz; propagação = cópias da agenda atualizando no seu tempo;
+  certificado = cadeado, emitido pelo Render.
+- **Simulador "A agenda da internet, ao vivo"** com 3 cenários: `onrender.com` (o Render escreveu
+  a linha), `.shop` antes do DNS (NXDOMAIN / `DNS_PROBE_FINISHED_NXDOMAIN`, o erro que os alunos
+  vão ver na propagação) e `.shop` depois do DNS (a linha que o aluno escreveu). Mensagem: a
+  diferença é só quem escreveu a linha.
+- **5 passos com checkpoint**: alugar (desligar renovação automática), avisar o Render (Custom
+  Domains), escrever A `@` → `216.24.57.1` e CNAME `www` → `*.onrender.com` no "DNS avançado" da
+  Superdomínios (apagar AAAA/A antigos; DNS externo → DNS da própria Superdomínios), esperar
+  Verified + certificado, celular take 3.
+- **BugZilla do domínio**: NXDOMAIN (linha ausente/propagação), "DNS update needed" eterno (IP
+  errado, CNAME na raiz, AAAA sobrando), sem cadeado (certificado pendente).
+- Fatos verificados em 06/10/2026: Render usa IP `216.24.57.1` para registro A na raiz e CNAME
+  no `www`, só IPv4, certificado Let's Encrypt automático, 2 domínios personalizados no plano
+  Free por workspace. Preços da Superdomínios da página de promoções do mesmo dia.
