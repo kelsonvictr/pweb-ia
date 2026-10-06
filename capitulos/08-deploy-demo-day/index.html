@@ -452,6 +452,7 @@ mark.hl{
   </div>
   <div class="sidebar-group">
     <div class="sidebar-group-title">🛠️ Mão na massa</div>
+    <a class="sidebar-link" onclick="goTo('ponto-de-partida')"><span class="dot" style="background:var(--accent5)"></span>Ponto de partida: duas portas</a>
     <a class="sidebar-link" onclick="goTo('empacotar')"><span class="dot" style="background:var(--accent6)"></span>Prompts 12, 13 e 14</a>
     <a class="sidebar-link" onclick="goTo('render')"><span class="dot" style="background:var(--accent7)"></span>GitHub → Render → URL</a>
     <a class="sidebar-link" onclick="goTo('bugzilla')"><span class="dot" style="background:var(--bug)"></span>BugZilla do deploy 🐛</a>
@@ -504,7 +505,7 @@ mark.hl{
     <div class="step-header">
       <div class="step-number sn-yellow">📥</div>
       <div>
-        <div class="step-title">Antes do encontro: duas contas e a Estante completa</div>
+        <div class="step-title">Antes do encontro: duas contas e a Estante até onde chegou</div>
         <div class="step-sub">Hoje tem Demo Day — o tempo de sala é todo pro deploy e pras apresentações</div>
       </div>
     </div>
@@ -513,8 +514,10 @@ mark.hl{
       <div class="swp-preflight">
         <div class="pf-title">⚠️ Confira ANTES do dia 8</div>
         <ol>
-          <li><strong>A Estante com os 12 prompts homologados</strong> (0 a 11 do Dia 7), com login
-            funcionando. Sem login, ela não vai pro ar.</li>
+          <li><strong>A sua Estante, até onde chegou.</strong> Se o login (Prompt 10) funciona, é ela
+            que vai pro ar. Se não chegou lá, sem pânico: a aula começa pelo
+            <em>ponto de partida</em>, e o agente traz a versão de referência do professor —
+            ninguém fica de fora do deploy.</li>
           <li><strong>Conta no GitHub</strong> criada em <code>github.com</code>, com o e-mail
             confirmado. O nome de usuário aparece no seu portfólio — escolha algo apresentável.</li>
           <li><strong>Conta no Render</strong>: em <code>render.com</code>, entre com o botão
@@ -522,7 +525,7 @@ mark.hl{
           <li><strong>Docker Desktop: você NÃO precisa instalar.</strong> Quem monta a imagem é o
             próprio Render. Se quiser ver a caixa rodando no seu notebook, é um extra pra casa.</li>
           <li><strong>Recomendado: leia a Parte 1, "Os fundamentos".</strong> Em sala ela vira um
-            resumo de 15 minutos — quem chega tendo lido entende cada prompt na primeira leitura.</li>
+            resumo de 12 minutos — quem chega tendo lido entende cada prompt na primeira leitura.</li>
         </ol>
       </div>
     </div>
@@ -557,10 +560,11 @@ mark.hl{
         <p>
           <strong>0:00</strong> os fundamentos, em resumo (as 6 estações, a caixa, a regra do
           dia e a prática "dentro ou fora") ·
-          <strong>0:15</strong> Prompts 12 e 13 — auditar e empacotar ·
-          <strong>0:28</strong> Prompt 14 + GitHub pelo PyCharm ·
-          <strong>0:38</strong> Render e o primeiro build ·
-          <strong>0:52</strong> o momento do celular ·
+          <strong>0:12</strong> ponto de partida — porta 1 (a sua Estante) ou porta 2 (Prompt A) ·
+          <strong>0:18</strong> Prompts 12 e 13 — auditar e empacotar ·
+          <strong>0:30</strong> Prompt 14 + GitHub pelo PyCharm ·
+          <strong>0:40</strong> Render e o primeiro build ·
+          <strong>0:53</strong> o momento do celular ·
           <strong>0:57</strong> Demo Day ·
           <strong>1:50</strong> a ponte pro que vem depois.
         </p>
@@ -1294,6 +1298,103 @@ app.secret_key = os.environ.<span class="fn">get</span>(<span class="st">"SECRET
   </div>
 
   <!-- ═══════════════════════════════════════════════════════
+       PONTO DE PARTIDA — duas portas + Prompt A
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="ponto-de-partida">
+    <div class="step-header">
+      <div class="step-number sn-yellow">🚦</div>
+      <div>
+        <div class="step-title">Ponto de partida: duas portas</div>
+        <div class="step-sub">Todo mundo sai daqui com a mesma Estante aberta no PyCharm — a sua, ou a de referência</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Os prompts de hoje assumem uma Estante <strong style="color:var(--text)">completa</strong>:
+        acervo, leitores, empréstimos, painel e login (Prompts 0 a 10 do Dia 7). Quem chegou lá
+        entra pela porta 1. Quem não chegou — ou travou no meio — entra pela porta 2 e parte da
+        <strong style="color:var(--text)">versão de referência do professor</strong>, trazida pelo
+        agente. Hoje o assunto é o deploy; ninguém fica de fora por causa de um prompt que não fechou.
+      </p>
+
+      <div class="swp-step">
+        <div class="swp-step-head"><span class="swp-step-num">1</span><span class="swp-step-title">Porta 1 — a sua Estante tem login e abre com ▶</span></div>
+        <div class="swp-step-body">Teste agora: ▶ no <code>app.py</code>, abra <code>localhost:5000</code>, entre com
+          <code>admin</code> + <code>trocar123</code>, faça um empréstimo e devolva. Funcionou? Pule direto
+          para o <a href="#empacotar" onclick="goTo('empacotar');return false">Prompt 12</a>. É a sua Estante que vai pro ar.</div>
+      </div>
+      <div class="swp-step">
+        <div class="swp-step-head"><span class="swp-step-num">2</span><span class="swp-step-title">Porta 2 — não chegou ao login (ou algo quebrou)</span></div>
+        <div class="swp-step-body">Crie um <strong>projeto novo e vazio</strong> no PyCharm, chamado <code>estante-deploy</code>
+          (a sua Estante do Dia 7 fica onde está — não apague). Abra o Terminal do PyCharm, chame o agente
+          e mande o Prompt A. Ele traz os arquivos da versão de referência <strong>no estado exato do fim do
+          Dia 7</strong> — segredos ainda no código, sem Dockerfile — e explica a arquitetura antes de
+          qualquer mudança. Os Prompts 12 e 13 continuam tendo trabalho de verdade.</div>
+      </div>
+
+      <div class="est-prompt-label"><span class="n">A</span> Trazer a versão de referência (só a porta 2)</div>
+      <div class="code-block" id="pA">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">Prompt A — a Estante de referência, no fim do Dia 7</span>
+          <button class="est-copy" type="button">📋 Copiar</button>
+          <span class="lang-badge prompt">prompt</span>
+        </div>
+        <div class="swp-spec-text"><span class="sp-k">[CONTEXTO]</span> Esta pasta está vazia. Hoje vou publicar a Estante, o sistema de biblioteca
+comunitária do curso, partindo da versão de referência do professor.
+
+<span class="sp-k">[TAREFA]</span> Baixe para esta pasta o conteúdo do branch <mark class="hl">dia-07</mark> do repositório
+https://github.com/kelsonvictr/sistema-estante-pyweb — <mark class="hl">sem a pasta .git</mark> (o histórico vai ser
+meu, em outro prompt). Instale o requirements.txt no ambiente deste projeto e execute o
+criar_banco.py <mark class="hl">uma única vez</mark>. Depois me explique a arquitetura: o que cada arquivo faz,
+onde mora cada regra de negócio e por onde um request passa até virar tela.
+
+<span class="sp-k">[RESTRIÇÕES]</span> <mark class="hl">Não altere nenhum arquivo</mark>. Não rode nada além do pip e do criar_banco.py.
+
+<span class="sp-k">[ACEITE]</span> ▶ no app.py abre a tela de login; admin + trocar123 entra; a pasta não tem .git.
+Pare e espere.</div>
+      </div>
+      <div class="est-done">
+        <label class="ck"><input type="checkbox"> Homologado</label>
+        <span><strong>Checkpoint:</strong> ▶ no <code>app.py</code>, entre, faça um empréstimo e devolva.
+        Leia a explicação do agente procurando os três endereços que você já conhece: SQL só no
+        <code>banco.py</code>, regras no <code>app.py</code>, telas em <code>templates/</code>. E confira
+        que não existe pasta <code>.git</code>: o repositório nasce <strong>na sua conta</strong>, no
+        Prompt 14.</span>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 Por que o agente traz os arquivos — e não um fork ou um clone</div>
+        <p>
+          <strong>Fork</strong> criaria na sua conta uma cópia com o selo "forked from" na página:
+          no portfólio, parece sistema de outra pessoa. <strong>Clone</strong> traria o histórico do
+          professor junto e exigiria autenticar o Git no terminal. Com o Prompt A, a pasta nasce só
+          com os arquivos; o Prompt 14 faz o primeiro commit e o PyCharm publica
+          <strong>no seu GitHub</strong>, como um projeto seu.
+        </p>
+        <p>
+          O branch <code>main</code> do mesmo repositório tem a versão <em>já empacotada</em> e um
+          README com a arquitetura inteira, o Dockerfile linha a linha e o passo a passo do Render.
+          Serve de gabarito para conferir o seu diff do Prompt 13.
+        </p>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">🎤 Honestidade no Demo Day</div>
+        <p>
+          Quem entrou pela porta 2 apresenta o deploy que fez hoje e, no passo 4 do roteiro, mostra um
+          prompt e um diff <strong>da própria Estante do Dia 7</strong> — até onde ela chegou.
+          "Construí até o Prompt 6 e publiquei a versão de referência" é uma frase que entrevistador
+          respeita. Fingir é a única opção ruim.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
        EMPACOTAR — prompts 12, 13 e 14
        ═══════════════════════════════════════════════════════ -->
   <section class="step-section" id="empacotar">
@@ -1307,7 +1408,8 @@ app.secret_key = os.environ.<span class="fn">get</span>(<span class="st">"SECRET
 
     <div class="card">
       <p style="color:var(--text-dim)">
-        A Estante parou no Prompt 11. O deploy é mais uma entrega — e segue o mesmo ritual:
+        A Estante parou no Prompt 11 — a sua ou a de referência, tanto faz: daqui em diante o
+        caminho é o mesmo. O deploy é mais uma entrega — e segue o mesmo ritual:
         primeiro o agente <strong style="color:var(--text)">olha sem mexer</strong>, depois muda
         só o necessário, e você lê o diff. Nenhuma rota, template ou SQL muda hoje:
         <strong style="color:var(--text)">o sistema está pronto, só vai ganhar embalagem</strong>.
@@ -1395,7 +1497,7 @@ Dockerfile e pare.</div>
           <button class="est-copy" type="button">📋 Copiar</button>
           <span class="lang-badge prompt">prompt</span>
         </div>
-        <div class="swp-spec-text"><span class="sp-k">[TAREFA]</span> Transforme a pasta estante num repositório Git: git init e um primeiro commit
+        <div class="swp-spec-text"><span class="sp-k">[TAREFA]</span> Transforme esta pasta num repositório Git: git init e um primeiro commit
 com a mensagem "Estante pronta para o deploy". <mark class="hl">Antes do commit, me mostre a lista de
 arquivos que vão entrar</mark> e confirme que venv, __pycache__ e estante.db não estão nela.
 
@@ -1717,7 +1819,7 @@ confirmar depois do próximo push. Espere minha aprovação antes de alterar qua
     <div class="card">
       <div class="swp-step">
         <div class="swp-step-head"><span class="swp-step-num">1</span><span class="swp-step-title">O pitch (30s)</span></div>
-        <div class="swp-step-body">"Esta é a minha Estante, o sistema de uma biblioteca comunitária." Uma frase — e, se a sua tem um extra, é agora que ele aparece. Abra JÁ na URL pública: deploy é a primeira coisa a mostrar.</div>
+        <div class="swp-step-body">"Esta é a minha Estante, o sistema de uma biblioteca comunitária." Uma frase — e, se a sua tem um extra, é agora que ele aparece. Entrou pela porta 2? Diga nessa mesma frase. Abra JÁ na URL pública: deploy é a primeira coisa a mostrar.</div>
       </div>
       <div class="swp-step">
         <div class="swp-step-head"><span class="swp-step-num">2</span><span class="swp-step-title">Login + um CRUD completo (2min)</span></div>

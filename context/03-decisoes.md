@@ -446,3 +446,38 @@ falha), e uma prática nova — "Dentro da caixa ou de fora?" — exige aplicar 
 Prompts 12–13, que pedem as mesmas três colunas. Feedback da prática fica na própria peça: no
 celular, um aviso no rodapé ficaria dez peças abaixo do clique. Leitura da Parte 1 recomendada
 antes da aula; em sala, resumo de 15 min, e o relógio andou 2 minutos (Demo Day às 0:57).
+
+---
+
+### D22 · Dia 8: ponto de partida com duas portas + repositório de referência (2026-10-06)
+
+Na manhã da aula de deploy, a Estante do professor estava no Prompt 2 e a da turma em estados
+variados. O professor cogitou um "mega prompt" para todos gerarem o sistema do zero no início da
+aula; descartado por três motivos: agente não é determinístico (20 alunos = 20 Estantes
+diferentes, com bugs que o BugZilla do deploy não cobre), não cabe no relógio (10–20 min por
+aluno antes do Render) e contradiz a lição central do Cap 07 ("diff de 300 linhas que ninguém lê").
+
+Decisão:
+
+- **Repositório de referência** `https://github.com/kelsonvictr/sistema-estante-pyweb`, com a
+  Estante completa (Prompts 0–13) construída e testada (62 aceites automatizados, build Docker,
+  homologação no navegador) e README de arquitetura + Docker + Render. Dois branches:
+  `main` = já empacotada (gabarito do Prompt 13); `dia-07` = estado exato do fim do Dia 7
+  (segredos no código, sem gunicorn, sem Dockerfile, sem .gitignore), para os Prompts 12 e 13
+  terem trabalho real.
+- **Nova seção "Ponto de partida: duas portas"** no Cap 08, abrindo a Parte 2. Porta 1: a Estante
+  do aluno tem login e abre com ▶ → Prompt 12. Porta 2: projeto novo `estante-deploy` + **Prompt A**:
+  o agente baixa o branch `dia-07` sem a pasta `.git`, instala, roda `criar_banco.py` uma vez e
+  explica a arquitetura, sem alterar nada. A explicação substitui a "leitura" que um mega prompt
+  não daria.
+- **Nem fork nem clone**: fork deixa o selo "forked from" no portfólio; clone traz o histórico do
+  professor e exige autenticar o Git no terminal. Com o Prompt A o repositório nasce na conta do
+  aluno no Prompt 14 + PyCharm, como projeto dele.
+- **Honestidade no Demo Day**: quem usou a porta 2 diz isso no pitch e mostra no passo 4 um prompt
+  e um diff da própria Estante do Dia 7.
+- Relógio ajustado: fundamentos 0:00–0:12, ponto de partida 0:12–0:18, Prompts 12–13 às 0:18,
+  Prompt 14 + GitHub às 0:30, Render às 0:40, celular às 0:53, Demo Day às 0:57 (inalterado).
+  Prompt 14 passou a dizer "esta pasta" em vez de "a pasta estante".
+
+Verificado em 06/10/2026: Render Free sem cartão (cadastro via GitHub), spin-down 15 min,
+750 h/mês.
