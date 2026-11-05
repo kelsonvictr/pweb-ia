@@ -395,10 +395,10 @@
             tabela <code>usuarios</code> vai nascer dentro dele.</li>
           <li><strong>O agente abre na pasta da loja?</strong> Terminal do PyCharm → <code>claude</code>,
             <code>codex</code> ou <code>agy</code> → aparece o prompt. (Instalação: capítulo
-            <a href="../02b-ia-agentes/" style="color:var(--accent6)">Dia 02½</a>.)</li>
+            <a href="../03b-ia-agentes/" style="color:var(--accent6)">Dia 03½</a>.)</li>
           <li><strong>Abra o seu <code>CLAUDE.md</code> (ou <code>AGENTS.md</code>) e leia o que está lá.</strong>
             Hoje ele cresce: toda restrição que você já repetiu três vezes vira linha permanente.</li>
-          <li><strong>Releia o ritual de revisão</strong> (①–⑤ do Dia 2½). Hoje o diff é o maior do
+          <li><strong>Releia o ritual de revisão</strong> (①–⑤ do Dia 3½). Hoje o diff é o maior do
             curso — e você vai treinar leitura num diff com bug plantado. 🕵️</li>
         </ol>
       </div>
@@ -1005,11 +1005,11 @@ arquivo e entregue um roteiro final com caminho feliz e caminhos de erro.</div>
 
     <div class="card">
       <p style="color:var(--text-dim)">
-        No <strong style="color:var(--text)">Dia 3</strong> você escreveu uma espec de visual e o
-        agente criou o <code>static/style.css</code>. Naquele dia a Loja tinha duas telas.
+        No <strong style="color:var(--text)">Dia 4</strong>, o Prompt de partida criou o
+        <code>static/style.css</code>. Naquele dia a Loja só tinha telas simples, como a tabela de produtos.
         <strong style="color:var(--text)">Editar, excluir, vender, vendas — e, de hoje, login —
         nasceram DEPOIS.</strong> E o CSS não adivinha: elemento que não existia quando você
-        escreveu a espec não tem regra nenhuma. Por isso essas telas aparecem cruas, com cara
+        escreveu o pedido não tem regra nenhuma. Por isso essas telas aparecem cruas, com cara
         de 1998, enquanto a lista de produtos continua bonita.
       </p>
       <p style="color:var(--text-dim)">
@@ -1020,7 +1020,7 @@ arquivo e entregue um roteiro final com caminho feliz e caminhos de erro.</div>
 
       <div class="swp-visual" id="swpVisual">
         <div class="swp-visual-tabs">
-          <button data-screen="produtos" class="sel">📋 /produtos <span class="flag">Dia 3 ✅</span></button>
+          <button data-screen="produtos" class="sel">📋 /produtos <span class="flag">Dia 4 ✅</span></button>
           <button data-screen="vender">🛒 /vender <span class="flag">Dia 5 ❌</span></button>
           <button data-screen="login">🔐 /login <span class="flag">hoje ❌</span></button>
         </div>
@@ -1055,7 +1055,7 @@ arquivo e entregue um roteiro final com caminho feliz e caminhos de erro.</div>
             <span class="filename">Prompt 5 — acabamento visual</span>
             <span class="lang-badge prompt">prompt</span>
           </div>
-          <div class="swp-spec-text"><span class="sp-k">[CONTEXTO]</span> Minha Loja tem static/style.css desde o Dia 3, mas as telas que
+          <div class="swp-spec-text"><span class="sp-k">[CONTEXTO]</span> Minha Loja tem static/style.css desde o Dia 4, mas as telas que
 nasceram depois (editar, excluir, vender, vendas e login) não têm regra nenhuma lá dentro e
 aparecem cruas.
 
@@ -1586,7 +1586,7 @@ document.addEventListener('DOMContentLoaded', () => {
           '<tr><td>1</td><td>Fone Bluetooth</td><td>R$ 149,90</td><td>12</td></tr>' +
           '<tr><td>2</td><td>Mouse Gamer</td><td>R$ 89,00</td><td>7</td></tr>' +
           '<tr><td>3</td><td>Teclado Mec&acirc;nico</td><td>R$ 249,00</td><td>4</td></tr></table>',
-        nota: 'essa tela existia no Dia 3, quando você escreveu a espec do CSS — por isso tem regra'
+        nota: 'essa tela já existia no Dia 4, quando o style.css nasceu — por isso tem regra'
       },
       vender: {
         url: 'localhost:5000/vender',
@@ -1610,7 +1610,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     };
 
-    /* /produtos já estava coberta desde o Dia 3 */
+    /* /produtos já estava coberta desde o Dia 4 */
     function estilizada(tela){
       return tela === 'produtos' ? true : aplicado;
     }
@@ -1644,7 +1644,7 @@ document.addEventListener('DOMContentLoaded', () => {
       tabs.forEach(b => {
         const f = b.querySelector('.flag');
         if (!f) return;
-        f.textContent = b.dataset.screen === 'produtos' ? 'Dia 3 ✅'
+        f.textContent = b.dataset.screen === 'produtos' ? 'Dia 4 ✅'
                       : b.dataset.screen === 'vender'   ? 'Dia 5 ❌' : 'hoje ❌';
       });
       render();

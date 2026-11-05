@@ -236,6 +236,7 @@
   </div>
   <div class="sidebar-group">
     <div class="sidebar-group-title">🤖 A virada do curso</div>
+    <a class="sidebar-link" onclick="goTo('agentes-20')"><span class="dot" style="background:var(--accent6)"></span>20 min de agentes</a>
     <a class="sidebar-link" onclick="goTo('projeto-zero')"><span class="dot" style="background:var(--accent2)"></span>⭐ Projeto novo do zero</a>
     <a class="sidebar-link" onclick="goTo('aquecimento')"><span class="dot" style="background:var(--accent5)"></span>Aquecimento</a>
     <a class="sidebar-link" onclick="goTo('contrato-agente')"><span class="dot" style="background:var(--accent6)"></span>⭐ Regras da Loja</a>
@@ -300,6 +301,52 @@
   <!-- ═══════════════════════════════════════════════════════
        PONTO DE SINCRONIZAÇÃO — PROJETO NOVO
        ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="agentes-20">
+    <div class="step-header">
+      <div class="step-number sn-purple">🤖</div>
+      <div>
+        <div class="step-title">20 minutos de agentes: o que você usa hoje</div>
+        <div class="step-sub">O essencial do Dia 3½, alinhado com a turma antes do primeiro prompt</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Até aqui a IA ficou de fora de propósito: quem nunca montou uma rota não consegue julgar a
+        rota que ela gerou. Agora você consegue. Três ideias do
+        <a href="../03b-ia-agentes/" style="color:var(--accent6)">Dia 3½</a> valem pra aula inteira:
+      </p>
+
+      <div class="keyword-grid">
+        <div class="keyword-chip">
+          <span class="emoji">🔁</span>
+          <span class="kw-name">O loop do agente</span>
+          <span class="kw-desc">ele lê seus arquivos, edita, roda, vê o erro e tenta de novo. Um chat só conversa; o agente tem mãos.</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">📋</span>
+          <span class="kw-name">Os 4 ingredientes</span>
+          <span class="kw-desc">todo pedido traz contexto, tarefa, restrições e aceite. Pedido vago vira código vago.</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">🔍</span>
+          <span class="kw-name">O ritual de revisão</span>
+          <span class="kw-desc">rodou, li o diff, segue o padrão, nada que não pedi, consigo explicar. Sem os cinco, não aceita.</span>
+        </div>
+      </div>
+
+      <div class="warning">
+        <span class="tip-icon">🆘</span>
+        <div class="tip-content">
+          <strong>Abra o agente agora, no Terminal do PyCharm</strong>, e mande um "oi". Não abriu?
+          Faça dupla com quem abriu: a aula não para pela instalação, e você resolve a sua no intervalo.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
   <section class="step-section" id="projeto-zero">
     <div class="step-header">
       <div class="step-number sn-orange">🧰</div>
@@ -638,7 +685,7 @@ manual correspondente. Pare e espere minha aprovação do plano.</div>
       <div class="step-number sn-mint">📦</div>
       <div>
         <div class="step-title">banco.py: a cozinha em duas funções</div>
-        <div class="step-sub">Funções do bootcamp + ritual do Dia 3 = a camada de dados</div>
+        <div class="step-sub">Funções Python + ritual do Dia 3 = a camada de dados</div>
       </div>
     </div>
 
@@ -687,7 +734,7 @@ produtos existentes e cadastrar um produto sem montar SQL com f-string.</div>
 
         <div class="swp-trace-msgs">
           <div data-seq-frame="0"><span class="tm-emoji">📦</span><span>Só o <strong>sqlite3</strong> — este arquivo nem sabe que o Flask existe. Cozinha não atende mesa.</span></div>
-          <div data-seq-frame="1"><span class="tm-emoji">📋</span><span><strong>listar_produtos()</strong> — uma função como as do bootcamp: nome claro, um trabalho só.</span></div>
+          <div data-seq-frame="1"><span class="tm-emoji">📋</span><span><strong>listar_produtos()</strong> — uma função Python comum: nome claro, um trabalho só.</span></div>
           <div data-seq-frame="2"><span class="tm-emoji">🔁</span><span>O <strong>ritual completo do Dia 3</strong>, inteirinho dentro da função: abre, consulta, fecha. Cada chamada é autossuficiente.</span></div>
           <div data-seq-frame="3"><span class="tm-emoji">🎁</span><span><strong>return produtos</strong> — devolve a lista de tuplas pra quem chamou (o app.py, daqui a pouco).</span></div>
           <div data-seq-frame="4"><span class="tm-emoji">➕</span><span><strong>cadastrar_produto(nome, preco, qtd)</strong> — os parâmetros vêm do formulário. Repara: a função não sabe DE ONDE vêm. Nem precisa.</span></div>
@@ -699,7 +746,7 @@ produtos existentes e cadastrar um produto sem montar SQL com f-string.</div>
         <span class="tip-icon">🧠</span>
         <div class="tip-content">
           <strong>Deja vu proposital:</strong> não tem UMA linha nova aqui — é o Dia 3
-          embrulhado em funções do bootcamp. Aprender de verdade é isso: peças conhecidas,
+          embrulhado em funções. Aprender de verdade é isso: peças conhecidas,
           arrumação nova.
         </div>
       </div>
@@ -1238,7 +1285,7 @@ mostram o motivo; um produto válido continua sendo cadastrado.</div>
 
   <div class="chapter-divider">
     <div class="chapter-icon">🤖</div>
-    <div class="chapter-number">Parte 3</div>
+    <div class="chapter-number">Parte 3 · em casa</div>
     <h2 style="background:linear-gradient(135deg,var(--accent6),var(--accent3));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">O ritual de cada entrega</h2>
     <p class="chapter-subtitle">O agente implementa; você prova que funciona e que respeita o combinado.</p>
   </div>
@@ -1608,7 +1655,7 @@ em vez de render_template? O que aconteceria se eu apertasse F5 sem o redirect?<
         </div>
         <p style="color:var(--text-dim)">
           Antes de mandar pro template, transforme cada tupla ajustando o preço com
-          <code>f"{p[2]:.2f}"</code> (aquele formatador do bootcamp). Dica: monte uma lista
+          <code>f"{p[2]:.2f}"</code> (a formatação de duas casas da f-string). Dica: monte uma lista
           nova com um for — ou mostre direto no template com
           <code class="jvar">{{ "%.2f"|format(p[2]) }}</code> se quiser espiar um filtro Jinja.
         </p>
@@ -1691,7 +1738,7 @@ em vez de render_template? O que aconteceria se eu apertasse F5 sem o redirect?<
         <div class="concept-title">🎯 A frase pra levar pra casa</div>
         <p>
           <strong>"Estoque e Cadastrar da minha Loja rodam com banco de verdade."</strong>
-          Duas das 4 abas do seu app_loja.py já viraram web — as outras duas
+          Duas das 4 áreas da Loja já estão de pé. As outras duas
           (Vender e Vendas) caem no Dia 5.
         </p>
       </div>

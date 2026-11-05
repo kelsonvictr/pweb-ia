@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dia 02½ · IA &amp; Agentes: seu par de programação — Sistemas Web com Python | programa AI</title>
+<title>Dia 03½ · IA &amp; Agentes: seu par de programação — Sistemas Web com Python | programa AI</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../shared/styles.css">
 <link rel="stylesheet" href="../../shared/components.css">
 <link rel="stylesheet" href="../../shared/animations.css">
 <style>
-/* ══════════ CSS local do capítulo 02½ (prefixo swp-) ══════════ */
+/* ══════════ CSS local do capítulo 03½ (prefixo swp-) ══════════ */
 
 /* Ligatures OFF em toda classe mono local (-> não vira →, != não vira ≠) */
 .mono,.pw-sent,.pw-cand,.mc-block,.lp-console,.lp-step,.ps-code,.ci-line,.tool-cmd,
@@ -193,6 +193,24 @@
 @media (prefers-reduced-motion: reduce){
   .pw-chip,.pw-cand,.mc-block,.lp-step,.agent-card,.ps-toggle button,.ci-line{transition:none;animation:none}
 }
+/* ---------- primeira tarefa (veio do Dia 3) ---------- */
+#agente-tutor .swp-spec-text,#agente-css .swp-spec-text,#agente-css .exercise .swp-spec-text{white-space:pre-wrap;font-family:'JetBrains Mono',monospace;font-size:0.76rem;line-height:1.75;font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;color:#c9d1d9;padding:14px 16px;background:var(--code-bg);border:1px solid rgba(167,139,250,0.3);border-radius:12px;margin:10px 0}
+.swp-spec-text .sp-k{color:var(--accent6);font-weight:700}
+.swp-spec-text .sp-you{color:var(--accent5);font-weight:700}
+.swp-accept{margin:12px 0}
+.swp-accept label{
+  display:flex;gap:10px;align-items:flex-start;padding:9px 12px;margin:6px 0;
+  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);
+  border-radius:10px;font-size:0.88rem;color:var(--text-dim);cursor:pointer;line-height:1.5;
+}
+.swp-accept input{accent-color:var(--accent7);width:17px;height:17px;flex-shrink:0;margin-top:2px}
+.swp-accept label:has(input:checked){border-color:rgba(6,214,160,0.4);color:var(--text)}
+.swp-ailook{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+@media(max-width:700px){.swp-ailook{grid-template-columns:1fr}}
+.swp-ailook > div{border-radius:14px;padding:14px 16px;border:1px solid rgba(255,255,255,0.08);background:var(--surface);font-size:0.86rem;color:var(--text-dim);line-height:1.6}
+.swp-ailook > div strong{display:block;margin-bottom:6px;color:var(--text)}
+.swp-ailook .bad{border-color:rgba(255,71,87,0.3)}
+.swp-ailook .good{border-color:rgba(6,214,160,0.3)}
 </style>
 </head>
 <body>
@@ -210,12 +228,12 @@
 <aside class="sidebar-nav" id="sidebar">
   <button class="sidebar-close" onclick="closeSidebar()" aria-label="Fechar menu">✕</button>
   <div class="sidebar-header">
-    <h3>🤖 Dia 02½ · IA &amp; Agentes</h3>
+    <h3>🤖 Dia 03½ · IA &amp; Agentes</h3>
     <a href="../../index.html" class="sidebar-back">← Voltar ao hub</a>
   </div>
   <div class="sidebar-group">
     <div class="sidebar-group-title">⚙️ Preparação</div>
-    <a class="sidebar-link" onclick="goTo('pre-encontro')"><span class="dot" style="background:var(--accent5)"></span>Antes do Dia 3</a>
+    <a class="sidebar-link" onclick="goTo('pre-encontro')"><span class="dot" style="background:var(--accent5)"></span>Antes do Dia 4</a>
     <a class="sidebar-link" onclick="goTo('aquecimento')"><span class="dot" style="background:var(--accent5)"></span>Aquecimento</a>
   </div>
   <div class="sidebar-group">
@@ -236,6 +254,11 @@
     <a class="sidebar-link" onclick="goTo('escada')"><span class="dot" style="background:var(--accent6)"></span>A escada do curso</a>
   </div>
   <div class="sidebar-group">
+    <div class="sidebar-group-title">🏠 Sua primeira tarefa</div>
+    <a class="sidebar-link" onclick="goTo('agente-tutor')"><span class="dot" style="background:var(--accent6)"></span>Tutor: explique o MEU SQL</a>
+    <a class="sidebar-link" onclick="goTo('agente-css')"><span class="dot" style="background:var(--accent6)"></span>⭐ A Loja fica moderna 🎨</a>
+  </div>
+  <div class="sidebar-group">
     <div class="sidebar-group-title">🏁 Fechamento</div>
     <a class="sidebar-link" onclick="goTo('bugzilla')"><span class="dot" style="background:var(--bug)"></span>BugZilla da era da IA 🐛</a>
     <a class="sidebar-link" onclick="goTo('quiz')"><span class="dot" style="background:var(--accent5)"></span>Quiz de fixação</a>
@@ -249,10 +272,10 @@
      ═══════════════════════════════════════════════════════ -->
 <section class="hero">
   <div class="hero-icons">🤖 🧠 ⌨️</div>
-  <span class="hero-badge python">Dia 02½ · entre o Dia 2 e o Dia 3 · leitura + instalação em casa</span>
+  <span class="hero-badge python">Dia 03½ · entre o Dia 3 e o Dia 4 · leitura + instalação em casa</span>
   <h1><span style="background:linear-gradient(135deg,var(--accent6),var(--accent3));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">IA &amp; Agentes:<br>seu par de programação</span></h1>
   <p class="subtitle">
-    Você passou dois encontros digitando tudo na mão. A partir do Dia 3 você ganha um
+    Você passou três encontros digitando tudo na mão. A partir do Dia 4 você ganha um
     <strong class="ia">estagiário genial</strong> que leu a internet inteira e digita a mil por
     hora — e descobre por que só quem fez o caminho na mão consegue ser o
     <strong style="color:var(--accent5)">CHEFE</strong> dele. Como um LLM funciona, o que é um
@@ -278,32 +301,33 @@
     <div class="step-header">
       <div class="step-number sn-yellow">📥</div>
       <div>
-        <div class="step-title">Antes do Dia 3: leia este capítulo e instale o seu agente</div>
-        <div class="step-sub">~40 minutos de leitura + ~15 de instalação. No Dia 3 a gente USA.</div>
+        <div class="step-title">Antes do Dia 4: leia, instale e faça a primeira tarefa</div>
+        <div class="step-sub">~40 minutos de leitura, ~15 de instalação e ~30 de tarefa. No Dia 4 a gente USA.</div>
       </div>
     </div>
 
     <div class="card">
       <div class="swp-preflight">
-        <div class="pf-title">⚠️ Este capítulo não tem encontro próprio — ele é a lição de casa entre o Dia 2 e o Dia 3</div>
+        <div class="pf-title">⚠️ Este capítulo não tem encontro próprio — ele é a lição de casa entre o Dia 3 e o Dia 4</div>
         <ol>
           <li><strong>Leia até o fim</strong>, brincando com as máquinas. Elas explicam o que a ferramenta
             faz por dentro — e por que você vai revisar tudo o que ela produzir.</li>
           <li><strong>Escolha o seu agente</strong> na seção <em>Bora instalar o seu</em>. Precisa de um dos
             planos pagos: <strong>Claude Pro</strong> (Claude Code), <strong>ChatGPT Plus</strong> (Codex) ou
-            <strong>Google AI Pro</strong> (Antigravity). Não existe opção gratuita neste curso —
-            use o plano que você já paga.</li>
+            <strong>Google AI Pro</strong> (Antigravity). Não existe opção gratuita neste curso:
+            se ainda não assina nenhum, escolha um antes do Dia 4.</li>
           <li><strong>Instale e faça o primeiro "oi"</strong> dentro do Terminal do PyCharm, na pasta da
             sua <code>loja</code>. Deu certo? Conte no grupo. ✅</li>
-          <li>No Dia 3, o agente estreia como <strong>tutor</strong> (explica o seu SQL) e faz a primeira tarefa
-            de verdade: <strong>dar uma cara moderna à Loja</strong>, com você revisando o CSS. 🎨</li>
+          <li><strong>Faça a primeira tarefa</strong>, na Parte 4: o agente explica o seu SQL e dá
+            <strong>uma cara moderna à Loja</strong>, com você revisando o CSS. 🎨</li>
+          <li>No Dia 4, a aula abre com 20 minutos sobre agentes e a turma já começa a trabalhar com eles.</li>
         </ol>
       </div>
 
       <div class="warning">
         <span class="tip-icon">🆘</span>
         <div class="tip-content">
-          <strong>Não conseguiu instalar?</strong> Venha mesmo assim: no Dia 3 você faz dupla com um
+          <strong>Não conseguiu instalar?</strong> Venha mesmo assim: no Dia 4 você faz dupla com um
           colega (dirigir o agente A DOIS é até melhor pra aprender) e resolvemos a instalação no intervalo.
         </div>
       </div>
@@ -326,15 +350,15 @@
 
     <div class="card">
       <div class="quiz">
-        <div class="quiz-q"><span class="q-emoji">🔥</span> Se existe IA que escreve código sozinha… por que você passou dois dias digitando Flask e Jinja na mão?</div>
+        <div class="quiz-q"><span class="q-emoji">🔥</span> Se existe IA que escreve código sozinha… por que você passou três dias digitando Flask, Jinja e SQL na mão?</div>
         <div class="quiz-options">
           <button class="quiz-opt" onclick="checkQuiz(this,false)">Porque o professor gosta de ver aluno sofrer</button>
           <button class="quiz-opt" onclick="checkQuiz(this,false)">Porque a IA erra sempre e não serve pra nada</button>
           <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Porque só quem sabe LER e REVISAR código consegue comandar a IA — em vez de ser refém dela</button>
           <button class="quiz-opt" onclick="checkQuiz(this,false)">Não precisava — foi tempo perdido</button>
         </div>
-        <div class="quiz-feedback" data-correct="Exatamente. E a partir do Dia 3 você vira o chefe." data-wrong="Pensa: quem confere se o código da IA está certo?"
-             data-explain="A IA escreve código MUITO bem — e erra com a maior confiança do mundo. O mercado não paga mais quem digita mais rápido: paga quem sabe ESPECIFICAR o que quer e REVISAR o que recebeu. As duas coisas exigem exatamente o que você construiu nos Dias 1 e 2: saber ler rota, template e formulário. Sem isso, você não comanda a IA — obedece a ela."></div>
+        <div class="quiz-feedback" data-correct="Exatamente. E a partir do Dia 4 você vira o chefe." data-wrong="Pensa: quem confere se o código da IA está certo?"
+             data-explain="A IA escreve código MUITO bem — e erra com a maior confiança do mundo. O mercado não paga mais quem digita mais rápido: paga quem sabe ESPECIFICAR o que quer e REVISAR o que recebeu. As duas coisas exigem exatamente o que você construiu nos Dias 1 a 3: saber ler rota, template, formulário e SQL. Sem isso, você não comanda a IA — obedece a ela."></div>
       </div>
 
       <div class="quiz">
@@ -345,8 +369,8 @@
           <button class="quiz-opt" onclick="checkQuiz(this,false)">O Flask salvava num arquivo sozinho</button>
           <button class="quiz-opt" onclick="checkQuiz(this,false)">Dava erro 500</button>
         </div>
-        <div class="quiz-feedback" data-correct="Isso — e é por isso que o Dia 3 é banco de dados." data-wrong="Lembra do apagão!"
-             data-explain="Guarda esse detalhe: no Dia 3, uma das primeiras coisas que você vai pedir ao agente é EXPLICAR o código que resolve o apagão. Você precisa saber a resposta pra julgar a explicação."></div>
+        <div class="quiz-feedback" data-correct="Isso — e foi por isso que o Dia 3 foi banco de dados." data-wrong="Lembra do apagão!"
+             data-explain="Guarda esse detalhe: na primeira tarefa deste capítulo, você vai pedir ao agente pra EXPLICAR o código que resolve o apagão. Você precisa saber a resposta pra julgar a explicação."></div>
       </div>
     </div>
   </section>
@@ -664,7 +688,7 @@
     <div class="card">
       <p style="color:var(--text-dim)">
         Essa é a área mais quente da tecnologia agora, e cada gigante tem o seu agente. Neste curso
-        você usa um destes três — o que vier com o plano que você já paga:
+        você usa um destes três — o que vier com o plano que você assinar:
       </p>
 
       <div class="agents-grid">
@@ -854,7 +878,7 @@ agy</div>
           <strong>LÊ</strong> o seu <code>app.py</code> e os templates (o loop em ação). Leia a
           explicação com olho crítico — você digitou esse projeto, você sabe se ele acertou.<br>
           <strong style="color:var(--text)">4.</strong> Funcionou? Conte no grupo da turma. ✅
-          É só isso por hoje: no Dia 3 vem a primeira tarefa de verdade.
+          Pronto: a primeira tarefa de verdade está na Parte 4.
         </p>
       </div>
     </div>
@@ -1027,12 +1051,8 @@ agy</div>
 
       <div class="swp-escada">
         <div class="swp-degrau now">
-          <span class="dg-n">DIA 2½</span>
-          <div><div class="dg-t">Instalar e entender</div><div class="dg-d">Este capítulo. O primeiro "oi" no seu projeto, sem mudar nada.</div></div>
-        </div>
-        <div class="swp-degrau">
-          <span class="dg-n">DIA 3</span>
-          <div><div class="dg-t">Tutor + primeira tarefa: a Loja fica moderna 🎨</div><div class="dg-d">Você escreve o SQL na mão e pede pro agente EXPLICAR cada linha. Depois, com uma espec sua, ele escreve o CSS da Loja — visual moderno, sem cara de IA — e você revisa o diff.</div></div>
+          <span class="dg-n">DIA 3½</span>
+          <div><div class="dg-t">Instalar, entender e fazer a primeira tarefa 🎨</div><div class="dg-d">Este capítulo. O agente explica o seu SQL e, com uma espec sua, escreve o CSS da Loja. Você revisa o diff.</div></div>
         </div>
         <div class="swp-degrau">
           <span class="dg-n">DIA 4</span>
@@ -1048,9 +1068,324 @@ agy</div>
         </div>
         <div class="swp-degrau">
           <span class="dg-n">DIAS 7–8</span>
-          <div><div class="dg-t">Seu sistema, seu CLAUDE.md</div><div class="dg-d">Projeto final com o agente de par, regras do projeto escritas em arquivo, e o Demo Day em que você explica tudo.</div></div>
+          <div><div class="dg-t">A Estante, do zero até o ar</div><div class="dg-d">Um sistema novo, 100% por prompts, publicado na internet, e o Demo Day em que você explica tudo.</div></div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <div class="chapter-divider">
+    <div class="chapter-icon">🏠</div>
+    <div class="chapter-number">Parte 4 · em casa</div>
+    <h2 style="background:linear-gradient(135deg,var(--accent6),var(--accent3));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Sua primeira tarefa</h2>
+    <p class="chapter-subtitle">Uns 30 minutos: primeiro ele explica o SEU código, depois gera algo que você revisa.</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       AGENTE COMO TUTOR
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="agente-tutor">
+    <div class="step-header">
+      <div class="step-number sn-purple">🤖</div>
+      <div>
+        <div class="step-title">O agente como tutor: "explique o MEU código"</div>
+        <div class="step-sub">Degrau 1 da escada: ele só fala — quem escreveu o SQL foi você</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        No Dia 3 você digitou três scripts na mão. É a hora perfeita pra estrear o agente do jeito
+        mais seguro que existe: <strong style="color:var(--text)">perguntando</strong>. Perguntar não
+        mexe em nada — e, como você aprendeu o assunto há pouco, você consegue
+        <strong style="color:var(--text)">julgar a resposta</strong>. É o treino do olho crítico antes
+        de deixar ele escrever qualquer coisa.
+      </p>
+
+      <div class="exercise guided">
+        <div class="exercise-header">
+          <span class="exercise-icon">👨‍🏫</span>
+          <div>
+            <div class="exercise-title">Passo a passo, em casa</div>
+            <div class="exercise-sub">Terminal do PyCharm, na pasta treino-sql</div>
+          </div>
+        </div>
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">1.</strong> Com o projeto <code>treino-sql</code> aberto,
+          Terminal (<code>Alt+F12</code> / <code>⌥F12</code>) → rode o seu agente
+          (<code>claude</code>, <code>codex</code> ou <code>agy</code>).<br>
+          <strong style="color:var(--text)">2.</strong> Cole este pedido:
+        </p>
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">pedido de tutor (não muda nada)</span>
+            <span class="lang-badge prompt">prompt</span>
+          </div>
+<pre>Leia criar_banco.py, inserir.py e consultar.py. Explique, linha por linha, o que cada
+um faz, pra um iniciante. Depois responda: (1) o que acontece se eu esquecer o commit?
+(2) por que o ? é mais seguro que montar o SQL com f-string? NÃO mude nenhum arquivo.</pre>
+        </div>
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">3.</strong> Leia a resposta <strong>conferindo com o que
+          você aprendeu no Dia 3</strong>: o commit é o carimbo (Rascunho e Carimbo), o <code>?</code>
+          é o que barra a injection. Ele acertou? Explicou melhor ou pior que o material?<br>
+          <strong style="color:var(--text)">4.</strong> Pergunte mais uma, sua: qualquer linha que
+          ainda esteja nebulosa. Tutor que responde na hora, 24h por dia, sobre o SEU código —
+          esse é o primeiro superpoder.
+        </p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🧐</span>
+        <div class="tip-content">
+          <strong>Ele vai sugerir "melhorias" sem você pedir</strong> — tipo trocar o ritual por
+          <code>with sqlite3.connect(...) as conexao:</code>. É válido, é o "jeito da internet"…
+          e não é o jeito do curso ainda. Responda: <em>"obrigado, hoje não mude nada"</em>.
+          Você decide o que entra. Sempre.
+        </div>
+      </div>
+
+      <div class="warning">
+        <span class="tip-icon">🎲</span>
+        <div class="tip-content">
+          <strong>E se ele explicar errado?</strong> Acontece (é a alucinação, lá da Parte 1). Você tem duas
+          armas: o material, que você acabou de ler, e o <code>▶</code>: rode o script sem o commit
+          e veja com os próprios olhos. Regra de ouro: <strong>confie, mas confira</strong>.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ⭐ A LOJA FICA MODERNA (CSS VIA AGENTE)
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="agente-css">
+    <div class="step-header">
+      <div class="step-number sn-purple">⭐</div>
+      <div>
+        <div class="step-title">A primeira tarefa: a Loja fica moderna 🎨</div>
+        <div class="step-sub">A primeira tarefa gerada — uma espec SUA, um CSS dele, e você revisando na tela</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Por que a primeira tarefa gerada é <strong style="color:var(--text)">visual</strong>? Porque
+        é a mais fácil de revisar: o resultado está na tela, você VÊ se ficou bom. Sem risco pros
+        dados, sem lógica escondida. E porque a Loja merece: o Pico.css foi ótimo pra começar, mas
+        todo site com Pico tem a mesma cara. Hoje ela ganha a <strong style="color:var(--text)">sua</strong>.
+      </p>
+
+      <div class="concept">
+        <div class="concept-title">🧱 Conceito novo de Flask (pequeno, mas você precisa dele pra revisar): a pasta <code>static/</code></div>
+        <p>
+          O Flask serve automaticamente qualquer arquivo que esteja na pasta <code>static/</code>
+          do projeto, no endereço <code>/static/...</code>. Então um arquivo
+          <code>loja/static/style.css</code> fica disponível em <code>localhost:5000/static/style.css</code>,
+          e o <code>base.html</code> puxa ele com
+          <code>&lt;link rel="stylesheet" href="/static/style.css"&gt;</code> — no lugar da linha do Pico.
+          É só isso. Mas se o agente inventar outro caminho, agora você sabe que está errado.
+        </p>
+      </div>
+
+      <p style="color:var(--text-dim)">
+        E o tal do "sem cara de IA"? Todo mundo já reconhece o site que a IA fez sozinha. A espec
+        precisa dizer o que <strong style="color:var(--text)">não</strong> queremos:
+      </p>
+
+      <div class="swp-ailook">
+        <div class="bad">
+          <strong>🤖 A "cara de IA" (evite na espec)</strong>
+          gradiente roxo-azul em tudo · card com sombra gigante em cada bloco · borda super
+          arredondada · emoji no título de cada seção · fundo escuro com brilho neon ·
+          "Bem-vindo à nossa plataforma inovadora"
+        </div>
+        <div class="good">
+          <strong>✅ O que pedir no lugar</strong>
+          uma paleta SUA (2 cores + 1 destaque) · uma fonte só · espaçamento generoso ·
+          tabela e formulário limpos e legíveis · menu simples e fixo · funciona no celular ·
+          sóbrio: parece um sistema de verdade, não um cartaz
+        </div>
+      </div>
+
+      <div class="exercise guided">
+        <div class="exercise-header">
+          <span class="exercise-icon">👨‍🏫</span>
+          <div>
+            <div class="exercise-title">Mão na massa com o agente</div>
+            <div class="exercise-sub">Espec → gerar → LER o diff → testar → ajustar</div>
+          </div>
+        </div>
+
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">1.</strong> Abra o projeto <code>loja</code> (não o
+          treino-sql!) no PyCharm → Terminal → seu agente.<br>
+          <strong style="color:var(--text)">2.</strong> Preencha o que está em
+          <strong style="color:var(--accent5)">amarelo</strong> com as SUAS escolhas e cole a espec
+          inteira (são os 4 ingredientes da Parte 3):
+        </p>
+
+<div class="swp-spec-text"><span class="sp-k">[CONTEXTO]</span> Projeto Flask em Python. Templates em templates/, todos herdam
+de base.html ({% block conteudo %}). O visual atual vem do Pico.css, linkado
+no &lt;head&gt; do base.html. Páginas: / (home), /produtos (tabela),
+/cadastro_produto (formulário), /sobre e /contato.
+
+<span class="sp-k">[TAREFA]</span> Crie static/style.css com um visual moderno e próprio para a loja,
+e troque a linha do Pico no base.html por &lt;link rel="stylesheet"
+href="/static/style.css"&gt;. Estilize: menu de navegação, títulos, tabela de
+produtos, formulário (inputs e botão) e links.
+
+<span class="sp-k">[RESTRIÇÕES]</span>
+- Só CSS puro. NÃO use JavaScript. NÃO instale nada. NÃO use framework de CSS.
+- NÃO mude a estrutura HTML dos templates nem os nomes dos blocos Jinja.
+- Mexa SÓ em static/style.css (novo) e na linha do &lt;link&gt; do base.html.
+- Uma fonte do Google Fonts, no máximo: <span class="sp-you">[ex.: Inter]</span>.
+- Paleta: <span class="sp-you">[ex.: fundo branco-gelo, texto grafite, destaque verde-escuro]</span>.
+- Sem "cara de IA": nada de gradiente roxo, nada de sombra gigante em tudo,
+  nada de borda muito arredondada, nada de emoji. Sóbrio, legível, espaçado.
+- Responsivo: tabela e formulário precisam funcionar no celular.
+
+<span class="sp-k">[ACEITE]</span> As 5 páginas abrem sem erro com o visual novo; o formulário continua
+cadastrando; nenhum arquivo além dos dois foi tocado.</div>
+
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">3.</strong> Ele vai pedir permissão pra criar o
+          <code>static/style.css</code> e editar o <code>base.html</code>.
+          <strong>Leia o diff antes de cada "sim"</strong>: são só esses dois arquivos? A linha do
+          Pico saiu e a do <code>/static/style.css</code> entrou? Nada de <code>&lt;script&gt;</code>?<br>
+          <strong style="color:var(--text)">4.</strong> ▶ no <code>app.py</code>, e passeie pelas 5
+          páginas. Cadastre um produto. Diminua a janela do navegador até ficar do tamanho de um
+          celular.<br>
+          <strong style="color:var(--text)">5.</strong> Marque o checklist de aceitação — a espec
+          virou teste:
+        </p>
+
+        <div class="swp-accept">
+          <label><input type="checkbox"> Só <code>static/style.css</code> (novo) e UMA linha do <code>base.html</code> mudaram?</label>
+          <label><input type="checkbox"> Nenhum <code>&lt;script&gt;</code>, nenhum <code>pip install</code>, nenhuma biblioteca de CSS?</label>
+          <label><input type="checkbox"> As 5 páginas abrem sem erro e com o visual novo (o menu aparece em todas — o base.html continua mandando)?</label>
+          <label><input type="checkbox"> O formulário continua cadastrando e a tabela continua listando?</label>
+          <label><input type="checkbox"> No tamanho de celular, a tabela e o form ainda são usáveis?</label>
+          <label><input type="checkbox"> Ficou com a SUA cara — paleta e fonte que você escolheu, sem "cara de IA"?</label>
+        </div>
+
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">6. Ajustar</strong> — algum item falhou ou você não
+          gostou? Peça mudanças <strong>pequenas e específicas</strong>: <em>"o botão Cadastrar está
+          pequeno: aumente o padding e deixe a fonte 16px"</em>, <em>"a tabela está apertada no
+          celular: deixe as células empilharem"</em>. Um pedido por vez, olhando o diff a cada um.<br>
+          <strong style="color:var(--text)">7. Tutor de novo</strong> — abra o
+          <code>style.css</code>, escolha três regras que você não entende e peça:
+          <em>"explique estas três regras do style.css e por que você as usou"</em>. Você viu CSS no
+          Dia 1; agora tem um arquivo inteiro pra aprender com ele.
+        </p>
+      </div>
+
+      <div class="warning">
+        <span class="tip-icon">🚫</span>
+        <div class="tip-content">
+          <strong>Ele mexeu em outro template? Renomeou um bloco? Colocou JavaScript?</strong>
+          Não aceite "porque ficou bonito". Responda: <em>"desfaça e refaça mexendo SÓ nos dois
+          arquivos da espec"</em>. É o item ④ do ritual (algo que eu NÃO pedi) na prática — e a
+          Caça ao Intruso da Parte 3 era exatamente sobre isso.
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🎨</span>
+        <div class="tip-content">
+          <strong>Ficou feio?</strong> A culpa é da espec, não da ferramenta: paleta e fonte foram
+          escolhas suas, e "moderno" é vago. Refine as restrições ("mais contraste", "menu com fundo
+          escuro", "linhas da tabela zebradas") e peça de novo. Especificar também se aprende
+          iterando.
+        </div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 O que você acabou de fazer, em termos de mercado</div>
+        <p>
+          Você escreveu uma especificação com contexto, tarefa, restrições e critério de aceite;
+          revisou um diff; testou contra o critério; pediu ajustes; e usou o gerador como tutor.
+          Isso é <strong>o fluxo inteiro</strong> — o mesmo que vai construir a Loja a partir do Dia 4
+          e a Estante no Dia 7. Foi CSS de propósito: assunto de baixo risco, ritual completo.
+          Esta tarefa é o seu treino: no Dia 4 a turma recomeça junta, num projeto novo.
+        </p>
+      </div>
+
+      <div class="exercise home">
+        <div class="exercise-header">
+          <span class="exercise-icon">🤖</span>
+          <div>
+            <div class="exercise-title">Bônus — Estoque de mentira, gerado e revisado</div>
+            <div class="exercise-sub">O agente escreve dados de teste; você confere o SQL dele</div>
+          </div>
+        </div>
+        <div class="drill-tags">
+          <span class="drill-level lv1"><span class="stars">★</span> fácil</span>
+          <span class="drill-tag">agente</span>
+          <span class="drill-tag">INSERT</span>
+          <span class="drill-tag">?</span>
+        </div>
+        <p style="color:var(--text-dim)">
+          Dados de teste são a tarefa ideal pra delegar: chatos de digitar, fáceis de conferir.
+          Peça ao agente, na pasta <code>treino-sql</code>:
+        </p>
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">pedido</span>
+            <span class="lang-badge prompt">prompt</span>
+          </div>
+<pre>Crie popular.py que insere 10 produtos de teste realistas (nome, preco, quantidade)
+na tabela produtos do loja.db, usando sqlite3 com placeholders ? e commit no final.
+Siga o mesmo estilo do inserir.py. NÃO mude os outros arquivos.</pre>
+        </div>
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">Revise antes de rodar</strong> (é o ritual): usa
+          <code>?</code> e não f-string? Tem <code>commit()</code>? Fecha a conexão? Os nomes fazem
+          sentido pra uma loja? Rodou → <code>consultar.py</code> mostra os 10 novos com ids
+          seguindo a sequência?
+        </p>
+        <div class="toggler">
+          <div class="toggler-header" onclick="toggleSection(this)">
+            <span>👀 Como deve ficar (seu gabarito mental pra revisar)</span>
+            <span class="toggler-arrow">▼</span>
+          </div>
+          <div class="toggler-body">
+            <div class="code-block">
+              <div class="code-header">
+                <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+                <span class="filename">treino-sql/popular.py (uma versão correta)</span>
+                <span class="lang-badge python">Python</span>
+              </div>
+<pre><span class="kw">import</span> sqlite3
+
+produtos = [
+    (<span class="st">"Cabo HDMI 2m"</span>,      <span class="num">35.00</span>,  <span class="num">40</span>),
+    (<span class="st">"Hub USB 4 portas"</span>,  <span class="num">59.90</span>,  <span class="num">15</span>),
+    (<span class="st">"Caixa de Som BT"</span>,   <span class="num">120.00</span>, <span class="num">8</span>),
+    <span class="cm"># ... mais 7 ...</span>
+]
+
+conexao = sqlite3.connect(<span class="st">"loja.db"</span>)
+cursor = conexao.cursor()
+<span class="kw">for</span> p <span class="kw">in</span> produtos:
+    cursor.execute(<span class="st">"INSERT INTO produtos (nome, preco, quantidade) VALUES (?, ?, ?)"</span>, p)
+conexao.commit()
+conexao.close()
+<span class="bi">print</span>(<span class="st">"10 produtos inseridos!"</span>)</pre>
+            </div>
+            <p style="color:var(--text-dim);font-size:0.88rem">
+              Se o agente usar <code>executemany</code> no lugar do <code>for</code>: também está
+              certo — é um atalho do sqlite3 pra listas. Peça pra ele explicar a diferença. 😉
+            </p>
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -1058,7 +1393,7 @@ agy</div>
     <div class="chapter-icon">🏁</div>
     <div class="chapter-number">Fechamento</div>
     <h2 style="background:linear-gradient(135deg,var(--accent5),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Os bugs de uma era nova</h2>
-    <p class="chapter-subtitle">BugZilla, quiz e o que levar pro Dia 3</p>
+    <p class="chapter-subtitle">BugZilla, quiz e o que levar pro Dia 4</p>
   </div>
 
   <!-- ═══════════════════════════════════════════════════════
@@ -1160,7 +1495,7 @@ agy</div>
       </div>
       <p class="text-dim" style="max-width:560px;margin:10px auto 0">
         E ferramenta boa na mão de quem sabe o que está fazendo… constrói coisa grande.
-        No Dia 3, a estreia: <strong style="color:var(--text)">a sua Loja com cara de produto</strong>.
+        No Dia 4, a virada: <strong style="color:var(--text)">você comanda e o agente constrói</strong>.
       </p>
     </div>
   </section>
@@ -1175,7 +1510,7 @@ agy</div>
       <div class="step-number sn-yellow">🧠</div>
       <div>
         <div class="step-title">Quiz de fixação</div>
-        <div class="step-sub">4 perguntas pra carimbar o Dia 2½</div>
+        <div class="step-sub">4 perguntas pra carimbar o Dia 3½</div>
       </div>
     </div>
 
@@ -1217,15 +1552,15 @@ agy</div>
       </div>
 
       <div class="quiz">
-        <div class="quiz-q"><span class="q-emoji">4️⃣</span> No Dia 3, qual é o papel do agente?</div>
+        <div class="quiz-q"><span class="q-emoji">4️⃣</span> A partir do Dia 4, qual é o seu papel?</div>
         <div class="quiz-options">
-          <button class="quiz-opt" onclick="checkQuiz(this,false)">Escrever o SQL por você</button>
-          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Explicar o SQL que VOCÊ escreveu, e gerar o CSS da Loja a partir de uma espec sua</button>
-          <button class="quiz-opt" onclick="checkQuiz(this,false)">Nenhum, ele só entra no Dia 6</button>
-          <button class="quiz-opt" onclick="checkQuiz(this,false)">Fazer o projeto final inteiro</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Digitar todo o código, como nos Dias 1 a 3</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Especificar, ler o diff, testar e aprovar o que o agente gerou</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Pedir o sistema inteiro num prompt só</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Aceitar o que vier, se a tela abrir</button>
         </div>
-        <div class="quiz-feedback" data-correct="Tutor + CSS. A preparação para comandar." data-wrong="Olha a progressão de novo!"
-             data-explain="o SQL é seu — a habilidade do dia. O agente explica (tutor) e faz a tarefa visual (CSS), que é fácil de revisar: você VÊ o resultado na tela."></div>
+        <div class="quiz-feedback" data-correct="É o ofício inteiro." data-wrong="Olha a progressão de novo!"
+             data-explain="o agente digita, mas quem define o resultado e responde por ele é você. Por isso cada operação tem prompt, diff, teste e aceite."></div>
       </div>
     </div>
   </section>
@@ -1239,7 +1574,7 @@ agy</div>
     <div class="step-header">
       <div class="step-number sn-green">🎒</div>
       <div>
-        <div class="step-title">O que você leva do Dia 2½</div>
+        <div class="step-title">O que você leva do Dia 3½</div>
         <div class="step-sub">O motor, o loop, o pedido e o ritual</div>
       </div>
     </div>
@@ -1265,17 +1600,16 @@ agy</div>
       <div class="tip">
         <span class="tip-icon">👀</span>
         <div class="tip-content">
-          <strong>No próximo encontro (Dia 3):</strong> banco de dados de verdade — SQL e SQLite
-          na mão, com o agente de tutor explicando cada linha. E, de sobremesa, a primeira tarefa
-          gerada: <strong>a Loja com visual moderno</strong>, CSS escrito pelo agente a partir da
-          SUA espec, revisado por você. Chegue com a ferramenta instalada. 🎨
+          <strong>No próximo encontro (Dia 4):</strong> a virada do curso. A turma alinha o essencial
+          sobre agentes em 20 minutos e parte para a integração: telas do Dia 2 + banco do Dia 3,
+          com você especificando e revisando. Chegue com a ferramenta instalada. 💍
         </div>
       </div>
 
       <div class="next-chapter">
-        <h3>🗄️ Dia 03 · Banco de dados de verdade</h3>
-        <p style="color:var(--text-dim)">SQL + SQLite: o cofre dos seus dados — e a estreia do agente</p>
-        <a href="../03-sql-sqlite/" class="btn-next">🗄️ Ir para o Dia 03 →</a>
+        <h3>🔗 Dia 04 · A Loja ganha banco</h3>
+        <p style="color:var(--text-dim)">Listar + cadastrar com SQLite — agora em modo agent-first</p>
+        <a href="../04-crud-parte-1/" class="btn-next">🔗 Ir para o Dia 04 →</a>
       </div>
     </div>
   </section>
@@ -1289,7 +1623,7 @@ agy</div>
 <script src="../../shared/scripts.js" defer></script>
 <script type="module" src="../../shared/motion-fx.js"></script>
 <script>
-/* ══════════ Máquinas didáticas do capítulo 02½ (vanilla, offline-first) ══════════ */
+/* ══════════ Máquinas didáticas do capítulo 03½ (vanilla, offline-first) ══════════ */
 document.addEventListener('DOMContentLoaded', () => {
   const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   const onView = (el, fn) => {

@@ -27,7 +27,7 @@ O aluno precisa construir o CRUD na mão primeiro (dias 1–5) para conseguir **
 
 Pragmática de custo: professor demonstra com Claude Code; aluno usa Gemini CLI (free tier) como padrão, Claude Code/Codex para quem tiver assinatura. O fluxo de trabalho ensinado é o mesmo.
 
-## D5 · Fio condutor = Loja/Vendas do desafio final do bootcamp (2026-07-22)
+## D5 · Fio condutor = Loja/Vendas do desafio final do bootcamp (2026-07-22 · origem superada por D24)
 
 Escolha do professor (vs lanchonete/cinema): reconstruir o `app_loja.py` (Streamlit + TinyDB, 4 abas) como sistema web. Vantagens: o aluno já conhece o domínio (zero tempo explicando requisitos), a comparação antes/depois é visceral, e a narrativa de evolução vende o curso sozinha.
 
@@ -511,3 +511,45 @@ exceto `.com.br`), apontar pro Render e explicar DNS do zero.
 - Fatos verificados em 06/10/2026: Render usa IP `216.24.57.1` para registro A na raiz e CNAME
   no `www`, só IPv4, certificado Let's Encrypt automático, 2 domínios personalizados no plano
   Free por workspace. Preços da Superdomínios da página de promoções do mesmo dia.
+
+---
+
+### D24 · Curso independente e orçamento de 8 aulas (2026-11-05)
+
+Pedidos do professor: desacoplar o curso do bootcamp e não passar das 8 aulas. As menções a
+bootcamp, Streamlit, TinyDB e `app_loja.py` nesta pasta de decisões ficam como histórico.
+
+**Diagnóstico da T01, pelo inventário da ClassContent (23/10) e pelas datas de `lojav2`:**
+
+| Aula | Data | Dia do plano |
+|---|---|---|
+| 1 | 15/08 | Dia 1 |
+| 2 e 3 | 25 e 26/08 | Dia 2, em duas aulas |
+| 4 | 01/09 | Dia 2½, que era leitura |
+| 5 | 02/09 | Dia 3 |
+| 6 | 04/09 | Dia 4 (sem resumo; `lojav2`) |
+| 7 | 08/09 | Dia 5 |
+| 8 | 22/09 | Dia 6 (sem resumo; `lojav2`) |
+| 9 | 23/09 | Dia 7 |
+| 10 | 06/10 | Dia 8 |
+
+**Decisões (escolhidas pelo professor):**
+
+- **Curso independente.** Pré-requisito: Python básico. Cap 01 ganhou `#preparo` (instalação e
+  autoteste). A Loja nasce no curso, sem "reconstruir" nada. O raio-X do Streamlit virou raio-X
+  com DevTools.
+- **Dias 1 a 3 sem IA em sala.** O capítulo de IA virou **Dia 3½** (`03b-ia-agentes`), com leitura,
+  instalação e primeira tarefa (tutor + CSS + bônus). O Dia 4 abre com 20 min de agentes e a
+  revisão final desse dia vai para casa. O `style.css` que o Cap 06 chama de "dívida" passa a vir do
+  Prompt de partida do Dia 4, que já recriava o arquivo.
+- **Cap 02 em 1 aula.** `base.html` antes do `{% for %}`, para o `produtos.html` não ser digitado
+  duas vezes; só a home migra em aula; o campo de quantidade entra direto no form; `{% if %}` e
+  arena vão para casa; saíram `url_for` e o spoiler de `request.method`. O estado final do capítulo
+  e o gabarito `dia-02` não mudaram.
+
+**Outras correções:** saída real do Flask no Cap 01 (WARNING explicado), log do F5, AirPlay na porta
+5000, `ValueError` do preço com vírgula, soluções das arenas dos Dias 1 e 3, Cap 00 alinhado à
+Estante, ao Render e aos pré-requisitos. Preço do Cap 00 mantido. Tokens de cor renomeados
+(`--coral`, `--amber`).
+
+**Regra daqui em diante:** cada dia cabe em 1 aula; conteúdo novo em sala exige dizer o que sai.

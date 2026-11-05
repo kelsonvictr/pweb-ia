@@ -7,11 +7,11 @@
 
 ## Dia 1 · `01-ola-web-ola-flask` — Olá, Web! Olá, Flask!
 
-**Gancho**: "Lembra do `streamlit run`? Hoje você descobre o que ele escondia de você."
+**Gancho**: "Todo programa Python que você fez só roda na sua máquina. Hoje isso começa a mudar."
 
 1. Como a web funciona: navegador ↔ servidor, request/response (analogia do garçom 🧑‍🍳)
 2. O que é uma URL, o que é `localhost:5000`
-3. O que o Streamlit fazia por baixo dos panos (desmistificação)
+3. Raio-X: um request real nas DevTools (método, status e HTML)
 4. Instalação: `pip install flask` (venv já preparado no pré-curso)
 5. Primeiro app: `app.py` com `@app.route("/")` retornando string
 6. `render_template("index.html")` — primeira página de verdade (template do starter kit)
@@ -23,6 +23,8 @@
 ---
 
 ## Dia 2 · `02-formularios-jinja` — Telas que falam com Python
+
+**Precisa caber em 1 aula (D24).** Ordem real do capítulo: `{{ }}` → `base.html` (migrando só a home) → `{% for %}` → form + GET/POST → cadastro → apagão. `{% if %}`, migração das outras páginas e arena ficam em casa.
 
 1. Jinja: `{{ variavel }}` — Python aparecendo no HTML
 2. `{% for %}` — listar uma lista de dicts (produtos fake em memória) numa tabela
@@ -37,11 +39,11 @@
 
 ---
 
-## Dia 3 · `03-sql-sqlite` — Banco de dados de verdade (adeus, TinyDB)
+## Dia 3 · `03-sql-sqlite` — Banco de dados de verdade (sem IA em sala)
 
-**Gancho**: "O TinyDB era um caderninho. Hoje você ganha um arquivo de aço com fichário indexado — o mesmo tipo de banco que roda em app de banco e e-commerce."
+**Gancho**: "Até aqui seus dados moravam na memória. Hoje você ganha um arquivo de aço com fichário indexado — o mesmo tipo de banco que roda em app de banco e e-commerce."
 
-1. Por que TinyDB não basta (concorrência, volume, busca, mercado)
+1. Por que um arquivo comum não basta (concorrência, volume, busca, mercado)
 2. O que é um banco relacional: tabelas, colunas, linhas (analogia: planilha turbinada)
 3. SQLite: banco profissional que vive num arquivo (está no seu celular agora!)
 4. `CREATE TABLE produtos (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT, preco REAL, quantidade INTEGER)`
@@ -87,18 +89,18 @@ depois envia o prompt, lê o diff e testa cada critério de aceite.
 6. Prompt 5 — histórico + faturamento (`SELECT SUM(...)`)
 7. Ritual obrigatório após cada geração: escopo do diff, regras SQL, teste feliz, teste de erro e explicação oral
 
-**Sai com**: a Loja completa — as 4 "abas" do desafio do bootcamp, agora como sistema web com banco. Comparação lado a lado: `app_loja.py` (Streamlit) vs agora.
+**Sai com**: a Loja completa — as quatro áreas funcionando como sistema web com banco, com um mapa final do que ela faz.
 **BugZilla do dia**: vender mais do que tem no estoque (validação!) · editar o produto errado (id na URL).
 
 ---
 
-## Dia 2½ · `02b-ia-agentes` — IA & Agentes: seu par de programação (leitura em casa, sem encontro)
+## Dia 3½ · `03b-ia-agentes` — IA & Agentes: seu par de programação (em casa, sem encontro)
 
-Capítulo teórico entre o Dia 2 e o Dia 3 (D15), adaptado do cap 09 do fullstack: LLM = próxima palavra · janela de contexto & alucinação · do chat ao agente (loop com ferramentas) · mercado (Claude Code ⭐ / Codex / Antigravity — planos pagos) · instalação no Terminal do PyCharm + primeiro "oi" · prompt = mini-espec (CONTEXTO/TAREFA/RESTRIÇÕES/ACEITE) · ritual de revisão ①–⑤ · escada do curso · BugZilla dos 5 clássicos.
+Capítulo entre o Dia 3 e o Dia 4 (D24), com leitura, instalação e primeira tarefa (tutor do SQL + CSS da Loja), adaptado do cap 09 do fullstack: LLM = próxima palavra · janela de contexto & alucinação · do chat ao agente (loop com ferramentas) · mercado (Claude Code ⭐ / Codex / Antigravity — planos pagos) · instalação no Terminal do PyCharm + primeiro "oi" · prompt = mini-espec (CONTEXTO/TAREFA/RESTRIÇÕES/ACEITE) · ritual de revisão ①–⑤ · escada do curso · BugZilla dos 5 clássicos.
 
 **A progressão revisada (D16)**:
-- Dia 3: **tutor** do SQL escrito pelo aluno + primeira tarefa visual (CSS)
-- Dia 4: **virada agent-first** — todo o CRUD integrado nasce de prompts-spec; o aluno comanda
+- Dia 3½, em casa: **tutor** do SQL escrito pelo aluno + primeira tarefa visual (CSS)
+- Dia 4: 20 min de agentes em sala + **virada agent-first** — todo o CRUD integrado nasce de prompts-spec; o aluno comanda
 - Dia 5: **sequência de entregas** — um prompt por operação, nunca “faça o resto da Loja”
 - Dia 6: **feature maior** — login inteiro, ainda dividido em plano, implementação e testes; fecha com o prompt de acabamento visual
 - Dias 7–8: projeto e deploy no mesmo fluxo; todo código gerado precisa ser explicado

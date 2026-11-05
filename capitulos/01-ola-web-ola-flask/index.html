@@ -174,7 +174,7 @@
 .swp-seg-info strong{color:var(--text)}
 .swp-seg-info code{background:rgba(255,255,255,0.07);padding:1px 6px;border-radius:5px;font-size:0.82rem}
 
-/* ---------- Raio-X do Streamlit ---------- */
+/* ---------- Raio-X de um site real ---------- */
 .swp-xray{
   display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0;align-items:stretch;
 }
@@ -338,12 +338,16 @@
     <a href="../../index.html" class="sidebar-back">← Voltar ao hub</a>
   </div>
   <div class="sidebar-group">
+    <div class="sidebar-group-title">🧰 Antes da aula</div>
+    <a class="sidebar-link" onclick="goTo('preparo')"><span class="dot" style="background:var(--accent7)"></span>Deixe tudo pronto</a>
+  </div>
+  <div class="sidebar-group">
     <div class="sidebar-group-title">🌐 Como a web funciona</div>
     <a class="sidebar-link" onclick="goTo('aquecimento')"><span class="dot" style="background:var(--accent5)"></span>Aquecimento</a>
     <a class="sidebar-link" onclick="goTo('garcom')"><span class="dot" style="background:var(--accent6)"></span>A analogia do garçom</a>
     <a class="sidebar-link" onclick="goTo('pedido-vivo')"><span class="dot" style="background:var(--accent4)"></span>⭐ Pedido ao Vivo</a>
     <a class="sidebar-link" onclick="goTo('url')"><span class="dot" style="background:var(--accent3)"></span>Anatomia da URL</a>
-    <a class="sidebar-link" onclick="goTo('streamlit')"><span class="dot" style="background:var(--streamlit)"></span>Raio-X do Streamlit</a>
+    <a class="sidebar-link" onclick="goTo('raio-x')"><span class="dot" style="background:var(--coral)"></span>Raio-X de um site real</a>
   </div>
   <div class="sidebar-group">
     <div class="sidebar-group-title">🧱 As linguagens do navegador</div>
@@ -378,8 +382,8 @@
   <span class="hero-badge python">Dia 01 · Sistemas Web com Python</span>
   <h1><span style="background:linear-gradient(135deg,var(--accent4),var(--python-y));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Olá, Web!<br>Olá, Flask!</span></h1>
   <p class="subtitle">
-    Hoje você descobre <strong style="color:var(--accent4)">o que acontece quando alguém abre um site</strong> —
-    e o que o <strong style="color:var(--streamlit)">streamlit run</strong> escondia de você esse tempo todo.
+    Hoje você descobre <strong style="color:var(--accent4)">o que acontece quando alguém abre um site</strong>
+    e vê essa conversa acontecer de verdade, no seu navegador.
     No fim da aula, seu computador vai estar servindo um site com
     <strong style="color:var(--accent7)">duas páginas e URL própria</strong>. 🚀
   </p>
@@ -394,36 +398,121 @@
 <div class="container">
 
   <!-- ═══════════════════════════════════════════════════════
-       AQUECIMENTO — ponte com o bootcamp
+       PREPARO — antes da aula
        ═══════════════════════════════════════════════════════ -->
-  <section class="step-section" id="aquecimento">
+  <section class="step-section" id="preparo">
     <div class="step-header">
-      <div class="step-number sn-yellow">🔥</div>
+      <div class="step-number sn-green">🧰</div>
       <div>
-        <div class="step-title">Aquecimento: de onde a gente vem</div>
-        <div class="step-sub">Um minuto de memória antes da novidade</div>
+        <div class="step-title">Antes da aula: deixe tudo pronto</div>
+        <div class="step-sub">Uns 20 minutos em casa, pra aula começar direto no assunto</div>
       </div>
     </div>
 
     <div class="card">
       <p style="color:var(--text-dim)">
-        No fim do bootcamp você construiu o <strong style="color:var(--text)">Sistema de Loja</strong>:
-        estoque, cadastro, vendas… tudo em Python, com telinha no Streamlit e dados no TinyDB.
-        Funciona! Mas ele tem um probleminha que você talvez nem tenha percebido —
-        e é exatamente esse problema que este curso resolve.
+        O curso roda no seu notebook, com duas ferramentas gratuitas:
+      </p>
+      <p style="color:var(--text-dim)">
+        <strong style="color:var(--text)">1. Python 3:</strong> baixe em <code>python.org/downloads</code>.
+        No Windows, marque <strong>"Add python.exe to PATH"</strong> na primeira tela do instalador.
+        Sem essa caixa, o computador não encontra o Python.<br>
+        <strong style="color:var(--text)">2. PyCharm:</strong> baixe em <code>jetbrains.com/pycharm</code>.
+        A versão gratuita basta. O curso inteiro acontece nele: editor, terminal e botão ▶ no mesmo lugar.<br>
+        <strong style="color:var(--text)">3. Teste:</strong> no PyCharm, <code>File → New Project…</code>,
+        nome <code>teste</code>, <strong>Create</strong>. Crie um arquivo <code>oi.py</code> com a linha abaixo e
+        clique com o botão direito nele → <strong>Run 'oi'</strong>:
+      </p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">teste/oi.py</span>
+          <span class="lang-badge python">Python</span>
+        </div>
+<pre><span class="bi">print</span>(<span class="st">"Python funcionando!"</span>)</pre>
+      </div>
+
+      <p style="color:var(--text-dim)">
+        A janela Run deve mostrar <code>Python funcionando!</code>. Apareceu
+        <em>"No Python interpreter configured"</em>? Vá em
+        <code>Settings → Project → Python Interpreter</code> e escolha o Python que você instalou.
+      </p>
+
+      <h3 style="margin:22px 0 10px">🐍 Confira seu Python</h3>
+      <p style="color:var(--text-dim)">
+        O curso parte do básico de Python: variáveis, <code>if</code>, <code>for</code>, funções,
+        listas e dicionários. Leia este código e responda sem rodar:
+      </p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">autoteste.py</span>
+          <span class="lang-badge python">Python</span>
+        </div>
+<pre>produtos = [
+    {<span class="st">"nome"</span>: <span class="st">"Fone"</span>, <span class="st">"preco"</span>: <span class="num">150</span>},
+    {<span class="st">"nome"</span>: <span class="st">"Mouse"</span>, <span class="st">"preco"</span>: <span class="num">90</span>},
+]
+
+<span class="kw">def</span> <span class="fn">contar_baratos</span>(lista):
+    total = <span class="num">0</span>
+    <span class="kw">for</span> p <span class="kw">in</span> lista:
+        <span class="kw">if</span> p[<span class="st">"preco"</span>] &lt; <span class="num">100</span>:
+            total = total + <span class="num">1</span>
+    <span class="kw">return</span> total
+
+<span class="bi">print</span>(<span class="st">f"Baratos: {contar_baratos(produtos)}"</span>)</pre>
+      </div>
+
+      <div class="quiz">
+        <div class="quiz-q"><span class="q-emoji">🐍</span> O que esse programa imprime?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Baratos: 0</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Baratos: 1</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Baratos: 2</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Dá erro</button>
+        </div>
+        <div class="quiz-feedback" data-correct="Exato!" data-wrong="Ainda não."
+             data-explain="só o Mouse custa menos de 100. Se você entendeu o caminho, tem a base do curso. Se travou, revise listas, dicionários, for e funções antes do Dia 1: o curso usa isso o tempo todo."></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       AQUECIMENTO
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="aquecimento">
+    <div class="step-header">
+      <div class="step-number sn-yellow">🔥</div>
+      <div>
+        <div class="step-title">Aquecimento: o que a gente vai construir</div>
+        <div class="step-sub">Um minuto pra ver o destino antes da novidade</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Neste curso você constrói uma <strong style="color:var(--text)">Loja</strong> do zero:
+        estoque, cadastro, vendas e histórico, tudo em Python. Ela nasce hoje como uma página
+        simples e cresce a cada encontro. Mas todo programa Python que você escreveu até aqui tem
+        um probleminha, e é exatamente esse problema que este curso resolve.
       </p>
 
       <div class="analogy">
         <div class="analogy-title">Pensa assim 🎪</div>
         <p>
-          Seu sistema hoje é como um <strong>espetáculo incrível ensaiado na sua garagem</strong>.
+          Um script é como um <strong>espetáculo incrível ensaiado na sua garagem</strong>.
           O show existe, é bom, funciona… mas ninguém consegue assistir,
           porque <strong>não tem endereço para chegar até ele</strong>.
         </p>
       </div>
 
       <div class="quiz">
-        <div class="quiz-q"><span class="q-emoji">1️⃣</span> O <code>app_loja.py</code> que você fez no bootcamp roda onde?</div>
+        <div class="quiz-q"><span class="q-emoji">1️⃣</span> Um arquivo <code>.py</code> que você escreveu roda onde?</div>
         <div class="quiz-options">
           <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Só no meu computador</button>
           <button class="quiz-opt" onclick="checkQuiz(this,false)">Na internet, qualquer um acessa</button>
@@ -431,7 +520,7 @@
           <button class="quiz-opt" onclick="checkQuiz(this,false)">No celular, se eu instalar</button>
         </div>
         <div class="quiz-feedback" data-correct="Exato!" data-wrong="Quase!"
-             data-explain="ele roda na SUA máquina. Se você desligar o notebook, o sistema some. Hoje começamos a mudar isso."></div>
+             data-explain="ele só roda na SUA máquina. Desligou o notebook, acabou. Hoje começamos a mudar isso."></div>
       </div>
 
       <div class="quiz">
@@ -444,6 +533,16 @@
         </div>
         <div class="quiz-feedback" data-correct="Isso!" data-wrong="Hmm, não!"
              data-explain="sites não se instalam: eles são VISITADOS por um endereço. Entender esse endereço é o assunto de hoje."></div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">✋</span>
+        <div class="tip-content">
+          <strong>Nos Dias 1 a 3, a IA fica de fora.</strong> Você digita rotas, HTML, formulários e
+          SQL na mão. Não é saudosismo: quem nunca montou uma rota não consegue julgar a rota que a
+          IA gerou. A partir do Dia 4, você dirige agentes de IA, e essa base é o que faz de você o
+          chefe deles.
+        </div>
       </div>
     </div>
   </section>
@@ -707,76 +806,74 @@
   <div class="section-connector"><div class="line"></div></div>
 
   <!-- ═══════════════════════════════════════════════════════
-       RAIO-X DO STREAMLIT
+       RAIO-X DE UM SITE REAL
        ═══════════════════════════════════════════════════════ -->
-  <section class="step-section" id="streamlit">
+  <section class="step-section" id="raio-x">
     <div class="step-header">
       <div class="step-number sn-red">🩻</div>
       <div>
-        <div class="step-title">O que o Streamlit escondia de você</div>
-        <div class="step-sub">Plot twist: você já rodava um servidor web sem saber</div>
+        <div class="step-title">Raio-X: um request de verdade</div>
+        <div class="step-sub">A máquina lá de cima era simulação. Agora é o seu navegador mostrando tudo.</div>
       </div>
     </div>
 
     <div class="card">
       <p style="color:var(--text-dim)">
-        Lembra do que aparecia no terminal toda vez que você rodava a Loja com
-        <code>streamlit run</code>?
-        Presta atenção na <strong style="color:var(--text)">segunda linha</strong>:
+        Todo navegador traz as <strong style="color:var(--text)">DevTools</strong>, um painel que mostra
+        cada request saindo e cada response voltando. Acompanhe o professor no Chrome:
+      </p>
+      <p style="color:var(--text-dim)">
+        <strong style="color:var(--text)">1.</strong> Abra <code>example.com</code>, uma página feita pra testes.<br>
+        <strong style="color:var(--text)">2.</strong> Aperte <code>F12</code>
+        (no Mac, <code>Cmd+Option+I</code>) e clique na aba <strong>Network</strong>, ou <strong>Rede</strong>.<br>
+        <strong style="color:var(--text)">3.</strong> Aperte <code>F5</code>. A lista se preenche: cada linha é um request.<br>
+        <strong style="color:var(--text)">4.</strong> Clique na linha <code>example.com</code> e leia a aba
+        <strong>Headers</strong>, ou <strong>Cabeçalhos</strong>:
       </p>
 
-      <div class="terminal" data-typewriter>
-        <div class="terminal-header">
-          <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
-          <span class="title">terminal</span>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">DevTools → Network → Headers</span>
+          <span class="lang-badge terminal">navegador</span>
         </div>
-        <div class="terminal-body">
-          <span class="prompt">$</span> <span class="typed" data-text="streamlit run app_loja.py"></span><span class="cursor"></span><br>
-          <span class="out">  You can now view your Streamlit app in your browser.</span><br>
-          <span class="out" style="color:var(--accent7)">  Local URL: http://localhost:8501</span><br>
-        </div>
+<pre>Request URL: https://example.com/
+Request Method: GET
+Status Code: 200 OK</pre>
       </div>
 
       <div class="tip">
         <span class="tip-icon">🕵️</span>
         <div class="tip-content">
-          <strong>Local URL… localhost… :8501…</strong> Você acabou de aprender a ler isso!
-          O Streamlit <strong>ligava um servidor no seu computador</strong>, na porta 8501,
-          e abria o navegador apontando pra ele. Você era dono de uma cozinha e não sabia.
+          <strong>Aí está a conversa do garçom.</strong> <code>GET</code> é o tipo do pedido e
+          <code>200 OK</code> é o servidor dizendo "deu certo". Na aba <strong>Response</strong>, ou
+          <strong>Resposta</strong>, está o que voltou: texto. Apareceu <code>304</code>? Também está
+          certo: significa "não mudou, use a cópia que você já tem".
         </div>
       </div>
 
       <div class="swp-xray" data-seq="1900">
         <div class="swp-xray-col">
-          <div class="xc-title">🎩 O que você via</div>
-          <div class="swp-xray-layer" data-seq-step="0,1,2,3"><span class="xl-emoji">✨</span> "Mágica": <code>st.title()</code>, <code>st.button()</code>… e a tela aparece</div>
-          <div class="swp-xray-layer" data-seq-step="1,2,3"><span class="xl-emoji">🎨</span> Visual pronto, sem você tocar em HTML</div>
-          <div class="swp-xray-layer" data-seq-step="2,3"><span class="xl-emoji">🔄</span> Tela que se refaz sozinha a cada clique</div>
+          <div class="xc-title">👀 O que você vê</div>
+          <div class="swp-xray-layer" data-seq-step="0,1,2,3"><span class="xl-emoji">⌨️</span> Digita um endereço e aperta Enter</div>
+          <div class="swp-xray-layer" data-seq-step="1,2,3"><span class="xl-emoji">🎨</span> A página aparece pronta</div>
+          <div class="swp-xray-layer" data-seq-step="2,3"><span class="xl-emoji">🖱️</span> Clica num link e a tela muda</div>
         </div>
         <div class="swp-xray-col flask-col">
-          <div class="xc-title">🩻 O que existia por baixo</div>
-          <div class="swp-xray-layer" data-seq-step="1,2,3"><span class="xl-emoji">🖥️</span> Um <strong>servidor web</strong> ouvindo em <code>localhost:8501</code></div>
-          <div class="swp-xray-layer" data-seq-step="2,3"><span class="xl-emoji">📦</span> <strong>Responses</strong> com páginas HTML prontas</div>
-          <div class="swp-xray-layer" data-seq-step="3"><span class="xl-emoji">🌐</span> O ciclo request → response que você acabou de aprender</div>
+          <div class="xc-title">🩻 O que acontece por baixo</div>
+          <div class="swp-xray-layer" data-seq-step="1,2,3"><span class="xl-emoji">✉️</span> Um <strong>request GET</strong> sai pro servidor</div>
+          <div class="swp-xray-layer" data-seq-step="2,3"><span class="xl-emoji">📦</span> Volta uma <strong>response</strong> com HTML</div>
+          <div class="swp-xray-layer" data-seq-step="3"><span class="xl-emoji">🔁</span> Cada clique repete o ciclo inteiro</div>
         </div>
       </div>
 
       <div class="concept">
-        <div class="concept-title">💡 Flask é o Streamlit de capô aberto</div>
+        <div class="concept-title">💡 E onde entra o Flask?</div>
         <p>
-          O Streamlit é ótimo — mas ele decide <strong>por você</strong>: as URLs, o visual, o
-          comportamento. Com o <strong>Flask</strong>, você assume o volante: escolhe cada URL,
-          cada página, cada resposta. É o mesmo motor… <strong>com você dirigindo</strong>.
+          Alguém precisa ficar do outro lado recebendo esses requests. O <strong>Flask</strong> é uma
+          biblioteca Python que cuida dessa conversa: você só diz "quando pedirem esta URL, responda
+          isto". Cada URL, cada página e cada resposta ficam à vista no seu código.
         </p>
-      </div>
-
-      <div class="warning">
-        <span class="tip-icon">🧭</span>
-        <div class="tip-content">
-          <strong>Spoiler honesto:</strong> vai dar um pouquinho mais de trabalho que o Streamlit.
-          Em troca, você ganha o superpoder que TODA vaga de backend pede:
-          entender <strong>como a web funciona de verdade</strong>.
-        </div>
       </div>
     </div>
   </section>
@@ -803,7 +900,7 @@
     <div class="card">
       <p style="color:var(--text-dim)">
         Quando o garçom volta com o "prato" (a response), o que vem dentro do pacote?
-        Não é uma foto da tela pronta. É <strong style="color:var(--text)">texto</strong> —
+        Você acabou de ver: não é uma foto da tela pronta. É <strong style="color:var(--text)">texto</strong> —
         texto escrito numa língua chamada <strong style="color:#ff7a52">HTML</strong>,
         que o navegador lê e transforma em página.
       </p>
@@ -1030,8 +1127,8 @@
           <div class="tip-content">
             <strong>Reparou na pasta <code>venv</code> que apareceu sozinha?</strong>
             O PyCharm cria o ambiente do projeto pra você a cada New Project —
-            é a mesma caixinha de ferramentas do bootcamp. Não mexa nela; ela vai
-            guardar o Flask daqui a pouco. 👍
+            uma caixinha de ferramentas exclusiva deste projeto (em versões novas ela se chama
+            <code>.venv</code>). Não mexa nela; ela vai guardar o Flask daqui a pouco. 👍
           </div>
         </div>
 
@@ -1117,7 +1214,7 @@
 
         <p style="color:var(--text-dim)">
           Missão: <strong style="color:var(--text)">1)</strong> troque o nome da loja pelo nome da SUA loja
-          (a que você inventou no bootcamp!), <strong style="color:var(--text)">2)</strong> adicione um
+          (invente uma!), <strong style="color:var(--text)">2)</strong> adicione um
           terceiro produto na lista e <strong style="color:var(--text)">3)</strong> crie um parágrafo
           novo no final com o horário de funcionamento.
         </p>
@@ -1261,7 +1358,7 @@
         <div class="warning">
           <span class="tip-icon">🧭</span>
           <div class="tip-content">
-            <strong>Neste curso, CSS é isso: uma linha.</strong> O Pico cuida do visual e a gente
+            <strong>Por enquanto, CSS é isso: uma linha.</strong> O Pico cuida do visual e a gente
             foca no Python. Quer dominar CSS de verdade (layouts, animações, design)?
             Esse é o território do <strong>curso Fullstack</strong> — te espero lá depois. 😉
           </div>
@@ -1369,8 +1466,8 @@
 
     <div class="card">
       <p style="color:var(--text-dim)">
-        O Flask é uma biblioteca Python como as que você já instalou no bootcamp
-        (TinyDB, Streamlit…). Mesmo lugar de sempre: o
+        Biblioteca Python se instala com o <code>pip</code>, o instalador que vem junto com o
+        Python. O lugar é o
         <strong style="color:var(--text)">Terminal do PyCharm</strong>, lá embaixo
         (ou <code>Alt+F12</code> / <code>Option+F12</code>).
       </p>
@@ -1410,7 +1507,7 @@
       <div class="tip">
         <span class="tip-icon">🧰</span>
         <div class="tip-content">
-          <strong>Relembrando o bootcamp:</strong> o <code>venv</code> é a caixa de ferramentas
+          <strong>Por que isso importa?</strong> O <code>venv</code> é a caixa de ferramentas
           exclusiva deste projeto — as bibliotecas ficam ali dentro, sem bagunçar o resto do
           computador. É aquela pasta que o PyCharm criou e você não mexe.
         </div>
@@ -1451,10 +1548,10 @@
         </div>
 
         <div class="swp-trace-msgs">
-          <div data-seq-frame="0"><span class="tm-emoji">📦</span><span>Importa a <strong>Flask</strong>, a peça que sabe ser um servidor web. Igualzinho você importava o TinyDB.</span></div>
+          <div data-seq-frame="0"><span class="tm-emoji">📦</span><span>Importa a <strong>Flask</strong>, a peça que sabe ser um servidor web. Igual a qualquer <code>import</code> do Python.</span></div>
           <div data-seq-frame="1"><span class="tm-emoji">🍳</span><span>Cria a sua "cozinha": <strong>app</strong> é o servidor. O <code>__name__</code> só diz ao Flask "o projeto começa neste arquivo".</span></div>
           <div data-seq-frame="2"><span class="tm-emoji">📍</span><span>A linha com <strong>@</strong> é um aviso grudado na função de baixo: <strong>"quando alguém pedir a URL <code>/</code>, chama ela"</strong>. Cada URL do site vai ter uma dessas.</span></div>
-          <div data-seq-frame="3"><span class="tm-emoji">🐍</span><span>Uma função Python normal, como as do bootcamp. O nome <code>home</code> é escolha sua — quem manda é o <code>@app.route</code> de cima.</span></div>
+          <div data-seq-frame="3"><span class="tm-emoji">🐍</span><span>Uma função Python normal. O nome <code>home</code> é escolha sua — quem manda é o <code>@app.route</code> de cima.</span></div>
           <div data-seq-frame="4"><span class="tm-emoji">📦</span><span>O <strong>return é a response!</strong> O que a função devolve é exatamente o que o navegador recebe e mostra.</span></div>
           <div data-seq-frame="5"><span class="tm-emoji">🔌</span><span><strong>Liga o servidor</strong> e deixa de plantão, esperando requests. O <code>debug=True</code> faz ele reiniciar sozinho quando você salva o arquivo. 🙌</span></div>
         </div>
@@ -1479,8 +1576,8 @@
         </div>
 
         <p style="color:var(--text-dim)">
-          Digite o <code>app.py</code> acima, salve, e rode do mesmo jeito que você rodava
-          no bootcamp: <strong style="color:var(--accent7)">botão direito no arquivo →
+          Digite o <code>app.py</code> acima, salve, e rode pelo PyCharm:
+          <strong style="color:var(--accent7)">botão direito no arquivo →
           Run 'app'</strong> (ou o ▶ verde lá em cima).
           A <strong>janela Run</strong> abre embaixo com isto:
         </p>
@@ -1493,8 +1590,22 @@
           <div class="terminal-body">
             <span class="out" style="color:#5b6478">/loja/venv/bin/python /loja/app.py</span><br>
             <span class="out"> * Serving Flask app 'app'</span><br>
+            <span class="out"> * Debug mode: on</span><br>
+            <span class="out" style="color:var(--bug)">WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.</span><br>
             <span class="out" style="color:var(--accent7)"> * Running on http://127.0.0.1:5000</span><br>
-            <span class="out">Press CTRL+C to quit</span><span class="cursor"></span><br>
+            <span class="out">Press CTRL+C to quit</span><br>
+            <span class="out"> * Restarting with stat</span><br>
+            <span class="out"> * Debugger is active!</span><br>
+            <span class="out"> * Debugger PIN: 447-970-654</span><span class="cursor"></span><br>
+          </div>
+        </div>
+
+        <div class="tip">
+          <span class="tip-icon">🚦</span>
+          <div class="tip-content">
+            <strong>WARNING em vermelho não é erro.</strong> O Flask só avisa que este servidor é pra
+            desenvolvimento. Serve perfeitamente pro curso; no Dia 8 a gente usa outro pra publicar.
+            A linha que importa é a verde.
           </div>
         </div>
 
@@ -1533,10 +1644,12 @@
           <div class="tip-content">
             <strong>"O PyCharm travou, o programa não termina!"</strong> Não travou —
             ele está <strong>de plantão</strong>, que é o trabalho de um servidor.
-            No bootcamp seus programas rodavam e acabavam; um servidor
+            Um script comum roda e acaba; um servidor
             <strong>fica ligado esperando pedidos</strong>. Repare: cada F5 no navegador
-            imprime uma linha nova na janela Run (é o request chegando!).
-            Pra desligar: o <strong>quadrado vermelho ⏹</strong> ao lado do ▶.
+            imprime uma linha nova na janela Run, tipo
+            <code>"GET / HTTP/1.1" 200 -</code>. É o mesmo GET e o mesmo 200 das DevTools, agora do
+            lado do servidor. Viu um <code>404</code> de <code>/favicon.ico</code>? É só o navegador
+            pedindo o iconezinho da aba, não é erro seu. Pra desligar: o <strong>quadrado vermelho ⏹</strong> ao lado do ▶.
           </div>
         </div>
       </div>
@@ -1710,7 +1823,7 @@ app.run(debug=<span class="bool">True</span>)</pre>
                 </div>
                 <div class="rv" data-rv="/sobre">
                   <h1>ℹ️ Sobre a loja</h1>
-                  <p>Nascemos num bootcamp de Python e nunca mais paramos.</p>
+                  <p>Nascemos de um projeto em Python e nunca mais paramos.</p>
                 </div>
                 <div class="rv" data-rv="404">
                   <div class="swp-page-err" style="padding:4px 0">
@@ -1741,7 +1854,7 @@ app.run(debug=<span class="bool">True</span>)</pre>
           As rotas são o <strong>cardápio</strong> do seu servidor: pediu <code>/</code>,
           sai o prato <code>home()</code>; pediu <code>/sobre</code>, sai o <code>sobre()</code>.
           Pediu algo fora do cardápio? O garçom devolve <strong>404 — "não temos isso, chefe"</strong>.
-          Lembra das 4 abas do seu <code>app_loja.py</code> no Streamlit? Aqui, cada aba vai
+          A Loja vai ter quatro áreas (estoque, cadastro, venda e histórico), e cada uma vai
           virar uma rota com URL própria.
         </p>
       </div>
@@ -1992,7 +2105,10 @@ app.run(debug=<span class="bool">True</span>)</pre>
           <strong>Bônus raro — "Address already in use":</strong> significa que já TEM um
           servidor na porta 5000 — quase sempre <strong>uma aba antiga da janela Run</strong>
           que ficou rodando. Olhe as abas do Run (ou o ⏹ aceso) e pare a antiga antes de
-          rodar de novo.
+          rodar de novo. <strong>No Mac</strong>, o culpado costuma ser o AirPlay Receiver, que usa a
+          mesma porta (às vezes aparece um <code>403</code> no navegador). Desligue em
+          <code>Ajustes do Sistema → Geral → AirDrop e Handoff</code>, ou troque a porta com
+          <code>app.run(debug=True, port=5001)</code> e abra <code>localhost:5001</code>.
         </div>
       </div>
     </div>
@@ -2206,6 +2322,21 @@ app.run(debug=<span class="bool">True</span>)</pre>
           servidor no <strong>⏹ vermelho</strong> e dê F5 — reconheceu o dinossauro? 🦖
           Aperte o ▶ pra religar. Errar DE PROPÓSITO tira o medo de errar sem querer.
         </p>
+        <div class="toggler">
+          <div class="toggler-header" onclick="toggleSection(this)">
+            <span>👀 Ver solução (depois de tentar!)</span>
+            <span class="toggler-arrow">▼</span>
+          </div>
+          <div class="toggler-body">
+            <p style="color:var(--text-dim)">
+              <strong style="color:var(--text)">1)</strong> Com a pasta errada, o navegador mostra
+              <code>jinja2.exceptions.TemplateNotFound: index.html</code>. Volte o nome pra
+              <code>templates</code> e dê F5.<br>
+              <strong style="color:var(--text)">2)</strong> Com o servidor parado, aparece
+              "Este site não pode ser alcançado": o request saiu, mas não tinha ninguém pra atender.
+            </p>
+          </div>
+        </div>
       </div>
 
       <div class="exercise home">
@@ -2226,6 +2357,25 @@ app.run(debug=<span class="bool">True</span>)</pre>
           Repare onde cada um aparece: um na <strong>aba</strong>, outro na <strong>página</strong> —
           head e body em ação.
         </p>
+        <div class="toggler">
+          <div class="toggler-header" onclick="toggleSection(this)">
+            <span>👀 Ver solução (depois de tentar!)</span>
+            <span class="toggler-arrow">▼</span>
+          </div>
+          <div class="toggler-body">
+            <div class="code-block">
+              <div class="code-header">
+                <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+                <span class="filename">loja/templates/sobre.html (só as linhas que mudam)</span>
+                <span class="lang-badge html">HTML</span>
+              </div>
+<pre><span class="tag">&lt;title&gt;</span>Minha Loja — Sobre<span class="tag">&lt;/title&gt;</span>
+
+<span class="cm">&lt;!-- no fim do body --&gt;</span>
+<span class="tag">&lt;p&gt;</span>Feito por Ana Souza<span class="tag">&lt;/p&gt;</span></pre>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="exercise home">
@@ -2248,6 +2398,41 @@ app.run(debug=<span class="bool">True</span>)</pre>
           rota própria, template próprio e entrar no menu de todas as páginas.
           Traga ela pronta no Dia 2 — vai ser a cobaia dos formulários. 😈
         </p>
+        <div class="toggler">
+          <div class="toggler-header" onclick="toggleSection(this)">
+            <span>👀 Ver solução (depois de tentar!)</span>
+            <span class="toggler-arrow">▼</span>
+          </div>
+          <div class="toggler-body">
+            <div class="code-block">
+              <div class="code-header">
+                <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+                <span class="filename">loja/templates/equipe.html (o body, uma solução possível)</span>
+                <span class="lang-badge html">HTML</span>
+              </div>
+<pre><span class="tag">&lt;h1&gt;</span>👥 Nossa equipe<span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;p&gt;</span>Quem faz a Loja acontecer todo dia.<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;ul&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Ana: vendas<span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Bruno: estoque<span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ul&gt;</span></pre>
+            </div>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+                <span class="filename">loja/app.py (bloco novo)</span>
+                <span class="lang-badge python">Python</span>
+              </div>
+<pre><span class="dec">@app.route</span>(<span class="st">"/equipe"</span>)
+<span class="kw">def</span> <span class="fn">equipe</span>():
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"equipe.html"</span>)</pre>
+            </div>
+            <p style="color:var(--text-dim)">
+              Falta só o link no menu de cada página:
+              <code>&lt;a href="/equipe"&gt;Equipe&lt;/a&gt;</code>.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -2270,7 +2455,7 @@ app.run(debug=<span class="bool">True</span>)</pre>
       <div class="about-bullets">
         <div>🌐 <strong>Como a web funciona:</strong> navegador pede (request), servidor responde (response) — o garçom nunca falha</div>
         <div>📮 <strong>URL por dentro:</strong> protocolo, domínio, porta e caminho — e o segredo do <code>localhost:5000</code></div>
-        <div>🩻 <strong>Streamlit desmascarado:</strong> era um servidor web esse tempo todo (localhost:8501!)</div>
+        <div>🩻 <strong>Raio-X:</strong> um request de verdade nas DevTools, com método, status e HTML</div>
         <div>🧱 <strong>HTML de verdade:</strong> tags, aninhamento, esqueleto — você ESCREVEU uma página na mão</div>
         <div>🌶️ <strong>Flask:</strong> servidor em 7 linhas de Python, rotas com <code>@app.route</code> e páginas com <code>render_template</code></div>
         <div>🐛 <strong>3 bugs clássicos dominados:</strong> Flask instalado fora do projeto, TemplateNotFound e o dinossauro 🦖</div>
@@ -2456,7 +2641,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupUrlAna('urlAna2', 'segInfo2', [
     {emoji:'🔓', html:'<strong>http sem S</strong> — sem cadeado. Tudo bem AQUI: a conversa nem sai do seu computador. Na internet de verdade, só com https.'},
     {emoji:'🏠', html:'<strong>localhost</strong> — o apelido do SEU computador. O request sai do navegador e chega… nele mesmo. Mesa e cozinha na mesma casa.'},
-    {emoji:'🚪', html:'<strong>Porta 5000</strong> — onde o Flask atende por padrão. Lembra do Streamlit na <code>:8501</code>? Mesma ideia, porta diferente. Cada servidor escolhe a sua.'},
+    {emoji:'🚪', html:'<strong>Porta 5000</strong> — onde o Flask atende por padrão. Um computador pode ter vários servidores ligados, cada um na sua porta.'},
     {emoji:'📄', html:'<strong>Caminho /</strong> — a "raiz", a página inicial. Hoje você cria a <code>/</code> e a <code>/sobre</code>. Amanhã, o sistema inteiro.'},
   ]);
 

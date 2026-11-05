@@ -215,7 +215,7 @@
 }
 .swp-day.active .d-num .d-label{color:rgba(10,10,18,0.7)}
 
-/* ---------- trilha bootcamp → curso ---------- */
+/* ---------- trilha do aluno ---------- */
 .swp-path{
   display:flex;align-items:stretch;justify-content:center;gap:0;
   flex-wrap:wrap;margin:26px 0;
@@ -273,7 +273,7 @@
 }
 .swp-offer::before{
   content:'';position:absolute;top:0;left:0;right:0;height:4px;
-  background:linear-gradient(90deg,var(--python),var(--accent5),var(--streamlit),var(--accent7));
+  background:linear-gradient(90deg,var(--python),var(--accent5),var(--coral),var(--accent7));
 }
 .swp-offer-badge{
   display:inline-block;font-size:0.7rem;font-weight:900;
@@ -369,10 +369,10 @@
      ═══════════════════════════════════════════════════════ -->
 <section class="hero">
   <div class="hero-icons">🌶️ 🌐 🤖</div>
-  <span class="hero-badge python">Novo curso · exclusivo pra quem fez o bootcamp</span>
+  <span class="hero-badge python">Curso rápido · 8 encontros · Flask + SQL + IA</span>
   <h1>Seu código merece<br>sair do seu computador</h1>
   <p class="subtitle">
-    Você já sabe programar. Agora chegou a hora do seu sistema ter
+    Você já escreve Python. Agora chegou a hora do seu código ter
     <strong style="color:var(--accent7)">um endereço na internet</strong>,
     telas de verdade e um <strong style="color:var(--python-y)">banco de dados profissional</strong> —
     construído por você, com um <strong style="color:var(--accent6)">agente de IA de par</strong>. 🤖
@@ -381,8 +381,8 @@
     <span class="stack-chip python">🐍 Python</span>
     <span class="stack-chip">🌶️ Flask</span>
     <span class="stack-chip">🗄️ SQL de verdade</span>
-    <span class="stack-chip">🤖 Claude Code</span>
-    <span class="stack-chip streamlit">🚀 Deploy real</span>
+    <span class="stack-chip">🤖 Agentes de IA</span>
+    <span class="stack-chip coral">🚀 Deploy real</span>
   </div>
 
   <!-- mockup: a Loja no ar, com URL de verdade -->
@@ -391,32 +391,32 @@
       <div class="dots"><span></span><span></span><span></span></div>
       <div class="swp-url-bar">
         <span class="lock">🔒</span>
-        <span class="swp-url-text">minha-loja.pythonanywhere.com</span>
+        <span class="swp-url-text">minha-estante.onrender.com</span>
         <span class="swp-url-cursor"></span>
       </div>
     </div>
     <div class="swp-browser-body">
       <div class="swp-mock-header">
-        <span class="swp-mock-title">🛍️ <span class="hl">Minha Loja</span> · Estoque</span>
-        <span class="swp-mock-btn">+ Nova venda</span>
+        <span class="swp-mock-title">📚 <span class="hl">Estante</span> · Acervo</span>
+        <span class="swp-mock-btn">+ Novo empréstimo</span>
       </div>
       <div class="swp-mock-row" data-seq-step>
-        <span class="p-name">🎧 Fone Bluetooth</span>
-        <span class="p-price">R$ 149,90</span>
-        <span class="p-qty">12 un.</span>
+        <span class="p-name">📖 Dom Casmurro</span>
+        <span class="p-price">Machado de Assis</span>
+        <span class="p-qty">3 ex.</span>
       </div>
       <div class="swp-mock-row" data-seq-step>
-        <span class="p-name">⌨️ Teclado Mecânico</span>
-        <span class="p-price">R$ 299,00</span>
-        <span class="p-qty">5 un.</span>
+        <span class="p-name">📘 Vidas Secas</span>
+        <span class="p-price">Graciliano Ramos</span>
+        <span class="p-qty">2 ex.</span>
       </div>
       <div class="swp-mock-row" data-seq-step>
-        <span class="p-name">🖱️ Mouse Gamer</span>
-        <span class="p-price">R$ 89,90</span>
-        <span class="p-qty">23 un.</span>
+        <span class="p-name">📗 O Cortiço</span>
+        <span class="p-price">Aluísio Azevedo</span>
+        <span class="p-qty">1 ex.</span>
       </div>
       <div class="swp-mock-foot">
-        Isso não é um print. É <strong>o sistema que VOCÊ vai construir</strong> — rodando na internet.
+        Isso é <strong>o tipo de sistema que VOCÊ vai construir</strong> — rodando na internet.
       </div>
     </div>
   </div>
@@ -439,10 +439,10 @@
     <div class="swp-chat" data-seq="1700">
       <div class="swp-bubble them" data-seq-step="0,1,2,3,4,5">
         <span class="who">Sua amiga</span>
-        mostra aí o sistema que você fez no curso! 😍
+        mostra aí o programa que você fez em Python! 😍
       </div>
       <div class="swp-bubble me" data-seq-step="1,2,3,4,5">
-        peraí… deixa eu ligar o notebook… abrir o PyCharm… ativar o venv… rodar o streamlit…
+        peraí… deixa eu ligar o notebook… abrir o PyCharm… rodar o script…
       </div>
       <div class="swp-bubble them" data-seq-step="2,3,4,5">
         …tá, então me manda o <strong>LINK</strong> que eu abro aqui no meu celular
@@ -459,8 +459,8 @@
     <div class="analogy">
       <div class="analogy-title">🎭 A real:</div>
       <p>
-        O bootcamp te ensinou a <strong>programar</strong> — e você programou! Loops, funções,
-        dicionários, banco, telinha no Streamlit. Mas todo esse talento está
+        Aprender a <strong>programar</strong> foi o primeiro passo: loops, funções, dicionários.
+        Mas, enquanto o seu código só roda no terminal, todo esse talento fica
         <strong>preso no seu computador</strong>. O mundo não consegue ver.
       </p>
     </div>
@@ -486,7 +486,7 @@
         mostra aí o sistema que você fez! 😍
       </div>
       <div class="swp-bubble me" data-seq-step="1,2,3,4,5">
-        <code>minha-loja.pythonanywhere.com</code>
+        <code>minha-estante.onrender.com</code>
       </div>
       <div class="swp-bubble them big" data-seq-step="2,3,4,5">
         PERA. ISSO TÁ NA INTERNET?? 🤯
@@ -495,7 +495,7 @@
         VOCÊ que fez isso?? com login e tudo???
       </div>
       <div class="swp-bubble me" data-seq-step="4,5">
-        fiz. 😎 telas, banco de dados SQL, login… e publiquei na internet. quer cadastrar um produto aí pra testar?
+        fiz. 😎 telas, banco de dados SQL, login… e publiquei na internet. quer pegar um livro emprestado aí pra testar?
       </div>
       <span data-seq-step="99" style="display:none"></span>
     </div>
@@ -546,9 +546,8 @@
       <div class="tip">
         <div class="tip-icon">💡</div>
         <div class="tip-content">
-          <strong>O Streamlit fazia tudo isso escondido de você.</strong> Nesse curso, você assume
-          o volante: cada rota, cada tela e cada consulta ao banco é <strong>código seu</strong> —
-          do jeito que os sistemas profissionais funcionam.
+          <strong>Nada de caixa-preta.</strong> Nesse curso, você entende cada parada dessa viagem:
+          rota, tela e consulta ao banco, do jeito que os sistemas profissionais funcionam.
         </div>
       </div>
     </div>
@@ -563,20 +562,20 @@
     <div class="step-header">
       <div class="step-number sn-yellow">⚡</div>
       <div>
-        <div class="step-title">Sua Loja: antes e depois</div>
-        <div class="step-sub">O mesmo sistema do desafio final do bootcamp — evoluído</div>
+        <div class="step-title">Seu Python: antes e depois</div>
+        <div class="step-sub">Do script no terminal ao sistema que qualquer pessoa abre</div>
       </div>
     </div>
 
     <div class="swp-vs reveal-stagger">
       <div class="swp-vs-col before">
-        <span class="swp-vs-tag">Bootcamp · onde você está</span>
-        <h4>🎨 app_loja.py no Streamlit</h4>
+        <span class="swp-vs-tag">Hoje · onde você está</span>
+        <h4>🐍 Um script em Python</h4>
         <ul>
           <li><span class="ic">🖥️</span> Só roda no seu computador</li>
-          <li><span class="ic">🙈</span> Telinha montada pelo Streamlit, do jeito dele</li>
-          <li><span class="ic">📄</span> TinyDB: um arquivinho JSON de dados</li>
-          <li><span class="ic">🔓</span> Qualquer um que rodar, mexe em tudo</li>
+          <li><span class="ic">⌨️</span> Conversa pelo terminal, com input() e print()</li>
+          <li><span class="ic">💨</span> Dados somem quando o programa termina</li>
+          <li><span class="ic">🔓</span> Sem login: quem tiver o arquivo, mexe em tudo</li>
           <li><span class="ic">🔗</span> Link pra mostrar? Não existe…</li>
         </ul>
       </div>
@@ -611,10 +610,9 @@
     <div class="card">
       <p>
         Em 2026, dev profissional não digita tudo na mão: ele <strong>dirige agentes de IA</strong> —
-        e revisa cada linha que a IA escreve. Nesse curso você vive isso na prática, um degrau
-        por dia a partir do dia 3: o agente explica o seu código, revisa, escreve o visual da sua
-        loja… até que, no dia 6, <strong style="color:var(--accent6)">ele constrói a tela de login do
-        seu sistema</strong> — e você especifica, revisa, testa e aprova. Como um dev sênior faz.
+        e revisa cada linha que a IA escreve. Nesse curso você vive isso na prática a partir do
+        dia 4: <strong style="color:var(--accent6)">o agente constrói o CRUD, as vendas, o login e um
+        sistema inteiro do zero</strong>, e você especifica, revisa, testa e aprova. Como um dev sênior faz.
       </p>
 
       <div class="terminal" data-typewriter>
@@ -634,8 +632,8 @@
       <div class="warning">
         <div class="warning-icon">🎯</div>
         <div class="warning-content">
-          <strong>E é por isso que os dias 1 a 5 são na mão.</strong> Quem não sabe construir um CRUD
-          não sabe julgar o que a IA gerou. Você vai saber os dois — e isso é
+          <strong>E é por isso que os dias 1 a 3 são sem IA.</strong> Quem nunca montou uma rota nem
+          escreveu um SQL não sabe julgar o que a IA gerou. Você vai saber os dois — e isso é
           <strong>exatamente o perfil que o mercado procura</strong>.
         </div>
       </div>
@@ -661,7 +659,7 @@
         <div class="d-num"><span class="d-label">dia</span><span class="d-n">01</span></div>
         <div class="d-body">
           <div class="d-title">🌐 Olá, Web! Olá, Flask!</div>
-          <div class="d-out">Você sai com: <strong>seu primeiro site com URL própria</strong> — e entendendo o que o Streamlit escondia</div>
+          <div class="d-out">Você sai com: <strong>seu primeiro site com URL própria</strong> — e entendendo como a web funciona por dentro</div>
         </div>
       </div>
       <div class="swp-day" data-seq-step>
@@ -682,7 +680,7 @@
         <div class="d-num"><span class="d-label">dia</span><span class="d-n">04</span></div>
         <div class="d-body">
           <div class="d-title">📦 A Loja ganha banco</div>
-          <div class="d-out">Você sai com: <strong>produtos salvos pra sempre</strong> — reinicia o servidor e os dados continuam lá 🤯</div>
+          <div class="d-out">Você sai com: <strong>produtos salvos pra sempre</strong>, com você já dirigindo o agente 🤯</div>
         </div>
       </div>
       <div class="swp-day" data-seq-step>
@@ -695,22 +693,22 @@
       <div class="swp-day" data-seq-step>
         <div class="d-num"><span class="d-label">dia</span><span class="d-n">06</span></div>
         <div class="d-body">
-          <div class="d-title">🤖 Agentes de IA na prática</div>
-          <div class="d-out">Você sai com: <strong>login construído por um agente</strong> — especificado, revisado e testado por você</div>
+          <div class="d-title">🔐 Login com agentes</div>
+          <div class="d-out">Você sai com: <strong>login dividido em prompts</strong> — especificado, revisado e testado por você</div>
         </div>
       </div>
       <div class="swp-day" data-seq-step>
         <div class="d-num"><span class="d-label">dia</span><span class="d-n">07</span></div>
         <div class="d-body">
-          <div class="d-title">🏗️ Projeto final: SEU sistema</div>
-          <div class="d-out">Você sai com: <strong>um sistema do SEU tema</strong> — barbearia, petshop, brechó, você escolhe</div>
+          <div class="d-title">📚 Projeto final: a Estante</div>
+          <div class="d-out">Você sai com: <strong>um sistema de biblioteca, do zero</strong>, 100% por prompts</div>
         </div>
       </div>
       <div class="swp-day" data-seq-step>
         <div class="d-num"><span class="d-label">dia</span><span class="d-n">08</span></div>
         <div class="d-body">
           <div class="d-title">🚀 Deploy + Demo Day</div>
-          <div class="d-out">Você sai com: <strong>seu sistema NO AR, com link público</strong> — apresentado pra turma inteira 🎉</div>
+          <div class="d-out">Você sai com: <strong>sua Estante NO AR, com link público</strong> — apresentada pra turma inteira 🎉</div>
         </div>
       </div>
     </div>
@@ -725,24 +723,24 @@
     <div class="step-header">
       <div class="step-number sn-mint">🏆</div>
       <div>
-        <div class="step-title">Você já provou que consegue</div>
-        <div class="step-sub">Esse curso começa exatamente de onde você parou</div>
+        <div class="step-title">O que você precisa pra começar</div>
+        <div class="step-sub">Python básico, um notebook e vontade de construir</div>
       </div>
     </div>
 
     <div class="card">
       <p style="text-align:center">
-        Você não está começando do zero. Você <strong>terminou um bootcamp inteiro</strong>:
-        lógica, funções, dicionários, banco, telinha. A parte difícil — aprender a programar —
-        <strong style="color:var(--accent7)">você já venceu</strong>. Agora é colher.
+        Você não precisa saber nada de web. Se já escreve <strong>variáveis, if, loops, funções,
+        listas e dicionários</strong> em Python, tem a base. HTTP, HTML, SQL e agentes de IA
+        <strong style="color:var(--accent7)">a gente aprende aqui, do zero</strong>.
       </p>
 
       <div class="swp-path">
         <div class="swp-path-node done">
           <span class="pn-ic">🐍</span>
-          <span class="pn-title">Bootcamp<br>Programação para Iniciantes</span>
-          <span class="pn-sub">lógica · Python · TinyDB · Streamlit</span><br>
-          <span class="pn-badge">✔ Concluído</span>
+          <span class="pn-title">Python<br>básico</span>
+          <span class="pn-sub">variáveis · if · loops · funções · listas · dicionários</span><br>
+          <span class="pn-badge">✔ Pré-requisito</span>
         </div>
         <div class="swp-path-arrow">→</div>
         <div class="swp-path-node now">
@@ -757,6 +755,24 @@
           <span class="pn-title">O caminho<br>profissional</span>
           <span class="pn-sub">portfólio · projetos reais · mercado</span><br>
           <span class="pn-badge">futuro</span>
+        </div>
+      </div>
+
+      <div class="keyword-grid" style="margin-bottom:18px">
+        <div class="keyword-chip">
+          <span class="emoji">💻</span>
+          <span class="kw-name">Um notebook</span>
+          <span class="kw-desc">com Python e PyCharm instalados</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">🔑</span>
+          <span class="kw-name">Um agente de IA</span>
+          <span class="kw-desc">assinatura Claude Pro, ChatGPT Plus ou Google AI Pro, a partir do Dia 4</span>
+        </div>
+        <div class="keyword-chip">
+          <span class="emoji">🐙</span>
+          <span class="kw-name">GitHub e Render</span>
+          <span class="kw-desc">as duas contas são gratuitas</span>
         </div>
       </div>
 
@@ -782,7 +798,7 @@
       <span class="chapter-number">Garanta sua vaga</span>
       <h2 class="grad-intro">Bora colocar seu código no mundo?</h2>
       <p class="chapter-subtitle">
-        Turma exclusiva pra quem veio do bootcamp — todo mundo no mesmo ritmo, sem enrolação.
+        Turma ao vivo com o professor — todo mundo no mesmo ritmo, sem enrolação.
       </p>
     </div>
 
@@ -791,8 +807,8 @@
 
       <ul class="swp-offer-list">
         <li><span class="ic">📅</span> <span><strong>8 encontros ao vivo de 2h</strong> — 16 horas de mão na massa com o professor</span></li>
-        <li><span class="ic">📚</span> <span><strong>Material interativo completo</strong> — o mesmo estilo do bootcamp, seu pra sempre</span></li>
-        <li><span class="ic">🧰</span> <span><strong>Starter kit pronto</strong> — as telas vêm montadas, você foca no Python</span></li>
+        <li><span class="ic">📚</span> <span><strong>Material interativo completo</strong> — seu pra sempre</span></li>
+        <li><span class="ic">🧰</span> <span><strong>Mão na massa do início ao fim</strong> — cada aula termina com algo funcionando</span></li>
         <li><span class="ic">🤖</span> <span><strong>Programação com agentes de IA</strong> — Claude Code e cia. na prática</span></li>
         <li><span class="ic">🌍</span> <span><strong>Seu sistema publicado na internet</strong> — com link pra colocar no currículo</span></li>
       </ul>
@@ -810,8 +826,7 @@
 
       <button class="swp-cta" onclick="confettiAt(this)">🚀 QUERO MINHA VAGA</button>
       <p class="swp-cta-sub">
-        A matrícula é com o <strong>prof. Kelson</strong> — fala com ele
-        <strong>agora no fim da aula</strong> (ele tá bem aí na sua frente 😄)
+        A matrícula é direto com o <strong>prof. Kelson</strong> — chama ele pra garantir a sua vaga
       </p>
 
       <div><span class="swp-scarcity"><span class="dot-live"></span> Turma única · vagas limitadas</span></div>

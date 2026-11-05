@@ -153,7 +153,7 @@
 }
 .swp-venda-msg.err{color:#ff8a8a}
 
-/* ---------- comparação Streamlit vs Web ---------- */
+/* ---------- mapa da Loja: pedido vs solução ---------- */
 .swp-vs{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0}
 @media(max-width:700px){.swp-vs{grid-template-columns:1fr}}
 .swp-vs-col{
@@ -164,7 +164,7 @@
   display:inline-block;font-size:0.66rem;font-weight:800;letter-spacing:1px;
   text-transform:uppercase;padding:4px 12px;border-radius:50px;margin-bottom:12px;
 }
-.swp-vs-col.before .vs-tag{background:rgba(255,75,75,0.14);color:var(--streamlit)}
+.swp-vs-col.before .vs-tag{background:rgba(255,75,75,0.14);color:var(--coral)}
 .swp-vs-col.after .vs-tag{background:rgba(6,214,160,0.14);color:var(--accent7)}
 .swp-vs-col.after{border-color:rgba(6,214,160,0.30)}
 .swp-vs-line{
@@ -256,7 +256,7 @@
   </div>
   <div class="sidebar-group">
     <div class="sidebar-group-title">🏁 Fechamento</div>
-    <a class="sidebar-link" onclick="goTo('comparacao')"><span class="dot" style="background:var(--streamlit)"></span>⭐ Antes vs agora</a>
+    <a class="sidebar-link" onclick="goTo('comparacao')"><span class="dot" style="background:var(--coral)"></span>⭐ O mapa da Loja</a>
     <a class="sidebar-link" onclick="goTo('bugzilla')"><span class="dot" style="background:var(--bug)"></span>BugZilla do dia 🐛</a>
     <a class="sidebar-link" onclick="goTo('quiz')"><span class="dot" style="background:var(--accent5)"></span>Quiz de fixação</a>
     <a class="sidebar-link" onclick="goTo('arena')"><span class="dot" style="background:var(--accent6)"></span>Arena de treino</a>
@@ -307,8 +307,8 @@
         Estoque listando do banco ✓. Cadastro com INSERT e redirect ✓.
         Mas experimenta: <strong style="color:var(--text)">errou o preço de um produto</strong> —
         e agora? Não tem como consertar pela tela. Produto saiu de linha? Sem como apagar.
-        E as abas <strong style="color:var(--text)">Vender</strong> e
-        <strong style="color:var(--text)">Vendas</strong> do seu <code>app_loja.py</code>?
+        E as telas de <strong style="color:var(--text)">Vender</strong> e
+        <strong style="color:var(--text)">Vendas</strong>?
         Ainda nem existem. Hoje resolve tudo.
       </p>
 
@@ -1391,23 +1391,23 @@ soma dos totais; com zero vendas, a página abre e mostra R$ 0,00.</div>
        ═══════════════════════════════════════════════════════ -->
   <section class="step-section" id="comparacao">
     <div class="step-header">
-      <div class="step-number" style="background:linear-gradient(135deg,var(--streamlit),var(--accent7))">🏆</div>
+      <div class="step-number" style="background:linear-gradient(135deg,var(--coral),var(--accent7))">🏆</div>
       <div>
-        <div class="step-title">Antes vs agora: a promessa cumprida</div>
-        <div class="step-sub">Lembra do "mesmo sistema, agora profissional"? Chegamos.</div>
+        <div class="step-title">O mapa da Loja: a promessa cumprida</div>
+        <div class="step-sub">Tudo que a Loja precisava fazer, e como ela faz agora</div>
       </div>
     </div>
 
     <div class="card">
       <div class="swp-vs">
         <div class="swp-vs-col before">
-          <span class="vs-tag">📓 bootcamp — app_loja.py</span>
-          <div class="swp-vs-line"><span>aba <strong>Estoque</strong></span><span>Streamlit + TinyDB</span></div>
-          <div class="swp-vs-line"><span>aba <strong>Cadastrar</strong></span><span>st.form</span></div>
-          <div class="swp-vs-line"><span>aba <strong>Vender</strong></span><span>st.selectbox</span></div>
-          <div class="swp-vs-line"><span>aba <strong>Vendas</strong></span><span>st.dataframe</span></div>
-          <div class="swp-vs-line"><span>acesso</span><span>só na SUA máquina</span></div>
-          <div class="swp-vs-line"><span>dados</span><span>db.json (caderninho)</span></div>
+          <span class="vs-tag">📋 o que a Loja precisava fazer</span>
+          <div class="swp-vs-line"><span><strong>Estoque</strong></span><span>ver os produtos</span></div>
+          <div class="swp-vs-line"><span><strong>Cadastrar</strong></span><span>incluir um produto</span></div>
+          <div class="swp-vs-line"><span><strong>Vender</strong></span><span>baixar o estoque</span></div>
+          <div class="swp-vs-line"><span><strong>Vendas</strong></span><span>histórico e total</span></div>
+          <div class="swp-vs-line"><span>acesso</span><span>sem depender de um script</span></div>
+          <div class="swp-vs-line"><span>dados</span><span>sobreviver a qualquer ⏹</span></div>
         </div>
         <div class="swp-vs-col after">
           <span class="vs-tag">🌶️ hoje — a Loja web</span>
@@ -1424,8 +1424,7 @@ soma dos totais; com zero vendas, a página abre e mostra R$ 0,00.</div>
         <div class="concept-title">💡 Pare 10 segundos e olhe isso</div>
         <p>
           Editar, excluir, validação, avisos, duas tabelas relacionadas, transação…
-          <strong>Você reconstruiu o desafio final do bootcamp como um sistema web
-          profissional.</strong> O que falta? Um cadeado na porta (login — Dia 6, com um
+          <strong>Você construiu um sistema web completo, do zero.</strong> O que falta? Um cadeado na porta (login — Dia 6, com um
           estagiário genial te ajudando 🤖) e um endereço público (Dia 8).
         </p>
       </div>
@@ -1689,7 +1688,7 @@ soma dos totais; com zero vendas, a página abre e mostra R$ 0,00.</div>
           Coluna <code>data TEXT</code> na tabela vendas (apague o loja.db e recrie — ou só
           pros novos), preenchida no INSERT com
           <code>datetime.now().strftime("%d/%m/%Y %H:%M")</code>
-          (<code>from datetime import datetime</code> — colega do bootcamp). Mostre no histórico.
+          (<code>from datetime import datetime</code>, módulo que já vem com o Python). Mostre no histórico.
         </p>
       </div>
 
@@ -1765,7 +1764,7 @@ soma dos totais; com zero vendas, a página abre e mostra R$ 0,00.</div>
       <div class="concept" style="margin-top:18px">
         <div class="concept-title">🎯 A frase pra levar pra casa</div>
         <p>
-          <strong>"As 4 abas do meu app_loja.py agora são um sistema web completo."</strong>
+          <strong>"Estoque, cadastro, venda e histórico: minha Loja é um sistema web completo."</strong>
           CRUD inteiro, operação de negócio, validações, avisos. O que um dev júnior de backend
           faz no dia a dia? Isso. Exatamente isso.
         </p>

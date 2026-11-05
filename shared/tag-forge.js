@@ -5,7 +5,7 @@
    real renderizado — com faíscas no "encaixe".
 
    Reaproveitada do material Fullstack (Forja de Tags). Aqui serve
-   pra mostrar funções do Streamlit (st.title, st.button, …) virando
+   pra mostrar comandos (título, botão, …) virando
    pedaços de tela. Funciona com QUALQUER alvo que tenha [data-paint].
 
    Carregada como <script type="module">. Se a CDN do Motion falhar

@@ -261,13 +261,12 @@
     <a class="sidebar-link" onclick="goTo('aquecimento')"><span class="dot" style="background:var(--accent5)"></span>Aquecimento</a>
     <a class="sidebar-link" onclick="goTo('jinja')"><span class="dot" style="background:var(--accent3)"></span>O template tem lacunas</a>
     <a class="sidebar-link" onclick="goTo('fabrica')"><span class="dot" style="background:var(--accent3)"></span>⭐ Fábrica de Páginas</a>
-    <a class="sidebar-link" onclick="goTo('for')"><span class="dot" style="background:var(--accent5)"></span>{% for %} — a linha de produção</a>
-    <a class="sidebar-link" onclick="goTo('if')"><span class="dot" style="background:var(--accent4)"></span>{% if %} — plano B na tela</a>
-    <a class="sidebar-link" onclick="goTo('bora-jinja')"><span class="dot" style="background:var(--accent7)"></span>Bora: loja com dados vivos</a>
   </div>
   <div class="sidebar-group">
-    <div class="sidebar-group-title">🏗️ Template base</div>
+    <div class="sidebar-group-title">🏗️ Moldura e dados</div>
     <a class="sidebar-link" onclick="goTo('base')"><span class="dot" style="background:var(--accent6)"></span>base.html — o remédio</a>
+    <a class="sidebar-link" onclick="goTo('for')"><span class="dot" style="background:var(--accent5)"></span>{% for %} — a linha de produção</a>
+    <a class="sidebar-link" onclick="goTo('bora-jinja')"><span class="dot" style="background:var(--accent7)"></span>Bora: loja com dados vivos</a>
   </div>
   <div class="sidebar-group">
     <div class="sidebar-group-title">📬 Formulários</div>
@@ -281,7 +280,11 @@
     <div class="sidebar-group-title">🏁 Fechamento</div>
     <a class="sidebar-link" onclick="goTo('dor-memoria')"><span class="dot" style="background:var(--bug)"></span>O apagão 😱</a>
     <a class="sidebar-link" onclick="goTo('bugzilla')"><span class="dot" style="background:var(--bug)"></span>BugZilla do dia 🐛</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🏠 Em casa</div>
     <a class="sidebar-link" onclick="goTo('quiz')"><span class="dot" style="background:var(--accent5)"></span>Quiz de fixação</a>
+    <a class="sidebar-link" onclick="goTo('if')"><span class="dot" style="background:var(--accent4)"></span>{% if %} — plano B na tela</a>
     <a class="sidebar-link" onclick="goTo('arena')"><span class="dot" style="background:var(--accent6)"></span>Arena de treino</a>
     <a class="sidebar-link" onclick="goTo('codigo-completo')"><span class="dot" style="background:var(--accent3)"></span>📦 Código completo do dia</a>
     <a class="sidebar-link" onclick="goTo('resumo')"><span class="dot" style="background:var(--accent7)"></span>Resumo do dia</a>
@@ -315,6 +318,22 @@
   <!-- ═══════════════════════════════════════════════════════
        AQUECIMENTO
        ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="roteiro">
+    <div class="card">
+      <h3 style="margin-bottom:10px">⏱️ O dia em 1 aula</h3>
+      <div class="about-bullets">
+        <div>🧩 <strong>26 min · Jinja:</strong> lacunas e fábrica de páginas</div>
+        <div>🏗️ <strong>12 min · base.html:</strong> a moldura, migrando só a home</div>
+        <div>🔁 <strong>14 min · {% for %}:</strong> a tabela nascendo do Python</div>
+        <div>📬 <strong>16 min · form e GET vs POST:</strong> o caminho do dado</div>
+        <div>⌨️ <strong>22 min · cadastro:</strong> mini-app do dia e apagão</div>
+      </div>
+      <p style="color:var(--text-dim);margin-top:12px">
+        <strong style="color:var(--text)">🏠 Em casa:</strong> migrar as outras páginas, BugZilla, {% if %}, quiz e arena.
+      </p>
+    </div>
+  </section>
+
   <section class="step-section" id="aquecimento">
     <div class="step-header">
       <div class="step-number sn-yellow">🔥</div>
@@ -344,19 +363,7 @@
       </div>
 
       <div class="quiz">
-        <div class="quiz-q"><span class="q-emoji">1️⃣</span> No seu <code>app_loja.py</code> do bootcamp (Streamlit), de onde vinham os produtos da tela?</div>
-        <div class="quiz-options">
-          <button class="quiz-opt" onclick="checkQuiz(this,false)">Digitados no meio da tela</button>
-          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">De uma lista/banco no Python</button>
-          <button class="quiz-opt" onclick="checkQuiz(this,false)">Da internet</button>
-          <button class="quiz-opt" onclick="checkQuiz(this,false)">O Streamlit inventava</button>
-        </div>
-        <div class="quiz-feedback" data-correct="Isso!" data-wrong="Lembra!"
-             data-explain="no Streamlit os dados moravam no Python (TinyDB) e a tela só EXIBIA. É exatamente isso que vamos fazer no Flask hoje — com o Jinja de ponte."></div>
-      </div>
-
-      <div class="quiz">
-        <div class="quiz-q"><span class="q-emoji">2️⃣</span> E pra RECEBER dados do visitante (nome de um produto novo, por exemplo), a página precisa de…</div>
+        <div class="quiz-q"><span class="q-emoji">1️⃣</span> Pra RECEBER dados do visitante (nome de um produto novo, por exemplo), a página precisa de…</div>
         <div class="quiz-options">
           <button class="quiz-opt" onclick="checkQuiz(this,false)">Um banco de dados</button>
           <button class="quiz-opt" onclick="checkQuiz(this,false)">JavaScript</button>
@@ -442,8 +449,8 @@
         <div class="tip-content">
           <strong>Detalhe importante:</strong> o visitante NUNCA vê <code class="jvar">{{ nome_loja }}</code>.
           O Jinja preenche as lacunas <strong>no servidor</strong>, antes da response sair.
-          O navegador recebe HTML já pronto, sem sinal de Jinja. (Aperte F12 → "ver código-fonte"
-          na sua página e confira!)
+          O navegador recebe HTML já pronto, sem sinal de Jinja. (Aperte <code>Ctrl+U</code>, ou
+          <code>Cmd+Option+U</code> no Mac, pra ver o código-fonte da sua página e confira!)
         </div>
       </div>
     </div>
@@ -516,6 +523,163 @@
 
   <div class="section-connector"><div class="line"></div></div>
 
+  <div class="chapter-divider">
+    <div class="chapter-icon">🏗️</div>
+    <div class="chapter-number">Intervalo técnico</div>
+    <h2 style="background:linear-gradient(135deg,var(--accent6),var(--accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">O remédio prometido</h2>
+    <p class="chapter-subtitle">Aquele menu copiado 4 vezes no Dia 1? Cobrança na mesa.</p>
+  </div>
+
+<!-- ═══════════════════════════════════════════════════════
+       BASE.HTML
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="base">
+    <div class="step-header">
+      <div class="step-number sn-purple">🏗️</div>
+      <div>
+        <div class="step-title">base.html: escreva o menu UMA vez</div>
+        <div class="step-sub">A dor da Missão 2 do Dia 1 tem cura — e ela chama herança de template</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Na arena do Dia 1 o menu foi copiado em TODAS as páginas. Mudou um link? Edita 4 arquivos.
+        E hoje vêm mais páginas. Antes de criar a próxima, vamos curar isso de vez.
+        O Jinja resolve com um <strong style="color:var(--text)">template pai</strong>: o
+        <code>base.html</code> guarda tudo que se repete, e cada página só preenche o miolo.
+      </p>
+
+      <div class="analogy">
+        <div class="analogy-title">O papel timbrado 🖋️</div>
+        <p>
+          Uma empresa não redesenha o logotipo e o rodapé a cada carta — usa
+          <strong>papel timbrado</strong>: a moldura já vem pronta, você só escreve o miolo.
+          O <code>base.html</code> é o papel timbrado do seu site.
+        </p>
+      </div>
+
+      <div class="code-block with-lines">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">loja/templates/base.html (NOVO)</span>
+          <span class="lang-badge jinja">Jinja</span>
+        </div>
+        <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17</div>
+<pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="atr">lang</span>=<span class="st">"pt-BR"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="atr">charset</span>=<span class="st">"UTF-8"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;title&gt;</span>Minha Loja<span class="tag">&lt;/title&gt;</span>
+    <span class="tag">&lt;link</span> <span class="atr">rel</span>=<span class="st">"stylesheet"</span> <span class="atr">href</span>=<span class="st">"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;/head&gt;</span>
+  <span class="tag">&lt;body&gt;</span>
+    <span class="tag">&lt;p&gt;</span>
+      <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/"</span><span class="tag">&gt;</span>Início<span class="tag">&lt;/a&gt;</span> ·
+      <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/sobre"</span><span class="tag">&gt;</span>Sobre<span class="tag">&lt;/a&gt;</span> ·
+      <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/produtos"</span><span class="tag">&gt;</span>Produtos<span class="tag">&lt;/a&gt;</span> ·
+      <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/contato"</span><span class="tag">&gt;</span>Contato<span class="tag">&lt;/a&gt;</span>
+    <span class="tag">&lt;/p&gt;</span>
+    <span class="jtag">{% block conteudo %}{% endblock %}</span>
+  <span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+      </div>
+
+      <p style="color:var(--text-dim)">
+        E cada página encolhe pra <strong style="color:var(--text)">só o próprio miolo</strong>:
+      </p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">loja/templates/sobre.html (INTEIRO — sim, só isso)</span>
+          <span class="lang-badge jinja">Jinja</span>
+        </div>
+<pre><span class="jtag">{% extends "base.html" %}</span>
+
+<span class="jtag">{% block conteudo %}</span>
+  <span class="tag">&lt;h1&gt;</span>ℹ️ Sobre a loja<span class="tag">&lt;/h1&gt;</span>
+  <span class="tag">&lt;p&gt;</span>Loja criada por MIM, com Python. 😄<span class="tag">&lt;/p&gt;</span>
+<span class="jtag">{% endblock %}</span></pre>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 extends + block</div>
+        <p>
+          <code class="jtag">{% extends "base.html" %}</code> = "usa o papel timbrado".
+          <code class="jtag">{% block conteudo %}</code> = "meu miolo entra na janela que o
+          base deixou aberta". Esqueleto, menu e Pico agora moram num lugar SÓ.
+        </p>
+      </div>
+
+      <div class="exercise guided">
+        <div class="exercise-header">
+          <span class="exercise-icon">👨‍🏫</span>
+          <div>
+            <div class="exercise-title">Bora migrar a loja</div>
+            <div class="exercise-sub">Em aula, só a home; as outras seguem a mesma receita em casa</div>
+          </div>
+        </div>
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">1.</strong> Crie o <code>templates/base.html</code> acima
+          (mova pra ele o menu e a linha do Pico).<br>
+          <strong style="color:var(--text)">2.</strong> No <code>index.html</code>:
+          apague esqueleto + menu, deixe só o miolo, e embrulhe com
+          <code class="jtag">{% extends %}</code> + <code class="jtag">{% block conteudo %}</code>.
+          Aproveite e tire a lista fixa de produtos: a partir de agora ela vai nascer do Python.
+        </p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">loja/templates/index.html (INTEIRO, depois da migração)</span>
+            <span class="lang-badge jinja">Jinja</span>
+          </div>
+<pre><span class="jtag">{% extends "base.html" %}</span>
+
+<span class="jtag">{% block conteudo %}</span>
+  <span class="tag">&lt;h1&gt;</span>🛍️ Minha Loja<span class="tag">&lt;/h1&gt;</span>
+  <span class="tag">&lt;p&gt;</span>As melhores ofertas da cidade, direto do meu Python.<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;p&gt;</span><span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/produtos"</span><span class="tag">&gt;</span>Ver os produtos →<span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/p&gt;</span>
+<span class="jtag">{% endblock %}</span></pre>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="filename">em casa: loja/templates/contato.html (INTEIRO, o sobre.html é igual)</span>
+            <span class="lang-badge jinja">Jinja</span>
+          </div>
+<pre><span class="jtag">{% extends "base.html" %}</span>
+
+<span class="jtag">{% block conteudo %}</span>
+  <span class="tag">&lt;h1&gt;</span>📞 Fale com a gente<span class="tag">&lt;/h1&gt;</span>
+  <span class="tag">&lt;p&gt;</span>E-mail: contato@minhaloja.com<span class="tag">&lt;/p&gt;</span>
+<span class="jtag">{% endblock %}</span></pre>
+        </div>
+
+        <div class="tip">
+          <span class="tip-icon">🧹</span>
+          <div class="tip-content">
+            <strong>Some coisa — e é pra sumir:</strong> aquele
+            <code>&lt;p&gt;&lt;a href="/"&gt;← voltar pro início&lt;/a&gt;&lt;/p&gt;</code>
+            que você tinha em cada página do Dia 1 pode sair: o menu do
+            <code>base.html</code> já leva pra home de qualquer lugar. O
+            <code>&lt;!DOCTYPE&gt;</code>, o <code>&lt;head&gt;</code> e a linha do Pico também
+            <strong>não ficam mais aqui</strong> — moram só no base.
+          </div>
+        </div>
+
+        <p style="color:var(--text-dim)">
+          <strong style="color:var(--text)">3.</strong> F5 na home: mesma cara, metade do código.
+          O link <strong>Produtos</strong> do menu ainda dá 404: a próxima seção cria essa rota.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
   <!-- ═══════════════════════════════════════════════════════
        {% FOR %}
        ═══════════════════════════════════════════════════════ -->
@@ -531,7 +695,7 @@
     <div class="card">
       <p style="color:var(--text-dim)">
         E quando o dado não é UM valor, mas uma <strong style="color:var(--text)">lista</strong>?
-        Seus produtos, por exemplo — uma lista de dicionários, igualzinho ao bootcamp:
+        Seus produtos, por exemplo — uma lista de dicionários:
       </p>
 
       <div class="code-block">
@@ -621,63 +785,6 @@
   <div class="section-connector"><div class="line"></div></div>
 
   <!-- ═══════════════════════════════════════════════════════
-       {% IF %}
-       ═══════════════════════════════════════════════════════ -->
-  <section class="step-section" id="if">
-    <div class="step-header">
-      <div class="step-number sn-blue">🚦</div>
-      <div>
-        <div class="step-title">{% if %}: o plano B na tela</div>
-        <div class="step-sub">E se a lista estiver vazia? O aluno de vendas nunca esquece o caso triste.</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <p style="color:var(--text-dim)">
-        Imagina a loja recém-aberta, sem produtos: <code>produtos = []</code>.
-        O <code class="jtag">{% for %}</code> roda <strong style="color:var(--text)">zero
-        vezes</strong> e a pessoa vê… uma tabela vazia, sem explicação. Feio.
-        O Jinja também tem <code class="jtag">{% if %}</code>:
-      </p>
-
-      <div class="code-block">
-        <div class="code-header">
-          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-          <span class="filename">loja/templates/index.html</span>
-          <span class="lang-badge jinja">Jinja</span>
-        </div>
-<pre><span class="jtag">{% if produtos %}</span>
-  <span class="tag">&lt;table&gt;</span> … a tabela com o for aqui … <span class="tag">&lt;/table&gt;</span>
-<span class="jtag">{% else %}</span>
-  <span class="tag">&lt;p&gt;</span>😢 Estoque vazio! Cadastre o primeiro produto.<span class="tag">&lt;/p&gt;</span>
-<span class="jtag">{% endif %}</span></pre>
-      </div>
-
-      <div class="concept">
-        <div class="concept-title">💡 Lista vazia é "falsa" — igual no Python</div>
-        <p>
-          <code class="jtag">{% if produtos %}</code> segue a regra que você aprendeu no bootcamp:
-          lista com itens = verdadeiro, lista vazia <code>[]</code> = falso.
-          O mesmo raciocínio, agora decidindo <strong>o que aparece na tela</strong>.
-        </p>
-      </div>
-
-      <div class="bug-box">
-        <span class="tip-icon">✍️</span>
-        <div class="tip-content">
-          <strong>Pegadinha de digitação:</strong> as tags de comando usam
-          <code class="jtag">{%&nbsp;%}</code> (com porcento) e as de valor usam
-          <code class="jvar">{{&nbsp;}}</code> (chaves duplas). Misturar as duas é o erro de
-          digitação nº 1 do Jinja — e TODO for/if precisa do seu
-          <code class="jtag">{% endfor %}</code>/<code class="jtag">{% endif %}</code>.
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="section-connector"><div class="line"></div></div>
-
-  <!-- ═══════════════════════════════════════════════════════
        EXERCÍCIO GUIADO — LOJA COM DADOS VIVOS
        ═══════════════════════════════════════════════════════ -->
   <section class="step-section" id="bora-jinja">
@@ -695,7 +802,7 @@
           <span class="exercise-icon">👨‍🏫</span>
           <div>
             <div class="exercise-title">Passo a passo com o professor</div>
-            <div class="exercise-sub">app.py ganha a lista e a rota /produtos; produtos.html ganha for + if</div>
+            <div class="exercise-sub">app.py ganha a lista e a rota /produtos; produtos.html ganha o for</div>
           </div>
         </div>
 
@@ -739,51 +846,38 @@ lista_de_produtos = [
         </div>
 
         <p style="color:var(--text-dim)">
-          <strong style="color:var(--text)">3.</strong> Crie o <code>templates/produtos.html</code>.
-          Sim, esqueleto de novo (é a última vez — a seção seguinte cura isso). O miolo é a tabela:
+          <strong style="color:var(--text)">3.</strong> Crie o <code>templates/produtos.html</code>,
+          já na moldura do base. Sem esqueleto e sem menu, só o miolo:
         </p>
 
-        <div class="code-block with-lines">
+        <div class="code-block">
           <div class="code-header">
             <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-            <span class="filename">loja/templates/produtos.html (NOVO)</span>
+            <span class="filename">loja/templates/produtos.html (NOVO, INTEIRO)</span>
             <span class="lang-badge jinja">Jinja</span>
           </div>
-          <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24</div>
-<pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
-<span class="tag">&lt;html</span> <span class="atr">lang</span>=<span class="st">"pt-BR"</span><span class="tag">&gt;</span>
-  <span class="tag">&lt;head&gt;</span>
-    <span class="tag">&lt;meta</span> <span class="atr">charset</span>=<span class="st">"UTF-8"</span><span class="tag">&gt;</span>
-    <span class="tag">&lt;title&gt;</span>Minha Loja<span class="tag">&lt;/title&gt;</span>
-    <span class="tag">&lt;link</span> <span class="atr">rel</span>=<span class="st">"stylesheet"</span> <span class="atr">href</span>=<span class="st">"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"</span><span class="tag">&gt;</span>
-  <span class="tag">&lt;/head&gt;</span>
-  <span class="tag">&lt;body&gt;</span>
-    <span class="tag">&lt;p&gt;</span><span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/"</span><span class="tag">&gt;</span>Início<span class="tag">&lt;/a&gt;</span> · <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/sobre"</span><span class="tag">&gt;</span>Sobre<span class="tag">&lt;/a&gt;</span> · <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/contato"</span><span class="tag">&gt;</span>Contato<span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/p&gt;</span>
+<pre><span class="jtag">{% extends "base.html" %}</span>
 
-    <span class="tag">&lt;h2&gt;</span>Lista de Produtos<span class="tag">&lt;/h2&gt;</span>
-    <span class="tag">&lt;table&gt;</span>
-      <span class="tag">&lt;tr&gt;</span><span class="tag">&lt;th&gt;</span>Produto<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Preço<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Estoque<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;/tr&gt;</span>
-      <span class="jtag">{% for p in produtos %}</span>
-        <span class="tag">&lt;tr&gt;</span>
-          <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["nome"] }}</span><span class="tag">&lt;/td&gt;</span>
-          <span class="tag">&lt;td&gt;</span>R$ <span class="jvar">{{ p["preco"] }}</span><span class="tag">&lt;/td&gt;</span>
-          <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["qtd"] }}</span> un.<span class="tag">&lt;/td&gt;</span>
-        <span class="tag">&lt;/tr&gt;</span>
-      <span class="jtag">{% endfor %}</span>
-    <span class="tag">&lt;/table&gt;</span>
-  <span class="tag">&lt;/body&gt;</span>
-<span class="tag">&lt;/html&gt;</span></pre>
+<span class="jtag">{% block conteudo %}</span>
+  <span class="tag">&lt;h2&gt;</span>Lista de Produtos<span class="tag">&lt;/h2&gt;</span>
+  <span class="tag">&lt;table&gt;</span>
+    <span class="tag">&lt;tr&gt;&lt;th&gt;</span>Produto<span class="tag">&lt;/th&gt;&lt;th&gt;</span>Preço<span class="tag">&lt;/th&gt;&lt;th&gt;</span>Estoque<span class="tag">&lt;/th&gt;&lt;/tr&gt;</span>
+    <span class="jtag">{% for p in produtos %}</span>
+    <span class="tag">&lt;tr&gt;</span>
+      <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["nome"] }}</span><span class="tag">&lt;/td&gt;</span>
+      <span class="tag">&lt;td&gt;</span>R$ <span class="jvar">{{ p["preco"] }}</span><span class="tag">&lt;/td&gt;</span>
+      <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["qtd"] }}</span> un.<span class="tag">&lt;/td&gt;</span>
+    <span class="tag">&lt;/tr&gt;</span>
+    <span class="jtag">{% endfor %}</span>
+  <span class="tag">&lt;/table&gt;</span>
+<span class="jtag">{% endblock %}</span></pre>
         </div>
 
         <p style="color:var(--text-dim)">
           <strong style="color:var(--text)">4.</strong> Salve tudo, abra
           <code>localhost:5000/produtos</code> — a tabela nasce dos dados! <br>
           <strong style="color:var(--text)">5.</strong> Prova dos nove: mude um preço NO PYTHON,
-          salve, F5 → a tela mudou sem tocar no HTML. 🤯<br>
-          <strong style="color:var(--text)">6.</strong> Na home (<code>index.html</code>), apague o
-          <code>&lt;ul&gt;</code> de produtos fixos do Dia 1 — a vitrine agora é a
-          <code>/produtos</code>. Deixe só um link: <code>&lt;a href="/produtos"&gt;Ver os produtos →&lt;/a&gt;</code>.
-          Duas listas de produtos no site (uma fixa, uma viva) é confusão na certa.
+          salve, F5 → a tela mudou sem tocar no HTML. 🤯
         </p>
 
         <div class="tip">
@@ -806,261 +900,6 @@ lista_de_produtos = [
         </div>
       </div>
 
-      <div class="exercise solo">
-        <div class="exercise-header">
-          <span class="exercise-icon">🧑‍💻</span>
-          <div>
-            <div class="exercise-title">Sozinho/a: o plano B da tabela</div>
-            <div class="exercise-sub">E se a lista estiver vazia?</div>
-          </div>
-        </div>
-
-        <div class="drill-tags">
-          <span class="drill-level lv1"><span class="stars">★</span> fácil</span>
-          <span class="drill-tag">{% if %}</span>
-          <span class="drill-tag">{% else %}</span>
-        </div>
-
-        <p style="color:var(--text-dim)">
-          Missão: embrulhe a tabela num <code class="jtag">{% if produtos %}</code> e, no
-          <code class="jtag">{% else %}</code>, mostre
-          <strong style="color:var(--text)">"😢 Estoque vazio! Cadastre o primeiro produto."</strong>
-          Teste com <code>lista_de_produtos = []</code> no Python (e desfaça depois).
-        </p>
-
-        <div class="concept">
-          <div class="concept-title">💡 Dica</div>
-          <p>
-            É a seção do <code class="jtag">{% if %}</code> aplicada: lista cheia é "verdadeira",
-            lista vazia é "falsa" — igual no Python. A tabela inteira (com o for dentro) fica
-            no ramo do if; o parágrafo triste fica no else.
-          </p>
-        </div>
-
-        <div class="try-first">
-          <div class="try-first-icon">🚨</div>
-          <div class="try-first-content">
-            <strong>Tenta primeiro!</strong> O erro clássico aqui é esquecer o
-            <code class="jtag">{% endif %}</code> — o Jinja reclama com
-            <em>TemplateSyntaxError: Unexpected end of template</em>.
-          </div>
-        </div>
-
-        <div class="toggler">
-          <div class="toggler-header" onclick="toggleSection(this)">
-            <span>👀 Só clique aqui DEPOIS de tentar — ver a solução</span>
-            <span class="toggler-arrow">▼</span>
-          </div>
-          <div class="toggler-body">
-            <div class="code-block">
-              <div class="code-header">
-                <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-                <span class="filename">produtos.html (o miolo)</span>
-                <span class="lang-badge jinja">Jinja</span>
-              </div>
-<pre><span class="tag">&lt;h2&gt;</span>Lista de Produtos<span class="tag">&lt;/h2&gt;</span>
-<span class="jtag">{% if produtos %}</span>
-  <span class="tag">&lt;table&gt;</span>
-    <span class="tag">&lt;tr&gt;</span><span class="tag">&lt;th&gt;</span>Produto<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Preço<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Estoque<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;/tr&gt;</span>
-    <span class="jtag">{% for p in produtos %}</span>
-      <span class="tag">&lt;tr&gt;</span>
-        <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["nome"] }}</span><span class="tag">&lt;/td&gt;</span>
-        <span class="tag">&lt;td&gt;</span>R$ <span class="jvar">{{ p["preco"] }}</span><span class="tag">&lt;/td&gt;</span>
-        <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["qtd"] }}</span> un.<span class="tag">&lt;/td&gt;</span>
-      <span class="tag">&lt;/tr&gt;</span>
-    <span class="jtag">{% endfor %}</span>
-  <span class="tag">&lt;/table&gt;</span>
-<span class="jtag">{% else %}</span>
-  <span class="tag">&lt;p&gt;</span>😢 Estoque vazio! Cadastre o primeiro produto.<span class="tag">&lt;/p&gt;</span>
-<span class="jtag">{% endif %}</span></pre>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="chapter-divider">
-    <div class="chapter-icon">🏗️</div>
-    <div class="chapter-number">Intervalo técnico</div>
-    <h2 style="background:linear-gradient(135deg,var(--accent6),var(--accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">O remédio prometido</h2>
-    <p class="chapter-subtitle">Aquele menu copiado 4 vezes no Dia 1? Cobrança na mesa.</p>
-  </div>
-
-<!-- ═══════════════════════════════════════════════════════
-       BASE.HTML
-       ═══════════════════════════════════════════════════════ -->
-  <section class="step-section" id="base">
-    <div class="step-header">
-      <div class="step-number sn-purple">🏗️</div>
-      <div>
-        <div class="step-title">base.html: escreva o menu UMA vez</div>
-        <div class="step-sub">A dor da Missão 2 do Dia 1 tem cura — e ela chama herança de template</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <p style="color:var(--text-dim)">
-        Na arena do Dia 1 você copiou o menu em TODAS as páginas — e acabou de copiar de novo
-        no <code>produtos.html</code>. Sentiu o incômodo: mudou um link? Edita 5 arquivos.
-        O Jinja resolve com um <strong style="color:var(--text)">template pai</strong>: o
-        <code>base.html</code> guarda tudo que se repete, e cada página só preenche o miolo.
-      </p>
-
-      <div class="analogy">
-        <div class="analogy-title">O papel timbrado 🖋️</div>
-        <p>
-          Uma empresa não redesenha o logotipo e o rodapé a cada carta — usa
-          <strong>papel timbrado</strong>: a moldura já vem pronta, você só escreve o miolo.
-          O <code>base.html</code> é o papel timbrado do seu site.
-        </p>
-      </div>
-
-      <div class="code-block with-lines">
-        <div class="code-header">
-          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-          <span class="filename">loja/templates/base.html (NOVO)</span>
-          <span class="lang-badge jinja">Jinja</span>
-        </div>
-        <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17</div>
-<pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
-<span class="tag">&lt;html</span> <span class="atr">lang</span>=<span class="st">"pt-BR"</span><span class="tag">&gt;</span>
-  <span class="tag">&lt;head&gt;</span>
-    <span class="tag">&lt;meta</span> <span class="atr">charset</span>=<span class="st">"UTF-8"</span><span class="tag">&gt;</span>
-    <span class="tag">&lt;title&gt;</span>Minha Loja<span class="tag">&lt;/title&gt;</span>
-    <span class="tag">&lt;link</span> <span class="atr">rel</span>=<span class="st">"stylesheet"</span> <span class="atr">href</span>=<span class="st">"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"</span><span class="tag">&gt;</span>
-  <span class="tag">&lt;/head&gt;</span>
-  <span class="tag">&lt;body&gt;</span>
-    <span class="tag">&lt;p&gt;</span>
-      <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/"</span><span class="tag">&gt;</span>Início<span class="tag">&lt;/a&gt;</span> ·
-      <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/sobre"</span><span class="tag">&gt;</span>Sobre<span class="tag">&lt;/a&gt;</span> ·
-      <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/produtos"</span><span class="tag">&gt;</span>Produtos<span class="tag">&lt;/a&gt;</span> ·
-      <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/contato"</span><span class="tag">&gt;</span>Contato<span class="tag">&lt;/a&gt;</span>
-    <span class="tag">&lt;/p&gt;</span>
-    <span class="jtag">{% block conteudo %}{% endblock %}</span>
-  <span class="tag">&lt;/body&gt;</span>
-<span class="tag">&lt;/html&gt;</span></pre>
-      </div>
-
-      <p style="color:var(--text-dim)">
-        E cada página encolhe pra <strong style="color:var(--text)">só o próprio miolo</strong>:
-      </p>
-
-      <div class="code-block">
-        <div class="code-header">
-          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-          <span class="filename">loja/templates/sobre.html (INTEIRO — sim, só isso)</span>
-          <span class="lang-badge jinja">Jinja</span>
-        </div>
-<pre><span class="jtag">{% extends "base.html" %}</span>
-
-<span class="jtag">{% block conteudo %}</span>
-  <span class="tag">&lt;h1&gt;</span>ℹ️ Sobre a loja<span class="tag">&lt;/h1&gt;</span>
-  <span class="tag">&lt;p&gt;</span>Loja criada por MIM, com Python. 😄<span class="tag">&lt;/p&gt;</span>
-<span class="jtag">{% endblock %}</span></pre>
-      </div>
-
-      <div class="concept">
-        <div class="concept-title">💡 extends + block</div>
-        <p>
-          <code class="jtag">{% extends "base.html" %}</code> = "usa o papel timbrado".
-          <code class="jtag">{% block conteudo %}</code> = "meu miolo entra na janela que o
-          base deixou aberta". Esqueleto, menu e Pico agora moram num lugar SÓ.
-        </p>
-      </div>
-
-      <div class="exercise guided">
-        <div class="exercise-header">
-          <span class="exercise-icon">👨‍🏫</span>
-          <div>
-            <div class="exercise-title">Bora migrar a loja</div>
-            <div class="exercise-sub">Todas as páginas entrando na moldura</div>
-          </div>
-        </div>
-        <p style="color:var(--text-dim)">
-          <strong style="color:var(--text)">1.</strong> Crie o <code>templates/base.html</code> acima
-          (mova pra ele o menu e a linha do Pico).<br>
-          <strong style="color:var(--text)">2.</strong> Em cada página
-          (<code>index</code>, <code>sobre</code>, <code>contato</code>, <code>produtos</code> — e
-          <code>promocoes</code>, se você fez a missão do Dia 1):
-          apague esqueleto + menu, deixe só o miolo, e embrulhe com
-          <code class="jtag">{% extends %}</code> + <code class="jtag">{% block conteudo %}</code>.
-        </p>
-
-        <div class="code-block">
-          <div class="code-header">
-            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-            <span class="filename">loja/templates/index.html (INTEIRO, depois da migração)</span>
-            <span class="lang-badge jinja">Jinja</span>
-          </div>
-<pre><span class="jtag">{% extends "base.html" %}</span>
-
-<span class="jtag">{% block conteudo %}</span>
-  <span class="tag">&lt;h1&gt;</span>🛍️ Minha Loja<span class="tag">&lt;/h1&gt;</span>
-  <span class="tag">&lt;p&gt;</span>As melhores ofertas da cidade, direto do meu Python.<span class="tag">&lt;/p&gt;</span>
-  <span class="tag">&lt;p&gt;</span><span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="st">"/produtos"</span><span class="tag">&gt;</span>Ver os produtos →<span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/p&gt;</span>
-<span class="jtag">{% endblock %}</span></pre>
-        </div>
-
-        <div class="code-block">
-          <div class="code-header">
-            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-            <span class="filename">loja/templates/produtos.html (INTEIRO, depois da migração)</span>
-            <span class="lang-badge jinja">Jinja</span>
-          </div>
-<pre><span class="jtag">{% extends "base.html" %}</span>
-
-<span class="jtag">{% block conteudo %}</span>
-  <span class="tag">&lt;h2&gt;</span>Lista de Produtos<span class="tag">&lt;/h2&gt;</span>
-  <span class="jtag">{% if produtos %}</span>
-    <span class="tag">&lt;table&gt;</span>
-      <span class="tag">&lt;tr&gt;</span><span class="tag">&lt;th&gt;</span>Produto<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Preço<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Estoque<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;/tr&gt;</span>
-      <span class="jtag">{% for p in produtos %}</span>
-        <span class="tag">&lt;tr&gt;</span>
-          <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["nome"] }}</span><span class="tag">&lt;/td&gt;</span>
-          <span class="tag">&lt;td&gt;</span>R$ <span class="jvar">{{ p["preco"] }}</span><span class="tag">&lt;/td&gt;</span>
-          <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["qtd"] }}</span> un.<span class="tag">&lt;/td&gt;</span>
-        <span class="tag">&lt;/tr&gt;</span>
-      <span class="jtag">{% endfor %}</span>
-    <span class="tag">&lt;/table&gt;</span>
-  <span class="jtag">{% else %}</span>
-    <span class="tag">&lt;p&gt;</span>😢 Estoque vazio! Cadastre o primeiro produto.<span class="tag">&lt;/p&gt;</span>
-  <span class="jtag">{% endif %}</span>
-<span class="jtag">{% endblock %}</span></pre>
-        </div>
-
-        <div class="code-block">
-          <div class="code-header">
-            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-            <span class="filename">loja/templates/contato.html (INTEIRO)</span>
-            <span class="lang-badge jinja">Jinja</span>
-          </div>
-<pre><span class="jtag">{% extends "base.html" %}</span>
-
-<span class="jtag">{% block conteudo %}</span>
-  <span class="tag">&lt;h1&gt;</span>📞 Fale com a gente<span class="tag">&lt;/h1&gt;</span>
-  <span class="tag">&lt;p&gt;</span>E-mail: contato@minhaloja.com<span class="tag">&lt;/p&gt;</span>
-<span class="jtag">{% endblock %}</span></pre>
-        </div>
-
-        <div class="tip">
-          <span class="tip-icon">🧹</span>
-          <div class="tip-content">
-            <strong>Some coisa — e é pra sumir:</strong> aquele
-            <code>&lt;p&gt;&lt;a href="/"&gt;← voltar pro início&lt;/a&gt;&lt;/p&gt;</code>
-            que você tinha em cada página do Dia 1 pode sair: o menu do
-            <code>base.html</code> já leva pra home de qualquer lugar. O
-            <code>&lt;!DOCTYPE&gt;</code>, o <code>&lt;head&gt;</code> e a linha do Pico também
-            <strong>não ficam mais aqui</strong> — moram só no base.
-          </div>
-        </div>
-
-        <p style="color:var(--text-dim)">
-          <strong style="color:var(--text)">3.</strong> F5 em todas — mesma cara, metade do código.
-          Teste o poder: adicione um link novo no menu do <code>base.html</code> →
-          <strong>apareceu em TODAS as páginas de uma vez</strong>. 💪
-        </p>
-      </div>
     </div>
   </section>
 
@@ -1267,7 +1106,7 @@ lista_de_produtos = [
           <span class="filename">loja/app.py</span>
           <span class="lang-badge python">Python</span>
         </div>
-        <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13</div>
+        <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14</div>
 <pre><span class="kw">from</span> flask <span class="kw">import</span> <span class="tp">Flask</span>, <span class="fn">render_template</span>, request, <span class="fn">redirect</span>
 
 <span class="dec">@app.route</span>(<span class="st">"/cadastro_produto"</span>)
@@ -1279,7 +1118,8 @@ lista_de_produtos = [
 <span class="kw">def</span> <span class="fn">cadastro</span>():
     nome  = request.form[<span class="st">"nome"</span>]
     preco = <span class="bi">float</span>(request.form[<span class="st">"preco"</span>])
-    lista_de_produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"</span>: preco})
+    qtd = <span class="bi">int</span>(request.form[<span class="st">"qtd"</span>])
+    lista_de_produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"</span>: preco, <span class="st">"qtd"</span>: qtd})
     <span class="kw">return</span> <span class="fn">redirect</span>(<span class="st">"/produtos"</span>)</pre>
       </div>
 
@@ -1296,8 +1136,8 @@ lista_de_produtos = [
         <span class="tip-icon">🔢</span>
         <div class="tip-content">
           <strong>Tudo chega como texto!</strong> Mesmo que a pessoa digite 149.90, o form entrega
-          <code>"149.90"</code> (string). Por isso o <code>float(...)</code> — você já fazia
-          igual com o <code>input()</code> no bootcamp. Nada mudou. 😉
+          <code>"149.90"</code> (string). Por isso o <code>float(...)</code>: é o mesmo caso do
+          <code>input()</code> do Python, que também sempre devolve texto.
         </div>
       </div>
 
@@ -1322,27 +1162,6 @@ lista_de_produtos = [
         </div>
       </div>
 
-      <div class="concept">
-        <div class="concept-title">💡 Viu <code>url_for</code> na aula?</div>
-        <p>
-          <code>redirect(url_for("produtos"))</code> chega no mesmo lugar: o
-          <code>url_for("produtos")</code> pergunta ao Flask <em>"qual é a URL da FUNÇÃO
-          <code>produtos</code>?"</em> e recebe <code>"/produtos"</code>. Os dois jeitos funcionam.
-          O material escreve o endereço direto porque é o que você vê na barra do navegador —
-          menos mágica pra hoje. Se preferir o <code>url_for</code>, lembre de importar:
-          <code>from flask import ..., url_for</code>.
-        </p>
-      </div>
-
-      <div class="tip">
-        <span class="tip-icon">🔭</span>
-        <div class="tip-content">
-          <strong>Spoiler do Dia 4:</strong> dá pra juntar as duas rotas numa só, com
-          <code>methods=["GET", "POST"]</code> e um <code>if request.method == "POST":</code>
-          separando "mostrar o form" de "processar o form". É o padrão dos sistemas grandes — e você
-          vai migrar pra ele quando o cadastro ganhar banco de dados. Hoje: duas rotas, dois papéis.
-        </div>
-      </div>
     </div>
   </section>
 
@@ -1445,7 +1264,8 @@ lista_de_produtos = [
 
         <p style="color:var(--text-dim)">
           <strong style="color:var(--text)">1.</strong> Crie o <code>templates/cadastro_produto.html</code>
-          — já na moldura do base:
+          — já na moldura do base. Repare no terceiro campo, a quantidade: ela chega como texto e
+          vira inteiro com <code>int()</code>, igual ao preço com <code>float()</code>:
         </p>
 
         <div class="code-block">
@@ -1461,6 +1281,7 @@ lista_de_produtos = [
   <span class="tag">&lt;form</span> <span class="atr">action</span>=<span class="st">"/cadastro"</span> <span class="atr">method</span>=<span class="st">"POST"</span><span class="tag">&gt;</span>
     <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"nome"</span> <span class="atr">placeholder</span>=<span class="st">"Nome do produto"</span><span class="tag">&gt;</span>
     <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"preco"</span> <span class="atr">placeholder</span>=<span class="st">"Preço"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"qtd"</span> <span class="atr">placeholder</span>=<span class="st">"Quantidade"</span><span class="tag">&gt;</span>
     <span class="tag">&lt;button&gt;</span>Cadastrar<span class="tag">&lt;/button&gt;</span>
   <span class="tag">&lt;/form&gt;</span>
 <span class="jtag">{% endblock %}</span></pre>
@@ -1564,7 +1385,8 @@ lista_de_produtos = [
 <span class="kw">def</span> <span class="fn">cadastro</span>():
     nome = request.form[<span class="st">"nome"</span>]
     preco = <span class="bi">float</span>(request.form[<span class="st">"preco"</span>])
-    lista_de_produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"</span>: preco})
+    qtd = <span class="bi">int</span>(request.form[<span class="st">"qtd"</span>])
+    lista_de_produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"</span>: preco, <span class="st">"qtd"</span>: qtd})
     <span class="kw">return</span> <span class="fn">redirect</span>(<span class="st">"/produtos"</span>)
 
 
@@ -1574,7 +1396,6 @@ app.run(debug=<span class="bool">True</span>)</pre>
         <p style="color:var(--text-dim)">
           <strong style="color:var(--text)">5.</strong> Salve → cadastre um produto de teste.
           O navegador pulou pra <code>/produtos</code> e a tabela cresceu! Cadastre mais dois. 🎉
-          (A coluna Estoque do produto novo fica vazia — o exercício logo abaixo resolve.)
         </p>
 
         <div class="tip">
@@ -1586,68 +1407,6 @@ app.run(debug=<span class="bool">True</span>)</pre>
         </div>
       </div>
 
-      <div class="exercise solo">
-        <div class="exercise-header">
-          <span class="exercise-icon">🧑‍💻</span>
-          <div>
-            <div class="exercise-title">Sozinho/a: o campo de quantidade</div>
-            <div class="exercise-sub">Fechando o trio nome + preço + estoque</div>
-          </div>
-        </div>
-
-        <div class="drill-tags">
-          <span class="drill-level lv2"><span class="stars">★★</span> médio</span>
-          <span class="drill-tag">name=</span>
-          <span class="drill-tag">request.form</span>
-          <span class="drill-tag">int()</span>
-        </div>
-
-        <p style="color:var(--text-dim)">
-          Missão: o form ganha um input de <strong style="color:var(--text)">quantidade</strong>,
-          o Python pesca com <code>request.form</code>, converte pra inteiro, guarda no dict —
-          e a coluna Estoque da tabela mostra o valor de verdade também pros produtos novos.
-        </p>
-
-        <div class="concept">
-          <div class="concept-title">💡 Dica</div>
-          <p>
-            O caminho do dado tem 4 paradas: input com <code>name="qtd"</code> →
-            <code>request.form["qtd"]</code> → <code>int(...)</code> →
-            <code>"qtd":</code> no dict do append. Se a coluna continuar vazia,
-            uma das 4 paradas tem nome errado.
-          </p>
-        </div>
-
-        <div class="try-first">
-          <div class="try-first-icon">🚨</div>
-          <div class="try-first-content">
-            <strong>Tenta primeiro!</strong> Se pintar <code>KeyError</code>, comemora:
-            é o bug mais famoso do dia, e a seção do BugZilla logo abaixo te ensina a lê-lo.
-          </div>
-        </div>
-
-        <div class="toggler">
-          <div class="toggler-header" onclick="toggleSection(this)">
-            <span>👀 Só clique aqui DEPOIS de tentar — ver a solução</span>
-            <span class="toggler-arrow">▼</span>
-          </div>
-          <div class="toggler-body">
-            <div class="code-block">
-              <div class="code-header">
-                <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-                <span class="filename">cadastro_produto.html + app.py (trechos)</span>
-                <span class="lang-badge python">Python</span>
-              </div>
-<pre><span class="cm">&lt;!-- cadastro_produto.html: input novo no form --&gt;</span>
-<span class="tag">&lt;input</span> <span class="atr">name</span>=<span class="st">"qtd"</span> <span class="atr">placeholder</span>=<span class="st">"Quantidade"</span><span class="tag">&gt;</span>
-
-<span class="cm"># app.py: dentro de cadastro()</span>
-qtd = <span class="bi">int</span>(request.form[<span class="st">"qtd"</span>])
-lista_de_produtos.append({<span class="st">"nome"</span>: nome, <span class="st">"preco"</span>: preco, <span class="st">"qtd"</span>: qtd})</pre>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -1743,8 +1502,8 @@ lista_de_produtos.append({<span class="st">"nome"</span>: nome, <span class="st"
     <div class="step-header">
       <div class="step-number sn-red">🐛</div>
       <div>
-        <div class="step-title">BugZilla do dia: a dupla do formulário</div>
-        <div class="step-sub">Os dois erros que TODA turma encontra no dia de forms</div>
+        <div class="step-title">BugZilla do dia: o trio do formulário</div>
+        <div class="step-sub">Os três erros que TODA turma encontra no dia de forms</div>
       </div>
     </div>
 
@@ -1801,13 +1560,14 @@ The method is not allowed for the requested URL.</pre>
               <span class="filename">navegador — tela de erro do Flask</span>
               <span class="lang-badge terminal">erro</span>
             </div>
-<pre>File "app.py", line 37, in cadastro
+<pre>File "app.py", line 40, in cadastro
     nome = request.form["nome"]
-<span style="color:var(--bug)">KeyError: 'nome'</span></pre>
+<span style="color:var(--bug)">werkzeug.exceptions.BadRequestKeyError: 400 Bad Request
+KeyError: 'nome'</span></pre>
           </div>
           <p>
-            O <code>request.form</code> é um dict — e <code>KeyError</code> em dict você já
-            conhece do bootcamp: <strong>a chave não existe</strong>. Aqui significa:
+            O <code>request.form</code> funciona como um dict — e <code>KeyError</code> é o erro
+            clássico de dict: <strong>a chave não existe</strong>. Aqui significa:
             nenhum input do form tem <code>name="nome"</code>. Ou o name está escrito diferente
             (<code>name="Nome"</code>? maiúscula conta!), ou… você esqueceu o
             <code>name</code> de vez.
@@ -1815,6 +1575,36 @@ The method is not allowed for the requested URL.</pre>
           <p>
             💊 <strong>Remédio:</strong> compare LETRA POR LETRA o <code>name="..."</code>
             do input com o <code>request.form["..."]</code> do Python.
+          </p>
+        </div>
+      </div>
+
+      <div class="bugzilla-card">
+        <div class="bugzilla-header">
+          <span class="bugzilla-emoji">🐛</span>
+          <div>
+            <div class="bugzilla-title">Bug 3 — ValueError: a vírgula brasileira</div>
+            <div class="bugzilla-sub">Você digitou 149,90 no campo de preço</div>
+          </div>
+        </div>
+        <div class="bugzilla-body">
+          <div class="code-block">
+            <div class="code-header">
+              <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+              <span class="filename">navegador — tela de erro do Flask</span>
+              <span class="lang-badge terminal">erro</span>
+            </div>
+<pre>File "app.py", line 41, in cadastro
+    preco = float(request.form["preco"])
+<span style="color:var(--bug)">ValueError: could not convert string to float: '149,90'</span></pre>
+          </div>
+          <p>
+            O Python só entende número com <strong>ponto</strong>. O <code>float("149,90")</code>
+            não sabe o que fazer com a vírgula, e um campo vazio dá o mesmo erro.
+          </p>
+          <p>
+            💊 <strong>Remédio:</strong> por enquanto, digite <code>149.90</code>. No Dia 4
+            a Loja ganha validação e o erro vira um aviso amigável.
           </p>
         </div>
       </div>
@@ -1938,6 +1728,135 @@ The method is not allowed for the requested URL.</pre>
         </div>
         <div class="quiz-feedback" data-correct="Boa!" data-wrong="Quase!"
              data-explain="a etiqueta name= vira a chave do dicionário request.form. Mesmo nome dos dois lados — sempre."></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       {% IF %}
+       ═══════════════════════════════════════════════════════ -->
+  <section class="step-section" id="if">
+    <div class="step-header">
+      <div class="step-number sn-blue">🚦</div>
+      <div>
+        <div class="step-title">🏠 Em casa: {% if %}, o plano B na tela</div>
+        <div class="step-sub">E se a lista estiver vazia? Todo sistema precisa pensar no caso triste.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--text-dim)">
+        Imagina a loja recém-aberta, sem produtos: <code>produtos = []</code>.
+        O <code class="jtag">{% for %}</code> roda <strong style="color:var(--text)">zero
+        vezes</strong> e a pessoa vê… uma tabela vazia, sem explicação. Feio.
+        O Jinja também tem <code class="jtag">{% if %}</code>:
+      </p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="filename">loja/templates/index.html</span>
+          <span class="lang-badge jinja">Jinja</span>
+        </div>
+<pre><span class="jtag">{% if produtos %}</span>
+  <span class="tag">&lt;table&gt;</span> … a tabela com o for aqui … <span class="tag">&lt;/table&gt;</span>
+<span class="jtag">{% else %}</span>
+  <span class="tag">&lt;p&gt;</span>😢 Estoque vazio! Cadastre o primeiro produto.<span class="tag">&lt;/p&gt;</span>
+<span class="jtag">{% endif %}</span></pre>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">💡 Lista vazia é "falsa" — igual no Python</div>
+        <p>
+          <code class="jtag">{% if produtos %}</code> segue a regra do Python:
+          lista com itens = verdadeiro, lista vazia <code>[]</code> = falso.
+          O mesmo raciocínio, agora decidindo <strong>o que aparece na tela</strong>.
+        </p>
+      </div>
+
+      <div class="bug-box">
+        <span class="tip-icon">✍️</span>
+        <div class="tip-content">
+          <strong>Pegadinha de digitação:</strong> as tags de comando usam
+          <code class="jtag">{%&nbsp;%}</code> (com porcento) e as de valor usam
+          <code class="jvar">{{&nbsp;}}</code> (chaves duplas). Misturar as duas é o erro de
+          digitação nº 1 do Jinja — e TODO for/if precisa do seu
+          <code class="jtag">{% endfor %}</code>/<code class="jtag">{% endif %}</code>.
+        </div>
+      </div>
+
+      <div class="exercise solo">
+        <div class="exercise-header">
+          <span class="exercise-icon">🧑‍💻</span>
+          <div>
+            <div class="exercise-title">Sozinho/a: o plano B da tabela</div>
+            <div class="exercise-sub">E se a lista estiver vazia?</div>
+          </div>
+        </div>
+
+        <div class="drill-tags">
+          <span class="drill-level lv1"><span class="stars">★</span> fácil</span>
+          <span class="drill-tag">{% if %}</span>
+          <span class="drill-tag">{% else %}</span>
+        </div>
+
+        <p style="color:var(--text-dim)">
+          Missão: embrulhe a tabela num <code class="jtag">{% if produtos %}</code> e, no
+          <code class="jtag">{% else %}</code>, mostre
+          <strong style="color:var(--text)">"😢 Estoque vazio! Cadastre o primeiro produto."</strong>
+          Teste com <code>lista_de_produtos = []</code> no Python (e desfaça depois).
+        </p>
+
+        <div class="concept">
+          <div class="concept-title">💡 Dica</div>
+          <p>
+            É a seção do <code class="jtag">{% if %}</code> aplicada: lista cheia é "verdadeira",
+            lista vazia é "falsa" — igual no Python. A tabela inteira (com o for dentro) fica
+            no ramo do if; o parágrafo triste fica no else.
+          </p>
+        </div>
+
+        <div class="try-first">
+          <div class="try-first-icon">🚨</div>
+          <div class="try-first-content">
+            <strong>Tenta primeiro!</strong> O erro clássico aqui é esquecer o
+            <code class="jtag">{% endif %}</code> — o Jinja reclama com
+            <em>TemplateSyntaxError: Unexpected end of template</em>.
+          </div>
+        </div>
+
+        <div class="toggler">
+          <div class="toggler-header" onclick="toggleSection(this)">
+            <span>👀 Só clique aqui DEPOIS de tentar — ver a solução</span>
+            <span class="toggler-arrow">▼</span>
+          </div>
+          <div class="toggler-body">
+            <div class="code-block">
+              <div class="code-header">
+                <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+                <span class="filename">produtos.html (o miolo)</span>
+                <span class="lang-badge jinja">Jinja</span>
+              </div>
+<pre><span class="tag">&lt;h2&gt;</span>Lista de Produtos<span class="tag">&lt;/h2&gt;</span>
+<span class="jtag">{% if produtos %}</span>
+  <span class="tag">&lt;table&gt;</span>
+    <span class="tag">&lt;tr&gt;</span><span class="tag">&lt;th&gt;</span>Produto<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Preço<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Estoque<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;/tr&gt;</span>
+    <span class="jtag">{% for p in produtos %}</span>
+      <span class="tag">&lt;tr&gt;</span>
+        <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["nome"] }}</span><span class="tag">&lt;/td&gt;</span>
+        <span class="tag">&lt;td&gt;</span>R$ <span class="jvar">{{ p["preco"] }}</span><span class="tag">&lt;/td&gt;</span>
+        <span class="tag">&lt;td&gt;</span><span class="jvar">{{ p["qtd"] }}</span> un.<span class="tag">&lt;/td&gt;</span>
+      <span class="tag">&lt;/tr&gt;</span>
+    <span class="jtag">{% endfor %}</span>
+  <span class="tag">&lt;/table&gt;</span>
+<span class="jtag">{% else %}</span>
+  <span class="tag">&lt;p&gt;</span>😢 Estoque vazio! Cadastre o primeiro produto.<span class="tag">&lt;/p&gt;</span>
+<span class="jtag">{% endif %}</span></pre>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -2242,8 +2161,9 @@ lista_de_produtos.append({<span class="st">"nome"</span>: nome, <span class="st"
         <div class="concept">
           <div class="concept-title">💡 Dica do filtro</div>
           <p>
-            No Python do bootcamp: <code>encontrados = [p for p in lista_de_produtos if q.lower() in
-            p["nome"].lower()]</code> — ou um for com if, do jeito clássico. Os dois valem.
+            Monte uma lista nova com um <code>for</code> + <code>if</code>:
+            a condição é <code>if q.lower() in p["nome"].lower():</code>. Quem conhece list
+            comprehension resolve em uma linha. Os dois valem.
           </p>
         </div>
         <div class="toggler">
@@ -2836,31 +2756,19 @@ app.run(debug=<span class="bool">True</span>)</pre>
         </p>
       </div>
 
-      <div class="warning">
-        <span class="tip-icon">📥</span>
-        <div class="tip-content">
-          <strong>Lição de casa obrigatória antes do Dia 3:</strong> o capítulo
-          <strong>Dia 02½ · IA &amp; Agentes</strong>. É leitura (~40 min) + instalação do seu
-          agente de IA (Claude Code, Codex ou Antigravity, conforme o plano que você já paga)
-          no Terminal do PyCharm. No Dia 3 o agente estreia como tutor do seu SQL e escreve o
-          CSS da Loja a partir de uma espec sua. Chegue com ele instalado. 🤖
-        </div>
-      </div>
-
       <div class="tip">
         <span class="tip-icon">👀</span>
         <div class="tip-content">
           <strong>No próximo encontro:</strong> resolver o apagão de uma vez por todas.
           Seus dados vão ganhar um cofre à prova de ⏹: o <strong>SQLite</strong> — e você
-          vai aprender a língua oficial dos bancos de dados, o <strong>SQL</strong>.
-          Adeus, caderninho. 🗄️
+          vai aprender a língua oficial dos bancos de dados, o <strong>SQL</strong>. 🗄️
         </div>
       </div>
 
       <div class="next-chapter">
-        <h3>🤖 Dia 02½ · IA &amp; Agentes: seu par de programação</h3>
-        <p style="color:var(--text-dim)">Leitura + instalação em casa — obrigatório antes do Dia 03</p>
-        <a href="../02b-ia-agentes/" class="btn-next">🤖 Ir para o Dia 02½ →</a>
+        <h3>🗄️ Dia 03 · Banco de dados de verdade</h3>
+        <p style="color:var(--text-dim)">SQL + SQLite: o cofre dos seus dados, digitado na mão</p>
+        <a href="../03-sql-sqlite/" class="btn-next">🗄️ Ir para o Dia 03 →</a>
       </div>
     </div>
   </section>

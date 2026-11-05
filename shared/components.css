@@ -579,8 +579,8 @@ pre{
 .hub-card.c06::before{background:linear-gradient(90deg,var(--accent2),var(--accent5))}
 .hub-card.c07::before{background:linear-gradient(90deg,var(--accent),var(--accent6))}
 .hub-card.c08::before{background:linear-gradient(90deg,var(--accent5),var(--accent3))}
-.hub-card.c09::before{background:linear-gradient(90deg,var(--tinydb),var(--accent3))}
-.hub-card.c10::before{background:linear-gradient(90deg,var(--streamlit),var(--accent5))}
+.hub-card.c09::before{background:linear-gradient(90deg,var(--amber),var(--accent3))}
+.hub-card.c10::before{background:linear-gradient(90deg,var(--coral),var(--accent5))}
 .hub-card:hover{
   transform:translateY(-6px);
   border-color:rgba(108,99,255,0.30);
@@ -1685,7 +1685,7 @@ pre{
    Engine em shared/tag-forge.js.
    Markup: <div class="forge" data-forge> … </div>
    O painel da direita pode ser qualquer alvo com [data-paint]
-   (ex.: um .browser-mockup do Streamlit).
+   (ex.: um .browser-mockup).
    ========================================================= */
 .forge{
   border:1px solid rgba(255,75,75,0.22);
@@ -1753,7 +1753,7 @@ pre{
   background:rgba(255,255,255,0.03);border-top:1px solid rgba(255,255,255,0.06);
 }
 .forge-hud .forge-btn{
-  background:linear-gradient(135deg,var(--streamlit),var(--accent5));color:#fff;
+  background:linear-gradient(135deg,var(--coral),var(--accent5));color:#fff;
   border:0;font-weight:800;padding:9px 18px;border-radius:10px;cursor:pointer;
   font-size:0.84rem;transition:transform .2s;
 }
